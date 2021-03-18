@@ -8,10 +8,10 @@ function Header() {
     <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
         <A className="navbar-brand brand-logo mr-5" href="#">
-          <Img src="images/logo.svg" className="mr-2" alt="logo" />
+          <img src="./images/logo.svg" className="mr-2" alt="logo" />
         </A>
         <A className="navbar-brand brand-logo-mini" href="#">
-          <Img src="images/logo-mini.svg" alt="logo" />
+          <img src="./images/logo-mini.svg" alt="logo" />
         </A>
       </div>
       <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">
@@ -41,7 +41,7 @@ function Header() {
           </li>
           <li className="nav-item nav-profile dropdown">
             <A className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <Img src="images/faces/face28.jpg" alt="profile" />
+              <img src="./images/faces/face28.jpg" alt="profile" />
             </A>
             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
               <A className="dropdown-item">
