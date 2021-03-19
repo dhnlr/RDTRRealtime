@@ -8,10 +8,10 @@ function Header() {
     <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
         <A className="navbar-brand brand-logo mr-5" href="#">
-          <img src="./images/logo.svg" className="mr-2" alt="logo" />
+          <img src="./images/logo-txt.png" className="mr-2" alt="logo" />
         </A>
         <A className="navbar-brand brand-logo-mini" href="#">
-          <img src="./images/logo-mini.svg" alt="logo" />
+          <img src="./images/logo-txt-mini.png" alt="logo" />
         </A>
       </div>
       <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">
