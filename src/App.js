@@ -4,7 +4,7 @@ import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound } from "./pages";
 
 function App() {
   return (
-    <Router basename="/app/">
+    <Router basename="/rdtrrealtime/">
       {/* <Router basename="/app"> */}
       <div>
         <Switch>

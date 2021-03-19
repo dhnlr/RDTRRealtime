@@ -5,7 +5,7 @@ import styled from "styled-components";
 function Home() {
   let history = useHistory();
   const handleDashboard = () => {
-    history.push("/dashboard");
+    history.push("/login");
   };
 
   return (
