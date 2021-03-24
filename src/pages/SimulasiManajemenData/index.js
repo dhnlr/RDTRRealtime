@@ -1,11 +1,57 @@
-import React from "react";
-import { Header, Menu, Footer, Img } from "../../components";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+
+import { Header, Menu, Footer } from "../../components";
 
 function SimulasiManajemenData() {
     let history = useHistory();
+    const { register, errors, control, handleSubmit } = useForm();
+    const onSubmit = data => console.log(data);
+
+    const provinceData = [
+        {
+            name: "DKI Jakarta",
+            city: ["Jakarta Utara", "Jakarta Barat", "Jakarta Pusat", "Jakarta Timur", "Jakarta Selatan"]
+        },
+        {
+            name: "Banten",
+            city: ["Kota Tangerang", "Kabupaten Tangerang", "Kota Tangerang Selatan"]
+        },
+        {
+            name: "Jawa barat",
+            city: ["Kota Depok", "Kota Bogor", "Kabupaten Bogor", "Kota Bandung"]
+        }
+    ];
+
+    const [{ province, city }, setData] = useState({
+        province: "DKI Jakarta",
+        city: ""
+    });
+
+    const provinces = provinceData.map((province) => (
+        <option key={province.name} value={province.name}>
+            {province.name}
+        </option>
+    ));
+
+    const cities = provinceData.find(item => item.name === province)?.city.map((cities) => (
+        <option key={cities} value={cities}>
+            {cities}
+        </option>
+    ));
+
+
     function goManajemenData() {
         history.push("/simulasimanajemendata")
+    }
+
+    function handleProvinceChange(event) {
+        setData(data => ({ city: '', province: event.target.value }));
+    }
+
+    function handleCityChange(event) {
+        setData(data => ({ ...data, city: event.target.value }));
     }
 
     return (
@@ -16,74 +62,54 @@ function SimulasiManajemenData() {
                 <div className="main-panel">
                     <div className="content-wrapper">
                         <div className="row">
-                            <div className="col-md-12 stretch-card mb-4">
-                                <div className="card data-icon-card-primary">
-                                    <div className="card-body">
-                                        {/* <img src="images/dashboard/info.png" alt="info" /> */}
-                                        <div className="row">
-                                            <div className="col-8 text-white">
-                                                <p className="card-title text-white">Manajemen Data</p>
-                                                <p className="text-white font-weight-500 mb-0">Kini masyarakat dapat melakukan simulasi terencana<br /> tata ruang secara online menjadi lebih mudah</p>
-                                            </div>
-                                            <div className="col-4 background-icon"></div>
-                                        </div>
-                                    </div>
+                            <div className="col-12">
+                                <div class="mb-2">
+                                    <h1>Proyek Saya</h1>
+                                    <p className="text-muted">Silahkan lengkapi borang di bawah ini</p>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="row my-4">
-                            <div className="col-md-1"><Img src="images/file-icons/64/attention.png" alt="Attention" aria-label="Business type: activate to sort column ascending"></Img></div>
-                            <div className="col-md-8">
-                                <h3>Buat Perencanaan Anda</h3>
-                                <p>Impor segala file pendukung kedalam modul perencanaan</p>
-                            </div>
-                            <div className="col-md-3">
-                                <button className="btn btn-primary btn-block" type="button" onClick={() => goManajemenData()}>Buat Sekarang</button>
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            <div className="col-md-12 grid-margin stretch-card my-4">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <p className="card-title">Data Yang Telah Dibuat</p>
-                                        <div className="row">
-                                            <div className="col-12">
-                                                <div className="table-responsive">
-                                                    <div id="example_wrapper" className="dataTables_wrapper dt-bootstrap4 no-footer"><div className="row"><div className="col-sm-12 col-md-6"></div><div className="col-sm-12 col-md-6"></div></div><div className="row"><div className="col-sm-12">
-                                                        <table id="manajemendata" className="display expandable-table dataTable no-footer" style={{ "width": "100%" }} role="grid">
-                                                        <thead>
-                                                            <tr role="row">
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Project Name</th>
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Kabupaten/Kota</th>
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Analis</th>
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Status</th>
-                                                                <th className="details-control sorting_disabled" tabIndex="0" aria-controls="example">Actions</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr className="odd">
-                                                                <td>Kemacetan</td>
-                                                                <td>Kab. Bandung</td>
-                                                                <td>1 Analis</td>
-                                                                <td>Private</td>
-                                                                <td>Make Visible to Public</td>
-                                                            </tr>
-                                                            <tr className="even">
-                                                                <td>Perencanaan Kota</td>
-                                                                <td>Kota Surabaya</td>
-                                                                <td>2 Analis</td>
-                                                                <td>Private</td>
-                                                                <td>Make Visible to Public</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table></div></div><div className="row"><div className="col-sm-12 col-md-5"></div><div className="col-sm-12 col-md-7"></div></div></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
+                                    {/* register your input into the hook by invoking the "register" function */}
+                                    <div class="form-group">
+                                        <label for="namaproyek">Nama Proyek</label>
+                                        <input className="form-control p-input" id="namaproyek" name="namaproyek" defaultValue="" ref={register} />
                                     </div>
-                                </div>
+
+                                    {/* include validation with required or other standard HTML validation rules */}
+                                    <div class="form-group">
+                                        <label for="provinsi">Provinsi</label>
+                                        <Controller
+                                            name="provinsi"
+                                            control={control}
+                                            defaultValue={null}
+                                            render={props =>
+                                                <select className="form-control" id="provinsi" name="provinsi" value={province} onChange={handleProvinceChange} ref={register}>
+                                                    {provinces}
+                                                </select>
+                                            }
+                                        />
+
+                                    </div>
+                                    {/* errors will return when field validation fails  */}
+                                    {errors.exampleRequired && <span>This field is required</span>}
+                                    <div class="form-group">
+                                        <label for="kota">Kota</label>
+                                        <Controller
+                                            name="kota"
+                                            control={control}
+                                            defaultValue={null}
+                                            render={props =>
+                                                <select className="form-control" id="kota" name="kota" value={city} onChange={handleCityChange} ref={register}>
+                                                    {cities}
+                                                </select>
+                                            }
+                                        />
+                                    </div>
+                                    <div className="template-demo float-right">
+                                        <button className="btn btn-light" type="button">Kembali</button>
+
+                                        <button className="btn btn-primary" type="submit">Selanjutnya</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
