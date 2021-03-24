@@ -2,7 +2,7 @@ import React from "react";
 import { Header, Menu, Footer, Img } from "../../components";
 import { useHistory } from "react-router-dom";
 
-function Simulasi() {
+function SimulasiManajemenData() {
     let history = useHistory();
     function goManajemenData() {
         history.push("/simulasimanajemendata")
@@ -94,4 +94,4 @@ function Simulasi() {
     );
 }
 
-export default Simulasi;
+export default SimulasiManajemenData;

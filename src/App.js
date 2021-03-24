@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, Simulasi } from "./pages";
+import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, Simulasi, SimulasiManajemenData } from "./pages";
 
 function App() {
   return (
@@ -14,6 +14,7 @@ function App() {
           <Route path="/register" component={Register} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/simulasi" component={Simulasi} />
+          <Route path="/simulasimanajemendata" component={SimulasiManajemenData} />
           <Route path="/not-authorized" component={NotAuthorized} />
           <Route path="*" component={NotFound} />
         </Switch>

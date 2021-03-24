@@ -6,5 +6,6 @@ import Home from "./Home";
 import Auth from "./Auth";
 import Register from "./Register"
 import Simulasi from "./Simulasi"
+import SimulasiManajemenData from "./SimulasiManajemenData"
 
-export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, Simulasi, Register };
+export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, Simulasi, Register, SimulasiManajemenData };
