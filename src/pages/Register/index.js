@@ -18,7 +18,7 @@ function Register() {
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
             </div>
-            <div style={{ flex: "1", justifyContent: "center", display: "flex", flexDirection: "column", padding: "20px 0" }}>
+            <div style={{ flex: "1", justifyContent: "center", display: "flex", flexDirection: "column", padding: "40px 0" }}>
               {/* <div style={{ display: "flex", margin: "20px 0" }}>
                 <img style={{ float: "left", display: "inline", width: "50px" }} src="./images/Image 7.svg" alt="Login"></img>
                 <div style={{ flex: "1", justifyContent: "center", display: "flex", flexDirection: "column" }}>
@@ -70,7 +70,7 @@ function Register() {
               </div>
             </div>
           </div>
-          <div style={{ flex: "1", backgroundImage: "url('./images/Image 8.png')", backgroundRepeat: "no-repeat", backgroundSize: "100% 100%"}}>
+          <div style={{ flex: "1", backgroundImage: "url('./images/Image 9.png')", backgroundRepeat: "no-repeat", backgroundSize: "100% 100%"}}>
             <img style={{ maxHeight: "100vh", width: "100%" }} src="" alt="Login Background"></img>
           </div>
         </div>

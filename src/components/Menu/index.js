@@ -18,7 +18,7 @@ function Menu(props) {
             <span className="menu-title">Manajemen Data</span>
           </A>
         </li>
-        <li className={`nav-item ${props.active === "simulasi" ? "active" : ""}`}>
+        <li className={`nav-item ${props.active.indexOf("simulasi") !== -1 ? "active" : ""}`}>
           <Link className="nav-link" to="/simulasi">
             <span className="menu-title">Simulasi</span>
           </Link>
