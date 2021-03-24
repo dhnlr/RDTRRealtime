@@ -1,16 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useHistory, Link } from "react-router-dom";
 import styled from "styled-components";
-
-import Img from '../../components/Img'
 
 function Login() {
   let history = useHistory();
   const handleDashboard = () => {
     history.push("/dashboard");
-  };
-  const goToHome = () => {
-    history.push("/home");
   };
 
   return (
@@ -22,13 +17,13 @@ function Login() {
           <div style={{ flex: "1", padding: "0 100px", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
-              <a href="#" onClick={() => goToHome()}>
+              <Link to="home">
                 &lt; Kembali ke Homepage
-              </a>
+              </Link>
             </div>
             <div style={{ flex: "1", justifyContent: "center", display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", margin: "20px 0" }}>
-                <img style={{ float: "left", display: "inline", width: "50px" }} src="./images/Image 7.svg" alt="Login Image"></img>
+                <img style={{ float: "left", display: "inline", width: "50px" }} src="./images/Image 7.svg" alt="Login"></img>
                 <div style={{ flex: "1", justifyContent: "center", display: "flex", flexDirection: "column" }}>
                   <div style={{ fontFamily: "Montserrat, sans-serif", fontSize: "24px", fontWeight: "bold", marginTop: "0px", color: "#07406b" }}>
                     RDTR
@@ -61,7 +56,7 @@ function Login() {
                     <a href="#">Forget Password?</a>
                   </div>
                   <div class="text-center font-weight-light">
-                    Don't have account? <a href="#">Create</a>
+                    Don't have account? <Link to="/register">Create</Link>
                   </div>
                 </form>
               </div>
