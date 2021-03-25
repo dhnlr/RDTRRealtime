@@ -5,9 +5,9 @@ import Login from "./Login";
 import Home from "./Home";
 import Auth from "./Auth";
 import Register from "./Register"
-import Simulasi from "./Simulasi"
-import SimulasiManajemenData from "./SimulasiManajemenData"
-import SimulasiManajemenDataPhase2 from "./SimulasiManajemenData/phase2"
-import SimulasiManajemenDataPhase3 from "./SimulasiManajemenData/phase3"
+import ManajemenData from "./ManajemenData"
+import ManajemenDataInput from "./ManajemenDataInput"
+import ManajemenDataInputPhase2 from "./ManajemenDataInput/phase2"
+import ManajemenDataInputPhase3 from "./ManajemenDataInput/phase3"
 
-export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, Simulasi, Register, SimulasiManajemenData, SimulasiManajemenDataPhase2, SimulasiManajemenDataPhase3 };
+export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3 };

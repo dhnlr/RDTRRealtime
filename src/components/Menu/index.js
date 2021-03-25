@@ -12,10 +12,10 @@ function Menu(props) {
             <span className="menu-title">Dashboard</span>
           </Link>
         </li>
-        <li className="nav-item">
-          <A className="nav-link" href="index.html">
+        <li className="nav-item" className={`nav-item ${props.active.indexOf("manajemendata") !== -1 ? "active" : ""}`}>
+          <Link className="nav-link" to="/manajemendata">
             <span className="menu-title">Manajemen Data</span>
-          </A>
+          </Link>
         </li>
         <li className={`nav-item ${props.active.indexOf("simulasi") !== -1 ? "active" : ""}`}>
           <Link className="nav-link" to="/simulasi">
