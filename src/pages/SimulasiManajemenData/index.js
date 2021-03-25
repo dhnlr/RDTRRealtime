@@ -7,7 +7,10 @@ import { Header, Menu, Footer } from "../../components";
 function SimulasiManajemenData() {
     let history = useHistory();
     const { register, errors, control, handleSubmit } = useForm();
-    const onSubmit = data => console.log(data);
+    const onSubmit = data => {
+        console.log(data); 
+        goManajemenDataPhase2()
+    };
 
     const provinceData = [
         {
@@ -42,8 +45,8 @@ function SimulasiManajemenData() {
     ));
 
 
-    function goManajemenData() {
-        history.push("/simulasimanajemendata")
+    function goManajemenDataPhase2() {
+        history.push("/simulasimanajemendata/kebutuhandata")
     }
 
     function handleProvinceChange(event) {
@@ -71,7 +74,7 @@ function SimulasiManajemenData() {
                                     {/* register your input into the hook by invoking the "register" function */}
                                     <div class="form-group">
                                         <label for="namaproyek">Nama Proyek</label>
-                                        <input className="form-control p-input" id="namaproyek" name="namaproyek" defaultValue="" ref={register} />
+                                        <input className="form-control p-input" id="namaproyek" name="namaproyek" defaultValue="" placeholder="Nama Proyek" ref={register} />
                                     </div>
 
                                     {/* include validation with required or other standard HTML validation rules */}
