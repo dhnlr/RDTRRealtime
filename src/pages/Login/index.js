@@ -34,28 +34,28 @@ function Login() {
                 </div>
               </div>
               <div>
-                <form class="forms-sample">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control p-input" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" autoFocus/>
+                <form className="forms-sample">
+                  <div className="form-group">
+                    <label htmlFor="exampleInputEmail1">Email address</label>
+                    <input type="email" className="form-control p-input" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" autoFocus/>
                   </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control p-input" id="exampleInputPassword1" placeholder="Password" />
+                  <div className="form-group">
+                    <label htmlFor="exampleInputPassword1">Password</label>
+                    <input type="password" className="form-control p-input" id="exampleInputPassword1" placeholder="Password" />
                   </div>
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block" onClick={() => handleDashboard()}>Login</button>
+                  <div className="form-group">
+                    <button type="submit" className="btn btn-primary btn-block" onClick={() => handleDashboard()}>Login</button>
                   </div>
-                  <div class="my-2 d-flex justify-content-between align-items-center" >
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input" />
+                  <div className="my-2 d-flex justify-content-between align-items-center" >
+                    <div className="form-check">
+                      <label className="form-check-label">
+                        <input type="checkbox" className="form-check-input" />
                       Keep me signed in
                     </label>
                     </div>
-                    <a href="#">Forget Password?</a>
+                    <Link to="/login">Forget Password?</Link>
                   </div>
-                  <div class="text-center font-weight-light">
+                  <div className="text-center font-weight-light">
                     Don't have account? <Link to="/register">Create</Link>
                   </div>
                 </form>

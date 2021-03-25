@@ -1,7 +1,6 @@
 import React from "react";
 import A from "../A";
-import Img from "../Img";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 function Menu(props) {

@@ -43,7 +43,10 @@ function SimulasiManajemenData() {
             {cities}
         </option>
     ));
-
+    
+    function goSimulasi() {
+        history.push("/simulasi")
+    }
 
     function goManajemenDataPhase2() {
         history.push("/simulasimanajemendata/kebutuhandata")
@@ -66,20 +69,20 @@ function SimulasiManajemenData() {
                     <div className="content-wrapper">
                         <div className="row">
                             <div className="col-12">
-                                <div class="mb-2">
+                                <div className="mb-2">
                                     <h1>Proyek Saya</h1>
                                     <p className="text-muted">Silahkan lengkapi borang di bawah ini</p>
                                 </div>
                                 <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
                                     {/* register your input into the hook by invoking the "register" function */}
-                                    <div class="form-group">
-                                        <label for="namaproyek">Nama Proyek</label>
+                                    <div className="form-group">
+                                        <label htmlFor="namaproyek">Nama Proyek</label>
                                         <input className="form-control p-input" id="namaproyek" name="namaproyek" defaultValue="" placeholder="Nama Proyek" ref={register} />
                                     </div>
 
                                     {/* include validation with required or other standard HTML validation rules */}
-                                    <div class="form-group">
-                                        <label for="provinsi">Provinsi</label>
+                                    <div className="form-group">
+                                        <label htmlFor="provinsi">Provinsi</label>
                                         <Controller
                                             name="provinsi"
                                             control={control}
@@ -94,8 +97,8 @@ function SimulasiManajemenData() {
                                     </div>
                                     {/* errors will return when field validation fails  */}
                                     {errors.exampleRequired && <span>This field is required</span>}
-                                    <div class="form-group">
-                                        <label for="kota">Kota</label>
+                                    <div className="form-group">
+                                        <label htmlFor="kota">Kota</label>
                                         <Controller
                                             name="kota"
                                             control={control}
@@ -108,7 +111,7 @@ function SimulasiManajemenData() {
                                         />
                                     </div>
                                     <div className="template-demo float-right">
-                                        <button className="btn btn-light" type="button">Kembali</button>
+                                        <button className="btn btn-light" type="button" onClick={()=>goSimulasi()}>Kembali</button>
 
                                         <button className="btn btn-primary" type="submit">Selanjutnya</button>
                                     </div>
