@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "homepage": "http://localhost/rdtrrealtime/",
+  "name": "rdtrrealtime",
+  "homepage": "http://localhost/app/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

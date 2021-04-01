@@ -9,11 +9,11 @@ function Menu() {
       <ul className="nav">
         <li className="nav-item">
           <A className="nav-link" href="index.html">
-            <i className="icon-grid menu-icon" />
             <span className="menu-title">Dashboard</span>
           </A>
         </li>
         <li className="nav-item">
+<<<<<<< HEAD
           <A className="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
             <i className="icon-layout menu-icon" />
             <span className="menu-title">UI Elements</span>
@@ -46,6 +46,30 @@ function Menu() {
           <A className="nav-link" href="pages/documentation/documentation.html">
             <i className="icon-paper menu-icon" />
             <span className="menu-title">Documentation</span>
+=======
+          <A className="nav-link" href="index.html">
+            <span className="menu-title">Manajemen Data</span>
+          </A>
+        </li>
+        <li className="nav-item">
+          <A className="nav-link" href="index.html">
+            <span className="menu-title">Simulasi</span>
+          </A>
+        </li>
+        <li className="nav-item">
+          <A className="nav-link" href="index.html">
+            <span className="menu-title">Laporan</span>
+          </A>
+        </li>
+        <li className="nav-item">
+          <A className="nav-link" href="index.html">
+            <span className="menu-title">Administrasi</span>
+          </A>
+        </li>
+        <li className="nav-item">
+          <A className="nav-link" href="index.html">
+            <span className="menu-title">Bantuan</span>
+>>>>>>> f76804ab221d2dc63c46e0b26b01ac243a149b21
           </A>
         </li>
       </ul>
