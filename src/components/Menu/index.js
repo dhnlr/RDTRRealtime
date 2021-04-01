@@ -1,56 +1,49 @@
 import React from "react";
 import A from "../A";
-import Img from "../Img";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
-function Menu() {
+function Menu(props) {
   return (
     <nav className="sidebar sidebar-offcanvas" id="sidebar">
       <ul className="nav">
+        <li className={`nav-item ${props.active === "dashboard" ? "active" : ""}`}>
+          <Link className="nav-link" to="/dashboard">
+            <span className="menu-title">Dashboard</span>
+          </Link>
+        </li>
+        <li className="nav-item" className={`nav-item ${props.active.indexOf("manajemendata") !== -1 ? "active" : ""}`}>
+          <Link className="nav-link" to="/manajemendata">
+            <span className="menu-title">Manajemen Data</span>
+          </Link>
+        </li>
+        <li className={`nav-item ${props.active.indexOf("simulasi") !== -1 ? "active" : ""}`}>
+          <Link className="nav-link" to="/simulasi">
+            <span className="menu-title">Simulasi</span>
+          </Link>
+        </li>
         <li className="nav-item">
           <A className="nav-link" href="index.html">
-            <i className="icon-grid menu-icon" />
-            <span className="menu-title">Dashboard</span>
+            <span className="menu-title">Laporan</span>
           </A>
         </li>
         <li className="nav-item">
-          <A className="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-            <i className="icon-layout menu-icon" />
-            <span className="menu-title">UI Elements</span>
-            <i className="menu-arrow" />
+          <A className="nav-link" href="index.html">
+            <span className="menu-title">Administrasi</span>
           </A>
-          <div className="collapse" id="ui-basic">
-            <ul className="nav flex-column sub-menu">
-              <li className="nav-item">
-                {" "}
-                <A className="nav-link" href="pages/ui-features/buttons.html">
-                  Buttons
-                </A>
-              </li>
-              <li className="nav-item">
-                {" "}
-                <A className="nav-link" href="pages/ui-features/dropdowns.html">
-                  Dropdowns
-                </A>
-              </li>
-              <li className="nav-item">
-                {" "}
-                <A className="nav-link" href="pages/ui-features/typography.html">
-                  Typography
-                </A>
-              </li>
-            </ul>
-          </div>
         </li>
         <li className="nav-item">
-          <A className="nav-link" href="pages/documentation/documentation.html">
-            <i className="icon-paper menu-icon" />
-            <span className="menu-title">Documentation</span>
+          <A className="nav-link" href="index.html">
+            <span className="menu-title">Bantuan</span>
           </A>
         </li>
       </ul>
     </nav>
   );
 }
+
+Menu.propTypes = {
+  active: PropTypes.string,
+};
 
 export default Menu;

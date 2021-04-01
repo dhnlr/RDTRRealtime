@@ -1,18 +1,18 @@
 import React from "react";
 import A from "../A";
-import Img from "../Img";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import logo from "./logo-txt.png";
 
 function Header() {
   return (
     <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <A className="navbar-brand brand-logo mr-5" href="#">
-          <Img src="images/logo.svg" className="mr-2" alt="logo" />
-        </A>
-        <A className="navbar-brand brand-logo-mini" href="#">
-          <Img src="images/logo-mini.svg" alt="logo" />
-        </A>
+        <Link className="navbar-brand brand-logo mr-5" to="/dashboard">
+          <img src={logo} className="mr-2" alt="logo" />
+        </Link>
+        <Link className="navbar-brand brand-logo-mini" to="/dashboard">
+          <img src="./images/logo-txt-mini.png" alt="logo" />
+        </Link>
       </div>
       <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <button className="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -41,7 +41,7 @@ function Header() {
           </li>
           <li className="nav-item nav-profile dropdown">
             <A className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <Img src="images/faces/face28.jpg" alt="profile" />
+              <img src="./images/faces/face28.jpg" alt="profile" />
             </A>
             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
               <A className="dropdown-item">

@@ -1,15 +1,22 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Home, Login, NotAuthorized, NotFound } from "./pages";
+import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, ManajemenData, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3 } from "./pages";
 
 function App() {
   return (
-    <Router basename="/app/">
+    <Router basename="/rdtrrealtime/">
       {/* <Router basename="/app"> */}
       <div>
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={Auth} />
+          <Route path="/home" component={Home} />
           <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/manajemendata" component={ManajemenData} />
+          <Route path="/manajemendatainput/kebutuhandata" component={ManajemenDataInputPhase2} />
+          <Route path="/manajemendatainput/uploaddata" component={ManajemenDataInputPhase3} />
+          <Route path="/manajemendatainput" component={ManajemenDataInput} />
           <Route path="/not-authorized" component={NotAuthorized} />
           <Route path="*" component={NotFound} />
         </Switch>
