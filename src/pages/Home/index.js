@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import { useHistory, Link } from "react-router-dom";
+import React from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 function Home() {
   let history = useHistory();
   const handleDashboard = () => {
-    history.push("/dashboard");
+    history.push("/login");
   };
 
   return (
@@ -29,7 +29,7 @@ function Home() {
             </div>
             <div style={{ width: "60%", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "60px" }}>
               <u style={{ fontSize: "14px", cursor: "pointer" }}>Pelajari lebih lanjut</u>
-              <button type="button" class="btn btn-primary" onClick={() => handleDashboard()}>
+              <button type="button" className="btn btn-primary" onClick={() => handleDashboard()}>
                 Mulai Sekarang
               </button>
             </div>

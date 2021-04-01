@@ -1,13 +1,12 @@
-import React, { useEffect } from "react";
-import { Header, Menu, Footer, A } from "../../components";
-import { useHistory, Link } from "react-router-dom";
+import React from "react";
+import { Header, Menu, Footer } from "../../components";
 
 function Dashboard() {
   return (
     <div className="container-scroller">
       <Header />
       <div className="container-fluid page-body-wrapper">
-        <Menu />
+        <Menu active="dashboard"/>
         <div className="main-panel">
           <div className="content-wrapper">
             <div className="row">
