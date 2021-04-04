@@ -12,7 +12,7 @@ function Menu(props) {
             <span className="menu-title">Dashboard</span>
           </Link>
         </li>
-        <li className="nav-item" className={`nav-item ${props.active.indexOf("manajemendata") !== -1 ? "active" : ""}`}>
+        <li className={`nav-item ${props.active.indexOf("manajemendata") !== -1 ? "active" : ""}`}>
           <Link className="nav-link" to="/manajemendata">
             <span className="menu-title">Manajemen Data</span>
           </Link>

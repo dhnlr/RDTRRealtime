@@ -1,11 +1,34 @@
-import React from "react";
-import { useHistory, Link } from "react-router-dom";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { useHistory, Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+
+import {config} from "../../Constants"
 
 function Login() {
+  const [ errMessage, setErrMessage ] = useState(null)
+
   let history = useHistory();
   const handleDashboard = () => {
     history.push("/dashboard");
+  };
+
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = async ({ username, password }) => {
+    setErrMessage(null)
+    try {
+      var resp = await axios.post(config.url.API_URL+"/Token", {
+        grant_type: "password",
+        username,
+        password
+      })
+      sessionStorage.setItem("token", resp.data.obj.accessToken)
+      handleDashboard()
+    } catch (error) {
+      console.log(error.response.data)
+      setErrMessage(error.response?.data?.status?.message)
+    }
   };
 
   return (
@@ -14,7 +37,7 @@ function Login() {
       <Main>
 
         <div style={{ flex: "4", display: "flex" }}>
-          <div style={{ flex: "1", padding: "0 100px", display: "flex", flexDirection: "column" }}>
+          <div style={{ flex: "1.4", padding: "0 3rem", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
               <Link to="home">
@@ -29,24 +52,31 @@ function Login() {
                     RDTR
                 </div>
                   <div style={{ fontFamily: "Montserrat, sans-serif", fontSize: "24px", fontWeight: "bold", marginTop: "0px", color: "#45ab75" }}>
-                    INTERAKTIF
+                    REALTIME
                  </div>
                 </div>
               </div>
+              {errMessage &&
+                <div className="alert alert-warning" role="alert">
+                  {errMessage}
+                </div>
+              }
               <div>
-                <form className="forms-sample">
+                <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-group">
-                    <label htmlFor="exampleInputEmail1">Email address</label>
-                    <input type="email" className="form-control p-input" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" autoFocus/>
+                    <label htmlFor="username">Username</label>
+                    <input type="text" className="form-control p-input" id="username" aria-describedby="usernameHelp" placeholder="Username" name="username" autoFocus ref={register({ required: true })} />
+                    {errors.username && <small id="usernameHelp" className="form-text text-danger">Username is required</small>}
                   </div>
                   <div className="form-group">
-                    <label htmlFor="exampleInputPassword1">Password</label>
-                    <input type="password" className="form-control p-input" id="exampleInputPassword1" placeholder="Password" />
+                    <label htmlFor="password">Password</label>
+                    <input type="password" className="form-control p-input" id="password" placeholder="Password" name="password" ref={register({ required: true, minLength: 6 })} />
+                    {errors.password && <small id="passwordHelp" className="form-text text-danger">Password is required and must be at least 6 characters.</small>}
                   </div>
                   <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block" onClick={() => handleDashboard()}>Login</button>
+                    <button type="submit" className="btn btn-primary btn-block" /* onClick={() => handleDashboard()} */>Login</button>
                   </div>
-                  <div className="my-2 d-flex justify-content-between align-items-center" >
+                  <div className="my-2 d-flex justify-content-between align-items-center flex-wrap" >
                     <div className="form-check">
                       <label className="form-check-label">
                         <input type="checkbox" className="form-check-input" />
@@ -62,9 +92,9 @@ function Login() {
               </div>
             </div>
           </div>
-          <div style={{ flex: "1", backgroundImage: "url('./images/Image 8.png')", backgroundRepeat: "no-repeat", backgroundSize: "100% 100%"}}>
-            <img style={{ maxHeight: "100vh", width: "100%" }} src="" alt="Login Background"></img>
-          </div>
+          {/* <div style={{ flex: "1", backgroundImage: "url('./images/Image 8.png')", backgroundRepeat: "no-repeat", backgroundSize: "100% 100%" }}>
+          </div> */}
+          <ImageDiv></ImageDiv>
         </div>
       </Main>
     </div>
@@ -79,3 +109,12 @@ const Main = styled.div`
   display: flex;
   flex-direction: column;
 `;
+const ImageDiv = styled.div`
+flex: 1; 
+background-image: url('./images/Image 8.png'); 
+background-repeat: no-repeat;
+background-size: 100% 100%;
+@media only screen and (max-width: 768px) {
+   display: none;
+   }
+`
