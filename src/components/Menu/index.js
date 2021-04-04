@@ -8,7 +8,7 @@ function Menu(props) {
     <nav className="sidebar sidebar-offcanvas" id="sidebar">
       <ul className="nav">
         <li className={`nav-item ${props.active === "dashboard" ? "active" : ""}`}>
-        <Link className="nav-link" to="/dashboard">
+          <Link className="nav-link" to="/dashboard">
             <span className="menu-title">Dashboard</span>
           </Link>
         </li>
