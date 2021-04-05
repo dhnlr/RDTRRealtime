@@ -1,14 +1,15 @@
 import React from "react";
 import A from "../A";
 import { Link } from "react-router-dom";
-import logo from "./logo-txt.png";
+// import logo from "./logo-txt.png"
+import logo2 from "./logo2.jpeg"
 
 function Header() {
   return (
     <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
         <Link className="navbar-brand brand-logo mr-5" to="/dashboard">
-          <img src={logo} className="mr-2" alt="logo" />
+          <img src={logo2} className="mr-2" alt="logo" />
         </Link>
         <Link className="navbar-brand brand-logo-mini" to="/dashboard">
           <img src="./images/logo-txt-mini.png" alt="logo" />
