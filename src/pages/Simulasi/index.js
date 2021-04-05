@@ -4,8 +4,11 @@ import { Header, Menu, Footer, Img } from "../../components";
 import { useHistory } from "react-router-dom";
 import "./simulasi.css";
 import Axios from "axios";
+import { config } from "../../Constants";
+import Swal from "sweetalert2";
 
 export const Simulasi = () => {
+  let history = useHistory();
   const mapRef = useRef();
   const [mapLoaded, setMapLoaded] = useState(true);
   const [modules, setModules] = useState(null);
@@ -32,12 +35,13 @@ export const Simulasi = () => {
           "esri/Graphic",
           "esri/tasks/support/Query",
           "esri/widgets/Editor",
+          "esri/widgets/LayerList",
         ],
         {
           css: true,
           version: "4.18",
         }
-      ).then(([Map, SceneView, FeatureLayer, Legend, watchUtils, Expand, Graphic, Query, Editor]) => {
+      ).then(([Map, SceneView, FeatureLayer, Legend, watchUtils, Expand, Graphic, Query, Editor, LayerList]) => {
         const map = new Map({
           basemap: "topo-vector",
           ground: "world-elevation",
@@ -114,19 +118,50 @@ export const Simulasi = () => {
           },
           title: "Bangunan",
           popupTemplate: {
-            // autocasts as new PopupTemplate()
             title: "{status_kdbklb}",
             content: [
               {
                 type: "fields",
                 fieldInfos: [
                   {
+                    fieldName: "jenis",
+                    label: "jenis",
+                  },
+                  {
+                    fieldName: "jenis_bang",
+                    label: "jenis_bang",
+                  },
+                  {
+                    fieldName: "toponim",
+                    label: "toponim",
+                  },
+                  {
+                    fieldName: "sumber",
+                    label: "sumber",
+                  },
+                  {
+                    fieldName: "jlh_lantai",
+                    label: "jlh_lantai",
+                  },
+                  {
+                    fieldName: "melanggar_fa",
+                    label: "melanggar_fa",
+                  },
+                  {
+                    fieldName: "melanggar_tinggi",
+                    label: "melanggar_tinggi",
+                  },
+                  {
                     fieldName: "status_kdbklb",
                     label: "Status",
                   },
                   {
-                    fieldName: "jlh_lantai",
-                    label: "Jumlah Lantai",
+                    fieldName: "id_bangunan",
+                    label: "id_bangunan",
+                  },
+                  {
+                    fieldName: "luas_m2",
+                    label: "luas_m2",
                   },
                 ],
               },
@@ -135,7 +170,211 @@ export const Simulasi = () => {
           outFields: ["status_kdbklb", "jlh_lantai"],
         });
 
-        map.add(buildingsLayer);
+        const persilTanahLayer = new FeatureLayer({
+          url: "https://rdtr.onemap.id/server/rest/services/KDBKLB/KDBKLB_PersilTanah_Pabaton/MapServer/0",
+          title: "Persil Tanah",
+          popupTemplate: {
+            title: "Persil Tanah",
+            content: [
+              {
+                type: "fields",
+                fieldInfos: [
+                  {
+                    fieldName: "namobj",
+                    label: "namobj",
+                  },
+                  {
+                    fieldName: "namzon",
+                    label: "namzon",
+                  },
+                  {
+                    fieldName: "kodzon",
+                    label: "kodzon",
+                  },
+                  {
+                    fieldName: "namszn",
+                    label: "namszn",
+                  },
+                  {
+                    fieldName: "kodszn",
+                    label: "kodszn",
+                  },
+                  {
+                    fieldName: "nambwp",
+                    label: "nambwp",
+                  },
+                  {
+                    fieldName: "nasbwp",
+                    label: "nasbwp",
+                  },
+                  {
+                    fieldName: "kodblk",
+                    label: "kodblk",
+                  },
+                  {
+                    fieldName: "kodsbl",
+                    label: "kodsbl",
+                  },
+                  {
+                    fieldName: "wadmkc",
+                    label: "wadmkc",
+                  },
+                  {
+                    fieldName: "wadmkd",
+                    label: "wadmkd",
+                  },
+                  {
+                    fieldName: "luasha",
+                    label: "luasha",
+                  },
+                  {
+                    fieldName: "kdb",
+                    label: "kdb",
+                  },
+                  {
+                    fieldName: "klb",
+                    label: "klb",
+                  },
+                  {
+                    fieldName: "kdh",
+                    label: "kdh",
+                  },
+                  {
+                    fieldName: "lantai_max",
+                    label: "lantai_max",
+                  },
+                  {
+                    fieldName: "nib",
+                    label: "nib",
+                  },
+                  {
+                    fieldName: "status_pemb_optimum",
+                    label: "status_pemb_optimum",
+                  },
+                ],
+              },
+            ],
+          },
+          outFields: ["*"],
+        });
+
+        const polaRuangLayer = new FeatureLayer({
+          url: "https://rdtr.onemap.id/server/rest/services/KDBKLB/KDBKLB_PolaRuang/MapServer/0",
+          title: "Pola Ruang",
+          popupTemplate: {
+            title: "Pola Ruang",
+            content: [
+              {
+                type: "fields",
+                fieldInfos: [
+                  {
+                    fieldName: "namobj",
+                    label: "namobj",
+                  },
+                  {
+                    fieldName: "namzon",
+                    label: "namzon",
+                  },
+                  {
+                    fieldName: "kodzon",
+                    label: "kodzon",
+                  },
+                  {
+                    fieldName: "namszn",
+                    label: "namszn",
+                  },
+                  {
+                    fieldName: "kodszn",
+                    label: "kodszn",
+                  },
+                  {
+                    fieldName: "nambwp",
+                    label: "nambwp",
+                  },
+                  {
+                    fieldName: "nasbwp",
+                    label: "nasbwp",
+                  },
+                  {
+                    fieldName: "kodblk",
+                    label: "kodblk",
+                  },
+                  {
+                    fieldName: "kodsbl",
+                    label: "kodsbl",
+                  },
+                  {
+                    fieldName: "wadmkc",
+                    label: "wadmkc",
+                  },
+                  {
+                    fieldName: "wadmkd",
+                    label: "wadmkd",
+                  },
+                  {
+                    fieldName: "kkop_1",
+                    label: "kkop_1",
+                  },
+                  {
+                    fieldName: "lp2b_2",
+                    label: "lp2b_2",
+                  },
+                  {
+                    fieldName: "krb_03",
+                    label: "krb_03",
+                  },
+                  {
+                    fieldName: "tod_04",
+                    label: "tod_04",
+                  },
+                  {
+                    fieldName: "teb_05",
+                    label: "teb_05",
+                  },
+                  {
+                    fieldName: "cagbud",
+                    label: "cagbud",
+                  },
+                  {
+                    fieldName: "hankam",
+                    label: "hankam",
+                  },
+                  {
+                    fieldName: "puslit",
+                    label: "puslit",
+                  },
+                  {
+                    fieldName: "tpz_00",
+                    label: "tpz_00",
+                  },
+                  {
+                    fieldName: "luasha",
+                    label: "luasha",
+                  },
+                  {
+                    fieldName: "kdb",
+                    label: "kdb",
+                  },
+                  {
+                    fieldName: "klb",
+                    label: "klb",
+                  },
+                  {
+                    fieldName: "kdh",
+                    label: "kdh",
+                  },
+                  {
+                    fieldName: "lantai_max",
+                    label: "lantai_max",
+                  },
+                ],
+              },
+            ],
+          },
+          outFields: ["*"],
+        });
+
+        map.addMany([polaRuangLayer, persilTanahLayer, buildingsLayer]);
 
         async function finishLayer() {
           if (isMounted) {
@@ -172,11 +411,32 @@ export const Simulasi = () => {
           });
           // end editor
 
+          // start layerlist
+          const layerList = new LayerList({
+            container: document.createElement("div"),
+            view: view,
+            // listItemCreatedFunction: function (event) {
+            //   var item = event.item;
+            // },
+          });
+          const layerListExpand = new Expand({
+            expandIconClass: "esri-icon-layers",
+            expandTooltip: "Layer List",
+            view: view,
+            content: layerList.domNode,
+          });
+          view.ui.add({
+            component: layerListExpand,
+            position: "top-left",
+            index: 4,
+          });
+          // end layerlist
+
           // start legend
           const legend = new Legend({
             container: document.createElement("div"),
             view: view,
-            layerInfos: [{ layer: buildingsLayer }],
+            layerInfos: [{ layer: polaRuangLayer }, { layer: persilTanahLayer }, { layer: buildingsLayer }],
           });
           const legendExpand = new Expand({
             expandIconClass: "esri-icon-drag-horizontal",
@@ -203,6 +463,8 @@ export const Simulasi = () => {
           });
           const handleMarking = () => {
             view.container.classList.add("screenshotCursor");
+            polaRuangLayer.popupEnabled = false;
+            persilTanahLayer.popupEnabled = false;
             buildingsLayer.popupEnabled = false;
             view.on("click", function (event) {
               // Remove the previous highlights
@@ -266,8 +528,30 @@ export const Simulasi = () => {
         if (response.data.features.length > 0) {
           let featuresPersilTanah = response.data.features;
           console.log(featuresPersilTanah[0].attributes.nib);
-          setResultAnalysis(true);
-          setResPersilTanah(featuresPersilTanah[0].attributes);
+          //setResultAnalysis(true);
+          //setResPersilTanah(featuresPersilTanah[0].attributes);
+          Axios.post(config.url.API_URL + "/Pembangunan/ExecuteSpPembangunanOptimum?nib=471072367")
+            .then(function (response) {
+              console.log(response);
+              if (response.status === 200) {
+                //Swal.fire("Success", "Your analysis has been running successfully.", "success");
+                Swal.fire({
+                  title: "Success",
+                  text: "Your analysis has been running successfully!",
+                  icon: "success",
+                  showCancelButton: false,
+                  confirmButtonColor: "#3085d6",
+                  confirmButtonText: "OK",
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    history.go(0);
+                  }
+                });
+              }
+            })
+            .catch(function (error) {
+              console.log("error check", error);
+            });
         }
       })
       .catch(function (error) {
@@ -288,6 +572,7 @@ export const Simulasi = () => {
   return (
     <div className="container-scroller">
       <div style={style.viewDiv} ref={mapRef} />
+      <div id="layerListExpDiv" className="esri-widget"></div>
       <div id="legendExpDiv" className="esri-widget"></div>
       <div id="buildingsExpDiv" className="esri-widget">
         <div className="esri-component esri-widget" style={{ background: "#fff", width: "300px" }}>
