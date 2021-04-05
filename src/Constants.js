@@ -5,7 +5,7 @@ const prod = {
 };
 const dev = {
     url: {
-        API_URL: 'https://f8a97c6e-0b6f-427a-be5e-e6a968b89d0e.mock.pstmn.io'
+        API_URL: 'https://rdtr.onemap.id/backend'
     }
 }; 
 export const config = process.env.NODE_ENV === 'development' ? dev : prod;

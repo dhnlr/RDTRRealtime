@@ -1,45 +1,54 @@
 import React from "react";
-import { Header, Menu, Footer, Img } from "../../components";
 import { useHistory } from "react-router-dom";
 
-function ManajemenData() {
+import { Header, Menu, Footer } from "../../components";
+import headerImage from "./header.png"
+import buildingIcon from "./building.svg"
+
+
+function Simulasi() {
     let history = useHistory();
-    function goManajemenData() {
-        history.push("/manajemendatainput")
+    function goInputSimulasi() {
+        history.push("/simulasimap")
     }
 
     return (
         <div className="container-scroller">
             <Header />
             <div className="container-fluid page-body-wrapper">
-                <Menu active="manajemendata" />
+                <Menu active="simulasi" />
                 <div className="main-panel">
                     <div className="content-wrapper">
                         <div className="row">
                             <div className="col-md-12 stretch-card mb-4">
-                                <div className="card data-icon-card-primary">
+                                {/* <div className="card data-icon-card-primary">
                                     <div className="card-body">
-                                        {/* <img src="images/dashboard/info.png" alt="info" /> */}
                                         <div className="row">
                                             <div className="col-8 text-white">
-                                                <p className="card-title text-white">Manajemen Data</p>
+                                                <p className="card-title text-white">Simulasi</p>
                                                 <p className="text-white font-weight-500 mb-0">Kini masyarakat dapat melakukan simulasi terencana<br /> tata ruang secara online menjadi lebih mudah</p>
                                             </div>
                                             <div className="col-4 background-icon"></div>
                                         </div>
                                     </div>
+                                </div> */}
+                                <div style={{ display: "flex", flexWrap: "wrap" }}>
+                                    <div style={{ flex: "1" }}>
+                                        <img src={headerImage} alt="header" style={{ width: "100%" }}></img>
+                                    </div>
+                                    <div style={{ flex: "2", display: "flex", flexWrap: "wrap", flexDirection: "column", padding: "0 2.3rem" }}>
+                                        <p className="font-weight-bold mb-4 fs-30">Simulasi</p>
+                                        <p className="font-weight-500 mb-0" style={{ fontSize: "16px", lineHeight: "1.64" }}>Kini masyarakat dapat melakukan simulasi terencana<br /> tata ruang secara online menjadi lebih mudah. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia tempor dolor, blandit mollis erat scelerisque vel. </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="row my-4">
-                            <div className="col-md-1"><Img src="images/file-icons/64/attention.png" alt="Attention" aria-label="Business type: activate to sort column ascending"></Img></div>
-                            <div className="col-md-8">
-                                <h3>Buat Data Anda</h3>
-                                <p>Impor segala file pendukung kedalam modul perencanaan</p>
-                            </div>
-                            <div className="col-md-3">
-                                <button className="btn btn-primary btn-block" type="button" onClick={() => goManajemenData()}>Buat Sekarang</button>
+                        <div className="row">
+                            <div className="col-md-12 stretch-card mt-4 mb-2">
+                                <img className="mr-2" src={buildingIcon} alt="building icon" style={{float:"left", width:"3rem"}}/>
+                                <p><span className="font-weight-bold ml-1 mr-1 align-middle" style={{fontSize:20}}>Buat simulasi Anda</span>
+                                <button className="btn btn-success ml-2" onClick={() => { goInputSimulasi() }}>Buat Sekarang</button></p>
                             </div>
                         </div>
 
@@ -47,11 +56,15 @@ function ManajemenData() {
                             <div className="col-md-12 grid-margin stretch-card my-4">
                                 <div className="card">
                                     <div className="card-body">
-                                        <p className="card-title">Data Yang Telah Dibuat</p>
+                                        <p className="card-title">Perencanaanmu</p>
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="table-responsive">
-                                                    <div id="example_wrapper" className="dataTables_wrapper dt-bootstrap4 no-footer"><div className="row"><div className="col-sm-12 col-md-6"></div><div className="col-sm-12 col-md-6"></div></div><div className="row"><div className="col-sm-12">
+                                                    <div style={{ "display": "flex", alignContent: "center", flexWrap: "wrap", flexDirection: "column", padding: "3% 30%" }}>
+                                                        <p>Ups... Kamu belum miliki perencanaan yang tersimpan. Silahkan membuat yang baru terlebih dahulu.</p>
+                                                        <button className="btn btn-success" onClick={() => { goInputSimulasi() }}>Buat Simulasi Anda</button>
+                                                    </div>
+                                                    {/* <div id="example_wrapper" className="dataTables_wrapper dt-bootstrap4 no-footer"><div className="row"><div className="col-sm-12 col-md-6"></div><div className="col-sm-12 col-md-6"></div></div><div className="row"><div className="col-sm-12">
                                                         <table id="manajemendata" className="display expandable-table dataTable no-footer" style={{ "width": "100%" }} role="grid">
                                                         <thead>
                                                             <tr role="row">
@@ -78,7 +91,7 @@ function ManajemenData() {
                                                                 <td>Make Visible to Public</td>
                                                             </tr>
                                                         </tbody>
-                                                    </table></div></div><div className="row"><div className="col-sm-12 col-md-5"></div><div className="col-sm-12 col-md-7"></div></div></div>
+                                                    </table></div></div><div className="row"><div className="col-sm-12 col-md-5"></div><div className="col-sm-12 col-md-7"></div></div></div> */}
                                                 </div>
                                             </div>
                                         </div>
@@ -86,6 +99,7 @@ function ManajemenData() {
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <Footer />
                 </div>
@@ -94,4 +108,4 @@ function ManajemenData() {
     );
 }
 
-export default ManajemenData;
+export default Simulasi;

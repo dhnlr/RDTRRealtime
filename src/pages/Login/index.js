@@ -26,7 +26,6 @@ function Login() {
       sessionStorage.setItem("token", resp.data.obj.accessToken)
       handleDashboard()
     } catch (error) {
-      console.log(error.response.data)
       setErrMessage(error.response?.data?.status?.message)
     }
   };

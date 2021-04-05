@@ -9,5 +9,6 @@ import ManajemenData from "./ManajemenData"
 import ManajemenDataInput from "./ManajemenDataInput"
 import ManajemenDataInputPhase2 from "./ManajemenDataInput/phase2"
 import ManajemenDataInputPhase3 from "./ManajemenDataInput/phase3"
+import Simulasi from "./Simulasi"
 
-export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3 };
+export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi };
