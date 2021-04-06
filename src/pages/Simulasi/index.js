@@ -36,7 +36,7 @@ function Simulasi() {
                                     <div style={{ flex: "1" }}>
                                         <img src={headerImage} alt="header" style={{ width: "100%" }}></img>
                                     </div>
-                                    <div style={{ flex: "2", display: "flex", flexWrap: "wrap", flexDirection: "column", padding: "0 2.3rem" }}>
+                                    <div style={{ flex: "2", display: "flex", flexWrap: "wrap", flexDirection: "column", padding: "0 2.3rem", justifyContent: "center" }}>
                                         <p className="font-weight-bold mb-4 fs-30">Simulasi</p>
                                         <p className="font-weight-500 mb-0" style={{ fontSize: "16px", lineHeight: "1.64" }}>Kini masyarakat dapat melakukan simulasi terencana<br /> tata ruang secara online menjadi lebih mudah. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia tempor dolor, blandit mollis erat scelerisque vel. </p>
                                     </div>
