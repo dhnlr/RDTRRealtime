@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import styled from "styled-components";
 import { useHistory, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -14,6 +14,12 @@ function Login() {
   const handleDashboard = () => {
     history.push("/dashboard");
   };
+
+  useEffect(() => {
+    if(sessionStorage.token){
+      handleDashboard()
+    }
+  })
 
   const {
     register,
