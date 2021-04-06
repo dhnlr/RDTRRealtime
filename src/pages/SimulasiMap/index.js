@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { loadModules } from "esri-loader";
-import { Header, Menu } from "../../components";
 import { useHistory } from "react-router-dom";
-import "./simulasi.css";
 import Axios from "axios";
-import { config } from "../../Constants";
 import Swal from "sweetalert2";
+
+import "./simulasi.css";
+import { Header, Menu } from "../../components";
+import { config } from "../../Constants";
 
 const SimulasiMap = () => {
   let history = useHistory();
@@ -111,7 +112,7 @@ const SimulasiMap = () => {
           ],
         };
         const buildingsLayer = new FeatureLayer({
-          url: "https://rdtr.onemap.id/server/rest/services/KDBKLB/KDBKLB_Bangunan/FeatureServer/0",
+          url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_Bangunan/FeatureServer/0",
           renderer: renderer,
           elevationInfo: {
             mode: "on-the-ground",
@@ -171,7 +172,7 @@ const SimulasiMap = () => {
         });
 
         const persilTanahLayer = new FeatureLayer({
-          url: "https://rdtr.onemap.id/server/rest/services/KDBKLB/KDBKLB_PersilTanah_Pabaton/MapServer/0",
+          url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PersilTanah_Pabaton/MapServer/0",
           title: "Persil Tanah",
           popupTemplate: {
             title: "Persil Tanah",
@@ -259,7 +260,7 @@ const SimulasiMap = () => {
         });
 
         const polaRuangLayer = new FeatureLayer({
-          url: "https://rdtr.onemap.id/server/rest/services/KDBKLB/KDBKLB_PolaRuang/MapServer/0",
+          url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PolaRuang/MapServer/0",
           title: "Pola Ruang",
           popupTemplate: {
             title: "Pola Ruang",
@@ -517,7 +518,7 @@ const SimulasiMap = () => {
   // start run analysis
   const handleRunAnalysis = () => {
     Axios.get(
-      "https://rdtr.onemap.id/server/rest/services/KDBKLB/KDBKLB_PersilTanah_Pabaton/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=" +
+      config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PersilTanah_Pabaton/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=" +
         document.getElementById("inputX").value +
         "%2C" +
         document.getElementById("inputY").value +
@@ -684,8 +685,8 @@ const style = {
   viewDiv: {
     padding: 0,
     margin: 0,
-    // height: "calc(100vh - 190px)",
-    height: "100vh",
+    height: "calc(100vh - 60px)",
+    // height: "100vh",
     // height: "380px",
     width: "100%",
     fallbacks: [{ width: "-moz-calc(100vh - 110px)" }, { width: "-webkit-calc(100vh - 110px)" }, { width: "-o-calc(100vh - 110px)" }],
