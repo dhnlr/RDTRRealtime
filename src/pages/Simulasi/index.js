@@ -116,13 +116,13 @@ function Simulasi() {
 
                         <div /* className="d-flex justify-content-center" */ style={{display: "none"}}>
                             <div className="col-md-7 stretch-card mt-2 mb-2">
-                                <div class="input-group">
-                                    <div class="input-group-prepend hover-cursor" id="navbar-search-icon" >
-                                        <span class="input-group-text" id="search" style={{background: "white", borderRight: "none"}}>
-                                            <i class="icon-search"></i>
+                                <div className="input-group">
+                                    <div className="input-group-prepend hover-cursor" id="navbar-search-icon" >
+                                        <span className="input-group-text" id="search" style={{background: "white", borderRight: "none"}}>
+                                            <i className="icon-search"></i>
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search"  style={{borderLeft: "none"}}/>
+                                    <input type="text" className="form-control" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search"  style={{borderLeft: "none"}}/>
                                 </div>
                             </div>
                         </div>
