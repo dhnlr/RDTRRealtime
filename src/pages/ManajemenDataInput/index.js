@@ -8,7 +8,6 @@ function ManajemenDataInput() {
     let history = useHistory();
     const { register, errors, control, handleSubmit } = useForm();
     const onSubmit = data => {
-        console.log(data); 
         goManajemenDataPhase2()
     };
 

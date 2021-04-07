@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useTable } from 'react-table'
 
 import { Header, Menu, Footer } from "../../components";
 import headerImage from "./header.png"
@@ -12,6 +13,73 @@ function Simulasi() {
         history.push("/simulasimap")
     }
 
+    const data = React.useMemo(
+        () => [
+            {
+                projectName: 'Apartemen Tangguh Makmur',
+                modul: 'KDB/KLB',
+                provence: 'Jawa Barat',
+                city: 'Kota Bogor',
+                date: '7 April 2021',
+                status: 'Tersedia',
+                actions: 'Lihat Smulasi',
+            },
+            {
+                projectName: 'Pembangunan Bendungan Hulu',
+                modul: 'Sampah',
+                provence: 'Jawa Barat',
+                city: 'Kota Bogor',
+                date: '1 April 2021',
+                status: 'Tersedia',
+                actions: 'Lihat Smulasi',
+            },
+        ],
+        []
+    )
+
+    const columns = React.useMemo(
+
+        () => [
+            {
+                Header: 'Nama Project',
+                accessor: 'projectName',
+            },
+            {
+                Header: 'Modul',
+                accessor: 'modul',
+            },
+            {
+                Header: 'Provinsi',
+                accessor: 'provence',
+            },
+            {
+                Header: 'City',
+                accessor: 'city',
+            },
+            {
+                Header: 'Tanggal',
+                accessor: 'date',
+            },
+            {
+                Header: 'Status',
+                accessor: 'status',
+            },
+            {
+                Header: '',
+                accessor: 'actions',
+            },
+        ],
+        []
+    )
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+    } = useTable({ columns, data })
+
     return (
         <div className="container-scroller">
             <Header />
@@ -21,18 +89,20 @@ function Simulasi() {
                     <div className="content-wrapper">
                         <div className="row">
                             <div className="col-md-12 stretch-card mb-4">
-                                {/* <div className="card data-icon-card-primary">
+                                {<div className="card">
                                     <div className="card-body">
                                         <div className="row">
-                                            <div className="col-8 text-white">
-                                                <p className="card-title text-white">Simulasi</p>
-                                                <p className="text-white font-weight-500 mb-0">Kini masyarakat dapat melakukan simulasi terencana<br /> tata ruang secara online menjadi lebih mudah</p>
+                                            <div className="col-8 ">
+                                                <p className="card-title ">Simulasi</p>
+                                                <p className=" font-weight-500 mb-0">Siapapun dapat melihat perencanaan secara publik</p>
                                             </div>
-                                            <div className="col-4 background-icon"></div>
+                                            <div className="col-4 background-icon">
+                                                <img src={headerImage} alt="header" style={{ width: "50%", float: "right" }}></img>
+                                            </div>
                                         </div>
                                     </div>
-                                </div> */}
-                                <div style={{ display: "flex", flexWrap: "wrap" }}>
+                                </div>}
+                                {/* <div style={{ display: "flex", flexWrap: "wrap" }}>
                                     <div style={{ flex: "1" }}>
                                         <img src={headerImage} alt="header" style={{ width: "100%" }}></img>
                                     </div>
@@ -40,15 +110,28 @@ function Simulasi() {
                                         <p className="font-weight-bold mb-4 fs-30">Simulasi</p>
                                         <p className="font-weight-500 mb-0" style={{ fontSize: "16px", lineHeight: "1.64" }}>Kini masyarakat dapat melakukan simulasi terencana<br /> tata ruang secara online menjadi lebih mudah. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia tempor dolor, blandit mollis erat scelerisque vel. </p>
                                     </div>
+                                </div> */}
+                            </div>
+                        </div>
+
+                        <div className="d-flex justify-content-center">
+                            <div className="col-md-7 stretch-card mt-2 mb-2">
+                                <div class="input-group">
+                                    <div class="input-group-prepend hover-cursor" id="navbar-search-icon" >
+                                        <span class="input-group-text" id="search" style={{background: "white", borderRight: "none"}}>
+                                            <i class="icon-search"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search"  style={{borderLeft: "none"}}/>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="row">
+                        <div className="row" style={{display: "none"}}>
                             <div className="col-md-12 stretch-card mt-4 mb-2">
-                                <img className="mr-2" src={buildingIcon} alt="building icon" style={{float:"left", width:"3rem"}}/>
-                                <p><span className="font-weight-bold ml-1 mr-1 align-middle" style={{fontSize:20}}>Buat simulasi Anda</span>
-                                <button className="btn btn-success ml-2" onClick={() => { goInputSimulasi() }}>Buat Sekarang</button></p>
+                                <img className="mr-2" src={buildingIcon} alt="building icon" style={{ float: "left", width: "3rem" }} />
+                                <p><span className="font-weight-bold ml-1 mr-1 align-middle" style={{ fontSize: 20 }}>Buat simulasi Anda</span>
+                                    <button className="btn btn-success ml-2" onClick={() => { goInputSimulasi() }}>Buat Sekarang</button></p>
                             </div>
                         </div>
 
@@ -64,34 +147,45 @@ function Simulasi() {
                                                         <p>Ups... Kamu belum miliki perencanaan yang tersimpan. Silahkan membuat yang baru terlebih dahulu.</p>
                                                         <button className="btn btn-success" onClick={() => { goInputSimulasi() }}>Buat Simulasi Anda</button>
                                                     </div>
-                                                    {/* <div id="example_wrapper" className="dataTables_wrapper dt-bootstrap4 no-footer"><div className="row"><div className="col-sm-12 col-md-6"></div><div className="col-sm-12 col-md-6"></div></div><div className="row"><div className="col-sm-12">
-                                                        <table id="manajemendata" className="display expandable-table dataTable no-footer" style={{ "width": "100%" }} role="grid">
-                                                        <thead>
-                                                            <tr role="row">
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Project Name</th>
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Kabupaten/Kota</th>
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Analis</th>
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Status</th>
-                                                                <th className="details-control sorting_disabled" tabIndex="0" aria-controls="example">Actions</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr className="odd">
-                                                                <td>Kemacetan</td>
-                                                                <td>Kab. Bandung</td>
-                                                                <td>1 Analis</td>
-                                                                <td>Private</td>
-                                                                <td>Make Visible to Public</td>
-                                                            </tr>
-                                                            <tr className="even">
-                                                                <td>Perencanaan Kota</td>
-                                                                <td>Kota Surabaya</td>
-                                                                <td>2 Analis</td>
-                                                                <td>Private</td>
-                                                                <td>Make Visible to Public</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table></div></div><div className="row"><div className="col-sm-12 col-md-5"></div><div className="col-sm-12 col-md-7"></div></div></div> */}
+                                                    <div style={{ display: "none" }}>
+                                                        <table {...getTableProps()} className="table">
+                                                            <thead>
+                                                                {headerGroups.map(headerGroup => (
+                                                                    <tr {...headerGroup.getHeaderGroupProps()}>
+                                                                        {headerGroup.headers.map(column => (
+                                                                            <th>
+                                                                                {column.render('Header')}
+                                                                            </th>
+                                                                        ))}
+                                                                    </tr>
+                                                                ))}
+                                                            </thead>
+                                                            <tbody {...getTableBodyProps()}>
+                                                                {rows.map(row => {
+                                                                    prepareRow(row)
+                                                                    return (
+                                                                        <tr {...row.getRowProps()}>
+                                                                            {row.cells.map(cell => {
+                                                                                if (cell.column.Header === "Status" && cell.value === "Tersedia") {
+                                                                                    return (
+                                                                                        <td>
+                                                                                            <span className="btn btn-success">{cell.render('Cell')}</span>
+                                                                                        </td>
+                                                                                    )
+                                                                                } else {
+                                                                                    return (
+                                                                                        <td>
+                                                                                            {cell.render('Cell')}
+                                                                                        </td>
+                                                                                    )
+                                                                                }
+                                                                            })}
+                                                                        </tr>
+                                                                    )
+                                                                })}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
