@@ -37,12 +37,13 @@ const SimulasiMap = () => {
           "esri/tasks/support/Query",
           "esri/widgets/Editor",
           "esri/widgets/LayerList",
+          "esri/widgets/Daylight"
         ],
         {
           css: true,
           version: "4.18",
         }
-      ).then(([Map, SceneView, FeatureLayer, Legend, watchUtils, Expand, Graphic, Query, Editor, LayerList]) => {
+      ).then(([Map, SceneView, FeatureLayer, Legend, watchUtils, Expand, Graphic, Query, Editor, LayerList, Daylight]) => {
         const map = new Map({
           basemap: "topo-vector",
           ground: "world-elevation",
@@ -502,6 +503,29 @@ const SimulasiMap = () => {
           };
           document.getElementById("markingBuildings").addEventListener("click", handleMarking);
           // end marking building
+
+          // start daylight
+          const daylight = new Daylight({
+            view,
+            visibleElements: {
+              timezone: false,
+              datePicker: false,
+              shadowsToggle: false
+            }
+          });
+
+          const daylightExpand = new Expand ({
+            expandIconClass: "esri-icon-lightbulb",
+            expandTooltip: "Daylight",
+            view,
+            content: daylight
+          })
+
+          view.ui.add({
+            component: daylightExpand,
+            position: "top-left"
+          })
+          // end daylight
         });
 
         setStateView(view);
