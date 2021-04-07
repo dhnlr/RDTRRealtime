@@ -114,7 +114,7 @@ function Simulasi() {
                             </div>
                         </div>
 
-                        <div className="d-flex justify-content-center">
+                        <div /* className="d-flex justify-content-center" */ style={{display: "none !important"}}>
                             <div className="col-md-7 stretch-card mt-2 mb-2">
                                 <div class="input-group">
                                     <div class="input-group-prepend hover-cursor" id="navbar-search-icon" >
@@ -127,7 +127,7 @@ function Simulasi() {
                             </div>
                         </div>
 
-                        <div className="row" style={{display: "none"}}>
+                        <div className="row">
                             <div className="col-md-12 stretch-card mt-4 mb-2">
                                 <img className="mr-2" src={buildingIcon} alt="building icon" style={{ float: "left", width: "3rem" }} />
                                 <p><span className="font-weight-bold ml-1 mr-1 align-middle" style={{ fontSize: 20 }}>Buat simulasi Anda</span>

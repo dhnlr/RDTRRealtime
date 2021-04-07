@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { loadModules } from "esri-loader";
-import { useHistory } from "react-router-dom";
 import Axios from "axios";
 import Swal from "sweetalert2";
+import { loadModules } from "esri-loader";
+import { useHistory } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
 
 import "./simulasi.css";
 import { Header, Menu } from "../../components";
@@ -10,6 +11,16 @@ import { config } from "../../Constants";
 
 const SimulasiMap = () => {
   let history = useHistory();
+  // Form State
+  const [form, setForm] = useState({
+    namaproyek: null,
+    provence: null,
+    kota: null,
+    data: null,
+    simulation: []
+  })
+
+  // Map State
   const mapRef = useRef();
   const [mapLoaded, setMapLoaded] = useState(true);
   const [modules, setModules] = useState(null);
@@ -20,6 +31,58 @@ const SimulasiMap = () => {
   const [stateView, setStateView] = useState(null);
   const [resultAnalysis, setResultAnalysis] = useState(false);
   const [resPersilTanah, setResPersilTanah] = useState({});
+
+  // Form related functions
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => {
+    setForm(data)
+  };
+
+  const provinceData = [
+    {
+      name: "DKI Jakarta",
+      city: ["Jakarta Utara", "Jakarta Barat", "Jakarta Pusat", "Jakarta Timur", "Jakarta Selatan"]
+    },
+    {
+      name: "Banten",
+      city: ["Kota Tangerang", "Kabupaten Tangerang", "Kota Tangerang Selatan"]
+    },
+    {
+      name: "Jawa barat",
+      city: ["Kota Depok", "Kota Bogor", "Kabupaten Bogor", "Kota Bandung"]
+    }
+  ];
+
+  const [{ province, city }, setData] = useState({
+    province: "DKI Jakarta",
+    city: ""
+  });
+
+  const provinces = provinceData.map((province) => (
+    <option key={province.name} value={province.name}>
+      {province.name}
+    </option>
+  ));
+
+  const cities = provinceData.find(item => item.name === province)?.city.map((cities) => (
+    <option key={cities} value={cities}>
+      {cities}
+    </option>
+  ));
+
+  function handleProvinceChange(event) {
+    setData(data => ({ city: '', province: event.target.value }));
+  }
+
+  function handleCityChange(event) {
+    setData(data => ({ ...data, city: event.target.value }));
+  }
+  // end form related functions
 
   useEffect(() => {
     let isMounted = true;
@@ -514,7 +577,7 @@ const SimulasiMap = () => {
             }
           });
 
-          const daylightExpand = new Expand ({
+          const daylightExpand = new Expand({
             expandIconClass: "esri-icon-lightbulb",
             expandTooltip: "Daylight",
             view,
@@ -543,10 +606,10 @@ const SimulasiMap = () => {
   const handleRunAnalysis = () => {
     Axios.get(
       config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PersilTanah_Pabaton/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=" +
-        document.getElementById("inputX").value +
-        "%2C" +
-        document.getElementById("inputY").value +
-        "&geometryType=esriGeometryPoint&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&f=pjson"
+      document.getElementById("inputX").value +
+      "%2C" +
+      document.getElementById("inputY").value +
+      "&geometryType=esriGeometryPoint&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&f=pjson"
     )
       .then(function (response) {
         // handle success
@@ -596,113 +659,188 @@ const SimulasiMap = () => {
 
   return (
     <div className="container-scroller">
-    <Header />
-    <div className="container-fluid page-body-wrapper">
+      <Header />
+      <div className="container-fluid page-body-wrapper">
         <Menu active="simulasi" />
-        <div className="main-panel">
-    <div className="container-scroller">
-      <div style={style.viewDiv} ref={mapRef} />
-      <div id="layerListExpDiv" className="esri-widget"></div>
-      <div id="legendExpDiv" className="esri-widget"></div>
-      <div id="buildingsExpDiv" className="esri-widget">
-        <div className="esri-component esri-widget" style={{ background: "#fff", width: "300px" }}>
-          <form className="esri-feature-form__form" style={{ padding: "5px" }}>
-            {selectBuildings && (
-              <div>
-                <label className="esri-feature-form__label">Select Building</label>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                  }}
-                >
-                  <button
-                    className="esri-button"
-                    id="markingBuildings"
-                    type="button"
-                    title="Marking"
-                    style={{
-                      marginTop: "5px",
-                      marginBottom: "5px",
-                      marginRight: "2px",
-                    }}
-                  >
-                    Select
-                  </button>
-                  <button
-                    className="esri-button"
-                    id="markingBuildingsReset"
-                    type="button"
-                    title="Cancel"
-                    style={{
-                      marginTop: "5px",
-                      marginBottom: "5px",
-                      marginLeft: "2px",
-                    }}
-                    onClick={() => handleMarkingReset()}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            )}
-            {runAnalysis && (
-              <div>
-                {" "}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                  }}
-                >
-                  <button
-                    className="esri-button"
-                    id="handleRunAnalysis"
-                    type="button"
-                    title="Run Analysis"
-                    style={{
-                      marginTop: "5px",
-                      marginBottom: "5px",
-                      marginRight: "2px",
-                    }}
-                    onClick={() => handleRunAnalysis()}
-                  >
-                    Run Analysis
-                  </button>
-                </div>
-              </div>
-            )}
-            <input name="inputX" id="inputX" type="hidden" defaultValue={inputX === 0 ? 0 : inputX} />
-            <input name="inputY" id="inputY" type="hidden" defaultValue={inputY === 0 ? 0 : inputY} />
+        {/* Form Simulasi */}
+        {/* <div className="sidebar sidebar-offcanvas p-4" id="sidebar" style={form.namaproyek ? { display: "none" } : { overflowX: "auto", height: "calc(100vh - 60px)", backgroundColor: "#fafafb" }}>
+          <p className="font-weight-bold">Simulasi Project</p>
+          <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-group">
+              <label htmlFor="namaproyek">Nama Proyek</label>
+              <input className="form-control p-input" id="namaproyek" name="namaproyek" defaultValue="" placeholder="Nama Proyek" ref={register({ required: true })} />
+              {errors.namaproyek && (
+                <small id="usernameHelp" className="form-text text-danger">
+                  Project Name is required
+                </small>
+              )}
+            </div>
+            <div className="form-group">
+              <label htmlFor="provinsi">Provinsi</label>
+              <Controller
+                name="provinsi"
+                control={control}
+                defaultValue={null}
+                render={props =>
+                  <select className="form-control" id="provinsi" name="provinsi" value={province} onChange={handleProvinceChange} ref={register}>
+                    {provinces}
+                  </select>
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="kota">Kota</label>
+              <Controller
+                name="kota"
+                control={control}
+                defaultValue={null}
+                render={props =>
+                  <select className="form-control" id="kota" name="kota" value={city} onChange={handleCityChange} ref={register}>
+                    {cities}
+                  </select>
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="data">Data</label>
+              <select className="form-control" ref={register} id="data" name="data">
+                <option value="tes">Tes</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Miss">Miss</option>
+                <option value="Dr">Dr</option>
+              </select>
+              {errors.data && (
+                <small id="usernameHelp" className="form-text text-danger">
+                  Data is required
+                </small>
+              )}
+            </div>
+            <div className="form-check">
+              <p>Pilih Simulasi</p>
+              <input className="form-check-input" ref={register({ required: true })} type="checkbox" value="Air Bersih" name="simulasi" id="simulasiAirBersih" style={{ marginLeft: 0 }} />
+              <label className="form-check-label" htmlFor="simulasiAirBersih">Air Bersih</label>
+              <input className="form-check-input" ref={register({ required: true })} type="checkbox" value="Kemacetan" name="simulasi" id="simulasiKemacetan" style={{ marginLeft: 0 }} />
+              <label className="form-check-label" htmlFor="simulasiKemacetan">Kemacetan</label>
+              <input className="form-check-input" ref={register({ required: true })} type="checkbox" value="Sampah" name="simulasi" id="simulasiSampah" style={{ marginLeft: 0 }} />
+              <label className="form-check-label" htmlFor="simulasiSampah">Sampah</label>
+              <input className="form-check-input" ref={register({ required: true })} type="checkbox" value="KDBKLB" name="simulasi" id="simulasiKDBKLB" style={{ marginLeft: 0 }} />
+              <label className="form-check-label" htmlFor="simulasiKDBKLB">KDBKLB</label>
+              {errors.simulasi && (
+                <small id="usernameHelp" className="form-text text-danger">
+                  Simulasi is required
+                </small>
+              )}
+            </div>
+            <div className="form-group">
+              <button className="btn btn-success" type="submit">Terapkan</button>
+            </div>
           </form>
+        </div> */}
+        {/* End Form Simulasi */}
+        <div className="main-panel">
+          <div className="container-scroller">
+            <div style={style.viewDiv} ref={mapRef} />
+            <div id="layerListExpDiv" className="esri-widget"></div>
+            <div id="legendExpDiv" className="esri-widget"></div>
+            <div id="buildingsExpDiv" className="esri-widget">
+              <div className="esri-component esri-widget" style={{ background: "#fff", width: "300px" }}>
+                <form className="esri-feature-form__form" style={{ padding: "5px" }}>
+                  {selectBuildings && (
+                    <div>
+                      <label className="esri-feature-form__label">Select Building</label>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                          alignItems: "center",
+                        }}
+                      >
+                        <button
+                          className="esri-button"
+                          id="markingBuildings"
+                          type="button"
+                          title="Marking"
+                          style={{
+                            marginTop: "5px",
+                            marginBottom: "5px",
+                            marginRight: "2px",
+                          }}
+                        >
+                          Select
+                  </button>
+                        <button
+                          className="esri-button"
+                          id="markingBuildingsReset"
+                          type="button"
+                          title="Cancel"
+                          style={{
+                            marginTop: "5px",
+                            marginBottom: "5px",
+                            marginLeft: "2px",
+                          }}
+                          onClick={() => handleMarkingReset()}
+                        >
+                          Cancel
+                  </button>
+                      </div>
+                    </div>
+                  )}
+                  {runAnalysis && (
+                    <div>
+                      {" "}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                          alignItems: "center",
+                        }}
+                      >
+                        <button
+                          className="esri-button"
+                          id="handleRunAnalysis"
+                          type="button"
+                          title="Run Analysis"
+                          style={{
+                            marginTop: "5px",
+                            marginBottom: "5px",
+                            marginRight: "2px",
+                          }}
+                          onClick={() => handleRunAnalysis()}
+                        >
+                          Run Analysis
+                  </button>
+                      </div>
+                    </div>
+                  )}
+                  <input name="inputX" id="inputX" type="hidden" defaultValue={inputX === 0 ? 0 : inputX} />
+                  <input name="inputY" id="inputY" type="hidden" defaultValue={inputY === 0 ? 0 : inputY} />
+                </form>
+              </div>
+            </div>
+            {resultAnalysis && (
+              <div
+                id="resultAnalysis"
+                style={{
+                  background: "#fff",
+                  width: "300px",
+                  height: "354px",
+                  overflowY: "auto",
+                  position: "absolute",
+                  top: "55px",
+                  right: "54px",
+                }}
+                className="esri-widget"
+              >
+                <div className="esri-component esri-widget">
+                  <h3>NIB: {resPersilTanah.nib}</h3>
+                </div>
+              </div>
+            )}
+          </div>
+          {/* <Footer /> */}
         </div>
       </div>
-      {resultAnalysis && (
-        <div
-          id="resultAnalysis"
-          style={{
-            background: "#fff",
-            width: "300px",
-            height: "354px",
-            overflowY: "auto",
-            position: "absolute",
-            top: "55px",
-            right: "54px",
-          }}
-          className="esri-widget"
-        >
-          <div className="esri-component esri-widget">
-            <h3>NIB: {resPersilTanah.nib}</h3>
-          </div>
-        </div>
-      )}
     </div>
-    {/* <Footer /> */}
-  </div>
-  </div>
-  </div>
   );
 };
 const style = {
