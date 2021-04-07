@@ -530,7 +530,7 @@ export const Simulasi = () => {
           console.log(featuresPersilTanah[0].attributes.nib);
           //setResultAnalysis(true);
           //setResPersilTanah(featuresPersilTanah[0].attributes);
-          Axios.post(config.url.API_URL + "/Pembangunan/ExecuteSpPembangunanOptimum?nib=471072367")
+          Axios.post(config.url.API_URL + "/Pembangunan/ExecuteSpPembangunanOptimum?nib=" + featuresPersilTanah[0].attributes.nib)
             .then(function (response) {
               console.log(response);
               if (response.status === 200) {
