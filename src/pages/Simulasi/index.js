@@ -114,7 +114,7 @@ function Simulasi() {
                             </div>
                         </div>
 
-                        <div /* className="d-flex justify-content-center" */ style={{display: "none !important"}}>
+                        <div /* className="d-flex justify-content-center" */ style={{display: "none"}}>
                             <div className="col-md-7 stretch-card mt-2 mb-2">
                                 <div class="input-group">
                                     <div class="input-group-prepend hover-cursor" id="navbar-search-icon" >
