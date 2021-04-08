@@ -212,12 +212,12 @@ const SimulasiMap = () => {
                     label: "jlh_lantai",
                   },
                   {
-                    fieldName: "melanggar_fa",
-                    label: "melanggar_fa",
+                    fieldName: "melampaui_fa",
+                    label: "melampaui_fa",
                   },
                   {
-                    fieldName: "melanggar_tinggi",
-                    label: "melanggar_tinggi",
+                    fieldName: "melampaui_tinggi",
+                    label: "melampaui_tinggi",
                   },
                   {
                     fieldName: "status_kdbklb",
@@ -310,12 +310,12 @@ const SimulasiMap = () => {
                     label: "jlh_lantai",
                   },
                   {
-                    fieldName: "melanggar_fa",
-                    label: "melanggar_fa",
+                    fieldName: "melampaui_fa",
+                    label: "melampaui_fa",
                   },
                   {
-                    fieldName: "melanggar_tinggi",
-                    label: "melanggar_tinggi",
+                    fieldName: "melampaui_tinggi",
+                    label: "melampaui_tinggi",
                   },
                   {
                     fieldName: "id_bangunan",
