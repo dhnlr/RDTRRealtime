@@ -19,3 +19,11 @@
   max-height: 425px !important;
 }
 /* end editor */
+
+/* start loading overlay */
+._loading_overlay_content {
+  top: 45%;
+  left: 50%;
+  position: fixed;
+}
+/* end loading overlay */
