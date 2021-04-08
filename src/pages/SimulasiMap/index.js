@@ -158,6 +158,13 @@ const SimulasiMap = () => {
               color: [0, 255, 255],
               fillOpacity: 0.6,
             },
+            popup: {
+              dockEnabled: true,
+              dockOptions: {
+                buttonEnabled: false,
+                breakpoint: false,
+              },
+            },
           });
 
           function getSymbol(color) {
@@ -585,6 +592,209 @@ const SimulasiMap = () => {
             outFields: ["*"],
           });
 
+          function getSymbolSampah(color) {
+            return {
+              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+              symbolLayers: [
+                {
+                  type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
+                  material: {
+                    color: color,
+                  },
+                  edges: {
+                    type: "solid",
+                    color: "#999",
+                    size: 0.5,
+                  },
+                },
+              ],
+            };
+          }
+          const rendererPersampahan = {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            defaultSymbol: getSymbolSampah("#B2B2B2"),
+            defaultLabel: "Eksisting",
+            field: "izin_sampah_y5",
+            uniqueValueInfos: [
+              {
+                value: "Diizinkan",
+                symbol: getSymbolSampah("#A8A800"),
+                label: "Diizinkan",
+              },
+              {
+                value: "Ditolak/rekomendasi",
+                symbol: getSymbolSampah("#730000"),
+                label: "Ditolak/rekomendasi",
+              },
+            ],
+            visualVariables: [
+              {
+                type: "size",
+                field: "jlh_lantai",
+                valueUnit: "meters", // Converts and extrudes all data values in meters
+              },
+            ],
+          };
+          const buildingPersampahanLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Persampahan/persampahan_Bangunan_Pabaton/FeatureServer/0",
+            renderer: rendererPersampahan,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            title: "Persampahan",
+            popupTemplate: {
+              title: "Persampahan",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "jenis",
+                      label: "jenis",
+                    },
+                    {
+                      fieldName: "jenis_bang",
+                      label: "jenis_bang",
+                    },
+                    {
+                      fieldName: "toponim",
+                      label: "toponim",
+                    },
+                    {
+                      fieldName: "sumber",
+                      label: "sumber",
+                    },
+                    {
+                      fieldName: "jlh_lantai",
+                      label: "jlh_lantai",
+                    },
+                    {
+                      fieldName: "melampaui_fa",
+                      label: "melampaui_fa",
+                    },
+                    {
+                      fieldName: "melampaui_tinggi",
+                      label: "melampaui_tinggi",
+                    },
+                    {
+                      fieldName: "id_bangunan",
+                      label: "id_bangunan",
+                    },
+                    {
+                      fieldName: "luas_m2",
+                      label: "luas_m2",
+                    },
+                    {
+                      fieldName: "tps_kapasitas",
+                      label: "tps_kapasitas",
+                    },
+                    {
+                      fieldName: "bangkitan_sampah_y5",
+                      label: "bangkitan_sampah_y5",
+                    },
+                    {
+                      fieldName: "bangkitan_sampah_y6",
+                      label: "bangkitan_sampah_y6",
+                    },
+                    {
+                      fieldName: "bangkitan_sampah_y7",
+                      label: "bangkitan_sampah_y7",
+                    },
+                    {
+                      fieldName: "bangkitan_sampah_y8",
+                      label: "bangkitan_sampah_y8",
+                    },
+                    {
+                      fieldName: "bangkitan_sampah_y9",
+                      label: "bangkitan_sampah_y9",
+                    },
+                    {
+                      fieldName: "bangkitan_sampah_y10",
+                      label: "bangkitan_sampah_y10",
+                    },
+                    {
+                      fieldName: "izin_sampah_y5",
+                      label: "izin_sampah_y5",
+                    },
+                    {
+                      fieldName: "izin_sampah_y6",
+                      label: "izin_sampah_y6",
+                    },
+                    {
+                      fieldName: "izin_sampah_y7",
+                      label: "izin_sampah_y7",
+                    },
+                    {
+                      fieldName: "izin_sampah_y8",
+                      label: "izin_sampah_y8",
+                    },
+                    {
+                      fieldName: "izin_sampah_y9",
+                      label: "izin_sampah_y9",
+                    },
+                    {
+                      fieldName: "izin_sampah_y10",
+                      label: "izin_sampah_y10",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+          });
+
+          const sampahTpsLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Persampahan/Sampah_TPS/FeatureServer/0",
+            title: "TPS",
+            popupTemplate: {
+              title: "TPS",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      fieldName: "orde01",
+                      label: "orde01",
+                    },
+                    {
+                      fieldName: "orde02",
+                      label: "orde02",
+                    },
+                    {
+                      fieldName: "jnsrsr",
+                      label: "jnsrsr",
+                    },
+                    {
+                      fieldName: "stsjrn",
+                      label: "stsjrn",
+                    },
+                    {
+                      fieldName: "sbdata",
+                      label: "sbdata",
+                    },
+                    {
+                      fieldName: "kapasitas",
+                      label: "kapasitas",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+          });
+
           const persilTanahLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PersilTanah_Pabaton/MapServer/0",
             title: "Persil Tanah",
@@ -665,6 +875,22 @@ const SimulasiMap = () => {
                     {
                       fieldName: "status_pemb_optimum",
                       label: "status_pemb_optimum",
+                    },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_sampah",
+                      label: "izin_sampah",
+                    },
+                    {
+                      fieldName: "izin_banjir",
+                      label: "izin_banjir",
                     },
                   ],
                 },
@@ -786,6 +1012,22 @@ const SimulasiMap = () => {
                       fieldName: "status_pemb_optimum",
                       label: "status_pemb_optimum",
                     },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_sampah",
+                      label: "izin_sampah",
+                    },
+                    {
+                      fieldName: "izin_banjir",
+                      label: "izin_banjir",
+                    },
                   ],
                 },
               ],
@@ -846,6 +1088,8 @@ const SimulasiMap = () => {
             kemacetanJaringanJalanLayer,
             polaRuangLayer,
             persilTanahLayer,
+            sampahTpsLayer,
+            buildingPersampahanLayer,
             buildingsKemacetanLayer,
             buildingsAirBersihLayer,
             buildingsLayer,
@@ -854,6 +1098,8 @@ const SimulasiMap = () => {
           basemapPolaRuangLayer.visible = false;
           airBersihPdamLayer.visible = false;
           kemacetanJaringanJalanLayer.visible = false;
+          sampahTpsLayer.visible = false;
+          buildingPersampahanLayer.visible = false;
           buildingsKemacetanLayer.visible = false;
           buildingsAirBersihLayer.visible = false;
 
@@ -929,6 +1175,8 @@ const SimulasiMap = () => {
               airBersihPdamLayer.popupEnabled = false;
               polaRuangLayer.popupEnabled = false;
               persilTanahLayer.popupEnabled = false;
+              sampahTpsLayer.popupEnabled = false;
+              buildingPersampahanLayer.popupEnabled = false;
               buildingsKemacetanLayer.popupEnabled = false;
               buildingsAirBersihLayer.popupEnabled = false;
               buildingsLayer.popupEnabled = false;
@@ -977,6 +1225,8 @@ const SimulasiMap = () => {
                 { layer: kemacetanJaringanJalanLayer },
                 { layer: polaRuangLayer },
                 { layer: persilTanahLayer },
+                { layer: sampahTpsLayer },
+                { layer: buildingPersampahanLayer },
                 { layer: buildingsKemacetanLayer },
                 { layer: buildingsAirBersihLayer },
                 { layer: buildingsLayer },
