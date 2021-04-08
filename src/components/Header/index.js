@@ -17,10 +17,7 @@ function Header() {
       </div>
       <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <button className="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize" onClick={()=> {
-          console.log("a")
           if (document.body.getAttribute("class") === 'sidebar-icon-only') {
-            console.log("b")
-            
             document.body.setAttribute("class",'');
           } else {
             document.body.setAttribute("class",'sidebar-icon-only');
