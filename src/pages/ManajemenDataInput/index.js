@@ -8,7 +8,6 @@ function ManajemenDataInput() {
     let history = useHistory();
     const { register, errors, control, handleSubmit } = useForm();
     const onSubmit = data => {
-        console.log(data); 
         goManajemenDataPhase2()
     };
 
@@ -64,7 +63,7 @@ function ManajemenDataInput() {
         <div className="container-scroller">
             <Header />
             <div className="container-fluid page-body-wrapper">
-                <Menu active="simulasi" />
+                <Menu active="manajemendata" />
                 <div className="main-panel">
                     <div className="content-wrapper">
                         <div className="row">

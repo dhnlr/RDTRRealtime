@@ -35,7 +35,7 @@ function ManajemenData() {
                         <div className="row my-4">
                             <div className="col-md-1"><Img src="images/file-icons/64/attention.png" alt="Attention" aria-label="Business type: activate to sort column ascending"></Img></div>
                             <div className="col-md-8">
-                                <h3>Buat Perencanaan Anda</h3>
+                                <h3>Buat Data Anda</h3>
                                 <p>Impor segala file pendukung kedalam modul perencanaan</p>
                             </div>
                             <div className="col-md-3">
