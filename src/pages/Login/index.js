@@ -53,10 +53,10 @@ function Login() {
       <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
       <Main>
         <div style={{ flex: "4", display: "flex" }}>
-          <div style={{ flex: "1.4", padding: "0 3rem", display: "flex", flexDirection: "column" }}>
+          <div style={{ flex: "1.4", padding: "0.75rem 3rem 0", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
-              <Link to="home">&lt; Kembali ke Homepage</Link>
+              <Link to="home">&lt; Kembali ke Halaman Utama</Link>
             </div>
             <div style={{ flex: "1", justifyContent: "center", display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", margin: "20px 0" }}>
@@ -91,42 +91,42 @@ function Login() {
                     />
                     {errors.username && (
                       <small id="usernameHelp" className="form-text text-danger">
-                        Username is required
+                        Username harus diisi
                       </small>
                     )}
                   </div>
                   <div className="form-group">
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password">Kata Sandi</label>
                     <input
                       type="password"
                       className="form-control p-input"
                       id="password"
-                      placeholder="Password"
+                      placeholder="Kata Sandi"
                       name="password"
                       ref={register({ required: true, minLength: 6 })}
                     />
                     {errors.password && (
                       <small id="passwordHelp" className="form-text text-danger">
-                        Password is required and must be at least 6 characters.
+                        Password harus diisi dan sekurangnya 6 karakter
                       </small>
                     )}
                   </div>
                   <div className="form-group">
                     <button type="submit" className="btn btn-primary btn-block" /* onClick={() => handleDashboard()} */>
-                      Login
+                      Masuk
                     </button>
                   </div>
                   <div className="my-2 d-flex justify-content-between align-items-center flex-wrap">
                     <div className="form-check">
                       <label className="form-check-label">
                         <input type="checkbox" className="form-check-input" />
-                        Keep me signed in
+                        Tetap masuk
                       </label>
                     </div>
-                    <Link to="/login">Forget Password?</Link>
+                    <Link to="/login">Lupa kata sandi?</Link>
                   </div>
                   <div className="text-center font-weight-light">
-                    Don't have account? <Link to="/register">Create</Link>
+                    Tidak punya akun? <Link to="/register">Daftar</Link>
                   </div>
                 </form>
               </div>

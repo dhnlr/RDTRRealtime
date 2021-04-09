@@ -30,24 +30,24 @@ function Register() {
                  </div>
                 </div>
               </div> */}
-              <h3>Register</h3>
+              <h3>Daftar</h3>
               <div>
                 <form className="forms-sample">
                   <div className="form-group">
-                    <label htmlFor="exampleInputEmail1">Email address</label>
-                    <input type="email" className="form-control p-input" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" autoFocus/>
+                    <label htmlFor="exampleInputEmail1">Alamat Email</label>
+                    <input type="email" className="form-control p-input" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Alamat Email" autoFocus/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="exampleInputUsername">Username</label>
-                    <input type="text" className="form-control p-input" id="exampleInputUsername" aria-describedby="usernameHelp" placeholder="Enter username"/>
+                    <input type="text" className="form-control p-input" id="exampleInputUsername" aria-describedby="usernameHelp" placeholder="Username"/>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="exampleInputRole">Role</label>
+                    <label htmlFor="exampleInputRole">Peranan</label>
                     <input type="text" className="form-control p-input" id="exampleInputRole" aria-describedby="roleHelp" placeholder="Daftar Sebagai"/>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="exampleInputPassword1">Password</label>
-                    <input type="password" className="form-control p-input" id="exampleInputPassword1" placeholder="Password" />
+                    <label htmlFor="exampleInputPassword1">Kata Sandi</label>
+                    <input type="password" className="form-control p-input" id="exampleInputPassword1" placeholder="Kata Sandi" />
                   </div>
                   <div className="form-group" style={{backgroundColor:"#e0e0e0", height:"200px", overflow: "hidden auto", padding: "20px"}}>
                     <h5>Disclaimer</h5>
@@ -57,14 +57,14 @@ function Register() {
                   <div className="form-check">
                       <label className="form-check-label">
                         <input type="checkbox" className="form-check-input" />
-                      I've read and agree with agreement
+                      Saya telah membaca dan menyetujui syarat dan ketentuan yang berlaku
                     </label>
                     </div>
                   <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block" onClick={() => handleDashboard()}>Register</button>
+                    <button type="submit" className="btn btn-primary btn-block" onClick={() => handleDashboard()}>Daftar</button>
                   </div>
                   <div className="text-center font-weight-light">
-                    Already have an account? <Link to="/login">Login</Link>
+                    Sudah punya akun? <Link to="/login">Masuk</Link>
                   </div>
                 </form>
               </div>

@@ -39,7 +39,7 @@ function Simulasi() {
   const columns = React.useMemo(
     () => [
       {
-        Header: "Nama Project",
+        Header: "Nama Proyek",
         accessor: "projectName",
       },
       {
@@ -120,7 +120,7 @@ function Simulasi() {
                     type="text"
                     className="form-control"
                     id="navbar-search-input"
-                    placeholder="Search now"
+                    placeholder="Cari simulasi"
                     aria-label="search"
                     aria-describedby="search"
                     style={{ borderLeft: "none" }}
@@ -152,7 +152,7 @@ function Simulasi() {
               <div className="col-md-12 grid-margin stretch-card my-4">
                 <div className="card">
                   <div className="card-body">
-                    <p className="card-title">Perencanaanmu</p>
+                    <p className="card-title">Simulasi Anda</p>
                     <div className="row">
                       <div className="col-12">
                         <div className="table-responsive">

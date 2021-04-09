@@ -27,3 +27,9 @@
   position: fixed;
 }
 /* end loading overlay */
+
+/* form style */
+.sidebar-icon-only .simulasi-map-form {
+  display: none !important;
+}
+/* end form style */

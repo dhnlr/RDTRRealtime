@@ -128,13 +128,14 @@ const SimulasiMap = () => {
           "esri/widgets/Daylight",
           "esri/layers/VectorTileLayer",
           "esri/layers/MapImageLayer",
+          "esri/intl"
         ],
         {
           css: true,
           version: "4.18",
         }
       ).then(
-        ([Map, SceneView, FeatureLayer, Legend, watchUtils, Expand, Graphic, Query, Editor, LayerList, Daylight, VectorTileLayer, MapImageLayer]) => {
+        ([Map, SceneView, FeatureLayer, Legend, watchUtils, Expand, Graphic, Query, Editor, LayerList, Daylight, VectorTileLayer, MapImageLayer, intl]) => {
           const map = new Map({
             basemap: "topo-vector",
             ground: "world-elevation",
@@ -1130,7 +1131,7 @@ const SimulasiMap = () => {
             });
             const layerListExpand = new Expand({
               expandIconClass: "esri-icon-layers",
-              expandTooltip: "Layer List",
+              expandTooltip: "Daftar Layer",
               view: view,
               content: layerList.domNode,
             });
@@ -1146,7 +1147,7 @@ const SimulasiMap = () => {
             });
             const editorExpand = new Expand({
               expandIconClass: "esri-icon-edit",
-              expandTooltip: "Editor",
+              expandTooltip: "Edit Layer",
               view: view,
               content: editor,
               // content: document.getElementById("placemarkExpDiv"),
@@ -1161,7 +1162,7 @@ const SimulasiMap = () => {
             // start marking building
             const buildingsExp = new Expand({
               expandIconClass: "esri-icon-map-pin",
-              expandTooltip: "Select Buildings",
+              expandTooltip: "Pilih Gedung",
               content: document.getElementById("buildingsExpDiv"),
               view: view,
             });
@@ -1234,7 +1235,7 @@ const SimulasiMap = () => {
             });
             const legendExpand = new Expand({
               expandIconClass: "esri-icon-drag-horizontal",
-              expandTooltip: "Legend",
+              expandTooltip: "Legenda",
               view: view,
               content: legend.domNode,
             });
@@ -1256,7 +1257,7 @@ const SimulasiMap = () => {
 
             const daylightExpand = new Expand({
               expandIconClass: "esri-icon-lightbulb",
-              expandTooltip: "Daylight",
+              expandTooltip: "Cahaya Matahari",
               view,
               content: daylight,
             });
@@ -1266,6 +1267,10 @@ const SimulasiMap = () => {
               position: "top-left",
             });
             // end daylight
+
+            // start locale to Indon
+            intl.setLocale("id");
+            // end locale
           });
 
           setStateView(view);
@@ -1304,8 +1309,8 @@ const SimulasiMap = () => {
               if (response.status === 200) {
                 //Swal.fire("Success", "Your analysis has been running successfully.", "success");
                 Swal.fire({
-                  title: "Success",
-                  text: "Your analysis has been running successfully!",
+                  title: "Berhasil",
+                  text: "Analisis Anda berhasil dilakukan!",
                   icon: "success",
                   showCancelButton: false,
                   confirmButtonColor: "#3085d6",
@@ -1344,7 +1349,7 @@ const SimulasiMap = () => {
       <div className="container-fluid page-body-wrapper">
         <Menu active="simulasi" />
         {/* Form Simulasi */}
-        {/* <div className="sidebar sidebar-offcanvas p-4" id="sidebar" style={form.namaproyek ? { display: "none" } : { overflowX: "auto", height: "calc(100vh - 60px)", backgroundColor: "#fafafb" }}>
+        {/* <div className="sidebar sidebar-offcanvas p-4 simulasi-map-form" id="sidebar" style={form.namaproyek ? { display: "none" } : { overflowX: "auto", height: "calc(100vh - 60px)", backgroundColor: "#fafafb" }}>
           <p className="font-weight-bold">Simulasi Project</p>
           <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group">
@@ -1352,7 +1357,7 @@ const SimulasiMap = () => {
               <input className="form-control p-input" id="namaproyek" name="namaproyek" defaultValue="" placeholder="Nama Proyek" ref={register({ required: true })} />
               {errors.namaproyek && (
                 <small id="usernameHelp" className="form-text text-danger">
-                  Project Name is required
+                  Nama proyek harus diisi
                 </small>
               )}
             </div>
@@ -1421,7 +1426,7 @@ const SimulasiMap = () => {
         <div className="main-panel">
           <div className="container-scroller">
             <DarkBackground disappear={!loaded}>
-              <LoadingOverlay active={true} spinner text="Running Analysis..."></LoadingOverlay>
+              <LoadingOverlay active={true} spinner text="Menjalankan analisis..."></LoadingOverlay>
             </DarkBackground>
             <div style={style.viewDiv} ref={mapRef} />
             <div id="layerListExpDiv" className="esri-widget"></div>
@@ -1431,7 +1436,7 @@ const SimulasiMap = () => {
                 <form className="esri-feature-form__form" style={{ padding: "5px" }}>
                   {selectBuildings && (
                     <div>
-                      <label className="esri-feature-form__label">Select Building</label>
+                      <label className="esri-feature-form__label">Pilih Bangunan</label>
                       <div
                         style={{
                           display: "flex",
@@ -1450,13 +1455,13 @@ const SimulasiMap = () => {
                             marginRight: "2px",
                           }}
                         >
-                          Select
+                          Pilih
                         </button>
                         <button
                           className="esri-button"
                           id="markingBuildingsReset"
                           type="button"
-                          title="Cancel"
+                          title="Batal"
                           style={{
                             marginTop: "5px",
                             marginBottom: "5px",
@@ -1464,7 +1469,7 @@ const SimulasiMap = () => {
                           }}
                           onClick={() => handleMarkingReset()}
                         >
-                          Cancel
+                          Batal
                         </button>
                       </div>
                     </div>
@@ -1483,7 +1488,7 @@ const SimulasiMap = () => {
                           className="esri-button"
                           id="handleRunAnalysis"
                           type="button"
-                          title="Run Analysis"
+                          title="Jalankan Analisis"
                           style={{
                             marginTop: "5px",
                             marginBottom: "5px",
@@ -1491,7 +1496,7 @@ const SimulasiMap = () => {
                           }}
                           onClick={() => handleRunAnalysis()}
                         >
-                          Run Analysis
+                          Jalankan Analisis
                         </button>
                       </div>
                     </div>
