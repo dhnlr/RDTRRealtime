@@ -44,11 +44,9 @@ function Login() {
       sessionStorage.setItem("token", resp.data.obj.accessToken);
       handleDashboard();
     } catch (error) {
-      console.log(error)
       if(error.response.data.status){
         setErrMessage(error.response?.data?.status?.message)
       } else {
-        console.log("aaa")
         setErrMessage("Gagal masuk. Silahkan coba beberapa saat lagi.")
       }
     }
