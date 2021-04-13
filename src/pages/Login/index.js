@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useHistory, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -8,48 +8,50 @@ import querystring from "querystring";
 import { config } from "../../Constants";
 
 function Login() {
-  const [errMessage, setErrMessage] = useState(null);
-
-  let history = useHistory();
-  const handleDashboard = () => {
-    history.push("/dashboard");
-  };
-
-  useEffect(() => {
-    if(sessionStorage.token){
-      handleDashboard()
-    }
-  })
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = async ({ username, password }) => {
-    setErrMessage(null);
-    try {
-      const headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-      };
-      var resp = await axios.post(
-        config.url.API_URL + "/Token",
-        querystring.stringify({
-          grant_type: "password",
-          username,
-          password,
-        }),
-        headers
-      );
-      sessionStorage.setItem("token", resp.data.obj.accessToken);
-      handleDashboard();
-    } catch (error) {
-      if(error.response.data.status){
-        setErrMessage(error.response?.data?.status?.message)
-      } else {
-        setErrMessage("Gagal masuk. Silahkan coba beberapa saat lagi.")
-      }
+  let history = useHistory();
+
+  const [errMessage, setErrMessage] = useState(null);
+
+  useEffect(() => {
+    if (sessionStorage.token) {
+      handleDashboard()
     }
+  })
+
+  const handleDashboard = () => {
+    history.push("/dashboard");
+  };
+
+  const onSubmit = ({ username, password }) => {
+    setErrMessage(null);
+    const headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+    axios.post(
+      config.url.API_URL + "/Token",
+      querystring.stringify({
+        grant_type: "password",
+        username,
+        password,
+      }),
+      headers
+    )
+      .then(resp => {
+        sessionStorage.setItem("token", resp.data.obj.accessToken);
+        handleDashboard();
+      })
+      .catch(error => {
+        if (error.response.data.status) {
+          setErrMessage(error.response?.data?.status?.message)
+        } else {
+          setErrMessage("Gagal masuk. Silahkan coba beberapa saat lagi.")
+        }
+      })
   };
 
   return (

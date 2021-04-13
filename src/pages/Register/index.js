@@ -30,44 +30,52 @@ function Register() {
     history.push("/login");
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     if (sessionStorage.token) {
       handleDashboard()
     }
     if (listRole.length === 0) {
-      var { data } = await axios.get(config.url.API_URL + '/Role/GetAll')
-      setListRole(data.obj)
+      axios.get(config.url.API_URL + '/Role/GetAll')
+        .then(({ data }) => {
+          setListRole(data.obj)
+        })
+        .catch(error => {
+          if (error.response.data.status) {
+            setErrMessage(error.response?.data?.status?.message)
+          } else {
+            setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
+          }
+        })
     }
   }, [listRole])
 
-  const onSubmit = async ({ username, password, rolename, email }) => {
-    console.log("aaa", { username, password, rolename, email })
+  const onSubmit = ({ username, password, rolename, email }) => {
     setErrMessage(null);
-    try {
-      const headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-      };
-      var resp = await axios.post(
-        config.url.API_URL + "/User/Create",
-        querystring.stringify({
-          "roleNames": [
-            rolename
-          ],
-          "email": email,
-          "userName": username,
-          "password": password
-        }),
-        headers
-      );
-      // sessionStorage.setItem("token", resp.data.obj.accessToken);
-      handleLogin();
-    } catch (error) {
-      if (error.response.data.status) {
-        setErrMessage(error.response?.data?.status?.message)
-      } else {
-        setErrMessage("Gagal daftar. Silahkan coba beberapa saat lagi.")
-      }
-    }
+    const headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+    axios.post(
+      config.url.API_URL + "/User/Create",
+      querystring.stringify({
+        "roleNames": [
+          rolename
+        ],
+        "email": email,
+        "userName": username,
+        "password": password
+      }),
+      headers
+    )
+      .then(() => {
+        handleLogin();
+      })
+      .catch(error => {
+        if (error.response.data.status) {
+          setErrMessage(error.response?.data?.status?.message)
+        } else {
+          setErrMessage("Gagal daftar. Silahkan coba beberapa saat lagi.")
+        }
+      })
   };
 
   return (
@@ -118,7 +126,7 @@ function Register() {
                       aria-describedby="usernameHelp"
                       placeholder="Username"
                       name="username"
-                      ref={register({required: "Username harus diisi", pattern: {value: /^[\w]*$/, message: "Hanya alfabet dan nomor yang diizinkan"}})}
+                      ref={register({ required: "Username harus diisi", pattern: { value: /^[\w]*$/, message: "Hanya alfabet dan nomor yang diizinkan" } })}
                     />
                     {errors.username && (
                       <small id="usernameHelp" className="form-text text-danger">
@@ -186,7 +194,7 @@ function Register() {
                     <p>Maecenas bibendum sapien dapibus, imperdiet ipsum id, scelerisque quam. Aenean mi quam, lacinia eget justo at, congue dignissim lacus. Vivamus ac purus tempus arcu porta hendrerit. Sed ut est ante. Fusce massa neque, sollicitudin vitae bibendum id, laoreet condimentum eros. Nulla accumsan justo diam, at imperdiet justo pretium quis. Proin vulputate sapien hendrerit lorem venenatis, vitae gravida turpis ornare. Vestibulum diam felis, ultrices ut porta a, porttitor sit amet augue. Aenean egestas porttitor odio sed fringilla. In ultrices, sapien a vulputate volutpat, magna massa convallis quam, in maximus dui ex vel leo. Morbi et condimentum mi. Pellentesque quis quam magna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vestibulum tempus, ligula non elementum sodales, sapien diam feugiat turpis, quis vulputate sapien nunc a justo. Cras eget enim mi. Pellentesque mi ante, luctus id sagittis eu, aliquet sit amet nibh. </p>
                   </div>
                   <div className="form-check">
-                    <input type="checkbox" className="form-check-input" id="agreement" name="agreement" ref={register({ required: "Anda harus menyetujui untuk melanjutkan" })} style={{ marginLeft: 0 }}/>
+                    <input type="checkbox" className="form-check-input" id="agreement" name="agreement" ref={register({ required: "Anda harus menyetujui untuk melanjutkan" })} style={{ marginLeft: 0 }} />
                     <label htmlFor="agreement" className="form-check-label">
                       Saya telah membaca dan menyetujui syarat dan ketentuan yang berlaku
                     </label>
