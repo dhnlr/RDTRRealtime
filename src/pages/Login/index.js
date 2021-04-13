@@ -44,7 +44,13 @@ function Login() {
       sessionStorage.setItem("token", resp.data.obj.accessToken);
       handleDashboard();
     } catch (error) {
-      setErrMessage(error.response?.data?.status?.message)
+      console.log(error)
+      if(error.response.data.status){
+        setErrMessage(error.response?.data?.status?.message)
+      } else {
+        console.log("aaa")
+        setErrMessage("Gagal masuk. Silahkan coba beberapa saat lagi.")
+      }
     }
   };
 
@@ -53,7 +59,7 @@ function Login() {
       <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
       <Main>
         <div style={{ flex: "4", display: "flex" }}>
-          <div style={{ flex: "1.4", padding: "0.75rem 3rem 0", display: "flex", flexDirection: "column" }}>
+          <div style={{ flex: "0.95", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
               <Link to="home">&lt; Kembali ke Halaman Utama</Link>
