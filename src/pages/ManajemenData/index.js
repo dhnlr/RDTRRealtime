@@ -55,11 +55,11 @@ function ManajemenData() {
                                                         <table id="manajemendata" className="display expandable-table dataTable no-footer" style={{ "width": "100%" }} role="grid">
                                                         <thead>
                                                             <tr role="row">
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Project Name</th>
+                                                                <th className="sorting" tabIndex="0" aria-controls="example">Nama Proyek</th>
                                                                 <th className="sorting" tabIndex="0" aria-controls="example">Kabupaten/Kota</th>
                                                                 <th className="sorting" tabIndex="0" aria-controls="example">Analis</th>
                                                                 <th className="sorting" tabIndex="0" aria-controls="example">Status</th>
-                                                                <th className="details-control sorting_disabled" tabIndex="0" aria-controls="example">Actions</th>
+                                                                <th className="details-control sorting_disabled" tabIndex="0" aria-controls="example"> </th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
