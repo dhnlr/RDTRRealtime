@@ -12,5 +12,6 @@ import ManajemenDataInputPhase3 from "./ManajemenDataInput/phase3"
 import Simulasi from "./Simulasi"
 import SimulasiMap from "./SimulasiMap"
 import ConfirmByCode from "./ConfirmByCode"
+import ResentEmailConfirmation from "./ResentEmailConfirmation"
 
-export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode };
+export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation };

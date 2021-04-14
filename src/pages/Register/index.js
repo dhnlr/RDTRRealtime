@@ -17,11 +17,11 @@ function Register() {
   let history = useHistory();
 
   const [errMessage, setErrMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [listRole, setListRole] = useState([])
 
   const password = useRef({});
   password.current = watch("password", "");
-  console.log(password.current, errors)
 
   const handleDashboard = () => {
     history.push("/dashboard");
@@ -40,10 +40,10 @@ function Register() {
           setListRole(data.obj)
         })
         .catch(error => {
-          error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengkonfirmasi akun. Silahkan coba beberapa saat lagi.")
+          error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
         })
     }
-  }, [listRole])
+  }, [])
 
   const onSubmit = ({ username, password, rolename, email }) => {
     setErrMessage(null);
@@ -63,14 +63,11 @@ function Register() {
       headers
     )
       .then(() => {
-        handleLogin();
+        // handleLogin();
+        setSuccessMessage("Konfirmasi untuk mengaktikan akun Anda. Periksa kotak masuk atau spam lalu ikuti petunjuk konfirmasi yang dikirmkan di email: " + email)
       })
       .catch(error => {
-        if (error.response.data.status) {
-          setErrMessage(error.response?.data?.status?.message)
-        } else {
-          setErrMessage("Gagal daftar. Silahkan coba beberapa saat lagi.")
-        }
+        error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendaftarkan akun. Silahkan coba beberapa saat lagi.")
       })
   };
 
@@ -102,11 +99,16 @@ function Register() {
                   {errMessage}
                 </div>
               )}
+              {successMessage && (
+                <div className="alert alert-success" role="alert">
+                  {successMessage}
+                </div>
+              )}
               <div>
                 <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-group">
-                    <label htmlFor="email">Alamat Surat Elektronik</label>
-                    <input type="email" className="form-control p-input" id="email" aria-describedby="emailHelp" placeholder="Alamat surat elektronik" name="email" autoFocus ref={register({ required: "Alamat surat elektronik harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat surat elektronik salah" } })} />
+                    <label htmlFor="email">Alamat Email</label>
+                    <input type="email" className="form-control p-input" id="email" aria-describedby="emailHelp" placeholder="Alamat email" name="email" autoFocus ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} />
                     {errors.email && (
                       <small id="emailHelp" className="form-text text-danger">
                         {errors.email.message}

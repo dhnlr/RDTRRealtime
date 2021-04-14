@@ -19,9 +19,11 @@ function ConfirmByCode() {
   const handleDashboard = () => {
     history.push("/dashboard");
   };
-
   const handleLogin = () => {
     history.push("/login");
+  };
+  const handleResentMailConfirmation = () => {
+    history.push("/resentmailconfirmation");
   };
 
   useEffect(() => {
@@ -34,26 +36,22 @@ function ConfirmByCode() {
         'Access-Control-Allow-Headers': '*',
         'Access-Control-Max-Age': 3600
       };
-      // var data = new FormData()
-      // data.code = query.get("code")
-      // axios.put(config.url.API_URL + '/User/ConfirmAccountByCode?code='+query.get("code"), 
-      // JSON.stringify(data), 
-      // {headers: headers})
-      axios.put(
-        config.url.API_URL + '/User/ConfirmAccountByCode',
-        querystring.stringify({
-          code:query.get("code")
-        }),
+      axios.post(
+        config.url.API_URL + '/User/ConfirmAccountByCode?code='+query.get("code"),
+        null,
         headers
       )
-        .then(() => {
+        .then(response => {
           // handleLogin()
+          if(response.data.code !== 200) {
+            setErrMessage(response.data.description)
+          }
         })
         .catch(error => {
           error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengkonfirmasi akun. Silahkan coba beberapa saat lagi.")
         })
     }
-  })
+  }, [])
 
   return (
     <div>
@@ -72,9 +70,13 @@ function ConfirmByCode() {
               {!errMessage && <div style={{ fontSize: "4.25rem", fontWeight: "bold", color: "#45ab75" }}>
                 Berhasil
             </div>}
-              {errMessage && <div style={{ paddingTop: "15px", fontSize: "16px" }}>
+              {errMessage && (<div><div style={{ padding: "3rem 0", fontSize: "16px" }}>
                 {errMessage}
-              </div>}
+              </div>
+              {(errMessage.toLowerCase().indexOf("expired") !== -1 || errMessage.toLowerCase().indexOf("hangus") !== -1) && <button type="submit" className="btn btn-block" onClick={() => handleResentMailConfirmation()} style={{backgroundColor: "#07406b", color: "white", borderColor: "#07406b"}}>
+                  Kirim ulang email konfirmasi
+                    </button>}
+              </div>)}
               {!errMessage && (<div>
                 <div style={{ padding: "3rem 0", fontSize: "16px" }}>
                   Akun terlah dikonfirmasi. Anda sekarang dapat menggunakan RDTR Realtime. Sistem ini menyediakan informasi lengkap mengenai rencana detail tata ruang meliputi hampir seluruh provinsi di Indonesia
