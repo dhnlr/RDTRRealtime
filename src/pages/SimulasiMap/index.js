@@ -899,6 +899,54 @@ const SimulasiMap = () => {
             outFields: ["*"],
           });
 
+          const polaRuangVersioningLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/PolaRuang_verioning/FeatureServer/0",
+            title: "Pola Ruang Versioning",
+            popupTemplate: {
+              title: "Pola Ruang Versioning",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namzon",
+                      label: "namzon",
+                    },
+                    {
+                      fieldName: "kodzon",
+                      label: "kodzon",
+                    },
+                    {
+                      fieldName: "namszn",
+                      label: "namszn",
+                    },
+                    {
+                      fieldName: "kodszn",
+                      label: "kodszn",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+          });
+
           const polaRuangLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PolaRuang/MapServer/0",
             title: "Pola Ruang",
@@ -1087,6 +1135,7 @@ const SimulasiMap = () => {
             airBersihPdamLayer,
             kemacetanJaringanJalanLayer,
             polaRuangLayer,
+            polaRuangVersioningLayer,
             persilTanahLayer,
             sampahTpsLayer,
             buildingPersampahanLayer,
@@ -1098,6 +1147,7 @@ const SimulasiMap = () => {
           basemapPolaRuangLayer.visible = false;
           airBersihPdamLayer.visible = false;
           kemacetanJaringanJalanLayer.visible = false;
+          polaRuangLayer.visible = false;
           sampahTpsLayer.visible = false;
           buildingPersampahanLayer.visible = false;
           buildingsKemacetanLayer.visible = false;
@@ -1143,6 +1193,49 @@ const SimulasiMap = () => {
             // start editor
             var editor = new Editor({
               view: view,
+              layerInfos: [
+                {
+                  layer: polaRuangVersioningLayer,
+                  enabled: true,
+                  addEnabled: true,
+                  updateEnabled: true,
+                  deleteEnabled: true,
+                  fieldConfig: [
+                    {
+                      name: "namzon",
+                      label: "namzon",
+                    },
+                    {
+                      name: "kodzon",
+                      label: "kodzon",
+                    },
+                    {
+                      name: "namszn",
+                      label: "namszn",
+                    },
+                    {
+                      name: "kodszn",
+                      label: "kodszn",
+                    },
+                    {
+                      name: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      name: "klb",
+                      label: "klb",
+                    },
+                    {
+                      name: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      name: "lantai_max",
+                      label: "lantai_max",
+                    },
+                  ],
+                },
+              ],
             });
             const editorExpand = new Expand({
               expandIconClass: "esri-icon-edit",
@@ -1174,6 +1267,7 @@ const SimulasiMap = () => {
               kemacetanJaringanJalanLayer.popupEnabled = false;
               airBersihPdamLayer.popupEnabled = false;
               polaRuangLayer.popupEnabled = false;
+              polaRuangVersioningLayer.popupEnabled = false;
               persilTanahLayer.popupEnabled = false;
               sampahTpsLayer.popupEnabled = false;
               buildingPersampahanLayer.popupEnabled = false;
@@ -1224,6 +1318,7 @@ const SimulasiMap = () => {
                 { layer: airBersihPdamLayer },
                 { layer: kemacetanJaringanJalanLayer },
                 { layer: polaRuangLayer },
+                { layer: polaRuangVersioningLayer },
                 { layer: persilTanahLayer },
                 { layer: sampahTpsLayer },
                 { layer: buildingPersampahanLayer },
