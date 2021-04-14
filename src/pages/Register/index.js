@@ -40,11 +40,7 @@ function Register() {
           setListRole(data.obj)
         })
         .catch(error => {
-          if (error.response.data.status) {
-            setErrMessage(error.response?.data?.status?.message)
-          } else {
-            setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
-          }
+          error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengkonfirmasi akun. Silahkan coba beberapa saat lagi.")
         })
     }
   }, [listRole])
