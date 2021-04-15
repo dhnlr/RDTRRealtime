@@ -17,22 +17,15 @@ function Register() {
   let history = useHistory();
 
   const [errMessage, setErrMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [listRole, setListRole] = useState([])
 
   const password = useRef({});
   password.current = watch("password", "");
-  console.log(password.current, errors)
-
-  const handleDashboard = () => {
-    history.push("/dashboard");
-  };
-  const handleLogin = () => {
-    history.push("/login");
-  };
 
   useEffect(() => {
     if (sessionStorage.token) {
-      handleDashboard()
+      history.push("/dashboard");
     }
     if (listRole.length === 0) {
       axios.get(config.url.API_URL + '/Role/GetAll')
@@ -40,20 +33,19 @@ function Register() {
           setListRole(data.obj)
         })
         .catch(error => {
-          if (error.response.data.status) {
-            setErrMessage(error.response?.data?.status?.message)
-          } else {
-            setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
-          }
+          error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
         })
     }
-  }, [listRole])
+  }, [history, listRole])
 
-  const onSubmit = ({ username, password, rolename, email }) => {
+  const onSubmit = ({ username, password, rolename, email }, e) => {
     setErrMessage(null);
+    setSuccessMessage(null)
+
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
     };
+
     axios.post(
       config.url.API_URL + "/User/Create",
       querystring.stringify({
@@ -67,20 +59,17 @@ function Register() {
       headers
     )
       .then(() => {
-        handleLogin();
+        setSuccessMessage("Konfirmasi untuk mengaktikan akun Anda. Periksa kotak masuk atau spam lalu ikuti petunjuk konfirmasi yang dikirimkan ke email: " + email)
+        e.target.reset()
+        document.body.scrollTop = 0
       })
       .catch(error => {
-        if (error.response.data.status) {
-          setErrMessage(error.response?.data?.status?.message)
-        } else {
-          setErrMessage("Gagal daftar. Silahkan coba beberapa saat lagi.")
-        }
+        error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendaftarkan akun. Silahkan coba beberapa saat lagi.")
       })
   };
 
   return (
     <div>
-      <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
       <Main>
 
         <div style={{ flex: "4", display: "flex" }}>
@@ -106,11 +95,17 @@ function Register() {
                   {errMessage}
                 </div>
               )}
+              {successMessage && (
+                <div className="alert alert-success" role="alert">
+                  <p>{successMessage}</p>
+                  <p>Tidak menerima email? <Link to="/resentmailconfirmation">Kirim ulang email konfirmasi</Link></p>
+                </div>
+              )}
               <div>
                 <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-group">
-                    <label htmlFor="email">Alamat Surat Elektronik</label>
-                    <input type="email" className="form-control p-input" id="email" aria-describedby="emailHelp" placeholder="Alamat surat elektronik" name="email" autoFocus ref={register({ required: "Alamat surat elektronik harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat surat elektronik salah" } })} />
+                    <label htmlFor="email">Alamat Email</label>
+                    <input type="email" className="form-control p-input" id="email" aria-describedby="emailHelp" placeholder="Alamat email" name="email" autoFocus ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} />
                     {errors.email && (
                       <small id="emailHelp" className="form-text text-danger">
                         {errors.email.message}
@@ -153,16 +148,17 @@ function Register() {
                       type="password"
                       className="form-control p-input"
                       id="password"
-                      placeholder="Kata Sandi"
+                      placeholder="Kata sandi"
                       name="password"
                       ref={register({
                         required: "Kata sandi harus diisi",
                         minLength: {
                           value: 6,
-                          message: "Kata sandi sekurangnya 6 karaketer"
+                          message: "Kata sandi sekurangnya memiliki 6 karaketer"
                         }
                       })}
                     />
+                    {!errors.password &&<small className="form-text text-muted">Kata sandi sekurangnya memiliki 6 karakter</small>}
                     {errors.password && (
                       <small id="passwordHelp" className="form-text text-danger">
                         {errors.password.message}
@@ -175,7 +171,7 @@ function Register() {
                       type="password"
                       className="form-control p-input"
                       id="konfirmasiPassword"
-                      placeholder="Kata Sandi"
+                      placeholder="Konfirmasi kata sandi"
                       name="konfirmasiPassword"
                       ref={register({
                         validate: value =>

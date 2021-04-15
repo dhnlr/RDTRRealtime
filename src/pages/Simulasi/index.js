@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useHistory } from "react-router-dom";
 import { useTable } from "react-table";
 
@@ -11,6 +11,12 @@ function Simulasi() {
   function goInputSimulasi() {
     history.push("/simulasimap");
   }
+
+  useEffect(() => {
+    if (!sessionStorage.token) {
+      history.push("/login");
+    }
+  }, [history])
 
   const data = React.useMemo(
     () => [

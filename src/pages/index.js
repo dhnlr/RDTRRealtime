@@ -11,5 +11,9 @@ import ManajemenDataInputPhase2 from "./ManajemenDataInput/phase2"
 import ManajemenDataInputPhase3 from "./ManajemenDataInput/phase3"
 import Simulasi from "./Simulasi"
 import SimulasiMap from "./SimulasiMap"
+import ConfirmByCode from "./ConfirmByCode"
+import ResentEmailConfirmation from "./ResentEmailConfirmation"
+import ForgotPassword from "./ForgotPassword"
+import ResetPassword from "./ResetPassword"
 
-export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap };
+export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword };

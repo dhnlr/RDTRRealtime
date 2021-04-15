@@ -1,10 +1,13 @@
 import React from "react";
 import A from "../A";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 // import logo from "./logo-txt.png"
+
 import logo2 from "./logo2.jpeg"
 
 function Header() {
+  let history = useHistory();
+
   return (
     <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
@@ -55,7 +58,10 @@ function Header() {
                 <i className="ti-settings text-primary" />
                 Settings
               </A>
-              <A className="dropdown-item">
+              <A className="dropdown-item" onClick={() => {
+                sessionStorage.clear();
+                history.push("/login")
+                }}>
                 <i className="ti-power-off text-primary" />
                 Logout
               </A>

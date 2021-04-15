@@ -31,6 +31,7 @@ function Login() {
     setErrMessage(null);
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
+      'Access-Control-Max-Age': 3600
     };
     axios.post(
       config.url.API_URL + "/Token",
@@ -46,11 +47,7 @@ function Login() {
         handleDashboard();
       })
       .catch(error => {
-        if (error.response.data.status) {
-          setErrMessage(error.response?.data?.status?.message)
-        } else {
-          setErrMessage("Gagal masuk. Silahkan coba beberapa saat lagi.")
-        }
+        error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengkonfirmasi akun. Silahkan coba beberapa saat lagi.")
       })
   };
 
@@ -129,7 +126,7 @@ function Login() {
                         Tetap masuk
                       </label>
                     </div>
-                    <Link to="/login">Lupa kata sandi?</Link>
+                    <Link to="/forgotpassword">Lupa kata sandi?</Link>
                   </div>
                   <div className="text-center font-weight-light">
                     Tidak punya akun? <Link to="/register">Daftar</Link>
