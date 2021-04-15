@@ -33,3 +33,66 @@
   display: none !important;
 }
 /* end form style */
+
+/* start hide popup */
+.esri-popup--is-docked-top-left .esri-popup__main-container,
+.esri-popup--is-docked-top-right .esri-popup__main-container,
+.esri-popup--is-docked-bottom-left .esri-popup__main-container,
+.esri-popup--is-docked-bottom-right .esri-popup__main-container {
+  display: none;
+}
+.esri-view-width-xsmall .esri-popup--is-docked-top-center .esri-popup__main-container,
+.esri-view-width-xsmall .esri-popup--is-docked-bottom-center .esri-popup__main-container {
+  display: none;
+}
+/* end hide popup */
+
+/* start fadein */
+.fade-in {
+  animation: fadeIn ease 0.5s;
+  -webkit-animation: fadeIn ease 0.5s;
+  -moz-animation: fadeIn ease 0.5s;
+  -o-animation: fadeIn ease 0.5s;
+  -ms-animation: fadeIn ease 0.5s;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-ms-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+/* end fadein */

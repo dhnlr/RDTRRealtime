@@ -12,6 +12,8 @@ import { config } from "../../Constants";
 
 import styled, { css } from "styled-components";
 
+import { TabsModule, TabModuleButton, TabModuleText, TabModuleContent } from "./tabModule";
+
 const DarkBackground = styled.div`
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -54,6 +56,21 @@ const SimulasiMap = () => {
   const [resultAnalysis, setResultAnalysis] = useState(false);
   const [resPersilTanah, setResPersilTanah] = useState({});
   const [loaded, setLoaded] = useState(true);
+
+  const [activeTab, setActiveTab] = useState(0);
+  const handleClickActiveTab = (e) => {
+    const index = parseInt(e.target.id, 0);
+    if (index !== activeTab) {
+      setActiveTab(index);
+    }
+  };
+  const [activeModuleResTab, setActiveModuleResTab] = useState(0);
+  const handleClickActiveModuleResTab = (e) => {
+    const index = parseInt(e.target.id, 0);
+    if (index !== activeModuleResTab) {
+      setActiveModuleResTab(index);
+    }
+  };
 
   // Form related functions
   const {
@@ -128,14 +145,29 @@ const SimulasiMap = () => {
           "esri/widgets/Daylight",
           "esri/layers/VectorTileLayer",
           "esri/layers/MapImageLayer",
-          "esri/intl"
+          "esri/intl",
         ],
         {
           css: true,
           version: "4.18",
         }
       ).then(
-        ([Map, SceneView, FeatureLayer, Legend, watchUtils, Expand, Graphic, Query, Editor, LayerList, Daylight, VectorTileLayer, MapImageLayer, intl]) => {
+        ([
+          Map,
+          SceneView,
+          FeatureLayer,
+          Legend,
+          watchUtils,
+          Expand,
+          Graphic,
+          Query,
+          Editor,
+          LayerList,
+          Daylight,
+          VectorTileLayer,
+          MapImageLayer,
+          intl,
+        ]) => {
           const map = new Map({
             basemap: "topo-vector",
             ground: "world-elevation",
@@ -228,7 +260,7 @@ const SimulasiMap = () => {
                       fieldName: "jenis",
                       label: "jenis",
                     },
-                    {
+                    /* {
                       fieldName: "jenis_bang",
                       label: "jenis_bang",
                     },
@@ -263,12 +295,12 @@ const SimulasiMap = () => {
                     {
                       fieldName: "luas_m2",
                       label: "luas_m2",
-                    },
+                    }, */
                   ],
                 },
               ],
             },
-            outFields: ["status_kdbklb", "jlh_lantai"],
+            outFields: ["*"],
           });
 
           function getSymbolAirBersih(color) {
@@ -1203,36 +1235,8 @@ const SimulasiMap = () => {
                   deleteEnabled: true,
                   fieldConfig: [
                     {
-                      name: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      name: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      name: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      name: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      name: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      name: "klb",
-                      label: "klb",
-                    },
-                    {
-                      name: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      name: "lantai_max",
-                      label: "lantai_max",
+                      name: "namobj",
+                      label: "namobj",
                     },
                   ],
                 },
@@ -1366,6 +1370,12 @@ const SimulasiMap = () => {
             // start locale to Indon
             intl.setLocale("id");
             // end locale
+          });
+
+          view.popup.watch("features", (features) => {
+            if (features[0]) {
+              console.log(features[0]);
+            }
           });
 
           setStateView(view);
@@ -1524,6 +1534,143 @@ const SimulasiMap = () => {
               <LoadingOverlay active={true} spinner text="Menjalankan analisis..."></LoadingOverlay>
             </DarkBackground>
             <div style={style.viewDiv} ref={mapRef} />
+            <div
+              style={{
+                borderLeft: "1px solid #CED4DA",
+                display: "block",
+                position: "fixed",
+                top: "60px",
+                right: "0",
+                bottom: "0",
+                zIndex: "9999",
+                width: "350px",
+                height: "100vh",
+                minHeight: "100%",
+                background: "#F8FAFC",
+              }}
+            >
+              <i
+                className="ti-close"
+                style={{
+                  position: "absolute",
+                  top: "16px",
+                  right: "16px",
+                  color: "#fff",
+                  background: "transparent",
+                  borderRadius: "4px",
+                  padding: "0 3px",
+                  cursor: "pointer",
+                  zIndex: "1",
+                }}
+              />
+              <p
+                style={{
+                  padding: "16px 0 13px 35px",
+                  fontSize: "0.875rem",
+                  fontFamily: "'Nunito', sans-serif",
+                  fontWeight: "500",
+                  lineHeight: "1",
+                  color: "rgb(255 255 255 / 90%)",
+                  opacity: "0.9",
+                  marginBottom: "0",
+                  borderTop: "1px solid #CED4DA",
+                  background: "#0A156A",
+                }}
+              >
+                SIMULASI INFORMATION
+              </p>
+              <TabsModule>
+                <div style={{ flex: "1", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <TabModuleButton onClick={handleClickActiveTab} activeTab={activeTab === 0} id={0} style={{ background: "#6D8392" }}>
+                    <img onClick={handleClickActiveTab} activeTab={activeTab === 0} id={0} src="./images/office-building.svg" alt="KDB/KLB" />
+                  </TabModuleButton>
+                  <TabModuleText onClick={handleClickActiveTab} activeTab={activeTab === 0} id={0}>
+                    KDB/KLB
+                  </TabModuleText>
+                </div>
+                <div
+                  style={{
+                    flex: "1",
+                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <TabModuleButton onClick={handleClickActiveTab} activeTab={activeTab === 1} id={1} style={{ background: "#EB5569" }}>
+                    <img onClick={handleClickActiveTab} activeTab={activeTab === 1} id={1} src="./images/traffic-lights.svg" alt="KEMACETAN" />
+                  </TabModuleButton>
+                  <TabModuleText onClick={handleClickActiveTab} activeTab={activeTab === 1} id={1}>
+                    KEMACETAN
+                  </TabModuleText>
+                </div>
+                <div style={{ flex: "1", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <TabModuleButton onClick={handleClickActiveTab} activeTab={activeTab === 2} id={2} style={{ background: "#6EAABA" }}>
+                    <img onClick={handleClickActiveTab} activeTab={activeTab === 2} id={2} src="./images/water.svg" alt="AIR BERSIH" />
+                  </TabModuleButton>
+                  <TabModuleText onClick={handleClickActiveTab} activeTab={activeTab === 2} id={2}>
+                    AIR BERSIH
+                  </TabModuleText>
+                </div>
+              </TabsModule>
+              <>
+                <TabModuleContent activeTab={activeTab === 0}>
+                  <TabsModule style={{ height: "45px" }}>
+                    <TabModuleButton
+                      onClick={handleClickActiveModuleResTab}
+                      activeTab={activeModuleResTab === 0}
+                      id={0}
+                      style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                    >
+                      Bangunan
+                    </TabModuleButton>
+                    <TabModuleButton
+                      onClick={handleClickActiveModuleResTab}
+                      activeTab={activeModuleResTab === 1}
+                      id={1}
+                      style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                    >
+                      Persil Tanah
+                    </TabModuleButton>
+                    <TabModuleButton
+                      onClick={handleClickActiveModuleResTab}
+                      activeTab={activeModuleResTab === 2}
+                      id={2}
+                      style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                    >
+                      Pola Ruang
+                    </TabModuleButton>
+                  </TabsModule>
+                  <>
+                    <TabModuleContent activeTab={activeModuleResTab === 0}>
+                      <div className="fade-in">
+                        <h4>KDB/KLB Bangunan</h4>
+                      </div>
+                    </TabModuleContent>
+                    <TabModuleContent activeTab={activeModuleResTab === 1}>
+                      <div className="fade-in">
+                        <h4>KDB/KLB Persil Tanah</h4>
+                      </div>
+                    </TabModuleContent>
+                    <TabModuleContent activeTab={activeModuleResTab === 2}>
+                      <div className="fade-in">
+                        <h4>KDB/KLB Pola Ruang</h4>
+                      </div>
+                    </TabModuleContent>
+                  </>
+                </TabModuleContent>
+                <TabModuleContent activeTab={activeTab === 1}>
+                  <div className="fade-in">
+                    <h1>Content 2</h1>
+                  </div>
+                </TabModuleContent>
+                <TabModuleContent activeTab={activeTab === 2}>
+                  <div className="fade-in">
+                    <h1>Content 3</h1>
+                  </div>
+                </TabModuleContent>
+              </>
+            </div>
             <div id="layerListExpDiv" className="esri-widget"></div>
             <div id="legendExpDiv" className="esri-widget"></div>
             <div id="buildingsExpDiv" className="esri-widget">
