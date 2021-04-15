@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, ManajemenData, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation } from "./pages";
+import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, ManajemenData, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword } from "./pages";
 
 function App() {
   return (
@@ -14,6 +14,8 @@ function App() {
           <Route path="/register" component={Register} />
           <Route path="/confirm" component={ConfirmByCode} />
           <Route path="/dashboard" component={Dashboard} />
+          <Route path="/forgotpassword" component={ForgotPassword} />
+          <Route path="/reset/password" component={ResetPassword} />
           <Route path="/manajemendata" component={ManajemenData} />
           <Route path="/manajemendatainput/kebutuhandata" component={ManajemenDataInputPhase2} />
           <Route path="/manajemendatainput/uploaddata" component={ManajemenDataInputPhase3} />

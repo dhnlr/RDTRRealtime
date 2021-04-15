@@ -126,7 +126,7 @@ function Login() {
                         Tetap masuk
                       </label>
                     </div>
-                    <Link to="/login">Lupa kata sandi?</Link>
+                    <Link to="/forgotpassword">Lupa kata sandi?</Link>
                   </div>
                   <div className="text-center font-weight-light">
                     Tidak punya akun? <Link to="/register">Daftar</Link>
