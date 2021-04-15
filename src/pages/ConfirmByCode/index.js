@@ -25,9 +25,6 @@ function ConfirmByCode() {
     } else {
       const headers = {
         "Content-Type": "application/x-www-form-urlencoded",
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Max-Age': 3600
       };
       axios.post(
         config.url.API_URL + '/User/ConfirmAccountByCode',
@@ -38,7 +35,6 @@ function ConfirmByCode() {
         }}
       )
         .then(response => {
-          // handleLogin()
           if (response.data.code !== 200) {
             setErrMessage(response.data.description)
           }
@@ -51,9 +47,7 @@ function ConfirmByCode() {
 
   return (
     <div>
-      <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
       <Main>
-
         <div style={{ flex: "4", display: "flex" }}>
           <div style={{ flex: "0.95", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>

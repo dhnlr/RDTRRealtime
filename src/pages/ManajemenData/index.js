@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Header, Menu, Footer, Img } from "../../components";
 import { useHistory } from "react-router-dom";
 
@@ -7,6 +7,12 @@ function ManajemenData() {
     function goManajemenData() {
         history.push("/manajemendatainput")
     }
+
+    useEffect(() => {
+        if (!sessionStorage.token) {
+            history.push("/login");
+        }
+    }, [history])
 
     return (
         <div className="container-scroller">
@@ -53,32 +59,32 @@ function ManajemenData() {
                                                 <div className="table-responsive">
                                                     <div id="example_wrapper" className="dataTables_wrapper dt-bootstrap4 no-footer"><div className="row"><div className="col-sm-12 col-md-6"></div><div className="col-sm-12 col-md-6"></div></div><div className="row"><div className="col-sm-12">
                                                         <table id="manajemendata" className="display expandable-table dataTable no-footer" style={{ "width": "100%" }} role="grid">
-                                                        <thead>
-                                                            <tr role="row">
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Nama Proyek</th>
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Kabupaten/Kota</th>
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Analis</th>
-                                                                <th className="sorting" tabIndex="0" aria-controls="example">Status</th>
-                                                                <th className="details-control sorting_disabled" tabIndex="0" aria-controls="example"> </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr className="odd">
-                                                                <td>Kemacetan</td>
-                                                                <td>Kab. Bandung</td>
-                                                                <td>1 Analis</td>
-                                                                <td>Private</td>
-                                                                <td>Make Visible to Public</td>
-                                                            </tr>
-                                                            <tr className="even">
-                                                                <td>Perencanaan Kota</td>
-                                                                <td>Kota Surabaya</td>
-                                                                <td>2 Analis</td>
-                                                                <td>Private</td>
-                                                                <td>Make Visible to Public</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table></div></div><div className="row"><div className="col-sm-12 col-md-5"></div><div className="col-sm-12 col-md-7"></div></div></div>
+                                                            <thead>
+                                                                <tr role="row">
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example">Nama Proyek</th>
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example">Kabupaten/Kota</th>
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example">Analis</th>
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example">Status</th>
+                                                                    <th className="details-control sorting_disabled" tabIndex="0" aria-controls="example"> </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr className="odd">
+                                                                    <td>Kemacetan</td>
+                                                                    <td>Kab. Bandung</td>
+                                                                    <td>1 Analis</td>
+                                                                    <td>Private</td>
+                                                                    <td>Make Visible to Public</td>
+                                                                </tr>
+                                                                <tr className="even">
+                                                                    <td>Perencanaan Kota</td>
+                                                                    <td>Kota Surabaya</td>
+                                                                    <td>2 Analis</td>
+                                                                    <td>Private</td>
+                                                                    <td>Make Visible to Public</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table></div></div><div className="row"><div className="col-sm-12 col-md-5"></div><div className="col-sm-12 col-md-7"></div></div></div>
                                                 </div>
                                             </div>
                                         </div>

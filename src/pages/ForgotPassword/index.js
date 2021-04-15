@@ -1,5 +1,5 @@
-import React, { useState,  } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect} from "react";
+import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import axios from "axios";
@@ -12,9 +12,16 @@ function ResetPassword() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  let history = useHistory();
 
   const [errMessage, setErrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+
+  useEffect(() => {
+    if (sessionStorage.token) {
+      history.push("/dashboard");
+    }
+  }, [history])
 
   const onSubmit = ({ email }, e) => {
     setErrMessage(null);

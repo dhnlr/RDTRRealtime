@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useLocation, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import axios from "axios";
@@ -13,6 +13,7 @@ function ForgotPassword() {
     formState: { errors },
     watch
   } = useForm();
+  let history = useHistory();
 
   const [errMessage, setErrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -20,6 +21,12 @@ function ForgotPassword() {
   var code = useLocation().search?.split("?code=")[1]?.trim()
   const password = useRef({});
   password.current = watch("password", "");
+
+  useEffect(() => {
+    if (sessionStorage.token) {
+      history.push("/dashboard");
+    }
+  }, [history])
 
   const onSubmit = ({ password, konfirmasiPassword }, e) => {
     setErrMessage(null);
@@ -143,7 +150,7 @@ const Main = styled.div`
 `;
 const ImageDiv = styled.div`
   flex: 1;
-  background-image: url("./../images/Mask Group 141.svg");
+  background-image: url("./../images/Mask Group 142.svg");
   background-repeat: no-repeat;
   background-position: right bottom;
   @media only screen and (max-width: 768px) {
