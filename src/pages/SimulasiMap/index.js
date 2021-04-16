@@ -128,14 +128,29 @@ const SimulasiMap = () => {
           "esri/widgets/Daylight",
           "esri/layers/VectorTileLayer",
           "esri/layers/MapImageLayer",
-          "esri/intl"
+          "esri/intl",
         ],
         {
           css: true,
           version: "4.18",
         }
       ).then(
-        ([Map, SceneView, FeatureLayer, Legend, watchUtils, Expand, Graphic, Query, Editor, LayerList, Daylight, VectorTileLayer, MapImageLayer, intl]) => {
+        ([
+          Map,
+          SceneView,
+          FeatureLayer,
+          Legend,
+          watchUtils,
+          Expand,
+          Graphic,
+          Query,
+          Editor,
+          LayerList,
+          Daylight,
+          VectorTileLayer,
+          MapImageLayer,
+          intl,
+        ]) => {
           const map = new Map({
             basemap: "topo-vector",
             ground: "world-elevation",
@@ -187,22 +202,8 @@ const SimulasiMap = () => {
             };
           }
           const renderer = {
-            type: "unique-value", // autocasts as new UniqueValueRenderer()
-            defaultSymbol: getSymbol("#B2B2B2"),
-            defaultLabel: "Eksisting",
-            field: "status_kdbklb",
-            uniqueValueInfos: [
-              {
-                value: "Diizinkan",
-                symbol: getSymbol("#38A800"),
-                label: "Diizinkan",
-              },
-              {
-                value: "Ditolak/rekomendasi",
-                symbol: getSymbol("#E64C00"),
-                label: "Ditolak/rekomendasi",
-              },
-            ],
+            type: "simple", // autocasts as new UniqueValueRenderer()
+            symbol: getSymbol("#B2B2B2"),
             visualVariables: [
               {
                 type: "size",
@@ -212,14 +213,14 @@ const SimulasiMap = () => {
             ],
           };
           const buildingsLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_Bangunan/FeatureServer/0",
+            url: config.url.ARCGIS_URL + "/Bangunan/FeatureServer/0",
             renderer: renderer,
             elevationInfo: {
               mode: "on-the-ground",
             },
             title: "Bangunan",
             popupTemplate: {
-              title: "{status_kdbklb}",
+              title: "Bangunan",
               content: [
                 {
                   type: "fields",
@@ -271,6 +272,191 @@ const SimulasiMap = () => {
             outFields: ["status_kdbklb", "jlh_lantai"],
           });
 
+          function getSymbolBuildingsEnvelope(color) {
+            return {
+              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+              symbolLayers: [
+                {
+                  type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
+                  material: {
+                    color: "rgba(178, 178, 178, 0.5)",
+                  },
+                  edges: {
+                    type: "solid",
+                    color: "#999",
+                    size: 0.5,
+                  },
+                },
+              ],
+            };
+          }
+          const rendererBuildingsEnvelope = {
+            type: "simple", // autocasts as new UniqueValueRenderer()
+            symbol: getSymbolBuildingsEnvelope("#B2B2B2"),
+            visualVariables: [
+              {
+                type: "size",
+                field: "jlh_lantai",
+                valueUnit: "meters", // Converts and extrudes all data values in meters
+              },
+            ],
+          };
+          const buildingsEnvelopeLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Hosted/Amplop_Bangunan_WFL1/FeatureServer/0",
+            renderer: rendererBuildingsEnvelope,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            title: "Bangunan - Envelope",
+            popupTemplate: {
+              title: "Bangunan - Envelope",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "jenis",
+                      label: "jenis",
+                    },
+                    {
+                      fieldName: "jenis_bang",
+                      label: "jenis_bang",
+                    },
+                    {
+                      fieldName: "toponim",
+                      label: "toponim",
+                    },
+                    {
+                      fieldName: "sumber",
+                      label: "sumber",
+                    },
+                    {
+                      fieldName: "jlh_lantai",
+                      label: "jlh_lantai",
+                    },
+                    {
+                      fieldName: "status_kdbklb",
+                      label: "Status",
+                    },
+                    {
+                      fieldName: "id_bangunan",
+                      label: "id_bangunan",
+                    },
+                    {
+                      fieldName: "luas_m2",
+                      label: "luas_m2",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["status_kdbklb", "jlh_lantai"],
+          });
+
+          function getSymbolKdbKlb(color) {
+            return {
+              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+              symbolLayers: [
+                {
+                  type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
+                  material: {
+                    color: color,
+                  },
+                  edges: {
+                    type: "solid",
+                    color: "#999",
+                    size: 0.5,
+                  },
+                },
+              ],
+            };
+          }
+          const rendererKdbKlb = {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            defaultSymbol: getSymbolKdbKlb("#B2B2B2"),
+            defaultLabel: "Eksisting",
+            field: "status_kdbklb",
+            uniqueValueInfos: [
+              {
+                value: "Diizinkan",
+                symbol: getSymbolKdbKlb("#38A800"),
+                label: "Diizinkan",
+              },
+              {
+                value: "Ditolak/rekomendasi",
+                symbol: getSymbolKdbKlb("#E64C00"),
+                label: "Ditolak/rekomendasi",
+              },
+            ],
+            visualVariables: [
+              {
+                type: "size",
+                field: "jlh_lantai",
+                valueUnit: "meters", // Converts and extrudes all data values in meters
+              },
+            ],
+          };
+          const buildingsKdbKlbLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_Bangunan/FeatureServer/0",
+            renderer: rendererKdbKlb,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            title: "Bangunan - Pembangunan Optimum",
+            popupTemplate: {
+              title: "Bangunan - Pembangunan Optimum",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "jenis",
+                      label: "jenis",
+                    },
+                    {
+                      fieldName: "jenis_bang",
+                      label: "jenis_bang",
+                    },
+                    {
+                      fieldName: "toponim",
+                      label: "toponim",
+                    },
+                    {
+                      fieldName: "sumber",
+                      label: "sumber",
+                    },
+                    {
+                      fieldName: "jlh_lantai",
+                      label: "jlh_lantai",
+                    },
+                    {
+                      fieldName: "melampaui_fa",
+                      label: "melampaui_fa",
+                    },
+                    {
+                      fieldName: "melampaui_tinggi",
+                      label: "melampaui_tinggi",
+                    },
+                    {
+                      fieldName: "status_kdbklb",
+                      label: "Status",
+                    },
+                    {
+                      fieldName: "id_bangunan",
+                      label: "id_bangunan",
+                    },
+                    {
+                      fieldName: "luas_m2",
+                      label: "luas_m2",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["status_kdbklb", "jlh_lantai"],
+            editingEnabled: false,
+          });
+
           function getSymbolAirBersih(color) {
             return {
               type: "polygon-3d", // autocasts as new PolygonSymbol3D()
@@ -320,9 +506,9 @@ const SimulasiMap = () => {
             elevationInfo: {
               mode: "on-the-ground",
             },
-            title: "Air Bersih",
+            title: "Bangunan - Air Bersih",
             popupTemplate: {
-              title: "Air Bersih",
+              title: "Bangunan - Air Bersih",
               content: [
                 {
                   type: "fields",
@@ -420,6 +606,7 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["*"],
+            editingEnabled: false,
           });
 
           function getSymbolKemacetan(color) {
@@ -471,9 +658,9 @@ const SimulasiMap = () => {
             elevationInfo: {
               mode: "on-the-ground",
             },
-            title: "Kemacetan",
+            title: "Bangunan - Transportasi",
             popupTemplate: {
-              title: "Kemacetan",
+              title: "Bangunan - Transportasi",
               content: [
                 {
                   type: "fields",
@@ -591,216 +778,14 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["*"],
+            editingEnabled: false,
           });
 
-          function getSymbolSampah(color) {
-            return {
-              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-              symbolLayers: [
-                {
-                  type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-                  material: {
-                    color: color,
-                  },
-                  edges: {
-                    type: "solid",
-                    color: "#999",
-                    size: 0.5,
-                  },
-                },
-              ],
-            };
-          }
-          const rendererPersampahan = {
-            type: "unique-value", // autocasts as new UniqueValueRenderer()
-            defaultSymbol: getSymbolSampah("#B2B2B2"),
-            defaultLabel: "Eksisting",
-            field: "izin_sampah_y5",
-            uniqueValueInfos: [
-              {
-                value: "Diizinkan",
-                symbol: getSymbolSampah("#A8A800"),
-                label: "Diizinkan",
-              },
-              {
-                value: "Ditolak/rekomendasi",
-                symbol: getSymbolSampah("#730000"),
-                label: "Ditolak/rekomendasi",
-              },
-            ],
-            visualVariables: [
-              {
-                type: "size",
-                field: "jlh_lantai",
-                valueUnit: "meters", // Converts and extrudes all data values in meters
-              },
-            ],
-          };
-          const buildingPersampahanLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Persampahan/persampahan_Bangunan_Pabaton/FeatureServer/0",
-            renderer: rendererPersampahan,
-            elevationInfo: {
-              mode: "on-the-ground",
-            },
-            title: "Persampahan",
+          const persilTanahKdbKlbLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PersilTanah_Pabaton/FeatureServer/0",
+            title: "Persil Tanah - Pembangunan Optimum",
             popupTemplate: {
-              title: "Persampahan",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "jenis",
-                      label: "jenis",
-                    },
-                    {
-                      fieldName: "jenis_bang",
-                      label: "jenis_bang",
-                    },
-                    {
-                      fieldName: "toponim",
-                      label: "toponim",
-                    },
-                    {
-                      fieldName: "sumber",
-                      label: "sumber",
-                    },
-                    {
-                      fieldName: "jlh_lantai",
-                      label: "jlh_lantai",
-                    },
-                    {
-                      fieldName: "melampaui_fa",
-                      label: "melampaui_fa",
-                    },
-                    {
-                      fieldName: "melampaui_tinggi",
-                      label: "melampaui_tinggi",
-                    },
-                    {
-                      fieldName: "id_bangunan",
-                      label: "id_bangunan",
-                    },
-                    {
-                      fieldName: "luas_m2",
-                      label: "luas_m2",
-                    },
-                    {
-                      fieldName: "tps_kapasitas",
-                      label: "tps_kapasitas",
-                    },
-                    {
-                      fieldName: "bangkitan_sampah_y5",
-                      label: "bangkitan_sampah_y5",
-                    },
-                    {
-                      fieldName: "bangkitan_sampah_y6",
-                      label: "bangkitan_sampah_y6",
-                    },
-                    {
-                      fieldName: "bangkitan_sampah_y7",
-                      label: "bangkitan_sampah_y7",
-                    },
-                    {
-                      fieldName: "bangkitan_sampah_y8",
-                      label: "bangkitan_sampah_y8",
-                    },
-                    {
-                      fieldName: "bangkitan_sampah_y9",
-                      label: "bangkitan_sampah_y9",
-                    },
-                    {
-                      fieldName: "bangkitan_sampah_y10",
-                      label: "bangkitan_sampah_y10",
-                    },
-                    {
-                      fieldName: "izin_sampah_y5",
-                      label: "izin_sampah_y5",
-                    },
-                    {
-                      fieldName: "izin_sampah_y6",
-                      label: "izin_sampah_y6",
-                    },
-                    {
-                      fieldName: "izin_sampah_y7",
-                      label: "izin_sampah_y7",
-                    },
-                    {
-                      fieldName: "izin_sampah_y8",
-                      label: "izin_sampah_y8",
-                    },
-                    {
-                      fieldName: "izin_sampah_y9",
-                      label: "izin_sampah_y9",
-                    },
-                    {
-                      fieldName: "izin_sampah_y10",
-                      label: "izin_sampah_y10",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-          });
-
-          const sampahTpsLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Persampahan/Sampah_TPS/FeatureServer/0",
-            title: "TPS",
-            popupTemplate: {
-              title: "TPS",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "orde01",
-                      label: "orde01",
-                    },
-                    {
-                      fieldName: "orde02",
-                      label: "orde02",
-                    },
-                    {
-                      fieldName: "jnsrsr",
-                      label: "jnsrsr",
-                    },
-                    {
-                      fieldName: "stsjrn",
-                      label: "stsjrn",
-                    },
-                    {
-                      fieldName: "sbdata",
-                      label: "sbdata",
-                    },
-                    {
-                      fieldName: "kapasitas",
-                      label: "kapasitas",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-          });
-
-          const persilTanahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PersilTanah_Pabaton/MapServer/0",
-            title: "Persil Tanah",
-            popupTemplate: {
-              title: "Persil Tanah",
+              title: "Persil Tanah - Pembangunan Optimum",
               content: [
                 {
                   type: "fields",
@@ -898,17 +883,22 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["*"],
+            editingEnabled: false,
           });
 
-          const polaRuangVersioningLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/PolaRuang_verioning/FeatureServer/0",
-            title: "Pola Ruang Versioning",
+          const persilTanahAirBersihLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Air/Persil_Tanah_Air_Bersih/FeatureServer/0",
+            title: "Persil Tanah - Air Bersih",
             popupTemplate: {
-              title: "Pola Ruang Versioning",
+              title: "Persil Tanah - Air Bersih",
               content: [
                 {
                   type: "fields",
                   fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
                     {
                       fieldName: "namzon",
                       label: "namzon",
@@ -926,6 +916,34 @@ const SimulasiMap = () => {
                       label: "kodszn",
                     },
                     {
+                      fieldName: "nambwp",
+                      label: "nambwp",
+                    },
+                    {
+                      fieldName: "nasbwp",
+                      label: "nasbwp",
+                    },
+                    {
+                      fieldName: "kodblk",
+                      label: "kodblk",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
                       fieldName: "kdb",
                       label: "kdb",
                     },
@@ -941,18 +959,269 @@ const SimulasiMap = () => {
                       fieldName: "lantai_max",
                       label: "lantai_max",
                     },
+                    {
+                      fieldName: "nib",
+                      label: "nib",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum",
+                      label: "status_pemb_optimum",
+                    },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_sampah",
+                      label: "izin_sampah",
+                    },
+                    {
+                      fieldName: "izin_banjir",
+                      label: "izin_banjir",
+                    },
                   ],
                 },
               ],
             },
             outFields: ["*"],
+            editingEnabled: false,
           });
 
-          const polaRuangLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PolaRuang/MapServer/0",
-            title: "Pola Ruang",
+          const persilTanahKemacetanLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Kemacetan/PersilTanah_Transportasi/FeatureServer/0",
+            title: "Persil Tanah - Transportasi",
             popupTemplate: {
-              title: "Pola Ruang",
+              title: "Persil Tanah - Transportasi",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      fieldName: "namzon",
+                      label: "namzon",
+                    },
+                    {
+                      fieldName: "kodzon",
+                      label: "kodzon",
+                    },
+                    {
+                      fieldName: "namszn",
+                      label: "namszn",
+                    },
+                    {
+                      fieldName: "kodszn",
+                      label: "kodszn",
+                    },
+                    {
+                      fieldName: "nambwp",
+                      label: "nambwp",
+                    },
+                    {
+                      fieldName: "nasbwp",
+                      label: "nasbwp",
+                    },
+                    {
+                      fieldName: "kodblk",
+                      label: "kodblk",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                    {
+                      fieldName: "nib",
+                      label: "nib",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum",
+                      label: "status_pemb_optimum",
+                    },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_sampah",
+                      label: "izin_sampah",
+                    },
+                    {
+                      fieldName: "izin_banjir",
+                      label: "izin_banjir",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+            editingEnabled: false,
+          });
+
+          const polaRuangEnvelopeLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Hosted/Amplop_Zonasi_WFL1/FeatureServer/0",
+            title: "Zonasi - Envelope",
+            popupTemplate: {
+              title: "Zonasi - Envelope",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      fieldName: "namzon",
+                      label: "namzon",
+                    },
+                    {
+                      fieldName: "kodzon",
+                      label: "kodzon",
+                    },
+                    {
+                      fieldName: "namszn",
+                      label: "namszn",
+                    },
+                    {
+                      fieldName: "kodszn",
+                      label: "kodszn",
+                    },
+                    {
+                      fieldName: "nambwp",
+                      label: "nambwp",
+                    },
+                    {
+                      fieldName: "nasbwp",
+                      label: "nasbwp",
+                    },
+                    {
+                      fieldName: "kodblk",
+                      label: "kodblk",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
+                    },
+                    {
+                      fieldName: "kkop_1",
+                      label: "kkop_1",
+                    },
+                    {
+                      fieldName: "lp2b_2",
+                      label: "lp2b_2",
+                    },
+                    {
+                      fieldName: "krb_03",
+                      label: "krb_03",
+                    },
+                    {
+                      fieldName: "tod_04",
+                      label: "tod_04",
+                    },
+                    {
+                      fieldName: "teb_05",
+                      label: "teb_05",
+                    },
+                    {
+                      fieldName: "cagbud",
+                      label: "cagbud",
+                    },
+                    {
+                      fieldName: "hankam",
+                      label: "hankam",
+                    },
+                    {
+                      fieldName: "puslit",
+                      label: "puslit",
+                    },
+                    {
+                      fieldName: "tpz_00",
+                      label: "tpz_00",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum",
+                      label: "status_pemb_optimum",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+            editingEnabled: false,
+          });
+
+          const polaRuangKdbKlbLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PolaRuang/FeatureServer/0",
+            title: "Zonasi - Pembangunan Optimum",
+            popupTemplate: {
+              title: "Zonasi - Pembangunan Optimum",
               content: [
                 {
                   type: "fields",
@@ -1082,16 +1351,286 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["*"],
+            editingEnabled: false,
+          });
+
+          const polaRuangAirBersihLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Air/Zonasi_AirBersih/FeatureServer/0",
+            title: "Zonasi - Air Bersih",
+            popupTemplate: {
+              title: "Zonasi - Air Bersih",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      fieldName: "namzon",
+                      label: "namzon",
+                    },
+                    {
+                      fieldName: "kodzon",
+                      label: "kodzon",
+                    },
+                    {
+                      fieldName: "namszn",
+                      label: "namszn",
+                    },
+                    {
+                      fieldName: "kodszn",
+                      label: "kodszn",
+                    },
+                    {
+                      fieldName: "nambwp",
+                      label: "nambwp",
+                    },
+                    {
+                      fieldName: "nasbwp",
+                      label: "nasbwp",
+                    },
+                    {
+                      fieldName: "kodblk",
+                      label: "kodblk",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
+                    },
+                    {
+                      fieldName: "kkop_1",
+                      label: "kkop_1",
+                    },
+                    {
+                      fieldName: "lp2b_2",
+                      label: "lp2b_2",
+                    },
+                    {
+                      fieldName: "krb_03",
+                      label: "krb_03",
+                    },
+                    {
+                      fieldName: "tod_04",
+                      label: "tod_04",
+                    },
+                    {
+                      fieldName: "teb_05",
+                      label: "teb_05",
+                    },
+                    {
+                      fieldName: "cagbud",
+                      label: "cagbud",
+                    },
+                    {
+                      fieldName: "hankam",
+                      label: "hankam",
+                    },
+                    {
+                      fieldName: "puslit",
+                      label: "puslit",
+                    },
+                    {
+                      fieldName: "tpz_00",
+                      label: "tpz_00",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum",
+                      label: "status_pemb_optimum",
+                    },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_sampah",
+                      label: "izin_sampah",
+                    },
+                    {
+                      fieldName: "izin_banjir",
+                      label: "izin_banjir",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+            editingEnabled: false,
+          });
+
+          const polaRuangKemacetanLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Kemacetan/Zonasi_Transportasi/FeatureServer/0",
+            title: "Zonasi - Transportasi",
+            popupTemplate: {
+              title: "Zonasi - Transportasi",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      fieldName: "namzon",
+                      label: "namzon",
+                    },
+                    {
+                      fieldName: "kodzon",
+                      label: "kodzon",
+                    },
+                    {
+                      fieldName: "namszn",
+                      label: "namszn",
+                    },
+                    {
+                      fieldName: "kodszn",
+                      label: "kodszn",
+                    },
+                    {
+                      fieldName: "nambwp",
+                      label: "nambwp",
+                    },
+                    {
+                      fieldName: "nasbwp",
+                      label: "nasbwp",
+                    },
+                    {
+                      fieldName: "kodblk",
+                      label: "kodblk",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
+                    },
+                    {
+                      fieldName: "kkop_1",
+                      label: "kkop_1",
+                    },
+                    {
+                      fieldName: "lp2b_2",
+                      label: "lp2b_2",
+                    },
+                    {
+                      fieldName: "krb_03",
+                      label: "krb_03",
+                    },
+                    {
+                      fieldName: "tod_04",
+                      label: "tod_04",
+                    },
+                    {
+                      fieldName: "teb_05",
+                      label: "teb_05",
+                    },
+                    {
+                      fieldName: "cagbud",
+                      label: "cagbud",
+                    },
+                    {
+                      fieldName: "hankam",
+                      label: "hankam",
+                    },
+                    {
+                      fieldName: "puslit",
+                      label: "puslit",
+                    },
+                    {
+                      fieldName: "tpz_00",
+                      label: "tpz_00",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum",
+                      label: "status_pemb_optimum",
+                    },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_sampah",
+                      label: "izin_sampah",
+                    },
+                    {
+                      fieldName: "izin_banjir",
+                      label: "izin_banjir",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+            editingEnabled: false,
           });
 
           const kemacetanJaringanJalanLayer = new MapImageLayer({
             url: config.url.ARCGIS_URL + "/Kemacetan/kemacetan_jaringan_jalan/MapServer",
-            title: "Kemacetan Jaringan Jalan",
-          });
-
-          const basemapPolaRuangLayer = new VectorTileLayer({
-            url: config.url.ARCGIS_URL + "/Hosted/KDBKLB_PolaRuang_base/VectorTileServer",
-            title: "Basemap Pola Ruang",
+            title: "Jaringan Jalan",
           });
 
           const airBersihPdamLayer = new FeatureLayer({
@@ -1131,28 +1670,92 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
+          const polaRuangVersioningLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/PolaRuang_verioning/FeatureServer/0",
+            title: "Pola Ruang Versioning",
+            popupTemplate: {
+              title: "Pola Ruang Versioning",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namzon",
+                      label: "namzon",
+                    },
+                    {
+                      fieldName: "kodzon",
+                      label: "kodzon",
+                    },
+                    {
+                      fieldName: "namszn",
+                      label: "namszn",
+                    },
+                    {
+                      fieldName: "kodszn",
+                      label: "kodszn",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+          });
+
+          const basemapPolaRuangLayer = new VectorTileLayer({
+            url: config.url.ARCGIS_URL + "/Hosted/KDBKLB_PolaRuang_base/VectorTileServer",
+            title: "Basemap Pola Ruang",
+          });
+
           map.addMany([
             basemapPolaRuangLayer,
+            polaRuangVersioningLayer,
             airBersihPdamLayer,
             kemacetanJaringanJalanLayer,
-            polaRuangLayer,
-            polaRuangVersioningLayer,
-            persilTanahLayer,
-            sampahTpsLayer,
-            buildingPersampahanLayer,
+            polaRuangKemacetanLayer,
+            polaRuangAirBersihLayer,
+            polaRuangKdbKlbLayer,
+            polaRuangEnvelopeLayer,
+            persilTanahKemacetanLayer,
+            persilTanahAirBersihLayer,
+            persilTanahKdbKlbLayer,
             buildingsKemacetanLayer,
             buildingsAirBersihLayer,
+            buildingsKdbKlbLayer,
+            buildingsEnvelopeLayer,
             buildingsLayer,
           ]);
 
           basemapPolaRuangLayer.visible = false;
           airBersihPdamLayer.visible = false;
           kemacetanJaringanJalanLayer.visible = false;
-          polaRuangLayer.visible = false;
-          sampahTpsLayer.visible = false;
-          buildingPersampahanLayer.visible = false;
+          polaRuangKemacetanLayer.visible = false;
+          polaRuangAirBersihLayer.visible = false;
+          polaRuangKdbKlbLayer.visible = false;
+          polaRuangEnvelopeLayer.visible = false;
+          persilTanahKemacetanLayer.visible = false;
+          persilTanahAirBersihLayer.visible = false;
+          persilTanahKdbKlbLayer.visible = false;
           buildingsKemacetanLayer.visible = false;
           buildingsAirBersihLayer.visible = false;
+          buildingsKdbKlbLayer.visible = false;
+          buildingsEnvelopeLayer.visible = false;
 
           async function finishLayer() {
             if (isMounted) {
@@ -1265,15 +1868,20 @@ const SimulasiMap = () => {
             });
             const handleMarking = () => {
               view.container.classList.add("screenshotCursor");
-              kemacetanJaringanJalanLayer.popupEnabled = false;
-              airBersihPdamLayer.popupEnabled = false;
-              polaRuangLayer.popupEnabled = false;
               polaRuangVersioningLayer.popupEnabled = false;
-              persilTanahLayer.popupEnabled = false;
-              sampahTpsLayer.popupEnabled = false;
-              buildingPersampahanLayer.popupEnabled = false;
+              airBersihPdamLayer.popupEnabled = false;
+              kemacetanJaringanJalanLayer.popupEnabled = false;
+              polaRuangKemacetanLayer.popupEnabled = false;
+              polaRuangAirBersihLayer.popupEnabled = false;
+              polaRuangKdbKlbLayer.popupEnabled = false;
+              polaRuangEnvelopeLayer.popupEnabled = false;
+              persilTanahKemacetanLayer.popupEnabled = false;
+              persilTanahAirBersihLayer.popupEnabled = false;
+              persilTanahKdbKlbLayer.popupEnabled = false;
               buildingsKemacetanLayer.popupEnabled = false;
               buildingsAirBersihLayer.popupEnabled = false;
+              buildingsKdbKlbLayer.popupEnabled = false;
+              buildingsEnvelopeLayer.popupEnabled = false;
               buildingsLayer.popupEnabled = false;
               view.on("click", function (event) {
                 // Remove the previous highlights
@@ -1316,15 +1924,19 @@ const SimulasiMap = () => {
               container: document.createElement("div"),
               view: view,
               layerInfos: [
+                { layer: polaRuangVersioningLayer },
                 { layer: airBersihPdamLayer },
                 { layer: kemacetanJaringanJalanLayer },
-                { layer: polaRuangLayer },
-                { layer: polaRuangVersioningLayer },
-                { layer: persilTanahLayer },
-                { layer: sampahTpsLayer },
-                { layer: buildingPersampahanLayer },
+                { layer: polaRuangKemacetanLayer },
+                { layer: polaRuangAirBersihLayer },
+                { layer: polaRuangKdbKlbLayer },
+                { layer: polaRuangEnvelopeLayer },
+                { layer: persilTanahKemacetanLayer },
+                { layer: persilTanahAirBersihLayer },
+                { layer: persilTanahKdbKlbLayer },
                 { layer: buildingsKemacetanLayer },
                 { layer: buildingsAirBersihLayer },
+                { layer: buildingsKdbKlbLayer },
                 { layer: buildingsLayer },
               ],
             });
