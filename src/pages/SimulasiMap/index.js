@@ -1096,8 +1096,175 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
+          function getSymbolPolaRuangEnvelope(color) {
+            return {
+              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+              symbolLayers: [
+                {
+                  type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
+                  material: {
+                    color: color,
+                  },
+                  edges: {
+                    type: "solid",
+                    color: "#999",
+                    size: 0.5,
+                  },
+                },
+              ],
+            };
+          }
+          const rendererPolaRuangEnvelope = {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            defaultSymbol: getSymbolPolaRuangEnvelope("#B2B2B2"),
+            defaultLabel: "Lainnya",
+            field: "namobj",
+            uniqueValueInfos: [
+              {
+                value: "Badan Air",
+                symbol: getSymbolPolaRuangEnvelope("#73DFFF"),
+                label: "Badan Air",
+              },
+              {
+                value: "Badan Jalan",
+                symbol: getSymbolPolaRuangEnvelope("#E60000"),
+                label: "Badan Jalan",
+              },
+              {
+                value: "Instalasi Pengolahan Air Limbah (IPAL)",
+                symbol: getSymbolPolaRuangEnvelope("#686868"),
+                label: "Instalasi Pengolahan Air Limbah (IPAL)",
+              },
+              {
+                value: "Kawasan Peruntukan Industri",
+                symbol: getSymbolPolaRuangEnvelope("#ADBACA"),
+                label: "Kawasan Peruntukan Industri",
+              },
+              {
+                value: "Pemakaman",
+                symbol: getSymbolPolaRuangEnvelope("#686868"),
+                label: "Pemakaman",
+              },
+              {
+                value: "Pembangkitan Tenaga Listrik",
+                symbol: getSymbolPolaRuangEnvelope("#828282"),
+                label: "Pembangkitan Tenaga Listrik",
+              },
+              {
+                value: "Perdagangan dan Jasa Skala BWP",
+                symbol: getSymbolPolaRuangEnvelope("#FF0000"),
+                label: "Perdagangan dan Jasa Skala BWP",
+              },
+              {
+                value: "Perdagangan dan Jasa Skala Kota",
+                symbol: getSymbolPolaRuangEnvelope("#FF0000"),
+                label: "Perdagangan dan Jasa Skala Kota",
+              },
+              {
+                value: "Perdagangan dan Jasa Skala Sub BWP",
+                symbol: getSymbolPolaRuangEnvelope("#FF0000"),
+                label: "Perdagangan dan Jasa Skala Sub BWP",
+              },
+              {
+                value: "Perkantoran",
+                symbol: getSymbolPolaRuangEnvelope("#6F4489"),
+                label: "Perkantoran",
+              },
+              {
+                value: "Pertahanan dan Keamanan",
+                symbol: getSymbolPolaRuangEnvelope("#728943"),
+                label: "Pertahanan dan Keamanan",
+              },
+              {
+                value: "Perumahan dan Perdagangan/Jasa",
+                symbol: getSymbolPolaRuangEnvelope("#FF7F7F"),
+                label: "Perumahan dan Perdagangan/Jasa",
+              },
+              {
+                value: "Resapan Air",
+                symbol: getSymbolPolaRuangEnvelope("#E8FFE0"),
+                label: "Resapan Air",
+              },
+              {
+                value: "Rimba Kota",
+                symbol: getSymbolPolaRuangEnvelope("#4CE600"),
+                label: "Rimba Kota",
+              },
+              {
+                value: "Rumah Kepadatan Rendah",
+                symbol: getSymbolPolaRuangEnvelope("#FFFFBF"),
+                label: "Rumah Kepadatan Rendah",
+              },
+              {
+                value: "Rumah Kepadatan Sangat Tinggi",
+                symbol: getSymbolPolaRuangEnvelope("#FEFF99"),
+                label: "Rumah Kepadatan Sangat Tinggi",
+              },
+              {
+                value: "Rumah Kepadatan Sedang",
+                symbol: getSymbolPolaRuangEnvelope("#FEFF73"),
+                label: "Rumah Kepadatan Sedang",
+              },
+              {
+                value: "Rumah Kepadatan Tinggi",
+                symbol: getSymbolPolaRuangEnvelope("#FFFF4D"),
+                label: "Rumah Kepadatan Tinggi",
+              },
+              {
+                value: "SPU Kesehatan Skala Kecamatan",
+                symbol: getSymbolPolaRuangEnvelope("#D4FCE7"),
+                label: "SPU Kesehatan Skala Kecamatan",
+              },
+              {
+                value: "Sempadan Sungai",
+                symbol: getSymbolPolaRuangEnvelope("#C3FFCC"),
+                label: "Sempadan Sungai",
+              },
+              {
+                value: "Taman Kecamatan",
+                symbol: getSymbolPolaRuangEnvelope("#CEFCC7"),
+                label: "Taman Kecamatan",
+              },
+              {
+                value: "Taman Kelurahan",
+                symbol: getSymbolPolaRuangEnvelope("#B3FCBF"),
+                label: "Taman Kelurahan",
+              },
+              {
+                value: "Taman Kota",
+                symbol: getSymbolPolaRuangEnvelope("#A5FF3D"),
+                label: "Taman Kota",
+              },
+              {
+                value: "Taman RW",
+                symbol: getSymbolPolaRuangEnvelope("#A5FF3D"),
+                label: "Taman RW",
+              },
+              {
+                value: "Transportasi",
+                symbol: getSymbolPolaRuangEnvelope("#FF2732"),
+                label: "Transportasi",
+              },
+              {
+                value: "Zona Penyangga",
+                symbol: getSymbolPolaRuangEnvelope("#AAFF00"),
+                label: "Zona Penyangga",
+              },
+            ],
+            visualVariables: [
+              {
+                type: "size",
+                field: "lantai_max",
+                valueUnit: "meters", // Converts and extrudes all data values in meters
+              },
+            ],
+          };
           const polaRuangEnvelopeLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/Hosted/Amplop_Zonasi_WFL1/FeatureServer/0",
+            renderer: rendererPolaRuangEnvelope,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
             title: "Zonasi - Envelope",
             popupTemplate: {
               title: "Zonasi - Envelope",
