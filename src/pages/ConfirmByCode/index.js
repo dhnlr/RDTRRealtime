@@ -9,6 +9,7 @@ function ConfirmByCode() {
   let history = useHistory();
 
   const [errMessage, setErrMessage] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   var code = useLocation().search?.split("?code=")[1]?.trim()
 
@@ -29,14 +30,18 @@ function ConfirmByCode() {
       axios.post(
         config.url.API_URL + '/User/ConfirmAccountByCode',
         null,
-        {headers: headers,
-        params: {
-          code
-        }}
+        {
+          headers: headers,
+          params: {
+            code
+          }
+        }
       )
         .then(response => {
           if (response.data.code !== 200) {
             setErrMessage(response.data.description)
+          } else {
+            setIsSuccess(true)
           }
         })
         .catch(error => {
@@ -49,15 +54,35 @@ function ConfirmByCode() {
     <div>
       <Main>
         <div style={{ flex: "4", display: "flex" }}>
-          <div style={{ flex: "0.95", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
+          <div style={{ flex: "1.4", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
             </div>
             <div style={{ flex: "1", justifyContent: "center", display: "flex", flexDirection: "column", padding: "40px 0" }}>
+              {!errMessage && !isSuccess && <div style={{ fontSize: "4.25rem", fontWeight: "bold", color: "#07406b" }}>
+                <div class="spinner-grow text-primary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-secondary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-success" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-danger" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-warning" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-info" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>}
               {errMessage && <div style={{ fontSize: "4.25rem", fontWeight: "bold", color: "#07406b" }}>
                 Gagal
             </div>}
-              {!errMessage && <div style={{ fontSize: "4.25rem", fontWeight: "bold", color: "#45ab75" }}>
+              {isSuccess && !errMessage && <div style={{ fontSize: "4.25rem", fontWeight: "bold", color: "#45ab75" }}>
                 Berhasil
             </div>}
               {errMessage && (<div><div style={{ padding: "3rem 0", fontSize: "16px" }}>
@@ -67,7 +92,7 @@ function ConfirmByCode() {
                   Kirim ulang email konfirmasi
                     </button>}
               </div>)}
-              {!errMessage && (<div>
+              {isSuccess && !errMessage && (<div>
                 <div style={{ padding: "3rem 0", fontSize: "16px" }}>
                   Akun berhasil dikonfirmasi. Anda sekarang dapat menggunakan RDTR Realtime. Sistem ini menyediakan informasi lengkap mengenai rencana detail tata ruang meliputi hampir seluruh provinsi di Indonesia
             </div>

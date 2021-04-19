@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
@@ -16,6 +16,7 @@ function ResetPassword() {
 
   const [errMessage, setErrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
     if (sessionStorage.token) {
@@ -26,9 +27,12 @@ function ResetPassword() {
   const onSubmit = ({ email }, e) => {
     setErrMessage(null);
     setSuccessMessage(null)
+    setIsProcessing(true)
+
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
     };
+
     axios.post(
       config.url.API_URL + "/User/ForgotPassword?email=" + email,
       null,
@@ -37,9 +41,11 @@ function ResetPassword() {
       .then(response => {
         if (response.data.code !== 200) {
           setErrMessage(response.data.message)
+          setIsProcessing(false)
         } else {
           e.target.reset()
           setSuccessMessage("Periksa kotak masuk atau spam lalu ikuti petunjuk yang dikirimkan di email: " + email)
+          setIsProcessing(false)
         }
       })
       .catch(error => {
@@ -59,7 +65,7 @@ function ResetPassword() {
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
             </div>
             <div style={{ flex: "1", justifyContent: "center", display: "flex", flexDirection: "column", padding: "40px 0" }}>
-              <div style={{ fontSize: "2.45rem", fontWeight: "bold", color: "#07406b", paddingBottom:"1.75rem" }}>
+              <div style={{ fontSize: "2.45rem", fontWeight: "bold", color: "#07406b", paddingBottom: "1.75rem" }}>
                 Lupa Kata Sandi
             </div>
               {errMessage && (
@@ -74,21 +80,24 @@ function ResetPassword() {
               )}
               <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
-                <label htmlFor="email">Alamat Email</label>
-                  <input id="email" type="email" className="form-control" placeholder="Alamat email" aria-label="Alamat email" name="email" ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} autoFocus/>
+                  <label htmlFor="email">Alamat Email</label>
+                  <input id="email" type="email" className="form-control" placeholder="Alamat email" aria-label="Alamat email" name="email" ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} autoFocus />
                   {errors.email && (
-                      <small id="emailHelp" className="form-text text-danger">
-                        {errors.email.message}
-                      </small>
-                    )}
+                    <small id="emailHelp" className="form-text text-danger">
+                      {errors.email.message}
+                    </small>
+                  )}
                 </div>
-                  <div className="form-group">
-                    <button className="btn btn-success" type="submit">Kirim Email</button>
-                  </div>
+                <div className="form-group">
+                  <button className="btn btn-success" type="submit" disabled={isProcessing}>
+                    {isProcessing && <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
+                      Kirim Email
+                    </button>
+                </div>
               </form>
               <div className="font-weight-light mt-4">
-                  Sudah terkonfirmasi? <Link to="/login">Masuk Sekarang</Link>
-                </div>
+                Sudah ingat? <Link to="/login">Masuk Sekarang</Link>
+              </div>
             </div>
           </div>
         </div>

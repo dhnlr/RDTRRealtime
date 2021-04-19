@@ -16,6 +16,7 @@ function ResentEmailConfirmation() {
 
   const [errMessage, setErrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
     if (sessionStorage.token) {
@@ -26,6 +27,7 @@ function ResentEmailConfirmation() {
   const onSubmit = ({ email }, e) => {
     setErrMessage(null);
     setSuccessMessage(null)
+    setIsProcessing(true);
 
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -43,9 +45,11 @@ function ResentEmailConfirmation() {
           e.target.reset()
           setSuccessMessage("Email konfirmasi berhasil dikirim ulang. Periksa kotak masuk atau spam lalu ikuti petunjuk yang dikirimkan di email: " + email)
         }
+        setIsProcessing(false)
       })
       .catch(error => {
         error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengirim email konfirmasi. Silahkan coba beberapa saat lagi.")
+        setIsProcessing(false)
       })
   };
 
@@ -54,7 +58,7 @@ function ResentEmailConfirmation() {
       <Main>
 
         <div style={{ flex: "4", display: "flex" }}>
-          <div style={{ flex: "0.95", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
+          <div style={{ flex: "1.4", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
             </div>
@@ -83,7 +87,10 @@ function ResentEmailConfirmation() {
                   )}
                 </div>
                 <div className="form-group">
-                  <button className="btn btn-success" type="submit">Kirim Email</button>
+                  <button className="btn btn-success" type="submit" disabled={isProcessing}>
+                  {isProcessing && <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
+                    Kirim Email
+                    </button>
                 </div>
               </form>
               <div className="font-weight-light mt-4">

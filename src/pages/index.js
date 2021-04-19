@@ -15,5 +15,7 @@ import ConfirmByCode from "./ConfirmByCode"
 import ResentEmailConfirmation from "./ResentEmailConfirmation"
 import ForgotPassword from "./ForgotPassword"
 import ResetPassword from "./ResetPassword"
+import UserManagement from "./UserManagement"
+import UserManagementEdit from "./UserManagement/edit"
 
-export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword };
+export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit };

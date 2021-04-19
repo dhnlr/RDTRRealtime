@@ -31,11 +31,11 @@ function Menu(props) {
             <span className="menu-title">Laporan</span>
           </A>
         </li>
-        <li className="nav-item">
-          <A className="nav-link" href="index.html">
+        <li className={`nav-item ${props.active.indexOf("user") !== -1 ? "active" : ""}`}>
+        <Link className="nav-link" to="/usermanagement">
             <i className="ti-user menu-icon"></i>
             <span className="menu-title">Administrasi</span>
-          </A>
+          </Link>
         </li>
         <li className="nav-item">
           <A className="nav-link" href="index.html">

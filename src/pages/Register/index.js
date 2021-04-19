@@ -18,6 +18,7 @@ function Register() {
 
   const [errMessage, setErrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false)
   const [listRole, setListRole] = useState([])
 
   const password = useRef({});
@@ -41,6 +42,7 @@ function Register() {
   const onSubmit = ({ username, password, rolename, email }, e) => {
     setErrMessage(null);
     setSuccessMessage(null)
+    setIsProcessing(true)
 
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -62,9 +64,11 @@ function Register() {
         setSuccessMessage("Konfirmasi untuk mengaktikan akun Anda. Periksa kotak masuk atau spam lalu ikuti petunjuk konfirmasi yang dikirimkan ke email: " + email)
         e.target.reset()
         document.body.scrollTop = 0
+        setIsProcessing(false)
       })
       .catch(error => {
         error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendaftarkan akun. Silahkan coba beberapa saat lagi.")
+        setIsProcessing(false)
       })
   };
 
@@ -73,7 +77,7 @@ function Register() {
       <Main>
 
         <div style={{ flex: "4", display: "flex" }}>
-          <div style={{ flex: "0.95", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
+          <div style={{ flex: "1.2", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
             </div>
@@ -158,7 +162,7 @@ function Register() {
                         }
                       })}
                     />
-                    {!errors.password &&<small className="form-text text-muted">Kata sandi sekurangnya memiliki 6 karakter</small>}
+                    {!errors.password && <small className="form-text text-muted">Kata sandi sekurangnya memiliki 6 karakter</small>}
                     {errors.password && (
                       <small id="passwordHelp" className="form-text text-danger">
                         {errors.password.message}
@@ -201,7 +205,10 @@ function Register() {
                     )}
                   </div>
                   <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block">Daftar</button>
+                    <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing}>
+                    {isProcessing && <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
+                      Daftar
+                    </button>
                   </div>
                 </form>
                 <div className="text-center font-weight-light">

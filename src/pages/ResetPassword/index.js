@@ -17,6 +17,7 @@ function ForgotPassword() {
 
   const [errMessage, setErrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false)
   
   var code = useLocation().search?.split("?code=")[1]?.trim()
   const password = useRef({});
@@ -31,10 +32,13 @@ function ForgotPassword() {
   const onSubmit = ({ password, konfirmasiPassword }, e) => {
     setErrMessage(null);
     setSuccessMessage(null)
+    setIsProcessing(true);
+
     const headers = {
       "Content-Type": "application/json",
       "Accept": "application/json"
     };
+
     axios.put(
       config.url.API_URL + "/User/ResetPassword",
       {
@@ -51,9 +55,11 @@ function ForgotPassword() {
           e.target.reset()
           setSuccessMessage("Kata sandi berhasil diganti")
         }
+        setIsProcessing(false)
       })
       .catch(error => {
         error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengirim email konfirmasi. Silahkan coba beberapa saat lagi.")
+        setIsProcessing(false)
       })
   };
 
@@ -126,7 +132,10 @@ function ForgotPassword() {
                     )}
                   </div>
                   <div className="form-group">
-                    <button className="btn btn-success" type="submit">Ganti Kata Sandi</button>
+                    <button className="btn btn-success" type="submit" disabled={isProcessing}>
+                  {isProcessing && <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
+                      Ganti Kata Sandi
+                      </button>
                   </div>
               </form>
               <div className="font-weight-light mt-4">

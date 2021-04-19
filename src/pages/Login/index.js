@@ -16,6 +16,7 @@ function Login() {
   let history = useHistory();
 
   const [errMessage, setErrMessage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
     if (sessionStorage.token) {
@@ -29,10 +30,13 @@ function Login() {
 
   const onSubmit = ({ username, password }) => {
     setErrMessage(null);
+    setIsProcessing(true);
+
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
       'Access-Control-Max-Age': 3600
     };
+
     axios.post(
       config.url.API_URL + "/Token",
       querystring.stringify({
@@ -44,10 +48,12 @@ function Login() {
     )
       .then(resp => {
         sessionStorage.setItem("token", resp.data.obj.accessToken);
+        setIsProcessing(false)
         handleDashboard();
       })
       .catch(error => {
         error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengkonfirmasi akun. Silahkan coba beberapa saat lagi.")
+        setIsProcessing(false)
       })
   };
 
@@ -56,7 +62,7 @@ function Login() {
       <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
       <Main>
         <div style={{ flex: "4", display: "flex" }}>
-          <div style={{ flex: "0.95", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
+          <div style={{ flex: "1.2", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
               <Link to="home">&lt; Kembali ke Halaman Utama</Link>
@@ -115,14 +121,15 @@ function Login() {
                     )}
                   </div>
                   <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block" /* onClick={() => handleDashboard()} */>
+                    <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing} /* onClick={() => handleDashboard()} */>
+                    {isProcessing && <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
                       Masuk
                     </button>
                   </div>
                   <div className="my-2 d-flex justify-content-between align-items-center flex-wrap">
                     <div className="form-check">
-                      <label className="form-check-label">
-                        <input type="checkbox" className="form-check-input" />
+                        <input type="checkbox" className="form-check-input" id="stay" style={{ marginLeft: 0 }} />
+                      <label className="form-check-label" htmlFor="stay">
                         Tetap masuk
                       </label>
                     </div>
