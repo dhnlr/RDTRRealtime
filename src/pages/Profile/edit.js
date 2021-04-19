@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 
 import { config } from "../../Constants";
 
 import { Header, Menu, Footer } from "../../components";
 
-function UserManagementEdit() {
+function ProfileEdit() {
     let history = useHistory();
     const { state } = useLocation()
     const { register,
         handleSubmit,
         formState: { errors },
-        control
     } = useForm({
         defaultValues: {
             email: state.email,
             username: state.userName,
-            rolename: state["roles[0].name"]
         }
     });
 
-    const [listRole, setListRole] = useState([])
     const [errMessage, setErrMessage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false)
 
@@ -30,16 +27,7 @@ function UserManagementEdit() {
         if (!sessionStorage.token) {
             history.push("/login");
         }
-        if (listRole.length === 0) {
-            axios.get(config.url.API_URL + '/Role/GetAll')
-                .then(({ data }) => {
-                    setListRole(data.obj)
-                })
-                .catch(error => {
-                    error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
-                })
-        }
-    }, [history, listRole])
+    }, [history])
 
     const onSubmit = ({ username, rolename, email }) => {
         setErrMessage(null);
@@ -51,12 +39,8 @@ function UserManagementEdit() {
         };
 
         axios.put(
-            config.url.API_URL + "/User/Update",
+            config.url.API_URL + "/Profile/Update",
             {
-                "id": state.id,
-                "roleNames": [
-                    rolename
-                ],
                 "email": email,
                 "userName": username,
             },
@@ -64,7 +48,7 @@ function UserManagementEdit() {
         )
             .then(() => {
                 setIsProcessing(false)
-                history.push("/usermanagement")
+                history.push("/profile")
             })
             .catch(error => {
                 setIsProcessing(false)
@@ -134,28 +118,9 @@ function UserManagementEdit() {
                                         )}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="exampleInputRole">Peranan</label>
-                                        <Controller
-                                            render={() =>
-                                                <select name="rolename" className="form-control" id="exampleInputRole" ref={register({ required: "Peran harus diisi" })}>
-                                                    {listRole.map(role => (
-                                                        <option key={role.id} value={role.name} >{role.name}</option>
-                                                    ))}
-                                                    <option value="Admin">Admin</option>
-                                                </select>}
-                                            control={control}
-                                            name="rolename"
-                                        />
-                                        {errors.rolename && (
-                                            <small id="rolenameHelp" className="form-text text-danger">
-                                                {errors.rolename.message}
-                                            </small>
-                                        )}
-                                    </div>
-                                    <div className="form-group">
                                         <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing}>
                                             {isProcessing && <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
-                                            Ubah Pengguna
+                                            Ubah Profil
                                         </button>
                                     </div>
                                 </form>
@@ -172,4 +137,4 @@ function UserManagementEdit() {
     );
 }
 
-export default UserManagementEdit;
+export default ProfileEdit;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 
@@ -9,7 +9,6 @@ import { Header, Menu, Footer } from "../../components";
 
 function RoleManagementCreate() {
     let history = useHistory();
-    const { state } = useLocation()
     const { register,
         handleSubmit,
         formState: { errors },
@@ -164,6 +163,9 @@ function RoleManagementCreate() {
                                         </button>
                                     </div>
                                 </form>
+                                <button className="btn btn-light btn-block mt-2" onClick={() => history.goBack()}>
+                                    Kembali
+                                </button>
                             </div>
                         </div>
                     </div>

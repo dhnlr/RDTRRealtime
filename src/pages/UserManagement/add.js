@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 
@@ -202,6 +202,9 @@ function UserManagementCreate() {
                                         </button>
                                     </div>
                                 </form>
+                                <button className="btn btn-light btn-block mt-1" onClick={() => history.goBack()}>
+                                    Kembali
+                                </button>
                             </div>
                         </div>
                     </div>

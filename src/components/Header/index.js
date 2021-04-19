@@ -55,7 +55,7 @@ function Header() {
               <img src={profile} alt="profile" />
             </A>
             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-              <A className="dropdown-item">
+              <A className="dropdown-item" onClick={()=>history.push("/profile")}>
                 <i className="ti-settings text-primary" />
                 Profil
               </A>

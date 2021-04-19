@@ -171,6 +171,9 @@ function RoleManagementEdit() {
                                         </button>
                                     </div>
                                 </form>
+                                <button className="btn btn-light btn-block mt-2" onClick={() => history.goBack()}>
+                                    Kembali
+                                </button>
                             </div>
                         </div>
                     </div>
