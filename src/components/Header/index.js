@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 // import logo from "./logo-txt.png"
 
 import logo2 from "./logo2.jpeg"
+import profile from "./face28.jpg"
 
 function Header() {
   let history = useHistory();
@@ -51,19 +52,19 @@ function Header() {
           </li>
           <li className="nav-item nav-profile dropdown">
             <A className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <img src="./images/faces/face28.jpg" alt="profile" />
+              <img src={profile} alt="profile" />
             </A>
             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
               <A className="dropdown-item">
                 <i className="ti-settings text-primary" />
-                Settings
+                Profil
               </A>
               <A className="dropdown-item" onClick={() => {
                 sessionStorage.clear();
                 history.push("/login")
                 }}>
                 <i className="ti-power-off text-primary" />
-                Logout
+                Keluar
               </A>
             </div>
           </li>

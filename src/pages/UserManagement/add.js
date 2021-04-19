@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
@@ -7,24 +7,25 @@ import { config } from "../../Constants";
 
 import { Header, Menu, Footer } from "../../components";
 
-function UserManagementEdit() {
+function UserManagementCreate() {
     let history = useHistory();
-    const { state } = useLocation()
     const { register,
         handleSubmit,
         formState: { errors },
-        control
+        control,
+        watch
     } = useForm({
-        defaultValues: {
-            email: state.email,
-            username: state.userName,
-            rolename: state["roles[0].name"]
+        defaultValues:{
+            rolename: "Masyarakat"
         }
     });
 
     const [listRole, setListRole] = useState([])
     const [errMessage, setErrMessage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false)
+
+    const password = useRef({});
+    password.current = watch("password", "");
 
     useEffect(() => {
         if (!sessionStorage.token) {
@@ -41,7 +42,7 @@ function UserManagementEdit() {
         }
     }, [history, listRole])
 
-    const onSubmit = ({ username, rolename, email }) => {
+    const onSubmit = ({ username, rolename, email, password }) => {
         setErrMessage(null);
         setIsProcessing(true)
 
@@ -50,15 +51,15 @@ function UserManagementEdit() {
             "Content-Type": "application/json",
         };
 
-        axios.put(
-            config.url.API_URL + "/User/Update",
+        axios.post(
+            config.url.API_URL + "/User/Create",
             {
-                "id": state.id,
                 "roleNames": [
                     rolename
                 ],
                 "email": email,
                 "userName": username,
+                "password": password
             },
             { headers }
         )
@@ -82,7 +83,7 @@ function UserManagementEdit() {
                         <div className="row">
                             <div className="col-12">
                                 <div className="mb-4">
-                                    <h1>Ubah Pengguna</h1>
+                                    <h1>Buat Pengguna</h1>
                                     <p className="text-muted">Silahkan lengkapi borang di bawah ini</p>
                                 </div>
                                 {errMessage && (
@@ -153,9 +154,51 @@ function UserManagementEdit() {
                                         )}
                                     </div>
                                     <div className="form-group">
+                                        <label htmlFor="password">Kata Sandi</label>
+                                        <input
+                                            type="password"
+                                            className="form-control p-input"
+                                            id="password"
+                                            placeholder="Kata sandi"
+                                            name="password"
+                                            ref={register({
+                                                required: "Kata sandi harus diisi",
+                                                minLength: {
+                                                    value: 6,
+                                                    message: "Kata sandi sekurangnya memiliki 6 karaketer"
+                                                }
+                                            })}
+                                        />
+                                        {!errors.password && <small className="form-text text-muted">Kata sandi sekurangnya memiliki 6 karakter</small>}
+                                        {errors.password && (
+                                            <small id="passwordHelp" className="form-text text-danger">
+                                                {errors.password.message}
+                                            </small>
+                                        )}
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="password">Konfirmasi Kata Sandi</label>
+                                        <input
+                                            type="password"
+                                            className="form-control p-input"
+                                            id="konfirmasiPassword"
+                                            placeholder="Konfirmasi kata sandi"
+                                            name="konfirmasiPassword"
+                                            ref={register({
+                                                validate: value =>
+                                                    value === password.current || "Kata sandi tidak sama"
+                                            })}
+                                        />
+                                        {errors.konfirmasiPassword && (
+                                            <small id="konfirmasiPasswordHelp" className="form-text text-danger">
+                                                {errors.konfirmasiPassword.message}
+                                            </small>
+                                        )}
+                                    </div>
+                                    <div className="form-group">
                                         <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing}>
                                             {isProcessing && <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
-                                            Ubah Pengguna
+                                            Buat Pengguna
                                         </button>
                                     </div>
                                 </form>
@@ -169,4 +212,4 @@ function UserManagementEdit() {
     );
 }
 
-export default UserManagementEdit;
+export default UserManagementCreate;

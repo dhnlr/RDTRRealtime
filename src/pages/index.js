@@ -17,5 +17,9 @@ import ForgotPassword from "./ForgotPassword"
 import ResetPassword from "./ResetPassword"
 import UserManagement from "./UserManagement"
 import UserManagementEdit from "./UserManagement/edit"
+import UserManagementCreate from "./UserManagement/add"
+import RoleManagement from "./RoleManagement"
+import RoleManagementEdit from "./RoleManagement/edit"
+import RoleManagementCreate from "./RoleManagement/add"
 
-export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit };
+export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, UserManagementCreate,RoleManagement, RoleManagementEdit, RoleManagementCreate };
