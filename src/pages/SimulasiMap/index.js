@@ -1949,15 +1949,49 @@ const SimulasiMap = () => {
             const layerList = new LayerList({
               container: document.createElement("div"),
               view: view,
-              // listItemCreatedFunction: function (event) {
-              //   var item = event.item;
-              // },
+              listItemCreatedFunction: function (event) {
+                var item = event.item;
+                console.log("ttle ", item.title);
+                if (item.title === "Bangunan - Envelope") {
+                  item.actionsSections = [
+                    [
+                      {
+                        title: "Increase Transparency",
+                        className: "esri-icon-up",
+                        id: "increase-opacity",
+                      },
+                      {
+                        title: "Decrease Transparency",
+                        className: "esri-icon-down",
+                        id: "decrease-opacity",
+                      },
+                    ],
+                  ];
+                }
+              },
             });
             const layerListExpand = new Expand({
               expandIconClass: "esri-icon-layers",
               expandTooltip: "Daftar Layer",
               view: view,
               content: layerList.domNode,
+            });
+            layerList.on("trigger-action", function (event) {
+              // Capture the action id.
+              var id = event.action.id;
+              if (id === "increase-opacity") {
+                // if the increase-opacity action is triggered, then
+                // increase the opacity of the GroupLayer by 0.25
+                if (buildingsEnvelopeLayer.opacity < 1) {
+                  buildingsEnvelopeLayer.opacity += 0.25;
+                }
+              } else if (id === "decrease-opacity") {
+                // if the decrease-opacity action is triggered, then
+                // decrease the opacity of the GroupLayer by 0.25
+                if (buildingsEnvelopeLayer.opacity > 0) {
+                  buildingsEnvelopeLayer.opacity -= 0.25;
+                }
+              }
             });
             view.ui.add({
               component: layerListExpand,
