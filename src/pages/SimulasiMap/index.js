@@ -150,6 +150,8 @@ const SimulasiMap = () => {
           "esri/layers/VectorTileLayer",
           "esri/layers/MapImageLayer",
           "esri/intl",
+          "esri/widgets/Bookmarks",
+          "esri/webmap/Bookmark",
         ],
         {
           css: true,
@@ -171,6 +173,8 @@ const SimulasiMap = () => {
           VectorTileLayer,
           MapImageLayer,
           intl,
+          Bookmarks,
+          Bookmark,
         ]) => {
           const map = new Map({
             basemap: "topo-vector",
@@ -2166,6 +2170,73 @@ const SimulasiMap = () => {
             // start locale to Indon
             intl.setLocale("id");
             // end locale
+
+            // start bookmarks
+            const bookmarks = new Bookmarks({
+              view: view,
+              bookmarks: [
+                new Bookmark({
+                  name: "Bogor, Pabaton",
+                  viewpoint: {
+                    targetGeometry: {
+                      type: "extent",
+                      spatialReference: {
+                        wkid: 102100,
+                      },
+                      xmin: 11887279.83,
+                      ymin: -736082.13,
+                      xmax: 11889610.93,
+                      ymax: -734253.33,
+                    },
+                  },
+                }),
+                new Bookmark({
+                  name: "Bengkalis",
+                  viewpoint: {
+                    targetGeometry: {
+                      type: "extent",
+                      spatialReference: {
+                        wkid: 102100,
+                      },
+                      xmin: 11307182.57,
+                      ymin: 212556.4,
+                      xmax: 11341104.52,
+                      ymax: 239168.92,
+                    },
+                  },
+                }),
+                new Bookmark({
+                  name: "Kota Kediri",
+                  viewpoint: {
+                    targetGeometry: {
+                      type: "extent",
+                      spatialReference: {
+                        latestWkid: 3857,
+                        wkid: 102100,
+                      },
+                      xmin: 12459226.85,
+                      ymin: -882133.1,
+                      xmax: 12480936.9,
+                      ymax: -865101.09,
+                    },
+                  },
+                }),
+              ],
+            });
+
+            // Add the widget to the top-right corner of the view
+            const bookmarksExpand = new Expand({
+              expandIconClass: "esri-icon-bookmark",
+              expandTooltip: "Bookmarks",
+              view,
+              content: bookmarks,
+            });
+
+            view.ui.add({
+              component: bookmarksExpand,
+              position: "top-left",
+            });
+            // end bookmarks
           });
 
           view.popup.watch("features", (features) => {
@@ -2251,8 +2322,7 @@ const SimulasiMap = () => {
   // start close showing popup
   const handleCloseShowingPopup = () => {
     console.log(stateView);
-    stateView.graphics.removeAll();
-    stateView.when(function () {});
+    stateView.popup.close();
     setShowingPopop({ ...showingPopup, show: false });
   };
   // end close showing popup
