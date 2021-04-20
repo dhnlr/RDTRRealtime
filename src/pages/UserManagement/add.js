@@ -177,7 +177,7 @@ function UserManagementCreate() {
                                         )}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="password">Konfirmasi Kata Sandi</label>
+                                        <label htmlFor="konfirmasiPassword">Konfirmasi Kata Sandi</label>
                                         <input
                                             type="password"
                                             className="form-control p-input"

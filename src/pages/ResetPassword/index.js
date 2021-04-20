@@ -115,7 +115,7 @@ function ForgotPassword() {
                     )}
                   </div>
                   <div className="form-group">
-                    <label htmlFor="password">Konfirmasi Kata Sandi Baru</label>
+                    <label htmlFor="konfirmasiPassword">Konfirmasi Kata Sandi Baru</label>
                     <input
                       type="password"
                       className="form-control p-input"

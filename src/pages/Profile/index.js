@@ -220,7 +220,7 @@ function Profile() {
                                                             )}
                                                         </div>
                                                         <div className="form-group">
-                                                            <label htmlFor="password">Kata Sandi Baru</label>
+                                                            <label htmlFor="konfirmasiPassword">Kata Sandi Baru</label>
                                                             <input
                                                                 type="password"
                                                                 className="form-control p-input"
