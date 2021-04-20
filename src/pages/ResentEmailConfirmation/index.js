@@ -5,6 +5,7 @@ import styled from "styled-components";
 import axios from "axios";
 
 import { config } from "../../Constants";
+import bgImage from "./Image 9.png"
 
 function ResentEmailConfirmation() {
   const {
@@ -115,7 +116,7 @@ const Main = styled.div`
 `;
 const ImageDiv = styled.div`
   flex: 1;
-  background-image: url("./images/Image 9.png");
+  background-image: url("${bgImage}");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   @media only screen and (max-width: 768px) {

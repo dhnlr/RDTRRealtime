@@ -5,6 +5,7 @@ import styled from "styled-components";
 import axios from "axios";
 
 import { config } from "../../Constants";
+import bgImage from "./Mask Group 141.svg"
 
 function ResetPassword() {
   const {
@@ -116,9 +117,9 @@ const Main = styled.div`
 `;
 const ImageDiv = styled.div`
   flex: 1;
-  background-image: url("./images/Mask Group 141.svg");
+  background-image: url("${bgImage}");
   background-repeat: no-repeat;
-  background-position: right bottom;
+  background-position: right center;
   @media only screen and (max-width: 768px) {
     display: none;
   }

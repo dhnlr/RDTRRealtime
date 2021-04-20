@@ -5,6 +5,7 @@ import styled from "styled-components";
 import axios from "axios";
 
 import { config } from "../../Constants";
+import bgImage from "./Mask Group 142.svg"
 
 function ForgotPassword() {
   const {
@@ -97,6 +98,7 @@ function ForgotPassword() {
                       id="password"
                       placeholder="Kata sandi baru"
                       name="password"
+                      autoComplete="new-password"
                       ref={register({
                         required: "Kata sandi harus diisi",
                         minLength: {
@@ -120,6 +122,7 @@ function ForgotPassword() {
                       id="konfirmasiPassword"
                       placeholder="Konfirmasi kata sandi baru"
                       name="konfirmasiPassword"
+                      autoComplete="confirm-new-password"
                       ref={register({
                         validate: value =>
                           value === password.current || "Kata sandi tidak sama"
@@ -139,7 +142,7 @@ function ForgotPassword() {
                   </div>
               </form>
               <div className="font-weight-light mt-4">
-                  Sudah terkonfirmasi? <Link to="/login">Masuk Sekarang</Link>
+                  Sudah ingat? <Link to="/login">Masuk Sekarang</Link>
                 </div>
             </div>
           </div>
@@ -159,9 +162,10 @@ const Main = styled.div`
 `;
 const ImageDiv = styled.div`
   flex: 1;
-  background-image: url("./../images/Mask Group 142.svg");
+  background-image: url("${bgImage}");
   background-repeat: no-repeat;
   background-position: right bottom;
+  background-size: 843px auto;
   @media only screen and (max-width: 768px) {
     display: none;
   }

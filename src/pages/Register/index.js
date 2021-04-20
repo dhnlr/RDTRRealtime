@@ -6,6 +6,7 @@ import axios from "axios";
 import querystring from "querystring";
 
 import { config } from "../../Constants";
+import bgImage from "./Image 9.png"
 
 function Register() {
   const {
@@ -109,7 +110,16 @@ function Register() {
                 <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-group">
                     <label htmlFor="email">Alamat Email</label>
-                    <input type="email" className="form-control p-input" id="email" aria-describedby="emailHelp" placeholder="Alamat email" name="email" autoFocus ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} />
+                    <input 
+                    type="email" 
+                    className="form-control p-input" 
+                    id="email" 
+                    aria-describedby="emailHelp" 
+                    placeholder="Alamat email" 
+                    name="email" 
+                    autoComplete="email" 
+                    autoFocus 
+                    ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} />
                     {errors.email && (
                       <small id="emailHelp" className="form-text text-danger">
                         {errors.email.message}
@@ -125,6 +135,7 @@ function Register() {
                       aria-describedby="usernameHelp"
                       placeholder="Username"
                       name="username"
+                      autoComplete="username"
                       ref={register({ required: "Username harus diisi", pattern: { value: /^[\w]*$/, message: "Hanya alfabet dan nomor yang diizinkan" } })}
                     />
                     {errors.username && (
@@ -154,6 +165,7 @@ function Register() {
                       id="password"
                       placeholder="Kata sandi"
                       name="password"
+                      autoComplete="current-password"
                       ref={register({
                         required: "Kata sandi harus diisi",
                         minLength: {
@@ -177,6 +189,7 @@ function Register() {
                       id="konfirmasiPassword"
                       placeholder="Konfirmasi kata sandi"
                       name="konfirmasiPassword"
+                      autoComplete="confirm-password"
                       ref={register({
                         validate: value =>
                           value === password.current || "Kata sandi tidak sama"
@@ -237,7 +250,7 @@ const Main = styled.div`
 `;
 const ImageDiv = styled.div`
   flex: 1;
-  background-image: url("./images/Image 9.png");
+  background-image: url("${bgImage}");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   @media only screen and (max-width: 768px) {

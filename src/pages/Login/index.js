@@ -6,6 +6,7 @@ import axios from "axios";
 import querystring from "querystring";
 
 import { config } from "../../Constants";
+import bgImage from "./Image 8.png"
 
 function Login() {
   const {
@@ -95,6 +96,7 @@ function Login() {
                       aria-describedby="usernameHelp"
                       placeholder="Username"
                       name="username"
+                      autoComplete="username"
                       autoFocus
                       ref={register({ required: true })}
                     />
@@ -112,6 +114,7 @@ function Login() {
                       id="password"
                       placeholder="Kata Sandi"
                       name="password"
+                      autoComplete="current-password"
                       ref={register({ required: true, minLength: 6 })}
                     />
                     {errors.password && (
@@ -161,7 +164,7 @@ const Main = styled.div`
 `;
 const ImageDiv = styled.div`
   flex: 1;
-  background-image: url("./images/Image 8.png");
+  background-image: url("${bgImage}");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   @media only screen and (max-width: 768px) {
