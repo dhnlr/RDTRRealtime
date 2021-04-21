@@ -154,7 +154,7 @@ function UserManagementEdit() {
                                     </div>
                                     <div className="form-group">
                                         <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing || listRole.length === 0}>
-                                            {isProcessing && <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
+                                            {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
                                             Ubah Pengguna
                                         </button>
                                     </div>

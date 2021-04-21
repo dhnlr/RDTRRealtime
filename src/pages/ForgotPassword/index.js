@@ -91,7 +91,7 @@ function ResetPassword() {
                 </div>
                 <div className="form-group">
                   <button className="btn btn-success" type="submit" disabled={isProcessing}>
-                    {isProcessing && <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
+                    {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
                       Kirim Email
                     </button>
                 </div>
