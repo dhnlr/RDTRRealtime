@@ -1100,6 +1100,123 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
+          const persilTanahBpn = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/persil_tanah_bpn/FeatureServer/0",
+            title: "Persil Tanah - BPN",
+            popupTemplate: {
+              title: "Persil Tanah - BPN",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "penggunaan",
+                      label: "penggunaan",
+                    },
+                    {
+                      fieldName: "nilai",
+                      label: "nilai",
+                    },
+                    {
+                      fieldName: "tipehak",
+                      label: "tipehak",
+                    },
+                    {
+                      fieldName: "numerikid",
+                      label: "numerikid",
+                    },
+                    {
+                      fieldName: "sumbergeom",
+                      label: "sumbergeom",
+                    },
+                    {
+                      fieldName: "wilayahid",
+                      label: "wilayahid",
+                    },
+                    {
+                      fieldName: "kantorid",
+                      label: "kantorid",
+                    },
+                    {
+                      fieldName: "kantorindu",
+                      label: "kantorindu",
+                    },
+                    {
+                      fieldName: "tipeproduk",
+                      label: "tipeproduk",
+                    },
+                    {
+                      fieldName: "tahun",
+                      label: "tahun",
+                    },
+                    {
+                      fieldName: "luas",
+                      label: "luas",
+                    },
+                    {
+                      fieldName: "luaspeta",
+                      label: "luaspeta",
+                    },
+                    {
+                      fieldName: "nib",
+                      label: "nib",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum",
+                      label: "status_pemb_optimum",
+                    },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_sampah",
+                      label: "izin_sampah",
+                    },
+                    {
+                      fieldName: "izin_banjir",
+                      label: "izin_banjir",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "gsb",
+                      label: "gsb",
+                    },
+                    {
+                      fieldName: "ktb",
+                      label: "ktb",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+            editingEnabled: false,
+          });
+
           function getSymbolPolaRuangEnvelope(color) {
             return {
               type: "polygon-3d", // autocasts as new PolygonSymbol3D()
@@ -1903,6 +2020,7 @@ const SimulasiMap = () => {
             polaRuangAirBersihLayer,
             polaRuangKdbKlbLayer,
             polaRuangEnvelopeLayer,
+            persilTanahBpn,
             persilTanahKemacetanLayer,
             persilTanahAirBersihLayer,
             persilTanahKdbKlbLayer,
@@ -1920,6 +2038,7 @@ const SimulasiMap = () => {
           polaRuangAirBersihLayer.visible = false;
           polaRuangKdbKlbLayer.visible = false;
           polaRuangEnvelopeLayer.visible = false;
+          persilTanahBpn.visible = false;
           persilTanahKemacetanLayer.visible = false;
           persilTanahAirBersihLayer.visible = false;
           persilTanahKdbKlbLayer.visible = false;
@@ -2080,6 +2199,7 @@ const SimulasiMap = () => {
               polaRuangAirBersihLayer.popupEnabled = false;
               polaRuangKdbKlbLayer.popupEnabled = false;
               polaRuangEnvelopeLayer.popupEnabled = false;
+              persilTanahBpn.popupEnabled = false;
               persilTanahKemacetanLayer.popupEnabled = false;
               persilTanahAirBersihLayer.popupEnabled = false;
               persilTanahKdbKlbLayer.popupEnabled = false;
@@ -2136,6 +2256,7 @@ const SimulasiMap = () => {
                 { layer: polaRuangAirBersihLayer },
                 { layer: polaRuangKdbKlbLayer },
                 { layer: polaRuangEnvelopeLayer },
+                { layer: persilTanahBpn },
                 { layer: persilTanahKemacetanLayer },
                 { layer: persilTanahAirBersihLayer },
                 { layer: persilTanahKdbKlbLayer },
