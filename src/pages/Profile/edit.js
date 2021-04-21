@@ -52,7 +52,7 @@ function ProfileEdit() {
             })
             .catch(error => {
                 setIsProcessing(false)
-                error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendaftarkan akun. Silahkan coba beberapa saat lagi.")
+                error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengubah profil. Silahkan coba beberapa saat lagi.")
             })
     };
 

@@ -59,7 +59,7 @@ function ForgotPassword() {
         setIsProcessing(false)
       })
       .catch(error => {
-        error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengirim email konfirmasi. Silahkan coba beberapa saat lagi.")
+        error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengubah kata sandi. Silahkan coba beberapa saat lagi.")
         setIsProcessing(false)
       })
   };

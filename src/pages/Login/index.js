@@ -53,7 +53,7 @@ function Login() {
         handleDashboard();
       })
       .catch(error => {
-        error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mengkonfirmasi akun. Silahkan coba beberapa saat lagi.")
+        error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal masuk. Silahkan coba beberapa saat lagi.")
         setIsProcessing(false)
       })
   };
