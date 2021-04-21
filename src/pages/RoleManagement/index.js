@@ -9,6 +9,7 @@ import { config } from "../../Constants";
 
 function RoleManagement() {
     const [search, setSearch] = useState(null)
+    const [isProcessing, setIsProcessing] = useState(false)
     const [processCounter, setProcessCounter] = useState(0)
     const [data, setData] = useState([]);
     const [recordsFiltered, setRecordsFiltered] = useState(0);
@@ -60,6 +61,7 @@ function RoleManagement() {
                 /* const datas = await axios.get(config.url.API_URL + "/User/List?input.pageSize=" + pageSize + "&input.page=" + (pageIndexTbl+1) + "&input.orderProperty="+sort+"&input.orderType="+ orderType + keyword, {
                     headers: { Authorization: "Bearer " + sessionStorage.token }
                 }); */
+                setIsProcessing(true)
                 const datas = await axios.get(config.url.API_URL + "/Role/List", {
                     headers: { Authorization: "Bearer " + sessionStorage.token },
                     params: {
@@ -83,8 +85,10 @@ function RoleManagement() {
                     setRecordsTotal(datas.data.count);
                     setPageCount(Math.ceil(datas.data.count / pageSize));
                     setSortByState(sortBy)
+                    setIsProcessing(false)
                 }
             } catch (errorForm) {
+                setIsProcessing(false)
                 console.warn(errorForm);
             }
         };
@@ -115,23 +119,23 @@ function RoleManagement() {
                             id
                         }
                     })
-                    .then((response)=> {
-                        if(response.data.code === 200 ){
-                            Swal.fire({
-                                title: "Berhasil",
-                                text: "Akun berhasil dihapus",
-                                icon: "success",
-                                confirmButtonText: "OK",
-                                allowOutsideClick: false,
-                            }).then((result) => {
-                                if (result.value) {
-                                    setProcessCounter(processCounter + 1)
-                                }
-                            });
-                        } else {
-                            Swal.fire("Maaf", response.data.description, "error");
-                        }
-                    })
+                        .then((response) => {
+                            if (response.data.code === 200) {
+                                Swal.fire({
+                                    title: "Berhasil",
+                                    text: "Akun berhasil dihapus",
+                                    icon: "success",
+                                    confirmButtonText: "OK",
+                                    allowOutsideClick: false,
+                                }).then((result) => {
+                                    if (result.value) {
+                                        setProcessCounter(processCounter + 1)
+                                    }
+                                });
+                            } else {
+                                Swal.fire("Maaf", response.data.description, "error");
+                            }
+                        })
                 }
             });
         } catch (errorForm) {

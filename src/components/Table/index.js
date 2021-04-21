@@ -18,9 +18,9 @@ function Table({
   nameApprove,
   filterStatus,
   filterTenant,
-//   filterDate
-searchVal,
-processCounter
+  //   filterDate
+  searchVal,
+  processCounter
 }) {
   const [valueFilter, setvalueFilter] = React.useState("");
   const [valueStatus, setValueStatus] = React.useState("");
@@ -29,7 +29,7 @@ processCounter
   const today = new Date()
   const yesterday = new Date(today)
   yesterday.setDate(yesterday.getDate() - 7)
-  const [valueDate, setValueDate] = React.useState([yesterday,today])
+  const [valueDate, setValueDate] = React.useState([yesterday, today])
   let history = useHistory();
 
   // Use the state and functions returned from useTable to build your UI
@@ -104,7 +104,7 @@ processCounter
     pageOptions,
     valueStatus,
     valueTenant,
-    valueDate,  
+    valueDate,
     sortBy,
     history,
     searchVal,
@@ -114,42 +114,42 @@ processCounter
   // Render the UI for your table
   return (
     <>
-      <div className="card-header" style={{display: "none"}}>
+      <div className="card-header" style={{ display: "none" }}>
         <div className="d-flex justify-content-between row">
-          <span className="card-title" style={{float:"right"}}>
-            { 
-              routeAdd ? 
-              <button
-              type="button"
-              className="btn btn-primary btn-flat mr-2"
-              onClick={() => handleAdd(routeAdd)}
-              >
-                <span>
-                  <i className="fas fa-plus-circle mr-2"></i>&nbsp;
+          <span className="card-title" style={{ float: "right" }}>
+            {
+              routeAdd ?
+                <button
+                  type="button"
+                  className="btn btn-primary btn-flat mr-2"
+                  onClick={() => handleAdd(routeAdd)}
+                >
+                  <span>
+                    <i className="fas fa-plus-circle mr-2"></i>&nbsp;
                 </span>
                 Add
               </button>
-              :
-              null
+                :
+                null
             }
-            { 
-              routeApprove ? 
-              <button
-              type="button"
-              className="btn btn-info btn-flat mr-2"
-              onClick={() => handleApprove(routeApprove)}
-              >
-                <span>
-                  <i className="fas fa-check-circle mr-2"></i>&nbsp;
+            {
+              routeApprove ?
+                <button
+                  type="button"
+                  className="btn btn-info btn-flat mr-2"
+                  onClick={() => handleApprove(routeApprove)}
+                >
+                  <span>
+                    <i className="fas fa-check-circle mr-2"></i>&nbsp;
                 </span>
-                {nameApprove ? nameApprove : 'Approve'}
-              </button>
-              :
-              null
-            }          
+                  {nameApprove ? nameApprove : 'Approve'}
+                </button>
+                :
+                null
+            }
           </span>
           {/* filter disini */}
-          
+
           {/* { 
               filterDate ? 
               <div className="col-6 row">
@@ -166,66 +166,66 @@ processCounter
               </div>
               : 
               null
-            }  */} 
-          <div className="col-6 row" style={{float:"right"}}>
-              { 
-                (filterTenant && filterTenant.length) ?
-                  <div className={
-                    (filterStatus && filterStatus.length) ? 
-                      (filterTenant && filterTenant.length) ?
-                        "input-group col-4" : "input-group col-6"
-                      :  "input-group col-6"
-                    }
-                  >
-                    <div className="input-group-prepend ml-2">
-                      <select 
-                        className="form-control"
-                          // data={filterStatus}
-                          placeholder="Select Site"                         
-                          onChange={e => {
-                            setValueTenant(e.target.value ? e.target.value : null);
-                          }}
-                        >
-                          {filterTenant.map((t) => <option key={t.name} value={t.id}>
-                            {t.name}
-                        </option>)}
-                      </select>
-                    </div>
-                  </div>
-                  : <div className={ (filterStatus && filterStatus.length) ? "null" : "col-3"}></div>
-              } 
-              { 
-                (filterStatus && filterStatus.length) ?
-                  <div className={
-                    (filterStatus && filterStatus.length) ? 
-                      (filterTenant && filterTenant.length) ?
-                        "input-group col-4" : "input-group col-6"
-                      :  "input-group col-6"
-                    }
-                  >
-                    <div className="input-group-prepend ml-2">
-                    <select 
+            }  */}
+          <div className="col-6 row" style={{ float: "right" }}>
+            {
+              (filterTenant && filterTenant.length) ?
+                <div className={
+                  (filterStatus && filterStatus.length) ?
+                    (filterTenant && filterTenant.length) ?
+                      "input-group col-4" : "input-group col-6"
+                    : "input-group col-6"
+                }
+                >
+                  <div className="input-group-prepend ml-2">
+                    <select
                       className="form-control"
-                        // data={filterStatus}
-                        placeholder="Select Status"                         
-                        onChange={e => {
-                          setValueStatus(e.target.value);
-                        }}
-                      >
-                        {filterStatus.map((f) => <option key={f.value} value={f.value}>
-                          {f.id}
+                      // data={filterStatus}
+                      placeholder="Select Site"
+                      onChange={e => {
+                        setValueTenant(e.target.value ? e.target.value : null);
+                      }}
+                    >
+                      {filterTenant.map((t) => <option key={t.name} value={t.id}>
+                        {t.name}
                       </option>)}
                     </select>
                   </div>
+                </div>
+                : <div className={(filterStatus && filterStatus.length) ? "null" : "col-3"}></div>
+            }
+            {
+              (filterStatus && filterStatus.length) ?
+                <div className={
+                  (filterStatus && filterStatus.length) ?
+                    (filterTenant && filterTenant.length) ?
+                      "input-group col-4" : "input-group col-6"
+                    : "input-group col-6"
+                }
+                >
+                  <div className="input-group-prepend ml-2">
+                    <select
+                      className="form-control"
+                      // data={filterStatus}
+                      placeholder="Select Status"
+                      onChange={e => {
+                        setValueStatus(e.target.value);
+                      }}
+                    >
+                      {filterStatus.map((f) => <option key={f.value} value={f.value}>
+                        {f.id}
+                      </option>)}
+                    </select>
                   </div>
-                  : <div className={ (filterTenant && filterTenant.length) ? null : "col-3"}></div>
-              } 
+                </div>
+                : <div className={(filterTenant && filterTenant.length) ? null : "col-3"}></div>
+            }
             <div className={
-              (filterStatus && filterStatus.length) ? 
+              (filterStatus && filterStatus.length) ?
                 (filterTenant && filterTenant.length) ?
                   "input-group col-4" : "input-group col-6"
-                :  "input-group col-6"
-              }>
+                : "input-group col-6"
+            }>
               <input
                 type="text"
                 className="form-control"
@@ -245,7 +245,10 @@ processCounter
         </div>
       </div>
       <div className="card-body">
-        <table
+        {data.length === 0 && <div style={{ display: "flex", alignContent: "center", flexWrap: "wrap", flexDirection: "column", padding: "3% 30%" }}>
+          <p>Ups... Kamu belum miliki data yang tersimpan. Silahkan membuat yang baru terlebih dahulu.</p>
+        </div>}
+        {data.length !== 0 && <table
           {...getTableProps()}
           className="table table-striped table-responsive"
         >
@@ -288,9 +291,9 @@ processCounter
               );
             })}
           </tbody>
-        </table>
+        </table>}
       </div>
-      <div className="card-footer clearfix">
+      {data.length !== 0 &&<div className="card-footer clearfix">
         <ul className="pagination pagination-sm m-0 float-right">
           <li className="page-item">
             <button
@@ -387,7 +390,7 @@ processCounter
             </>
           )}
         </span>
-      </div>
+      </div>}
     </>
   );
 }

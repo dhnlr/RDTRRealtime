@@ -29,7 +29,7 @@ function RoleManagementCreate() {
                     setListRole(data.obj)
                 })
                 .catch(error => {
-                    error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
+                    error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan izin peran. Silahkan coba beberapa saat lagi.")
                 })
         }
     }, [history, listRole])
@@ -57,7 +57,7 @@ function RoleManagementCreate() {
             })
             .catch(error => {
                 setIsProcessing(false)
-                error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendaftarkan akun. Silahkan coba beberapa saat lagi.")
+                error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendaftarkan peran. Silahkan coba beberapa saat lagi.")
             })
     };
 
@@ -157,7 +157,7 @@ function RoleManagementCreate() {
                                         )}
                                     </div>
                                     <div className="form-group">
-                                        <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing}>
+                                        <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing || listRole.length === 0}>
                                             {isProcessing && <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
                                             Tambah Peran
                                         </button>

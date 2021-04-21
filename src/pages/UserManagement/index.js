@@ -215,7 +215,7 @@ function UserManagement() {
                                             goInputSimulasi();
                                         }}
                                     >
-                                        Buat Akun Pengguna
+                                        Buat Pengguna
                   </button>
                                 </p>
                             </div>
@@ -229,7 +229,7 @@ function UserManagement() {
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="table-responsive">
-                                                    <div>
+                                                    {<div>
                                                         <Table
                                                             routeAdd="/user/add"
                                                             // filterTenant={site}
@@ -307,7 +307,7 @@ function UserManagement() {
                                                             searchVal={search}
                                                             processCounter={processCounter}
                                                         />
-                                                    </div>
+                                                    </div>}
                                                 </div>
                                             </div>
                                         </div>

@@ -31,9 +31,9 @@ function Menu(props) {
             <span className="menu-title">Laporan</span>
           </A>
         </li>
-        <li className={`nav-item collapsed ${props.active.indexOf("user") !== -1 ? "active" : ""}`}>
+        <li className={`nav-item ${props.active.indexOf("user") !== -1 ? "active" : ""}`}>
         {/* <Link className="nav-link" to="/usermanagement"> */}
-        <A className="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="true" aria-controls="ui-basic">
+        <A className="nav-link collapsed" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
             <i className="ti-user menu-icon"></i>
             <span className="menu-title">Administrasi</span>
             <i className="menu-arrow"></i>
