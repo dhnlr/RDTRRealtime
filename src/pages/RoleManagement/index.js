@@ -156,7 +156,10 @@ function RoleManagement() {
                                 <div className="input-group">
                                     <div className="input-group-prepend hover-cursor" id="navbar-search-icon">
                                         <span className="input-group-text" id="search" style={{ background: "white", borderRight: "none" }}>
-                                            <i className="icon-search"></i>
+                                        {!isProcessing && <i className="icon-search"></i>}
+                                            {isProcessing && <div className="spinner-border spinner-border-sm" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>}
                                         </span>
                                     </div>
                                     <input

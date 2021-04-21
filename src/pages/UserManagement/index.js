@@ -9,6 +9,7 @@ import { config } from "../../Constants";
 
 function UserManagement() {
     const [search, setSearch] = useState(null)
+    const [isProcessing, setIsProcessing] = useState(false)
     const [processCounter, setProcessCounter] = useState(0)
     const [data, setData] = useState([]);
     const [recordsFiltered, setRecordsFiltered] = useState(0);
@@ -60,6 +61,7 @@ function UserManagement() {
                 /* const datas = await axios.get(config.url.API_URL + "/User/List?input.pageSize=" + pageSize + "&input.page=" + (pageIndexTbl+1) + "&input.orderProperty="+sort+"&input.orderType="+ orderType + keyword, {
                     headers: { Authorization: "Bearer " + sessionStorage.token }
                 }); */
+                setIsProcessing(true)
                 const datas = await axios.get(config.url.API_URL + "/User/List", {
                     headers: { Authorization: "Bearer " + sessionStorage.token },
                     params: {
@@ -83,9 +85,11 @@ function UserManagement() {
                     setRecordsTotal(datas.data.count);
                     setPageCount(Math.ceil(datas.data.count / pageSize));
                     setSortByState(sortBy)
+                    setIsProcessing(false)
                 }
             } catch (errorForm) {
-                console.warn(errorForm);
+                    setIsProcessing(false)
+                    console.warn(errorForm);
             }
         };
 
@@ -96,8 +100,8 @@ function UserManagement() {
     const handleDelete = ({ id }) => {
         try {
             Swal.fire({
-                title: "Hapus Akun",
-                text: "Akun yang dihapus tidak dapat dikembalikan. Apakah Anda yakin untuk menghapus akun pengguna?",
+                title: "Hapus Pengguna",
+                text: "Pengguna yang dihapus tidak dapat dikembalikan. Apakah Anda yakin untuk menghapus pengguna?",
                 icon: "warning",
                 showCancelButton: true,
                 showLoaderOnConfirm: true,
@@ -115,19 +119,19 @@ function UserManagement() {
                             id
                         }
                     })
-                    .then(()=> {
-                        Swal.fire({
-                            title: "Berhasil",
-                            text: "Akun berhasil dihapus",
-                            icon: "success",
-                            confirmButtonText: "OK",
-                            allowOutsideClick: false,
-                        }).then((result) => {
-                            if (result.value) {
-                                setProcessCounter(processCounter + 1)
-                            }
-                        });
-                    })
+                        .then(() => {
+                            Swal.fire({
+                                title: "Berhasil",
+                                text: "Pengguna berhasil dihapus",
+                                icon: "success",
+                                confirmButtonText: "OK",
+                                allowOutsideClick: false,
+                            }).then((result) => {
+                                if (result.value) {
+                                    setProcessCounter(processCounter + 1)
+                                }
+                            });
+                        })
                 }
             });
         } catch (errorForm) {
@@ -137,8 +141,8 @@ function UserManagement() {
 
     const handleConfirm = (id) => {
         Swal.fire({
-            title: "Konfirmasi Akun",
-            text: "Apakah Anda yakin untuk mengkonfirmasi akun pengguna?",
+            title: "Konfirmasi Pengguna",
+            text: "Apakah Anda yakin untuk mengkonfirmasi pengguna?",
             icon: "question",
             showCancelButton: true,
             showLoaderOnConfirm: true,
@@ -155,7 +159,7 @@ function UserManagement() {
                         .then(() => {
                             Swal.fire({
                                 title: "Berhasil",
-                                text: "Akun berhasil dikonfirmasi",
+                                text: "Pengguna berhasil dikonfirmasi",
                                 icon: "success",
                                 confirmButtonText: "OK",
                                 allowOutsideClick: false,
@@ -185,7 +189,10 @@ function UserManagement() {
                                 <div className="input-group">
                                     <div className="input-group-prepend hover-cursor" id="navbar-search-icon">
                                         <span className="input-group-text" id="search" style={{ background: "white", borderRight: "none" }}>
-                                            <i className="icon-search"></i>
+                                            {!isProcessing && <i className="icon-search"></i>}
+                                            {isProcessing && <div className="spinner-border spinner-border-sm" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>}
                                         </span>
                                     </div>
                                     <input
