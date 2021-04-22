@@ -63,7 +63,7 @@ function Profile() {
                         title: "Berhasil",
                         text: "Kata sandi berhasil diganti",
                         icon: "success",
-                        confirmButtonText: "OK",
+                        confirmButtonText: "Selesai",
                         allowOutsideClick: false,
                     }).then((result) => {
                         if (result.value) {
@@ -220,7 +220,7 @@ function Profile() {
                                                             )}
                                                         </div>
                                                         <div className="form-group">
-                                                            <label htmlFor="konfirmasiPassword">Kata Sandi Baru</label>
+                                                            <label htmlFor="password">Kata Sandi Baru</label>
                                                             <input
                                                                 type="password"
                                                                 className="form-control p-input"
@@ -243,7 +243,7 @@ function Profile() {
                                                             )}
                                                         </div>
                                                         <div className="form-group">
-                                                            <label htmlFor="password">Konfirmasi Kata Sandi Baru</label>
+                                                            <label htmlFor="konfirmasiPassword">Konfirmasi Kata Sandi Baru</label>
                                                             <input
                                                                 type="password"
                                                                 className="form-control p-input"

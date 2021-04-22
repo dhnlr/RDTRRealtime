@@ -23,5 +23,6 @@ import RoleManagementEdit from "./RoleManagement/edit"
 import RoleManagementCreate from "./RoleManagement/add"
 import Profile from './Profile'
 import ProfileEdit from './Profile/edit'
+import Report from './Report'
 
-export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, UserManagementCreate,RoleManagement, RoleManagementEdit, RoleManagementCreate, Profile, ProfileEdit };
+export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, UserManagementCreate,RoleManagement, RoleManagementEdit, RoleManagementCreate, Profile, ProfileEdit, Report };
