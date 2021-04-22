@@ -323,7 +323,7 @@ function UserManagement() {
                                                                                     <i className="ti-id-badge"></i>
                                                                                 </span>
                                                                             </button>&nbsp;</>}
-                                                                            <button className="btn btn-outline-danger btn-xs" title="Ubah Kata Sandi" onClick={() => handleResetPassword(row.row.values)}>
+                                                                            <button className="btn btn-outline-dark btn-xs" title="Ubah Kata Sandi" onClick={() => handleResetPassword(row.row.values)}>
                                                                                 <span>
                                                                                     <i className="ti-unlock"></i>
                                                                                 </span>
