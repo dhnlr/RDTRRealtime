@@ -236,7 +236,7 @@ function RoleManagement() {
                                                                     Header: "Publisher",
                                                                     accessor: "isPublisher",
                                                                     width: "15%",
-                                                                    Cell: (row) => (row.cell.value ? <label className="badge badge-pill badge-light">Ya</label> : <label className="badge  badge-pill badge-light">Tidak</label>)
+                                                                    Cell: (row) => (<div style={{ textAlign: "center" }}>{row.cell.value ? <i class="ti-check text-success text-center"></i> : <i class="ti-close text-danger text-center"></i>}</div>)
                                                                 },
                                                                 {
                                                                     Header: "Action",
