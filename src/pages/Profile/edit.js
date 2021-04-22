@@ -66,7 +66,7 @@ function ProfileEdit() {
                         <div className="row">
                             <div className="col-12">
                                 <div className="mb-4">
-                                    <h1>Ubah Pengguna</h1>
+                                    <h1>Ubah Profil</h1>
                                     <p className="text-muted">Silahkan lengkapi borang di bawah ini</p>
                                 </div>
                                 {errMessage && (
