@@ -60,7 +60,7 @@ function ProfileEdit() {
         <div className="container-scroller">
             <Header />
             <div className="container-fluid page-body-wrapper">
-                <Menu active="usermanagement" />
+                <Menu active="profile" />
                 <div className="main-panel">
                     <div className="content-wrapper">
                         <div className="row">
