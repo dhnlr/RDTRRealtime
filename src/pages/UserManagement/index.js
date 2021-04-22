@@ -231,7 +231,7 @@ function UserManagement() {
                                         <span className="input-group-text" id="search" style={{ background: "white", borderRight: "none" }}>
                                             {!isProcessing && <i className="icon-search"></i>}
                                             {isProcessing && <div className="spinner-border spinner-border-sm" role="status">
-                                                <span class="sr-only">Loading...</span>
+                                                <span className="sr-only">Loading...</span>
                                             </div>}
                                         </span>
                                     </div>

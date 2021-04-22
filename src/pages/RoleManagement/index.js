@@ -159,7 +159,7 @@ function RoleManagement() {
                                         <span className="input-group-text" id="search" style={{ background: "white", borderRight: "none" }}>
                                         {!isProcessing && <i className="icon-search"></i>}
                                             {isProcessing && <div className="spinner-border spinner-border-sm" role="status">
-                                                <span class="sr-only">Loading...</span>
+                                                <span className="sr-only">Loading...</span>
                                             </div>}
                                         </span>
                                     </div>
@@ -236,7 +236,7 @@ function RoleManagement() {
                                                                     Header: "Publisher",
                                                                     accessor: "isPublisher",
                                                                     width: "15%",
-                                                                    Cell: (row) => (<div style={{ textAlign: "center" }}>{row.cell.value ? <i class="ti-check text-success text-center"></i> : <i class="ti-close text-danger text-center"></i>}</div>)
+                                                                    Cell: (row) => (<div style={{ textAlign: "center" }}>{row.cell.value ? <i className="ti-check text-success text-center"></i> : <i className="ti-close text-danger text-center"></i>}</div>)
                                                                 },
                                                                 {
                                                                     Header: "Action",
