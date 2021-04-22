@@ -110,7 +110,8 @@ function RoleManagement() {
                     cancelButton: "btn-link"
                 },
                 confirmButtonText: "Ya, hapus!",
-                confirmButtonColor: "#FF4747"
+                confirmButtonColor: "#FF4747",
+                cancelButtonText: "Batal"
             }).then((action) => {
                 if (action.isConfirmed) {
                     axios.delete(config.url.API_URL + "/Role/Delete", {

@@ -110,7 +110,8 @@ function UserManagement() {
                     cancelButton: "btn-link"
                 },
                 confirmButtonText: "Ya, hapus!",
-                confirmButtonColor: "#FF4747"
+                confirmButtonColor: "#FF4747",
+                cancelButtonText: "Batal"
             }).then((action) => {
                 if (action.isConfirmed) {
                     axios.delete(config.url.API_URL + "/User/Delete", {
@@ -124,7 +125,7 @@ function UserManagement() {
                                 title: "Berhasil",
                                 text: "Pengguna berhasil dihapus",
                                 icon: "success",
-                                confirmButtonText: "OK",
+                                confirmButtonText: "Selesai",
                                 allowOutsideClick: false,
                             }).then((result) => {
                                 if (result.value) {
@@ -147,6 +148,7 @@ function UserManagement() {
             showCancelButton: true,
             showLoaderOnConfirm: true,
             confirmButtonText: "Ya, konfirmasi!",
+            cancelButtonText: "Batal"
         })
             .then((action) => {
                 if (action.isConfirmed) {
@@ -161,7 +163,7 @@ function UserManagement() {
                                 title: "Berhasil",
                                 text: "Pengguna berhasil dikonfirmasi",
                                 icon: "success",
-                                confirmButtonText: "OK",
+                                confirmButtonText: "Selesai",
                                 allowOutsideClick: false,
                             }).then((result) => {
                                 if (result.value) {
@@ -175,6 +177,44 @@ function UserManagement() {
                 Swal.fire("Maaf", errorForm.response.data.error.message, "error");
             })
     }
+
+    const handleResetPassword = ({ email }) => {
+        Swal.fire({
+            title: "Ubah Kata Sandi Pengguna",
+            text: "Apakah Anda yakin untuk mengubah kata sandi pengguna?",
+            icon: "question",
+            showCancelButton: true,
+            showLoaderOnConfirm: true,
+            confirmButtonText: "Ya, ubah kata sandi!",
+            cancelButtonText: "Batal"
+        })
+            .then((action) => {
+                if (action.isConfirmed) {
+                    axios.put(config.url.API_URL + "/User/ResetPasswordByEmail", null, {
+                        headers: { Authorization: "Bearer " + sessionStorage.token },
+                        params: {
+                            email
+                        }
+                    })
+                        .then(() => {
+                            Swal.fire({
+                                title: "Berhasil",
+                                text: "Kata sandi pengguna berhasil diubah",
+                                icon: "success",
+                                confirmButtonText: "Selesai",
+                                allowOutsideClick: false,
+                            }).then((result) => {
+                                if (result.value) {
+                                    setProcessCounter(processCounter + 1)
+                                }
+                            });
+                        })
+                }
+            })
+            .catch(errorForm => {
+                Swal.fire("Maaf", errorForm.response.data.error.message, "error");
+            })
+    };
 
     return (
         <div className="container-scroller">
@@ -283,6 +323,11 @@ function UserManagement() {
                                                                                     <i className="ti-id-badge"></i>
                                                                                 </span>
                                                                             </button>&nbsp;</>}
+                                                                            <button className="btn btn-outline-danger btn-xs" title="Ubah Kata Sandi" onClick={() => handleResetPassword(row.row.values)}>
+                                                                                <span>
+                                                                                    <i className="ti-unlock"></i>
+                                                                                </span>
+                                                                            </button> &nbsp;
                                                                             <Link to={{
                                                                                 pathname: "/usermanagement/edit",
                                                                                 state: row.row.values
