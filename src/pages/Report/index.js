@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios"
 import Swal from "sweetalert2"
 
-import { Header, Menu, Footer, Img } from "../../components";
+import { Header, Menu, Footer } from "../../components";
 import image from "./OBJECTS.svg"
 
 import { config } from "../../Constants";
@@ -18,8 +18,6 @@ function Report() {
     } = useForm();
     let history = useHistory();
 
-    const [data, setData] = useState(null);
-    const [errMessage, setErrMessage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false)
 
     const password = useRef({});
@@ -32,6 +30,8 @@ function Report() {
     }, [history])
 
     const onSubmit = ({ subject, name, email, agency, body }, e) => {
+        setIsProcessing(true)
+
         axios.post(config.url.API_URL + "/Report", {
             subject,
             name,
@@ -52,11 +52,17 @@ function Report() {
                     }).then((result) => {
                         if (result.value) {
                             e.target.reset()
+                            setIsProcessing(false)
                         }
                     });
                 } else {
                     Swal.fire("Maaf", response.data.description, "error");
+                    setIsProcessing(false)
                 }
+            })
+            .catch(error => {
+                Swal.fire("Maaf", error.response?.data?.status?.message ? error.response?.data?.status?.message : 'Gagal mengirim laporan. Silahkan coba beberapa saat lagi', "error");
+                setIsProcessing(false)
             })
     }
 
@@ -68,11 +74,6 @@ function Report() {
                 <div className="main-panel">
                     <div className="content-wrapper">
                         <div className="row">
-                            {errMessage && (
-                                <div className="alert alert-warning" role="alert">
-                                    {errMessage}
-                                </div>
-                            )}
                             <div className="col-md-12 stretch-card mt-4 mb-2">
                                 {/* <img className="mr-2" src={buildingIcon} alt="building icon" style={{ float: "left", width: "3rem" }} /> */}
                                 {/* <p>
@@ -84,21 +85,22 @@ function Report() {
                         </div>
 
                         <div className="row">
-                            <div className="col-md-6 grid-margin stretch-card my-2 transparent">
-                                <div className="row">
-                                    <div className="col-12">
-                                        <p className="mb-4">
+                            <div className="col-md-6  my-2 transparent">
+                                {/* <div className="row">
+                                    <div className="col-12"> */}
+                                        <h2 className="mb-4">
                                             <span className="font-weight-bold mr-1 align-middle" style={{ fontSize: 20 }}>
                                                 Laporan
                                     </span>
-                                        </p>
+                                        </h2>
+                                        {/* <br/> */}
                                         <p><strong>Silahkan hubungi kami untuk mengirimkan saran atau mendapatkan bantuan terkait sistem.</strong>
                                             <br /><br />Umpan balik Anda sangat penting bagi kami. Jika Anda ingin mengirimkan proyek hebat yang baru saja Anda selesaikan atau proyek yang akan datang, bagikan kisah hebat Anda dengan pengguna lainnya, laporkan kesalahan, atau beri saran dan masukkan.
                                     <br /><br />
-                                            <Img src={image} alt="Hubungi kami" />
+                                            <img src={image} alt="Hubungi kami" style={{width: "100%"}}/>
                                         </p>
-                                    </div>
-                                </div>
+                                    {/* </div>
+                                </div> */}
                             </div>
 
 

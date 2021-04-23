@@ -32,7 +32,13 @@ function UserManagementCreate() {
             history.push("/login");
         }
         if (listRole.length === 0) {
-            axios.get(config.url.API_URL + '/Role/GetAll')
+            axios.get(config.url.API_URL + '/Role/List', {
+                headers: { Authorization: "Bearer " + sessionStorage.token },
+                params: {
+                    "input.pageSize": 100,
+                    "input.orderProperty": "name"
+                }
+            })
                 .then(({ data }) => {
                     setListRole(data.obj)
                 })
@@ -142,7 +148,6 @@ function UserManagementCreate() {
                                                     {listRole.map(role => (
                                                         <option key={role.id} value={role.name} >{role.name}</option>
                                                     ))}
-                                                    <option value="Admin">Admin</option>
                                                 </select>}
                                             control={control}
                                             name="rolename"

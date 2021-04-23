@@ -69,7 +69,13 @@ function Header() {
             </div>
           </li>
         </ul>
-        <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+        <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas" onClick={()=> {
+          if (document.getElementById("sidebar").getAttribute("class").indexOf('active') === -1) {
+            document.getElementById("sidebar").setAttribute("class", "sidebar sidebar-offcanvas active");
+          } else {
+            document.getElementById("sidebar").setAttribute("class", "sidebar sidebar-offcanvas active");
+          }
+        }}>
           <span className="icon-menu" />
         </button>
       </div>
