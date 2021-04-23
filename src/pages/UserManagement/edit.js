@@ -16,9 +16,9 @@ function UserManagementEdit() {
         control
     } = useForm({
         defaultValues: {
-            email: state.email,
-            username: state.userName,
-            rolename: state["roles[0].name"]
+            email: state?.email,
+            username: state?.userName,
+            rolename: state ? state["roles[0].name"] : null
         }
     });
 
@@ -39,13 +39,21 @@ function UserManagementEdit() {
                 }
             })
                 .then(({ data }) => {
-                    setListRole(data.obj)
+                    if(data.status.code === 200 && data.obj.length > 0) {
+                        setListRole(data.obj)
+                    }
                 })
                 .catch(error => {
                     error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
                 })
         }
     }, [history, listRole])
+
+    useEffect(()=> {
+        if(!state){
+            history.goBack()
+        }
+    })
 
     const onSubmit = ({ username, rolename, email }) => {
         setErrMessage(null);
@@ -150,6 +158,7 @@ function UserManagementEdit() {
                                                 </select>}
                                             control={control}
                                             name="rolename"
+                                            rules={{ required: "Peran harus diisi" }}
                                         />
                                         {errors.rolename && (
                                             <small id="rolenameHelp" className="form-text text-danger">
@@ -158,7 +167,7 @@ function UserManagementEdit() {
                                         )}
                                     </div>
                                     <div className="form-group">
-                                        <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing || listRole.length === 0}>
+                                        <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing}>
                                             {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
                                             Ubah Pengguna
                                         </button>

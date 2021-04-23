@@ -40,7 +40,9 @@ function UserManagementCreate() {
                 }
             })
                 .then(({ data }) => {
-                    setListRole(data.obj)
+                    if(data.status.code === 200 && data.obj.length > 0) {
+                        setListRole(data.obj)
+                    }
                 })
                 .catch(error => {
                     error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
@@ -151,6 +153,7 @@ function UserManagementCreate() {
                                                 </select>}
                                             control={control}
                                             name="rolename"
+                                            rules={{ required: "Peran harus diisi" }}
                                         />
                                         {errors.rolename && (
                                             <small id="rolenameHelp" className="form-text text-danger">
@@ -201,7 +204,7 @@ function UserManagementCreate() {
                                         )}
                                     </div>
                                     <div className="form-group">
-                                        <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing || listRole.length === 0}>
+                                        <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing}>
                                             {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
                                             Buat Pengguna
                                         </button>

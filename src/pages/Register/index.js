@@ -32,7 +32,9 @@ function Register() {
     if (listRole.length === 0) {
       axios.get(config.url.API_URL + '/Role/GetAll')
         .then(({ data }) => {
-          setListRole(data.obj)
+          if (data.status.code === 200 && data.obj.length > 0) {
+            setListRole(data.obj)
+          }
         })
         .catch(error => {
           error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
@@ -110,16 +112,16 @@ function Register() {
                 <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-group">
                     <label htmlFor="email">Alamat Email</label>
-                    <input 
-                    type="email" 
-                    className="form-control p-input" 
-                    id="email" 
-                    aria-describedby="emailHelp" 
-                    placeholder="Alamat email" 
-                    name="email" 
-                    autoComplete="email" 
-                    autoFocus 
-                    ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} />
+                    <input
+                      type="email"
+                      className="form-control p-input"
+                      id="email"
+                      aria-describedby="emailHelp"
+                      placeholder="Alamat email"
+                      name="email"
+                      autoComplete="email"
+                      autoFocus
+                      ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} />
                     {errors.email && (
                       <small id="emailHelp" className="form-text text-danger">
                         {errors.email.message}
@@ -219,7 +221,7 @@ function Register() {
                   </div>
                   <div className="form-group">
                     <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing || listRole.length === 0}>
-                    {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
+                      {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
                       Daftar
                     </button>
                   </div>

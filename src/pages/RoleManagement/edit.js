@@ -16,9 +16,9 @@ function RoleManagementEdit() {
         control
     } = useForm({
         defaultValues: {
-            name: state.name,
-            permissions: state.permissions,
-            isPublisher: String(state.isPublisher)
+            name: state?.name,
+            permissions: state?.permissions,
+            isPublisher: String(state?.isPublisher)
         }
     });
 
@@ -40,6 +40,12 @@ function RoleManagementEdit() {
                 })
         }
     }, [history, listRole])
+
+    useEffect(()=> {
+        if(!state){
+            history.goBack()
+        }
+    })
 
     const onSubmit = ({ name, permissions, isPublisher }) => {
         setErrMessage(null);

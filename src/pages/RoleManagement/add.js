@@ -26,7 +26,9 @@ function RoleManagementCreate() {
         if (listRole.length === 0) {
             axios.get(config.url.API_URL + '/Role/GetAllPermissions', { headers: { Authorization: "Bearer " + sessionStorage.token }, })
                 .then(({ data }) => {
-                    setListRole(data.obj)
+                    if (data.status.code === 200 && data.obj.length > 0) {
+                        setListRole(data.obj)
+                    }
                 })
                 .catch(error => {
                     error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan izin peran. Silahkan coba beberapa saat lagi.")
@@ -121,6 +123,8 @@ function RoleManagementCreate() {
                                             }
                                             control={control}
                                             name="permissions"
+                                            rules={{ required: "Izin harus diisi" }}
+                                            defaultValue=""
                                         />
                                         {errors.permissions && (
                                             <small id="permissionsHelp" className="form-text text-danger">
@@ -149,6 +153,8 @@ function RoleManagementCreate() {
                                             }
                                             control={control}
                                             name="isPublisher"
+                                            rules={{ required: "Status publisher harus diisi" }}
+                                            defaultValue=""
                                         />
                                         {errors.isPublisher && (
                                             <small id="isPublisherHelp" className="form-text text-danger">
@@ -157,7 +163,7 @@ function RoleManagementCreate() {
                                         )}
                                     </div>
                                     <div className="form-group">
-                                        <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing || listRole.length === 0}>
+                                        <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing}>
                                             {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
                                             Tambah Peran
                                         </button>
