@@ -76,6 +76,10 @@ const SimulasiMap = () => {
     show: false,
   });
 
+  const [contentBangunan, setContentBangunan] = useState("");
+  const [contentBangunan1, setContentBangunan1] = useState([]);
+  const [hasilWarnaBangunanKdbKlb, setHasilWarnaBangunanKdbKlb] = useState("");
+
   // Form related functions
   const {
     register,
@@ -1121,6 +1125,123 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
+          const persilTanahBpn = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/persil_tanah_bpn/FeatureServer/0",
+            title: "Persil Tanah - BPN",
+            popupTemplate: {
+              title: "Persil Tanah - BPN",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "penggunaan",
+                      label: "penggunaan",
+                    },
+                    {
+                      fieldName: "nilai",
+                      label: "nilai",
+                    },
+                    {
+                      fieldName: "tipehak",
+                      label: "tipehak",
+                    },
+                    {
+                      fieldName: "numerikid",
+                      label: "numerikid",
+                    },
+                    {
+                      fieldName: "sumbergeom",
+                      label: "sumbergeom",
+                    },
+                    {
+                      fieldName: "wilayahid",
+                      label: "wilayahid",
+                    },
+                    {
+                      fieldName: "kantorid",
+                      label: "kantorid",
+                    },
+                    {
+                      fieldName: "kantorindu",
+                      label: "kantorindu",
+                    },
+                    {
+                      fieldName: "tipeproduk",
+                      label: "tipeproduk",
+                    },
+                    {
+                      fieldName: "tahun",
+                      label: "tahun",
+                    },
+                    {
+                      fieldName: "luas",
+                      label: "luas",
+                    },
+                    {
+                      fieldName: "luaspeta",
+                      label: "luaspeta",
+                    },
+                    {
+                      fieldName: "nib",
+                      label: "nib",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum",
+                      label: "status_pemb_optimum",
+                    },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_sampah",
+                      label: "izin_sampah",
+                    },
+                    {
+                      fieldName: "izin_banjir",
+                      label: "izin_banjir",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "gsb",
+                      label: "gsb",
+                    },
+                    {
+                      fieldName: "ktb",
+                      label: "ktb",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+            editingEnabled: false,
+          });
+
           function getSymbolPolaRuangEnvelope(color) {
             return {
               type: "polygon-3d", // autocasts as new PolygonSymbol3D()
@@ -1924,6 +2045,7 @@ const SimulasiMap = () => {
             polaRuangAirBersihLayer,
             polaRuangKdbKlbLayer,
             polaRuangEnvelopeLayer,
+            persilTanahBpn,
             persilTanahKemacetanLayer,
             persilTanahAirBersihLayer,
             persilTanahKdbKlbLayer,
@@ -1941,6 +2063,7 @@ const SimulasiMap = () => {
           polaRuangAirBersihLayer.visible = false;
           polaRuangKdbKlbLayer.visible = false;
           polaRuangEnvelopeLayer.visible = false;
+          persilTanahBpn.visible = false;
           persilTanahKemacetanLayer.visible = false;
           persilTanahAirBersihLayer.visible = false;
           persilTanahKdbKlbLayer.visible = false;
@@ -1972,7 +2095,6 @@ const SimulasiMap = () => {
               view: view,
               listItemCreatedFunction: function (event) {
                 var item = event.item;
-                console.log("ttle ", item.title);
                 if (item.title === "Bangunan - Envelope") {
                   item.actionsSections = [
                     [
@@ -2101,6 +2223,7 @@ const SimulasiMap = () => {
               polaRuangAirBersihLayer.popupEnabled = false;
               polaRuangKdbKlbLayer.popupEnabled = false;
               polaRuangEnvelopeLayer.popupEnabled = false;
+              persilTanahBpn.popupEnabled = false;
               persilTanahKemacetanLayer.popupEnabled = false;
               persilTanahAirBersihLayer.popupEnabled = false;
               persilTanahKdbKlbLayer.popupEnabled = false;
@@ -2157,6 +2280,7 @@ const SimulasiMap = () => {
                 { layer: polaRuangAirBersihLayer },
                 { layer: polaRuangKdbKlbLayer },
                 { layer: polaRuangEnvelopeLayer },
+                { layer: persilTanahBpn },
                 { layer: persilTanahKemacetanLayer },
                 { layer: persilTanahAirBersihLayer },
                 { layer: persilTanahKdbKlbLayer },
@@ -2276,6 +2400,18 @@ const SimulasiMap = () => {
           view.popup.watch("features", (features) => {
             if (features[0]) {
               console.log(features[0]);
+              setContentBangunan(features[0].attributes.id_bangunan + " == " + features[0].attributes.jlh_lantai);
+              let fieldBuildingArr = [];
+              var strstr = "";
+              features[0].layer.fields.map((fieldBuilding) => {
+                if (features[0].attributes[fieldBuilding.name] !== undefined) {
+                  fieldBuildingArr.push({ field_name: fieldBuilding.name, field_value: features[0].attributes[fieldBuilding.name] });
+                  strstr += "<tr><td>" + fieldBuilding.name + "</td><td>" + features[0].attributes[fieldBuilding.name] + "</td></tr>";
+                }
+              });
+              // console.log("arrcoba ", fieldBuildingArr);
+              setContentBangunan1(fieldBuildingArr);
+              setHasilWarnaBangunanKdbKlb("#38A800");
               setShowingPopop({
                 ...showingPopup,
                 show: !showingPopup.show,
@@ -2557,17 +2693,61 @@ const SimulasiMap = () => {
                       </TabModuleButton>
                     </TabsModule>
                     <>
-                      <TabModuleContent activeTab={activeModuleResTab === 0}>
+                      <TabModuleContent
+                        activeTab={activeModuleResTab === 0}
+                        style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
+                      >
                         <div className="fade-in">
-                          <h4>KDB/KLB Bangunan</h4>
+                          <h4 className="card-title" style={{ margin: "25px 0 10px 20px" }}>
+                            Hasil Simulasi
+                          </h4>
+                          <div className="row" style={{ margin: "0 0 0 5px" }}>
+                            <div className="col-md-6 d-flex align-items-center">
+                              <div className="d-flex flex-row align-items-center">
+                                <p className="font-weight-bold">Pembangunan</p>
+                              </div>
+                            </div>
+                            <div className="col-md-6 d-flex align-items-center">
+                              <div className="d-flex flex-row align-items-center">
+                                <label className="badge badge-danger" style={{ background: hasilWarnaBangunanKdbKlb }}>
+                                  Ditolak
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row" style={{ margin: "0 0 0 5px" }}>
+                            <div className="col-md-12 d-flex align-items-center">
+                              <p>Berdasarkan hasil analisis, dalam rencana pembangunan yang diajukan</p>
+                            </div>
+                          </div>
+                          <div className="table-responsive">
+                            <table className="table">
+                              <tbody>
+                                {contentBangunan1.map((fieldMap) => (
+                                  <tr>
+                                    <td>{fieldMap.field_name}</td>
+                                    <td>{fieldMap.field_value}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {contentBangunan}
                         </div>
                       </TabModuleContent>
-                      <TabModuleContent activeTab={activeModuleResTab === 1}>
+                      <TabModuleContent
+                        activeTab={activeModuleResTab === 1}
+                        style={{ position: "absolute", height: "calc(100% - 240px)", overflow: "auto" }}
+                      >
                         <div className="fade-in">
                           <h4>KDB/KLB Persil Tanah</h4>
                         </div>
                       </TabModuleContent>
-                      <TabModuleContent activeTab={activeModuleResTab === 2}>
+                      <TabModuleContent
+                        activeTab={activeModuleResTab === 2}
+                        style={{ position: "absolute", height: "calc(100% - 240px)", overflow: "auto" }}
+                      >
                         <div className="fade-in">
                           <h4>KDB/KLB Pola Ruang</h4>
                         </div>
