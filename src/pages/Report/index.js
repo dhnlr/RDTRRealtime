@@ -29,16 +29,20 @@ function Report() {
         }
     }, [history])
 
-    const onSubmit = ({ subject, name, email, agency, body }, e) => {
+    const onSubmit = ({ subject, name, email, agency, body, attachment, category }, e) => {
         setIsProcessing(true)
+        
+        var fd = new FormData();
+        fd.set("file", attachment[0])
+        fd.append("subject", subject)
+        fd.append("nama", name)
+        fd.append("email", email)
+        fd.append("instansi", agency)
+        fd.append("isian", body)
+        fd.append("fitur", "a")
+        fd.append("jenis", category)
 
-        axios.post(config.url.API_URL + "/Report", {
-            subject,
-            name,
-            email,
-            agency,
-            body
-        }, {
+        axios.post(config.url.API_URL + "/Laporan/Create", fd, {
             headers: { Authorization: "Bearer " + sessionStorage.token },
         })
             .then((response) => {
@@ -88,18 +92,18 @@ function Report() {
                             <div className="col-md-6  my-2 transparent">
                                 {/* <div className="row">
                                     <div className="col-12"> */}
-                                        <h2 className="mb-4">
-                                            <span className="font-weight-bold mr-1 align-middle" style={{ fontSize: 20 }}>
-                                                Laporan
+                                <h2 className="mb-4">
+                                    <span className="font-weight-bold mr-1 align-middle" style={{ fontSize: 20 }}>
+                                        Laporan
                                     </span>
-                                        </h2>
-                                        {/* <br/> */}
-                                        <p><strong>Silahkan hubungi kami untuk mengirimkan saran atau mendapatkan bantuan terkait sistem.</strong>
-                                            <br /><br />Umpan balik Anda sangat penting bagi kami. Jika Anda ingin mengirimkan proyek hebat yang baru saja Anda selesaikan atau proyek yang akan datang, bagikan kisah hebat Anda dengan pengguna lainnya, laporkan kesalahan, atau beri saran dan masukkan.
+                                </h2>
+                                {/* <br/> */}
+                                <p><strong>Silahkan hubungi kami untuk mengirimkan saran atau mendapatkan bantuan terkait sistem.</strong>
+                                    <br /><br />Umpan balik Anda sangat penting bagi kami. Jika Anda ingin mengirimkan proyek hebat yang baru saja Anda selesaikan atau proyek yang akan datang, bagikan kisah hebat Anda dengan pengguna lainnya, laporkan kesalahan, atau beri saran dan masukkan.
                                     <br /><br />
-                                            <img src={image} alt="Hubungi kami" style={{width: "100%"}}/>
-                                        </p>
-                                    {/* </div>
+                                    <img src={image} alt="Hubungi kami" style={{ width: "100%" }} />
+                                </p>
+                                {/* </div>
                                 </div> */}
                             </div>
 
@@ -112,24 +116,6 @@ function Report() {
                                             <div className="col-12">
                                                 <div className="table-responsive">
                                                     <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
-                                                        <div className="form-group">
-                                                            <label htmlFor="subject">Subjek</label>
-                                                            <input
-                                                                type="text"
-                                                                className="form-control p-input"
-                                                                id="subject"
-                                                                placeholder="Subjek"
-                                                                name="subject"
-                                                                ref={register({
-                                                                    required: "Subjek harus diisi",
-                                                                })}
-                                                            />
-                                                            {errors.subject && (
-                                                                <small id="subjectHelp" className="form-text text-danger">
-                                                                    {errors.subject.message}
-                                                                </small>
-                                                            )}
-                                                        </div>
                                                         <div className="form-group">
                                                             <label htmlFor="name">Nama</label>
                                                             <input
@@ -188,6 +174,50 @@ function Report() {
                                                             )}
                                                         </div>
                                                         <div className="form-group">
+                                                            <label htmlFor="category">Jenis Pelaporan</label>
+                                                            <select name="category" className="form-control" id="category" ref={register({ required: "Jenis pelaporan harus diisi" })}>
+                                                                <option value="saran">Saran</option>
+                                                                <option value="pertanyaan">Pertanyaan</option>
+                                                                <option value="komentar">Komentar</option>
+                                                            </select>
+                                                            {errors.category && (
+                                                                <small id="categoryHelp" className="form-text text-danger">
+                                                                    {errors.category.message}
+                                                                </small>
+                                                            )}
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label htmlFor="feature">Fitur</label>
+                                                            <select name="feature" className="form-control" id="feature" ref={register({ required: "Fitur harus diisi" })}>
+                                                                <option value="a">A</option>
+                                                                <option value="b">B</option>
+                                                                <option value="c">C</option>
+                                                            </select>
+                                                            {errors.feature && (
+                                                                <small id="featureHelp" className="form-text text-danger">
+                                                                    {errors.feature.message}
+                                                                </small>
+                                                            )}
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label htmlFor="subject">Subjek</label>
+                                                            <input
+                                                                type="text"
+                                                                className="form-control p-input"
+                                                                id="subject"
+                                                                placeholder="Subjek"
+                                                                name="subject"
+                                                                ref={register({
+                                                                    required: "Subjek harus diisi",
+                                                                })}
+                                                            />
+                                                            {errors.subject && (
+                                                                <small id="subjectHelp" className="form-text text-danger">
+                                                                    {errors.subject.message}
+                                                                </small>
+                                                            )}
+                                                        </div>
+                                                        <div className="form-group">
                                                             <label htmlFor="body">Pesan</label>
                                                             <textarea
                                                                 type="text"
@@ -207,7 +237,15 @@ function Report() {
                                                             )}
                                                         </div>
                                                         <div className="form-group">
-                                                            <button className="btn btn-success" type="submit" disabled={isProcessing}>
+                                                            <label>Lampiran (opsional)</label>
+                                                            <div className="custom-file">
+                                                                <label id="file-label" htmlFor="attachment" className="custom-file-label">Cari berkas...</label>
+                                                                <input className="form-control custom-file-input" ref={register} type="file" name="attachment" onChange={(e)=> {e.target.files[0].name ? document.getElementById("file-label").innerHTML = e.target.files[0].name : document.getElementById("file-label").innerHTML = "Cari berkas..."}}/>
+                                                            </div>
+
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <button className="btn btn-primary" type="submit" disabled={isProcessing}>
                                                                 {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
                                                                 Kirim Laporan
                                                             </button>
