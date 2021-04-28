@@ -32,8 +32,9 @@ function Report() {
     const onSubmit = ({ subject, name, email, agency, body, attachment, category }, e) => {
         setIsProcessing(true)
         
+        var date = new Date()
         var fd = new FormData();
-        fd.set("file", attachment[0])
+        fd.set("file", attachment[0], `${name}_${date.getDate()}_${date.getMonth()}_${date.getFullYear()}_${attachment[0].name}`)
         fd.append("subject", subject)
         fd.append("nama", name)
         fd.append("email", email)
@@ -114,7 +115,7 @@ function Report() {
                                         {/* <p className="card-title">Kata Sandi</p> */}
                                         <div className="row">
                                             <div className="col-12">
-                                                <div className="table-responsive">
+                                                <div>
                                                     <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
                                                         <div className="form-group">
                                                             <label htmlFor="name">Nama</label>
@@ -189,9 +190,10 @@ function Report() {
                                                         <div className="form-group">
                                                             <label htmlFor="feature">Fitur</label>
                                                             <select name="feature" className="form-control" id="feature" ref={register({ required: "Fitur harus diisi" })}>
-                                                                <option value="a">A</option>
-                                                                <option value="b">B</option>
-                                                                <option value="c">C</option>
+                                                                <option value="Analisis">Analisis</option>
+                                                                <option value="Manajemen Data">Manajemen Data</option>
+                                                                <option value="Manajemen Proyek">Manajemen Proyek</option>
+                                                                <option value="Profil Pengguna">Profil Pengguna</option>
                                                             </select>
                                                             {errors.feature && (
                                                                 <small id="featureHelp" className="form-text text-danger">
