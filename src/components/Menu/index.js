@@ -10,7 +10,7 @@ function Menu(props) {
         <li className={`nav-item ${props.active === "dashboard" ? "active" : ""}`}>
           <Link className="nav-link" to="/dashboard">
             <i className="ti-dashboard menu-icon"></i>
-            <span className="menu-title">Dashboard</span>
+            <span className="menu-title">Dasbor</span>
           </Link>
         </li>
         <li className={`nav-item ${props.active.indexOf("manajemendata") !== -1 ? "active" : ""}`}>
@@ -25,17 +25,26 @@ function Menu(props) {
             <span className="menu-title">Simulasi</span>
           </Link>
         </li>
-        <li className="nav-item">
-          <A className="nav-link" href="index.html">
+        <li className={`nav-item ${props.active.indexOf("report") !== -1 ? "active" : ""}`}>
+          <Link className="nav-link" to="/report">
             <i className="ti-write menu-icon"></i>
             <span className="menu-title">Laporan</span>
-          </A>
+          </Link>
         </li>
-        <li className="nav-item">
-          <A className="nav-link" href="index.html">
+        <li className={`nav-item ${props.active.indexOf("user") !== -1 ? "active" : ""}`}>
+        {/* <Link className="nav-link" to="/usermanagement"> */}
+        <A className="nav-link collapsed" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
             <i className="ti-user menu-icon"></i>
             <span className="menu-title">Administrasi</span>
-          </A>
+            <i className="menu-arrow"></i>
+            </A>
+          {/* </Link> */}
+          <div className="collapse" id="ui-basic" >
+              <ul className="nav flex-column sub-menu">
+                <li className="nav-item"> <Link className="nav-link" to="/usermanagement">Pengguna</Link></li>
+                <li className="nav-item"> <Link className="nav-link" to="/rolemanagement">Peran</Link></li>
+              </ul>
+            </div>
         </li>
         <li className="nav-item">
           <A className="nav-link" href="index.html">

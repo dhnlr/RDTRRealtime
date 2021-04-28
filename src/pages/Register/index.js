@@ -6,6 +6,7 @@ import axios from "axios";
 import querystring from "querystring";
 
 import { config } from "../../Constants";
+import bgImage from "./Image 9.png"
 
 function Register() {
   const {
@@ -17,43 +18,39 @@ function Register() {
   let history = useHistory();
 
   const [errMessage, setErrMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false)
   const [listRole, setListRole] = useState([])
 
   const password = useRef({});
   password.current = watch("password", "");
-  console.log(password.current, errors)
-
-  const handleDashboard = () => {
-    history.push("/dashboard");
-  };
-  const handleLogin = () => {
-    history.push("/login");
-  };
 
   useEffect(() => {
     if (sessionStorage.token) {
-      handleDashboard()
+      history.push("/dashboard");
     }
     if (listRole.length === 0) {
       axios.get(config.url.API_URL + '/Role/GetAll')
         .then(({ data }) => {
-          setListRole(data.obj)
-        })
-        .catch(error => {
-          if (error.response.data.status) {
-            setErrMessage(error.response?.data?.status?.message)
-          } else {
-            setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
+          if (data.status.code === 200 && data.obj.length > 0) {
+            setListRole(data.obj)
           }
         })
+        .catch(error => {
+          error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan peran. Silahkan coba beberapa saat lagi.")
+        })
     }
-  }, [listRole])
+  }, [history, listRole])
 
-  const onSubmit = ({ username, password, rolename, email }) => {
+  const onSubmit = ({ username, password, rolename, email }, e) => {
     setErrMessage(null);
+    setSuccessMessage(null)
+    setIsProcessing(true)
+
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
     };
+
     axios.post(
       config.url.API_URL + "/User/Create",
       querystring.stringify({
@@ -67,24 +64,23 @@ function Register() {
       headers
     )
       .then(() => {
-        handleLogin();
+        setSuccessMessage("Konfirmasi untuk mengaktikan akun Anda. Periksa kotak masuk atau spam lalu ikuti petunjuk konfirmasi yang dikirimkan ke email: " + email)
+        e.target.reset()
+        document.body.scrollTop = 0
+        setIsProcessing(false)
       })
       .catch(error => {
-        if (error.response.data.status) {
-          setErrMessage(error.response?.data?.status?.message)
-        } else {
-          setErrMessage("Gagal daftar. Silahkan coba beberapa saat lagi.")
-        }
+        error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendaftarkan akun. Silahkan coba beberapa saat lagi.")
+        setIsProcessing(false)
       })
   };
 
   return (
     <div>
-      <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
       <Main>
 
         <div style={{ flex: "4", display: "flex" }}>
-          <div style={{ flex: "0.95", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
+          <div style={{ flex: "1.2", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
             </div>
@@ -106,11 +102,26 @@ function Register() {
                   {errMessage}
                 </div>
               )}
+              {successMessage && (
+                <div className="alert alert-success" role="alert">
+                  <p>{successMessage}</p>
+                  <p>Tidak menerima email? <Link to="/resentmailconfirmation">Kirim ulang email konfirmasi</Link></p>
+                </div>
+              )}
               <div>
                 <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-group">
-                    <label htmlFor="email">Alamat Surat Elektronik</label>
-                    <input type="email" className="form-control p-input" id="email" aria-describedby="emailHelp" placeholder="Alamat surat elektronik" name="email" autoFocus ref={register({ required: "Alamat surat elektronik harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat surat elektronik salah" } })} />
+                    <label htmlFor="email">Alamat Email</label>
+                    <input
+                      type="email"
+                      className="form-control p-input"
+                      id="email"
+                      aria-describedby="emailHelp"
+                      placeholder="Alamat email"
+                      name="email"
+                      autoComplete="email"
+                      autoFocus
+                      ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} />
                     {errors.email && (
                       <small id="emailHelp" className="form-text text-danger">
                         {errors.email.message}
@@ -126,6 +137,7 @@ function Register() {
                       aria-describedby="usernameHelp"
                       placeholder="Username"
                       name="username"
+                      autoComplete="username"
                       ref={register({ required: "Username harus diisi", pattern: { value: /^[\w]*$/, message: "Hanya alfabet dan nomor yang diizinkan" } })}
                     />
                     {errors.username && (
@@ -153,16 +165,18 @@ function Register() {
                       type="password"
                       className="form-control p-input"
                       id="password"
-                      placeholder="Kata Sandi"
+                      placeholder="Kata sandi"
                       name="password"
+                      autoComplete="current-password"
                       ref={register({
                         required: "Kata sandi harus diisi",
                         minLength: {
                           value: 6,
-                          message: "Kata sandi sekurangnya 6 karaketer"
+                          message: "Kata sandi sekurangnya memiliki 6 karaketer"
                         }
                       })}
                     />
+                    {!errors.password && <small className="form-text text-muted">Kata sandi sekurangnya memiliki 6 karakter</small>}
                     {errors.password && (
                       <small id="passwordHelp" className="form-text text-danger">
                         {errors.password.message}
@@ -170,13 +184,14 @@ function Register() {
                     )}
                   </div>
                   <div className="form-group">
-                    <label htmlFor="password">Konfirmasi Kata Sandi</label>
+                    <label htmlFor="konfirmasiPassword">Konfirmasi Kata Sandi</label>
                     <input
                       type="password"
                       className="form-control p-input"
                       id="konfirmasiPassword"
-                      placeholder="Kata Sandi"
+                      placeholder="Konfirmasi kata sandi"
                       name="konfirmasiPassword"
+                      autoComplete="confirm-password"
                       ref={register({
                         validate: value =>
                           value === password.current || "Kata sandi tidak sama"
@@ -205,7 +220,10 @@ function Register() {
                     )}
                   </div>
                   <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block">Daftar</button>
+                    <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing || listRole.length === 0}>
+                      {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
+                      Daftar
+                    </button>
                   </div>
                 </form>
                 <div className="text-center font-weight-light">
@@ -234,7 +252,7 @@ const Main = styled.div`
 `;
 const ImageDiv = styled.div`
   flex: 1;
-  background-image: url("./images/Image 9.png");
+  background-image: url("${bgImage}");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   @media only screen and (max-width: 768px) {

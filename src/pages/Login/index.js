@@ -6,6 +6,7 @@ import axios from "axios";
 import querystring from "querystring";
 
 import { config } from "../../Constants";
+import bgImage from "./Image 8.png"
 
 function Login() {
   const {
@@ -16,6 +17,7 @@ function Login() {
   let history = useHistory();
 
   const [errMessage, setErrMessage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
     if (sessionStorage.token) {
@@ -29,9 +31,13 @@ function Login() {
 
   const onSubmit = ({ username, password }) => {
     setErrMessage(null);
+    setIsProcessing(true);
+
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
+      'Access-Control-Max-Age': 3600
     };
+
     axios.post(
       config.url.API_URL + "/Token",
       querystring.stringify({
@@ -43,14 +49,12 @@ function Login() {
     )
       .then(resp => {
         sessionStorage.setItem("token", resp.data.obj.accessToken);
+        setIsProcessing(false)
         handleDashboard();
       })
       .catch(error => {
-        if (error.response.data.status) {
-          setErrMessage(error.response?.data?.status?.message)
-        } else {
-          setErrMessage("Gagal masuk. Silahkan coba beberapa saat lagi.")
-        }
+        error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal masuk. Silahkan coba beberapa saat lagi.")
+        setIsProcessing(false)
       })
   };
 
@@ -59,7 +63,7 @@ function Login() {
       <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
       <Main>
         <div style={{ flex: "4", display: "flex" }}>
-          <div style={{ flex: "0.95", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
+          <div style={{ flex: "1.2", padding: "0.85rem 4.28rem 0", display: "flex", flexDirection: "column" }}>
             <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center" }}>
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
               <Link to="home">&lt; Kembali ke Halaman Utama</Link>
@@ -92,6 +96,7 @@ function Login() {
                       aria-describedby="usernameHelp"
                       placeholder="Username"
                       name="username"
+                      autoComplete="username"
                       autoFocus
                       ref={register({ required: true })}
                     />
@@ -109,6 +114,7 @@ function Login() {
                       id="password"
                       placeholder="Kata Sandi"
                       name="password"
+                      autoComplete="current-password"
                       ref={register({ required: true, minLength: 6 })}
                     />
                     {errors.password && (
@@ -118,18 +124,19 @@ function Login() {
                     )}
                   </div>
                   <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block" /* onClick={() => handleDashboard()} */>
+                    <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing} /* onClick={() => handleDashboard()} */>
+                    {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
                       Masuk
                     </button>
                   </div>
                   <div className="my-2 d-flex justify-content-between align-items-center flex-wrap">
                     <div className="form-check">
-                      <label className="form-check-label">
-                        <input type="checkbox" className="form-check-input" />
+                        <input type="checkbox" className="form-check-input" id="stay" style={{ marginLeft: 0 }} />
+                      <label className="form-check-label" htmlFor="stay">
                         Tetap masuk
                       </label>
                     </div>
-                    <Link to="/login">Lupa kata sandi?</Link>
+                    <Link to="/forgotpassword">Lupa kata sandi?</Link>
                   </div>
                   <div className="text-center font-weight-light">
                     Tidak punya akun? <Link to="/register">Daftar</Link>
@@ -157,7 +164,7 @@ const Main = styled.div`
 `;
 const ImageDiv = styled.div`
   flex: 1;
-  background-image: url("./images/Image 8.png");
+  background-image: url("${bgImage}");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   @media only screen and (max-width: 768px) {

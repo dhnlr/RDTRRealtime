@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 
@@ -42,7 +42,7 @@ function ManajemenDataInput() {
             {cities}
         </option>
     ));
-    
+
     function goSimulasi() {
         history.push("/manajemendata")
     }
@@ -58,6 +58,12 @@ function ManajemenDataInput() {
     function handleCityChange(event) {
         setData(data => ({ ...data, city: event.target.value }));
     }
+
+    useEffect(() => {
+        if (!sessionStorage.token) {
+            history.push("/login");
+        }
+    }, [history])
 
     return (
         <div className="container-scroller">
@@ -110,7 +116,7 @@ function ManajemenDataInput() {
                                         />
                                     </div>
                                     <div className="template-demo float-right">
-                                        <button className="btn btn-light" type="button" onClick={()=>goSimulasi()}>Kembali</button>
+                                        <button className="btn btn-light" type="button" onClick={() => goSimulasi()}>Kembali</button>
 
                                         <button className="btn btn-primary" type="submit">Selanjutnya</button>
                                     </div>

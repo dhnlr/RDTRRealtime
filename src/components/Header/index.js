@@ -1,10 +1,14 @@
 import React from "react";
 import A from "../A";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 // import logo from "./logo-txt.png"
+
 import logo2 from "./logo2.jpeg"
+import profile from "./face28.jpg"
 
 function Header() {
+  let history = useHistory();
+
   return (
     <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
@@ -48,21 +52,30 @@ function Header() {
           </li>
           <li className="nav-item nav-profile dropdown">
             <A className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <img src="./images/faces/face28.jpg" alt="profile" />
+              <img src={profile} alt="profile" />
             </A>
             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-              <A className="dropdown-item">
+              <A className="dropdown-item" onClick={()=>history.push("/profile")}>
                 <i className="ti-settings text-primary" />
-                Settings
+                Profil
               </A>
-              <A className="dropdown-item">
+              <A className="dropdown-item" onClick={() => {
+                sessionStorage.clear();
+                history.push("/login")
+                }}>
                 <i className="ti-power-off text-primary" />
-                Logout
+                Keluar
               </A>
             </div>
           </li>
         </ul>
-        <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+        <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas" onClick={()=> {
+          if (document.getElementById("sidebar").getAttribute("class").indexOf('active') === -1) {
+            document.getElementById("sidebar").setAttribute("class", "sidebar sidebar-offcanvas active");
+          } else {
+            document.getElementById("sidebar").setAttribute("class", "sidebar sidebar-offcanvas active");
+          }
+        }}>
           <span className="icon-menu" />
         </button>
       </div>

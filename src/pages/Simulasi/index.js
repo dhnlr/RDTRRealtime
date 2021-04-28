@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useTable } from "react-table";
 
 import { Header, Menu, Footer } from "../../components";
-import headerImage from "./header.png";
+import headerImage from "./Group 12399.svg";
 import buildingIcon from "./building.svg";
 
 function Simulasi() {
@@ -11,6 +11,12 @@ function Simulasi() {
   function goInputSimulasi() {
     history.push("/simulasimap");
   }
+
+  useEffect(() => {
+    if (!sessionStorage.token) {
+      history.push("/login");
+    }
+  }, [history])
 
   const data = React.useMemo(
     () => [
@@ -82,12 +88,26 @@ function Simulasi() {
             <div className="row">
               <div className="col-md-12 stretch-card mb-4">
                 {
-                  <div className="card">
+                  <div className="card" style={{background: "#80c3d1"}}>
                     <div className="card-body">
                       <div className="row">
                         <div className="col-8 ">
-                          <p className="card-title ">Simulasi</p>
-                          <p className=" font-weight-500 mb-0">Siapapun dapat melihat perencanaan secara publik</p>
+                          <table style={{ height: "100px" }}>
+                            <tbody>
+                              <tr>
+                          
+                                {/* <td className="align-baseline">baseline</td>
+                                <td className="align-top">top</td> */}
+                                <td className="align-middle text-white"><h2 className="">Simulasi</h2>
+                                <p className=" font-weight-500 mb-2">Siapapun dapat melihat perencanaan secara publik</p>
+                                <p className=" font-weight-400 mt-4"><i className="ti-help-alt"> </i>Butuh bantuan?</p>
+                                </td>
+                                {/* <td className="align-bottom">bottom</td>
+                                <td className="align-text-top">text-top</td>
+                                // <td className="align-text-bottom">text-bottom</td> */}
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
                         <div className="col-4 background-icon">
                           <img src={headerImage} alt="header" style={{ width: "50%", float: "right" }}></img>
