@@ -180,6 +180,7 @@ const SimulasiMap = () => {
           "esri/intl",
           "esri/widgets/Bookmarks",
           "esri/webmap/Bookmark",
+          "esri/layers/GroupLayer",
         ],
         {
           css: true,
@@ -203,6 +204,7 @@ const SimulasiMap = () => {
           intl,
           Bookmarks,
           Bookmark,
+          GroupLayer,
         ]) => {
           const map = new Map({
             basemap: "topo-vector",
@@ -428,17 +430,22 @@ const SimulasiMap = () => {
             type: "unique-value", // autocasts as new UniqueValueRenderer()
             defaultSymbol: getSymbolKdbKlb("#B2B2B2"),
             defaultLabel: "Eksisting",
-            field: "status_kdbklb",
+            field: "melampaui_tinggi",
             uniqueValueInfos: [
               {
-                value: "Diizinkan",
-                symbol: getSymbolKdbKlb("#38A800"),
-                label: "Diizinkan",
+                value: "Belum melampaui jumlah lantai maksimal",
+                symbol: getSymbolKdbKlb("#4CE600"),
+                label: "Belum melampaui jumlah lantai maksimal",
               },
               {
-                value: "Ditolak/rekomendasi",
-                symbol: getSymbolKdbKlb("#E64C00"),
-                label: "Ditolak/rekomendasi",
+                value: "Melampaui jumlah lantai maksimal",
+                symbol: getSymbolKdbKlb("#FF0000"),
+                label: "Melampaui jumlah lantai maksimal",
+              },
+              {
+                value: "Jumlah lantai sudah maksimal",
+                symbol: getSymbolKdbKlb("#FFFF00"),
+                label: "Jumlah lantai sudah maksimal",
               },
             ],
             visualVariables: [
@@ -1989,9 +1996,85 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
-          const kemacetanJaringanJalanLayer = new MapImageLayer({
-            url: config.url.ARCGIS_URL + "/Kemacetan/kemacetan_jaringan_jalan/MapServer",
+          const kemacetanJaringanJalanLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Kemacetan/kemacetan_jaringan_jalan/FeatureServer/0",
             title: "Jaringan Jalan",
+            popupTemplate: {
+              title: "Jaringan Jalan",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      fieldName: "orde01",
+                      label: "orde01",
+                    },
+                    {
+                      fieldName: "orde02",
+                      label: "orde02",
+                    },
+                    {
+                      fieldName: "jnsrsr",
+                      label: "jnsrsr",
+                    },
+                    {
+                      fieldName: "stsjrn",
+                      label: "stsjrn",
+                    },
+                    {
+                      fieldName: "sbdata",
+                      label: "sbdata",
+                    },
+                    {
+                      fieldName: "lebar",
+                      label: "lebar",
+                    },
+                    {
+                      fieldName: "los",
+                      label: "los",
+                    },
+                    {
+                      fieldName: "bangkitan",
+                      label: "bangkitan",
+                    },
+                    {
+                      fieldName: "bangkitan_ruasjalan",
+                      label: "bangkitan_ruasjalan",
+                    },
+                    {
+                      fieldName: "kapasitas",
+                      label: "kapasitas",
+                    },
+                    {
+                      fieldName: "los_num",
+                      label: "los_num",
+                    },
+                    {
+                      fieldName: "x1",
+                      label: "x1",
+                    },
+                    {
+                      fieldName: "x2",
+                      label: "x2",
+                    },
+                    {
+                      fieldName: "y1",
+                      label: "y1",
+                    },
+                    {
+                      fieldName: "y2",
+                      label: "y2",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["namobj", "kapasitas"],
+            editingEnabled: false,
           });
 
           const airBersihPdamLayer = new FeatureLayer({
@@ -2041,20 +2124,56 @@ const SimulasiMap = () => {
                   type: "fields",
                   fieldInfos: [
                     {
-                      fieldName: "namzon",
-                      label: "namzon",
+                      fieldName: "namobj",
+                      label: "namobj",
                     },
                     {
-                      fieldName: "kodzon",
-                      label: "kodzon",
+                      fieldName: "namazona",
+                      label: "namazona",
                     },
                     {
-                      fieldName: "namszn",
-                      label: "namszn",
+                      fieldName: "kdzona",
+                      label: "kdzona",
                     },
                     {
-                      fieldName: "kodszn",
-                      label: "kodszn",
+                      fieldName: "namaszona",
+                      label: "namaszona",
+                    },
+                    {
+                      fieldName: "kdszona",
+                      label: "kdszona",
+                    },
+                    {
+                      fieldName: "nambwp",
+                      label: "nambwp",
+                    },
+                    {
+                      fieldName: "nasbwp",
+                      label: "nasbwp",
+                    },
+                    {
+                      fieldName: "kodblk",
+                      label: "kodblk",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
+                    },
+                    {
+                      fieldName: "kabkot",
+                      label: "kabkot",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
                     },
                     {
                       fieldName: "kdb",
@@ -2067,6 +2186,14 @@ const SimulasiMap = () => {
                     {
                       fieldName: "kdh",
                       label: "kdh",
+                    },
+                    {
+                      fieldName: "gsb",
+                      label: "gsb",
+                    },
+                    {
+                      fieldName: "ktb",
+                      label: "ktb",
                     },
                     {
                       fieldName: "lantai_max",
@@ -2084,22 +2211,29 @@ const SimulasiMap = () => {
             title: "Basemap Pola Ruang",
           });
 
+          let kdbKlbGroupLayer = new GroupLayer({
+            title: "Pembangunan Optimum",
+            layers: [polaRuangKdbKlbLayer, persilTanahKdbKlbLayer, buildingsKdbKlbLayer],
+          });
+          let kemacetanGroupLayer = new GroupLayer({
+            title: "Transportasi",
+            layers: [polaRuangKemacetanLayer, persilTanahKemacetanLayer, buildingsKemacetanLayer],
+          });
+          let airBersihGroupLayer = new GroupLayer({
+            title: "Air Bersih",
+            layers: [polaRuangAirBersihLayer, persilTanahAirBersihLayer, buildingsAirBersihLayer],
+          });
+
           map.addMany([
             basemapPolaRuangLayer,
             polaRuangVersioningLayer,
             airBersihPdamLayer,
             kemacetanJaringanJalanLayer,
-            polaRuangKemacetanLayer,
-            polaRuangAirBersihLayer,
-            polaRuangKdbKlbLayer,
             polaRuangEnvelopeLayer,
             persilTanahBpn,
-            persilTanahKemacetanLayer,
-            persilTanahAirBersihLayer,
-            persilTanahKdbKlbLayer,
-            buildingsKemacetanLayer,
-            buildingsAirBersihLayer,
-            buildingsKdbKlbLayer,
+            airBersihGroupLayer,
+            kemacetanGroupLayer,
+            kdbKlbGroupLayer,
             buildingsEnvelopeLayer,
             buildingsLayer,
           ]);
@@ -2234,6 +2368,27 @@ const SimulasiMap = () => {
               view: view,
               layerInfos: [
                 {
+                  layer: buildingsLayer,
+                  enabled: true,
+                  addEnabled: true,
+                  updateEnabled: true,
+                  deleteEnabled: true,
+                  fieldConfig: [
+                    {
+                      name: "jenis",
+                      label: "jenis",
+                    },
+                    {
+                      name: "luas_m2",
+                      label: "luas_m2",
+                    },
+                    {
+                      name: "jlh_lantai",
+                      label: "jlh_lantai",
+                    },
+                  ],
+                },
+                {
                   layer: polaRuangVersioningLayer,
                   enabled: true,
                   addEnabled: true,
@@ -2241,36 +2396,20 @@ const SimulasiMap = () => {
                   deleteEnabled: true,
                   fieldConfig: [
                     {
-                      name: "namzon",
-                      label: "namzon",
+                      name: "namazona",
+                      label: "namazona",
                     },
                     {
-                      name: "kodzon",
-                      label: "kodzon",
+                      name: "kdzona",
+                      label: "kdzona",
                     },
                     {
-                      name: "namszn",
-                      label: "namszn",
+                      name: "namaszona",
+                      label: "namaszona",
                     },
                     {
-                      name: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      name: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      name: "klb",
-                      label: "klb",
-                    },
-                    {
-                      name: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      name: "lantai_max",
-                      label: "lantai_max",
+                      name: "kdszona",
+                      label: "kdszona",
                     },
                   ],
                 },
@@ -2548,11 +2687,13 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.luas_m2_sebelum,
                   },
                 ]);
-                setHasilSimulasiBangunanKdbKlb(features[0].attributes.status_kdbklb);
-                if (features[0].attributes.status_kdbklb === "Ditolak/rekomendasi") {
-                  setHasilWarnaBangunanKdbKlb("#E64C00");
-                } else if (features[0].attributes.status_kdbklb === "Diizinkan") {
-                  setHasilWarnaBangunanKdbKlb("#38A800");
+                setHasilSimulasiBangunanKdbKlb(features[0].attributes.melampaui_tinggi);
+                if (features[0].attributes.melampaui_tinggi === "Belum melampaui jumlah lantai maksimal") {
+                  setHasilWarnaBangunanKdbKlb("#4CE600");
+                } else if (features[0].attributes.melampaui_tinggi === "Melampaui jumlah lantai maksimal") {
+                  setHasilWarnaBangunanKdbKlb("#FF0000");
+                } else if (features[0].attributes.melampaui_tinggi === "Jumlah lantai sudah maksimal") {
+                  setHasilWarnaBangunanKdbKlb("#FFFF00");
                 } else {
                   setHasilWarnaBangunanKdbKlb("#B2B2B2");
                   setHasilSimulasiBangunanKdbKlb("Eksisting");
