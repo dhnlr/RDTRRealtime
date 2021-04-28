@@ -12,6 +12,8 @@ import { config } from "../../Constants";
 
 import styled, { css } from "styled-components";
 
+import { TabsModule, TabModuleButton, TabModuleText, TabModuleContent } from "./tabModule";
+
 const DarkBackground = styled.div`
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -55,6 +57,53 @@ const SimulasiMap = () => {
   const [resPersilTanah, setResPersilTanah] = useState({});
   const [loaded, setLoaded] = useState(true);
 
+  const [activeTab, setActiveTab] = useState(0);
+  const handleClickActiveTab = (e) => {
+    const index = parseInt(e.target.id, 0);
+    if (index !== activeTab) {
+      setActiveTab(index);
+    }
+  };
+  const [activeModuleResTab, setActiveModuleResTab] = useState(0);
+  const handleClickActiveModuleResTab = (e) => {
+    const index = parseInt(e.target.id, 0);
+    if (index !== activeModuleResTab) {
+      setActiveModuleResTab(index);
+    }
+  };
+
+  const [showingPopup, setShowingPopop] = useState({
+    show: false,
+    title: "",
+  });
+
+  const [contentGeneral, setContentGeneral] = useState([]);
+  const [contentPersilTanah, setContentPersilTanah] = useState([]);
+  const [contentPolaRuang, setContentPolaRuang] = useState([]);
+
+  const [contentBangunanKdbKlb, setContentBangunanKdbKlb] = useState([]);
+  const [hasilSimulasiBangunanKdbKlb, setHasilSimulasiBangunanKdbKlb] = useState("");
+  const [hasilWarnaBangunanKdbKlb, setHasilWarnaBangunanKdbKlb] = useState("");
+  const [contentHasilPersilTanahKdbKlb, setContentHasilPersilTanahKdbKlb] = useState({});
+  const [contentHasilPolaRuangKdbKlb, setContentHasilPolaRuangKdbKlb] = useState({});
+  const [hasilWarnaPersilTanahKdbKlb, setHasilWarnaPersilTanahKdbKlb] = useState("");
+  const [hasilWarnaPolaRuangKdbKlb, setHasilWarnaPolaRuangKdbKlb] = useState("");
+
+  const [contentBangunanKemacetan, setContentBangunanKemacetan] = useState([]);
+  const [hasilSimulasiBangunanKemacetan, setHasilSimulasiBangunanKemacetan] = useState("");
+  const [hasilWarnaBangunanKemacetan, setHasilWarnaBangunanKemacetan] = useState("");
+  const [contentHasilPersilTanahKemacetan, setContentHasilPersilTanahKemacetan] = useState({});
+  const [contentHasilPolaRuangKemacetan, setContentHasilPolaRuangKemacetan] = useState({});
+  const [hasilWarnaPersilTanahKemacetan, setHasilWarnaPersilTanahKemacetan] = useState("");
+  const [hasilWarnaPolaRuangKemacetan, setHasilWarnaPolaRuangKemacetan] = useState("");
+
+  const [contentBangunanAirBersih, setContentBangunanAirBersih] = useState([]);
+  const [hasilSimulasiBangunanAirBersih, setHasilSimulasiBangunanAirBersih] = useState("");
+  const [hasilWarnaBangunanAirBersih, setHasilWarnaBangunanAirBersih] = useState("");
+  const [contentHasilPersilTanahAirBersih, setContentHasilPersilTanahAirBersih] = useState({});
+  const [contentHasilPolaRuangAirBersih, setContentHasilPolaRuangAirBersih] = useState({});
+  const [hasilWarnaPersilTanahAirBersih, setHasilWarnaPersilTanahAirBersih] = useState("");
+  const [hasilWarnaPolaRuangAirBersih, setHasilWarnaPolaRuangAirBersih] = useState("");
   // Form related functions
   const {
     register,
@@ -131,6 +180,7 @@ const SimulasiMap = () => {
           "esri/intl",
           "esri/widgets/Bookmarks",
           "esri/webmap/Bookmark",
+          "esri/layers/GroupLayer",
         ],
         {
           css: true,
@@ -154,6 +204,7 @@ const SimulasiMap = () => {
           intl,
           Bookmarks,
           Bookmark,
+          GroupLayer,
         ]) => {
           const map = new Map({
             basemap: "topo-vector",
@@ -164,7 +215,7 @@ const SimulasiMap = () => {
             container: mapRef.current,
             map: map,
             camera: {
-              position: [106.794803, -6.590398, 682.98652],
+              position: [106.7936983, -6.5969447, 682.98652],
               heading: 0,
               tilt: 48.52,
             },
@@ -379,17 +430,22 @@ const SimulasiMap = () => {
             type: "unique-value", // autocasts as new UniqueValueRenderer()
             defaultSymbol: getSymbolKdbKlb("#B2B2B2"),
             defaultLabel: "Eksisting",
-            field: "status_kdbklb",
+            field: "melampaui_tinggi",
             uniqueValueInfos: [
               {
-                value: "Diizinkan",
-                symbol: getSymbolKdbKlb("#38A800"),
-                label: "Diizinkan",
+                value: "Belum melampaui jumlah lantai maksimal",
+                symbol: getSymbolKdbKlb("#4CE600"),
+                label: "Belum melampaui jumlah lantai maksimal",
               },
               {
-                value: "Ditolak/rekomendasi",
-                symbol: getSymbolKdbKlb("#E64C00"),
-                label: "Ditolak/rekomendasi",
+                value: "Melampaui jumlah lantai maksimal",
+                symbol: getSymbolKdbKlb("#FF0000"),
+                label: "Melampaui jumlah lantai maksimal",
+              },
+              {
+                value: "Jumlah lantai sudah maksimal",
+                symbol: getSymbolKdbKlb("#FFFF00"),
+                label: "Jumlah lantai sudah maksimal",
               },
             ],
             visualVariables: [
@@ -453,11 +509,19 @@ const SimulasiMap = () => {
                       fieldName: "luas_m2",
                       label: "luas_m2",
                     },
+                    {
+                      fieldName: "jlh_lantai_sebelum",
+                      label: "jlh_lantai_sebelum",
+                    },
+                    {
+                      fieldName: "luas_m2_sebelum",
+                      label: "luas_m2_sebelum",
+                    },
                   ],
                 },
               ],
             },
-            outFields: ["status_kdbklb", "jlh_lantai"],
+            outFields: ["*"],
             editingEnabled: false,
           });
 
@@ -604,6 +668,14 @@ const SimulasiMap = () => {
                     {
                       fieldName: "izin_air_y10",
                       label: "izin_air_y10",
+                    },
+                    {
+                      fieldName: "jlh_lantai_sebelum",
+                      label: "jlh_lantai_sebelum",
+                    },
+                    {
+                      fieldName: "luas_m2_sebelum",
+                      label: "luas_m2_sebelum",
                     },
                   ],
                 },
@@ -776,6 +848,14 @@ const SimulasiMap = () => {
                     {
                       fieldName: "izin_macet_y10",
                       label: "izin_macet_y10",
+                    },
+                    {
+                      fieldName: "jlh_lantai_sebelum",
+                      label: "jlh_lantai_sebelum",
+                    },
+                    {
+                      fieldName: "luas_m2_sebelum",
+                      label: "luas_m2_sebelum",
                     },
                   ],
                 },
@@ -1916,9 +1996,85 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
-          const kemacetanJaringanJalanLayer = new MapImageLayer({
-            url: config.url.ARCGIS_URL + "/Kemacetan/kemacetan_jaringan_jalan/MapServer",
+          const kemacetanJaringanJalanLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Kemacetan/kemacetan_jaringan_jalan/FeatureServer/0",
             title: "Jaringan Jalan",
+            popupTemplate: {
+              title: "Jaringan Jalan",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      fieldName: "orde01",
+                      label: "orde01",
+                    },
+                    {
+                      fieldName: "orde02",
+                      label: "orde02",
+                    },
+                    {
+                      fieldName: "jnsrsr",
+                      label: "jnsrsr",
+                    },
+                    {
+                      fieldName: "stsjrn",
+                      label: "stsjrn",
+                    },
+                    {
+                      fieldName: "sbdata",
+                      label: "sbdata",
+                    },
+                    {
+                      fieldName: "lebar",
+                      label: "lebar",
+                    },
+                    {
+                      fieldName: "los",
+                      label: "los",
+                    },
+                    {
+                      fieldName: "bangkitan",
+                      label: "bangkitan",
+                    },
+                    {
+                      fieldName: "bangkitan_ruasjalan",
+                      label: "bangkitan_ruasjalan",
+                    },
+                    {
+                      fieldName: "kapasitas",
+                      label: "kapasitas",
+                    },
+                    {
+                      fieldName: "los_num",
+                      label: "los_num",
+                    },
+                    {
+                      fieldName: "x1",
+                      label: "x1",
+                    },
+                    {
+                      fieldName: "x2",
+                      label: "x2",
+                    },
+                    {
+                      fieldName: "y1",
+                      label: "y1",
+                    },
+                    {
+                      fieldName: "y2",
+                      label: "y2",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["namobj", "kapasitas"],
+            editingEnabled: false,
           });
 
           const airBersihPdamLayer = new FeatureLayer({
@@ -1968,20 +2124,56 @@ const SimulasiMap = () => {
                   type: "fields",
                   fieldInfos: [
                     {
-                      fieldName: "namzon",
-                      label: "namzon",
+                      fieldName: "namobj",
+                      label: "namobj",
                     },
                     {
-                      fieldName: "kodzon",
-                      label: "kodzon",
+                      fieldName: "namazona",
+                      label: "namazona",
                     },
                     {
-                      fieldName: "namszn",
-                      label: "namszn",
+                      fieldName: "kdzona",
+                      label: "kdzona",
                     },
                     {
-                      fieldName: "kodszn",
-                      label: "kodszn",
+                      fieldName: "namaszona",
+                      label: "namaszona",
+                    },
+                    {
+                      fieldName: "kdszona",
+                      label: "kdszona",
+                    },
+                    {
+                      fieldName: "nambwp",
+                      label: "nambwp",
+                    },
+                    {
+                      fieldName: "nasbwp",
+                      label: "nasbwp",
+                    },
+                    {
+                      fieldName: "kodblk",
+                      label: "kodblk",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
+                    },
+                    {
+                      fieldName: "kabkot",
+                      label: "kabkot",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
                     },
                     {
                       fieldName: "kdb",
@@ -1994,6 +2186,14 @@ const SimulasiMap = () => {
                     {
                       fieldName: "kdh",
                       label: "kdh",
+                    },
+                    {
+                      fieldName: "gsb",
+                      label: "gsb",
+                    },
+                    {
+                      fieldName: "ktb",
+                      label: "ktb",
                     },
                     {
                       fieldName: "lantai_max",
@@ -2011,22 +2211,29 @@ const SimulasiMap = () => {
             title: "Basemap Pola Ruang",
           });
 
+          let kdbKlbGroupLayer = new GroupLayer({
+            title: "Pembangunan Optimum",
+            layers: [polaRuangKdbKlbLayer, persilTanahKdbKlbLayer, buildingsKdbKlbLayer],
+          });
+          let kemacetanGroupLayer = new GroupLayer({
+            title: "Transportasi",
+            layers: [polaRuangKemacetanLayer, persilTanahKemacetanLayer, buildingsKemacetanLayer],
+          });
+          let airBersihGroupLayer = new GroupLayer({
+            title: "Air Bersih",
+            layers: [polaRuangAirBersihLayer, persilTanahAirBersihLayer, buildingsAirBersihLayer],
+          });
+
           map.addMany([
             basemapPolaRuangLayer,
             polaRuangVersioningLayer,
             airBersihPdamLayer,
             kemacetanJaringanJalanLayer,
-            polaRuangKemacetanLayer,
-            polaRuangAirBersihLayer,
-            polaRuangKdbKlbLayer,
             polaRuangEnvelopeLayer,
             persilTanahBpn,
-            persilTanahKemacetanLayer,
-            persilTanahAirBersihLayer,
-            persilTanahKdbKlbLayer,
-            buildingsKemacetanLayer,
-            buildingsAirBersihLayer,
-            buildingsKdbKlbLayer,
+            airBersihGroupLayer,
+            kemacetanGroupLayer,
+            kdbKlbGroupLayer,
             buildingsEnvelopeLayer,
             buildingsLayer,
           ]);
@@ -2065,6 +2272,7 @@ const SimulasiMap = () => {
 
           view.when(function () {
             // start layerlist
+            var uniqueParentItems = [];
             const layerList = new LayerList({
               container: document.createElement("div"),
               view: view,
@@ -2101,6 +2309,17 @@ const SimulasiMap = () => {
                     ],
                   ];
                 }
+                if (!item.parent) {
+                  if (!uniqueParentItems.includes(item.title)) {
+                    uniqueParentItems.push(item.title);
+                    item.watch("visible", function (event) {
+                      if (event === false) {
+                        view.popup.close();
+                        setShowingPopop({ ...showingPopup, show: false, title: "" });
+                      }
+                    });
+                  }
+                }
               },
             });
             const layerListExpand = new Expand({
@@ -2116,25 +2335,25 @@ const SimulasiMap = () => {
                 // if the increase-opacity action is triggered, then
                 // increase the opacity of the GroupLayer by 0.25
                 if (buildingsEnvelopeLayer.opacity < 1) {
-                  buildingsEnvelopeLayer.opacity += 0.25;
+                  buildingsEnvelopeLayer.opacity -= 0.25;
                 }
               } else if (id === "decrease-opacity-bangunan-envelope") {
                 // if the decrease-opacity action is triggered, then
                 // decrease the opacity of the GroupLayer by 0.25
                 if (buildingsEnvelopeLayer.opacity > 0) {
-                  buildingsEnvelopeLayer.opacity -= 0.25;
+                  buildingsEnvelopeLayer.opacity += 0.25;
                 }
               } else if (id === "increase-opacity-zonasi-envelope") {
                 // if the increase-opacity action is triggered, then
                 // increase the opacity of the GroupLayer by 0.25
                 if (polaRuangEnvelopeLayer.opacity < 1) {
-                  polaRuangEnvelopeLayer.opacity += 0.25;
+                  polaRuangEnvelopeLayer.opacity -= 0.25;
                 }
               } else if (id === "decrease-opacity-zonasi-envelope") {
                 // if the decrease-opacity action is triggered, then
                 // decrease the opacity of the GroupLayer by 0.25
                 if (polaRuangEnvelopeLayer.opacity > 0) {
-                  polaRuangEnvelopeLayer.opacity -= 0.25;
+                  polaRuangEnvelopeLayer.opacity += 0.25;
                 }
               }
             });
@@ -2149,6 +2368,27 @@ const SimulasiMap = () => {
               view: view,
               layerInfos: [
                 {
+                  layer: buildingsLayer,
+                  enabled: true,
+                  addEnabled: true,
+                  updateEnabled: true,
+                  deleteEnabled: true,
+                  fieldConfig: [
+                    {
+                      name: "jenis",
+                      label: "jenis",
+                    },
+                    {
+                      name: "luas_m2",
+                      label: "luas_m2",
+                    },
+                    {
+                      name: "jlh_lantai",
+                      label: "jlh_lantai",
+                    },
+                  ],
+                },
+                {
                   layer: polaRuangVersioningLayer,
                   enabled: true,
                   addEnabled: true,
@@ -2156,36 +2396,20 @@ const SimulasiMap = () => {
                   deleteEnabled: true,
                   fieldConfig: [
                     {
-                      name: "namzon",
-                      label: "namzon",
+                      name: "namazona",
+                      label: "namazona",
                     },
                     {
-                      name: "kodzon",
-                      label: "kodzon",
+                      name: "kdzona",
+                      label: "kdzona",
                     },
                     {
-                      name: "namszn",
-                      label: "namszn",
+                      name: "namaszona",
+                      label: "namaszona",
                     },
                     {
-                      name: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      name: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      name: "klb",
-                      label: "klb",
-                    },
-                    {
-                      name: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      name: "lantai_max",
-                      label: "lantai_max",
+                      name: "kdszona",
+                      label: "kdszona",
                     },
                   ],
                 },
@@ -2399,6 +2623,584 @@ const SimulasiMap = () => {
             // end bookmarks
           });
 
+          view.popup.watch("features", (features) => {
+            if (features[0]) {
+              console.log(features[0]);
+              let fieldsArr = [];
+              features[0].layer.fields.map((fieldVal) => {
+                if (features[0].attributes[fieldVal.name] !== undefined) {
+                  fieldsArr.push({ field_name: fieldVal.name, field_value: features[0].attributes[fieldVal.name] });
+                }
+              });
+              if (
+                features[0].layer.title === "Bangunan - Pembangunan Optimum" ||
+                features[0].layer.title === "Bangunan - Air Bersih" ||
+                features[0].layer.title === "Bangunan - Transportasi"
+              ) {
+                setContentBangunanKdbKlb([
+                  {
+                    field_name: "jenis",
+                    field_value: features[0].attributes.jenis,
+                  },
+                  {
+                    field_name: "jenis_bang",
+                    field_value: features[0].attributes.jenis_bang,
+                  },
+                  {
+                    field_name: "toponim",
+                    field_value: features[0].attributes.toponim,
+                  },
+                  {
+                    field_name: "sumber",
+                    field_value: features[0].attributes.sumber,
+                  },
+                  {
+                    field_name: "jlh_lantai",
+                    field_value: features[0].attributes.jlh_lantai,
+                  },
+                  {
+                    field_name: "melampaui_fa",
+                    field_value: features[0].attributes.melampaui_fa,
+                  },
+                  {
+                    field_name: "melampaui_tinggi",
+                    field_value: features[0].attributes.melampaui_tinggi,
+                  },
+                  {
+                    field_name: "status_kdbklb",
+                    field_value: features[0].attributes.status_kdbklb,
+                  },
+                  {
+                    field_name: "id_bangunan",
+                    field_value: features[0].attributes.id_bangunan,
+                  },
+                  {
+                    field_name: "luas_m2",
+                    field_value: features[0].attributes.luas_m2,
+                  },
+                  {
+                    field_name: "jlh_lantai_sebelum",
+                    field_value: features[0].attributes.jlh_lantai_sebelum,
+                  },
+                  {
+                    field_name: "luas_m2_sebelum",
+                    field_value: features[0].attributes.luas_m2_sebelum,
+                  },
+                ]);
+                setHasilSimulasiBangunanKdbKlb(features[0].attributes.melampaui_tinggi);
+                if (features[0].attributes.melampaui_tinggi === "Belum melampaui jumlah lantai maksimal") {
+                  setHasilWarnaBangunanKdbKlb("#4CE600");
+                } else if (features[0].attributes.melampaui_tinggi === "Melampaui jumlah lantai maksimal") {
+                  setHasilWarnaBangunanKdbKlb("#FF0000");
+                } else if (features[0].attributes.melampaui_tinggi === "Jumlah lantai sudah maksimal") {
+                  setHasilWarnaBangunanKdbKlb("#FFFF00");
+                } else {
+                  setHasilWarnaBangunanKdbKlb("#B2B2B2");
+                  setHasilSimulasiBangunanKdbKlb("Eksisting");
+                }
+
+                setContentBangunanKemacetan([
+                  {
+                    field_name: "jenis",
+                    field_value: features[0].attributes.jenis,
+                  },
+                  {
+                    field_name: "jenis_bang",
+                    field_value: features[0].attributes.jenis_bang,
+                  },
+                  {
+                    field_name: "toponim",
+                    field_value: features[0].attributes.toponim,
+                  },
+                  {
+                    field_name: "sumber",
+                    field_value: features[0].attributes.sumber,
+                  },
+                  {
+                    field_name: "jlh_lantai",
+                    field_value: features[0].attributes.jlh_lantai,
+                  },
+                  {
+                    field_name: "melampaui_fa",
+                    field_value: features[0].attributes.melampaui_fa,
+                  },
+                  {
+                    field_name: "melampaui_tinggi",
+                    field_value: features[0].attributes.melampaui_tinggi,
+                  },
+                  {
+                    field_name: "id_bangunan",
+                    field_value: features[0].attributes.id_bangunan,
+                  },
+                  {
+                    field_name: "luas_m2",
+                    field_value: features[0].attributes.luas_m2,
+                  },
+                  {
+                    field_name: "lebar_jalan",
+                    field_value: features[0].attributes.lebar_jalan,
+                  },
+                  {
+                    field_name: "panjang_jalan",
+                    field_value: features[0].attributes.panjang_jalan,
+                  },
+                  {
+                    field_name: "bangkitan",
+                    field_value: features[0].attributes.bangkitan,
+                  },
+                  {
+                    field_name: "bangkitan_ruasjalan",
+                    field_value: features[0].attributes.bangkitan_ruasjalan,
+                  },
+                  {
+                    field_name: "kapasitas",
+                    field_value: features[0].attributes.kapasitas,
+                  },
+                  {
+                    field_name: "los_num",
+                    field_value: features[0].attributes.los_num,
+                  },
+                  {
+                    field_name: "los",
+                    field_value: features[0].attributes.los,
+                  },
+                  {
+                    field_name: "izin_macet",
+                    field_value: features[0].attributes.izin_macet,
+                  },
+                  {
+                    field_name: "bangkitan_ruasjalan_y6",
+                    field_value: features[0].attributes.bangkitan_ruasjalan_y6,
+                  },
+                  {
+                    field_name: "bangkitan_ruasjalan_y7",
+                    field_value: features[0].attributes.bangkitan_ruasjalan_y7,
+                  },
+                  {
+                    field_name: "bangkitan_ruasjalan_y8",
+                    field_value: features[0].attributes.bangkitan_ruasjalan_y8,
+                  },
+                  {
+                    field_name: "bangkitan_ruasjalan_y9",
+                    field_value: features[0].attributes.bangkitan_ruasjalan_y9,
+                  },
+                  {
+                    field_name: "bangkitan_ruasjalan_y10",
+                    field_value: features[0].attributes.bangkitan_ruasjalan_y10,
+                  },
+                  {
+                    field_name: "izin_macet_y6",
+                    field_value: features[0].attributes.izin_macet_y6,
+                  },
+                  {
+                    field_name: "izin_macet_y7",
+                    field_value: features[0].attributes.izin_macet_y7,
+                  },
+                  {
+                    field_name: "izin_macet_y8",
+                    field_value: features[0].attributes.izin_macet_y8,
+                  },
+                  {
+                    field_name: "izin_macet_y9",
+                    field_value: features[0].attributes.izin_macet_y9,
+                  },
+                  {
+                    field_name: "izin_macet_y10",
+                    field_value: features[0].attributes.izin_macet_y10,
+                  },
+                  {
+                    field_name: "jlh_lantai_sebelum",
+                    field_value: features[0].attributes.jlh_lantai_sebelum,
+                  },
+                  {
+                    field_name: "luas_m2_sebelum",
+                    field_value: features[0].attributes.luas_m2_sebelum,
+                  },
+                ]);
+                setHasilSimulasiBangunanKemacetan(features[0].attributes.izin_macet);
+                if (features[0].attributes.izin_macet === "Ditolak/rekomendasi") {
+                  setHasilWarnaBangunanKemacetan("#A80000");
+                } else if (features[0].attributes.izin_macet === "Diizinkan") {
+                  setHasilWarnaBangunanKemacetan("#00A884");
+                } else {
+                  setHasilWarnaBangunanKemacetan("#B2B2B2");
+                  setHasilSimulasiBangunanKemacetan("Eksisting");
+                }
+
+                setContentBangunanAirBersih([
+                  {
+                    field_name: "jenis",
+                    field_value: features[0].attributes.jenis,
+                  },
+                  {
+                    field_name: "jenis_bang",
+                    field_value: features[0].attributes.jenis_bang,
+                  },
+                  {
+                    field_name: "toponim",
+                    field_value: features[0].attributes.toponim,
+                  },
+                  {
+                    field_name: "sumber",
+                    field_value: features[0].attributes.sumber,
+                  },
+                  {
+                    field_name: "jlh_lantai",
+                    field_value: features[0].attributes.jlh_lantai,
+                  },
+                  {
+                    field_name: "melampaui_fa",
+                    field_value: features[0].attributes.melampaui_fa,
+                  },
+                  {
+                    field_name: "melampaui_tinggi",
+                    field_value: features[0].attributes.melampaui_tinggi,
+                  },
+                  {
+                    field_name: "id_bangunan",
+                    field_value: features[0].attributes.id_bangunan,
+                  },
+                  {
+                    field_name: "luas_m2",
+                    field_value: features[0].attributes.luas_m2,
+                  },
+                  {
+                    field_name: "pdam_kapasitas_harian",
+                    field_value: features[0].attributes.pdam_kapasitas_harian,
+                  },
+                  {
+                    field_name: "keb_air_harian_y5",
+                    field_value: features[0].attributes.keb_air_harian_y5,
+                  },
+                  {
+                    field_name: "keb_air_harian_y6",
+                    field_value: features[0].attributes.keb_air_harian_y6,
+                  },
+                  {
+                    field_name: "keb_air_harian_y7",
+                    field_value: features[0].attributes.keb_air_harian_y7,
+                  },
+                  {
+                    field_name: "keb_air_harian_y8",
+                    field_value: features[0].attributes.keb_air_harian_y8,
+                  },
+                  {
+                    field_name: "keb_air_harian_y9",
+                    field_value: features[0].attributes.keb_air_harian_y9,
+                  },
+                  {
+                    field_name: "keb_air_harian_y10",
+                    field_value: features[0].attributes.keb_air_harian_y10,
+                  },
+                  {
+                    field_name: "izin_air_y5",
+                    field_value: features[0].attributes.izin_air_y5,
+                  },
+                  {
+                    field_name: "izin_air_y6",
+                    field_value: features[0].attributes.izin_air_y6,
+                  },
+                  {
+                    field_name: "izin_air_y7",
+                    field_value: features[0].attributes.izin_air_y7,
+                  },
+                  {
+                    field_name: "izin_air_y8",
+                    field_value: features[0].attributes.izin_air_y8,
+                  },
+                  {
+                    field_name: "izin_air_y9",
+                    field_value: features[0].attributes.izin_air_y9,
+                  },
+                  {
+                    field_name: "izin_air_y10",
+                    field_value: features[0].attributes.izin_air_y10,
+                  },
+                  {
+                    field_name: "jlh_lantai_sebelum",
+                    field_value: features[0].attributes.jlh_lantai_sebelum,
+                  },
+                  {
+                    field_name: "luas_m2_sebelum",
+                    field_value: features[0].attributes.luas_m2_sebelum,
+                  },
+                ]);
+                setHasilSimulasiBangunanAirBersih(features[0].attributes.izin_air_y5);
+                if (features[0].attributes.izin_air_y5 === "Ditolak/rekomendasi") {
+                  setHasilWarnaBangunanAirBersih("#730000");
+                } else if (features[0].attributes.izin_air_y5 === "Diizinkan") {
+                  setHasilWarnaBangunanAirBersih("#00A884");
+                } else {
+                  setHasilWarnaBangunanAirBersih("#B2B2B2");
+                  setHasilSimulasiBangunanAirBersih("Eksisting");
+                }
+
+                // get persil tanah
+                Axios.get(
+                  config.url.ARCGIS_URL +
+                    "/KDBKLB/KDBKLB_PersilTanah_Pabaton/FeatureServer/0/query?where=objectid+%3D+" +
+                    features[0].attributes.oid_persil_tanah +
+                    "&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&f=pjson"
+                )
+                  .then(function (response) {
+                    // handle success
+                    if (response.data.features.length > 0) {
+                      var features = response.data.features[0].attributes;
+                      setContentHasilPersilTanahKdbKlb({
+                        field_name: "status_pemb_optimum",
+                        field_value: features.status_pemb_optimum,
+                      });
+                      setContentHasilPersilTanahKemacetan({
+                        field_name: "izin_macet",
+                        field_value: features.izin_macet,
+                      });
+                      setContentHasilPersilTanahAirBersih({
+                        field_name: "izin_air",
+                        field_value: features.izin_air,
+                      });
+                      setContentPersilTanah([
+                        {
+                          field_name: "objectid",
+                          field_value: features.objectid,
+                        },
+                        {
+                          field_name: "namzon",
+                          field_value: features.namzon,
+                        },
+                        {
+                          field_name: "wadmkc",
+                          field_value: features.wadmkc,
+                        },
+                        {
+                          field_name: "wadmkd",
+                          field_value: features.wadmkd,
+                        },
+                        {
+                          field_name: "luas_m2",
+                          field_value: features.luas_m2,
+                        },
+                        {
+                          field_name: "luaspeta",
+                          field_value: features.luaspeta,
+                        },
+                        {
+                          field_name: "luasha",
+                          field_value: features.luasha,
+                        },
+                        {
+                          field_name: "kdb",
+                          field_value: features.kdb,
+                        },
+                        {
+                          field_name: "klb",
+                          field_value: features.klb,
+                        },
+                        {
+                          field_name: "kdh",
+                          field_value: features.kdh,
+                        },
+                        {
+                          field_name: "lantai_max",
+                          field_value: features.lantai_max,
+                        },
+                        {
+                          field_name: "nib",
+                          field_value: features.nib,
+                        },
+                      ]);
+                    }
+                  })
+                  .catch(function (error) {
+                    // handle error
+                    console.log("error check", error);
+                  });
+
+                // get pola ruang
+                Axios.get(
+                  config.url.ARCGIS_URL +
+                    "/KDBKLB/KDBKLB_PolaRuang/FeatureServer/0/query?where=objectid+%3D+" +
+                    features[0].attributes.oid_zonasi +
+                    "&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&f=pjson"
+                )
+                  .then(function (response) {
+                    // handle success
+                    if (response.data.features.length > 0) {
+                      var features_pola_ruang = response.data.features[0].attributes;
+                      setContentHasilPolaRuangKdbKlb({
+                        field_name: "status_pemb_optimum",
+                        field_value: features_pola_ruang.status_pemb_optimum,
+                      });
+                      setContentHasilPolaRuangKemacetan({
+                        field_name: "izin_macet",
+                        field_value: features_pola_ruang.izin_macet,
+                      });
+                      setContentHasilPolaRuangAirBersih({
+                        field_name: "izin_air",
+                        field_value: features_pola_ruang.izin_air,
+                      });
+                      setContentPolaRuang([
+                        {
+                          field_name: "objectid",
+                          field_value: features_pola_ruang.objectid,
+                        },
+                        {
+                          field_name: "namobj",
+                          field_value: features_pola_ruang.namobj,
+                        },
+                        {
+                          field_name: "namzon",
+                          field_value: features_pola_ruang.namzon,
+                        },
+                        {
+                          field_name: "kodzon",
+                          field_value: features_pola_ruang.kodzon,
+                        },
+                        {
+                          field_name: "namszn",
+                          field_value: features_pola_ruang.namszn,
+                        },
+                        {
+                          field_name: "kodszn",
+                          field_value: features_pola_ruang.kodszn,
+                        },
+                        {
+                          field_name: "nambwp",
+                          field_value: features_pola_ruang.nambwp,
+                        },
+                        {
+                          field_name: "nasbwp",
+                          field_value: features_pola_ruang.nasbwp,
+                        },
+                        {
+                          field_name: "kodblk",
+                          field_value: features_pola_ruang.kodblk,
+                        },
+                        {
+                          field_name: "kodsbl",
+                          field_value: features_pola_ruang.kodsbl,
+                        },
+                        {
+                          field_name: "wadmkc",
+                          field_value: features_pola_ruang.wadmkc,
+                        },
+                        {
+                          field_name: "wadmkd",
+                          field_value: features_pola_ruang.wadmkd,
+                        },
+                        {
+                          field_name: "kkop_1",
+                          field_value: features_pola_ruang.kkop_1,
+                        },
+                        {
+                          field_name: "lp2b_2",
+                          field_value: features_pola_ruang.lp2b_2,
+                        },
+                        {
+                          field_name: "krb_03",
+                          field_value: features_pola_ruang.krb_03,
+                        },
+                        {
+                          field_name: "tod_04",
+                          field_value: features_pola_ruang.tod_04,
+                        },
+                        {
+                          field_name: "teb_05",
+                          field_value: features_pola_ruang.teb_05,
+                        },
+                        {
+                          field_name: "cagbud",
+                          field_value: features_pola_ruang.cagbud,
+                        },
+                        {
+                          field_name: "hankam",
+                          field_value: features_pola_ruang.hankam,
+                        },
+                        {
+                          field_name: "puslit",
+                          field_value: features_pola_ruang.puslit,
+                        },
+                        {
+                          field_name: "tpz_00",
+                          field_value: features_pola_ruang.tpz_00,
+                        },
+                        {
+                          field_name: "luasha",
+                          field_value: features_pola_ruang.luasha,
+                        },
+                        {
+                          field_name: "kdb",
+                          field_value: features_pola_ruang.kdb,
+                        },
+                        {
+                          field_name: "klb",
+                          field_value: features_pola_ruang.klb,
+                        },
+                        {
+                          field_name: "kdh",
+                          field_value: features_pola_ruang.kdh,
+                        },
+                        {
+                          field_name: "lantai_max",
+                          field_value: features_pola_ruang.lantai_max,
+                        },
+                        {
+                          field_name: "id_polaruang",
+                          field_value: features_pola_ruang.id_polaruang,
+                        },
+                        {
+                          field_name: "gsb",
+                          field_value: features_pola_ruang.gsb,
+                        },
+                        {
+                          field_name: "ktb",
+                          field_value: features_pola_ruang.ktb,
+                        },
+                        {
+                          field_name: "keterangan",
+                          field_value: features_pola_ruang.keterangan,
+                        },
+                        {
+                          field_name: "kabkot",
+                          field_value: features_pola_ruang.kabkot,
+                        },
+                        {
+                          field_name: "userid",
+                          field_value: features_pola_ruang.userid,
+                        },
+                        {
+                          field_name: "namazona",
+                          field_value: features_pola_ruang.namazona,
+                        },
+                        {
+                          field_name: "kdzona",
+                          field_value: features_pola_ruang.kdzona,
+                        },
+                        {
+                          field_name: "namaszona",
+                          field_value: features_pola_ruang.namaszona,
+                        },
+                        {
+                          field_name: "kdszona",
+                          field_value: features_pola_ruang.kdszona,
+                        },
+                      ]);
+                    }
+                  })
+                  .catch(function (error) {
+                    // handle error
+                    console.log("error check", error);
+                  });
+              } else {
+                setContentGeneral(fieldsArr);
+              }
+              setShowingPopop({
+                ...showingPopup,
+                show: !showingPopup.show,
+                title: features[0].layer.title,
+              });
+            }
+          });
+
           setStateView(view);
 
           return { view };
@@ -2468,6 +3270,14 @@ const SimulasiMap = () => {
     stateView.container.classList.remove("screenshotCursor");
   };
   // end marking reset
+
+  // start close showing popup
+  const handleCloseShowingPopup = () => {
+    console.log(stateView);
+    stateView.popup.close();
+    setShowingPopop({ ...showingPopup, show: false, title: "" });
+  };
+  // end close showing popup
 
   return (
     <div className="container-scroller">
@@ -2555,6 +3365,461 @@ const SimulasiMap = () => {
               <LoadingOverlay active={true} spinner text="Menjalankan analisis..."></LoadingOverlay>
             </DarkBackground>
             <div style={style.viewDiv} ref={mapRef} />
+            {showingPopup.show && (
+              <div
+                style={{
+                  borderLeft: "1px solid #CED4DA",
+                  display: "block",
+                  position: "fixed",
+                  top: "60px",
+                  right: "0",
+                  bottom: "0",
+                  zIndex: "9999",
+                  width: "350px",
+                  height: "100vh",
+                  minHeight: "100%",
+                  background: "#F8FAFC",
+                }}
+              >
+                <i
+                  className="ti-close"
+                  style={{
+                    position: "absolute",
+                    top: "16px",
+                    right: "16px",
+                    color: "#fff",
+                    background: "transparent",
+                    borderRadius: "4px",
+                    padding: "0 3px",
+                    cursor: "pointer",
+                    zIndex: "1",
+                  }}
+                  onClick={() => handleCloseShowingPopup()}
+                />
+                <p
+                  style={{
+                    padding: "16px 0 13px 15px",
+                    fontSize: "1rem",
+                    fontFamily: "'Nunito', sans-serif",
+                    fontWeight: "500",
+                    lineHeight: "1",
+                    color: "rgb(255 255 255 / 90%)",
+                    opacity: "0.9",
+                    marginBottom: "0",
+                    borderTop: "1px solid #CED4DA",
+                    background: "#0A156A",
+                  }}
+                >
+                  {showingPopup.title}
+                </p>
+                {showingPopup.title === "Bangunan - Pembangunan Optimum" ||
+                showingPopup.title === "Bangunan - Air Bersih" ||
+                showingPopup.title === "Bangunan - Transportasi" ? (
+                  <>
+                    <TabsModule>
+                      <div style={{ flex: "1", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <TabModuleButton onClick={handleClickActiveTab} activeTab={activeTab === 0} id={0} style={{ background: "#6D8392" }}>
+                          <img onClick={handleClickActiveTab} activeTab={activeTab === 0} id={0} src="./images/office-building.svg" alt="KDB/KLB" />
+                        </TabModuleButton>
+                        <TabModuleText onClick={handleClickActiveTab} activeTab={activeTab === 0} id={0}>
+                          KDB/KLB
+                        </TabModuleText>
+                      </div>
+                      <div
+                        style={{
+                          flex: "1",
+                          textAlign: "center",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                      >
+                        <TabModuleButton onClick={handleClickActiveTab} activeTab={activeTab === 1} id={1} style={{ background: "#EB5569" }}>
+                          <img onClick={handleClickActiveTab} activeTab={activeTab === 1} id={1} src="./images/traffic-lights.svg" alt="KEMACETAN" />
+                        </TabModuleButton>
+                        <TabModuleText onClick={handleClickActiveTab} activeTab={activeTab === 1} id={1}>
+                          KEMACETAN
+                        </TabModuleText>
+                      </div>
+                      <div style={{ flex: "1", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <TabModuleButton onClick={handleClickActiveTab} activeTab={activeTab === 2} id={2} style={{ background: "#6EAABA" }}>
+                          <img onClick={handleClickActiveTab} activeTab={activeTab === 2} id={2} src="./images/water.svg" alt="AIR BERSIH" />
+                        </TabModuleButton>
+                        <TabModuleText onClick={handleClickActiveTab} activeTab={activeTab === 2} id={2}>
+                          AIR BERSIH
+                        </TabModuleText>
+                      </div>
+                    </TabsModule>
+                    <>
+                      <TabModuleContent activeTab={activeTab === 0}>
+                        <TabsModule style={{ height: "45px" }}>
+                          <TabModuleButton
+                            onClick={handleClickActiveModuleResTab}
+                            activeTab={activeModuleResTab === 0}
+                            id={0}
+                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                          >
+                            Bangunan
+                          </TabModuleButton>
+                          <TabModuleButton
+                            onClick={handleClickActiveModuleResTab}
+                            activeTab={activeModuleResTab === 1}
+                            id={1}
+                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                          >
+                            Persil Tanah
+                          </TabModuleButton>
+                          <TabModuleButton
+                            onClick={handleClickActiveModuleResTab}
+                            activeTab={activeModuleResTab === 2}
+                            id={2}
+                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                          >
+                            Pola Ruang
+                          </TabModuleButton>
+                        </TabsModule>
+                        <>
+                          <TabModuleContent
+                            activeTab={activeModuleResTab === 0}
+                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
+                          >
+                            <div className="fade-in">
+                              <h4 className="card-title" style={{ margin: "25px 0 10px 20px" }}>
+                                Hasil Simulasi
+                              </h4>
+                              <div className="row" style={{ margin: "0 0 0 5px" }}>
+                                <div className="col-md-6 d-flex align-items-center">
+                                  <div className="d-flex flex-row align-items-center">
+                                    <p className="font-weight-bold">Pembangunan</p>
+                                  </div>
+                                </div>
+                                <div className="col-md-6 d-flex align-items-center">
+                                  <div className="d-flex flex-row align-items-center">
+                                    <label className="badge badge-danger" style={{ background: hasilWarnaBangunanKdbKlb }}>
+                                      {hasilSimulasiBangunanKdbKlb}
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="row" style={{ margin: "0 0 0 5px" }}>
+                                <div className="col-md-12 d-flex align-items-center">
+                                  <p>Berdasarkan hasil analisis, dalam rencana pembangunan yang diajukan</p>
+                                </div>
+                              </div>
+                              <div className="table-responsive">
+                                <table className="table">
+                                  <tbody>
+                                    {contentBangunanKdbKlb.map((fieldMap, i) => (
+                                      <tr key={i}>
+                                        <td>{fieldMap.field_name}</td>
+                                        <td>{fieldMap.field_value}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </TabModuleContent>
+                          <TabModuleContent
+                            activeTab={activeModuleResTab === 1}
+                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
+                          >
+                            <div className="fade-in">
+                              <div className="table-responsive">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>{contentHasilPersilTanahKdbKlb.field_name}</td>
+                                      <td>{contentHasilPersilTanahKdbKlb.field_value}</td>
+                                    </tr>
+                                    {contentPersilTanah.map((fieldMap, i) => (
+                                      <tr key={i}>
+                                        <td>{fieldMap.field_name}</td>
+                                        <td>{fieldMap.field_value}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </TabModuleContent>
+                          <TabModuleContent
+                            activeTab={activeModuleResTab === 2}
+                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
+                          >
+                            <div className="fade-in">
+                              <div className="table-responsive">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>{contentHasilPolaRuangKdbKlb.field_name}</td>
+                                      <td>{contentHasilPolaRuangKdbKlb.field_value}</td>
+                                    </tr>
+                                    {contentPolaRuang.map((fieldMap, i) => (
+                                      <tr key={i}>
+                                        <td>{fieldMap.field_name}</td>
+                                        <td>{fieldMap.field_value}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </TabModuleContent>
+                        </>
+                      </TabModuleContent>
+                      <TabModuleContent activeTab={activeTab === 1}>
+                        <TabsModule style={{ height: "45px" }}>
+                          <TabModuleButton
+                            onClick={handleClickActiveModuleResTab}
+                            activeTab={activeModuleResTab === 0}
+                            id={0}
+                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                          >
+                            Bangunan
+                          </TabModuleButton>
+                          <TabModuleButton
+                            onClick={handleClickActiveModuleResTab}
+                            activeTab={activeModuleResTab === 1}
+                            id={1}
+                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                          >
+                            Persil Tanah
+                          </TabModuleButton>
+                          <TabModuleButton
+                            onClick={handleClickActiveModuleResTab}
+                            activeTab={activeModuleResTab === 2}
+                            id={2}
+                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                          >
+                            Pola Ruang
+                          </TabModuleButton>
+                        </TabsModule>
+                        <>
+                          <TabModuleContent
+                            activeTab={activeModuleResTab === 0}
+                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
+                          >
+                            <div className="fade-in">
+                              <h4 className="card-title" style={{ margin: "25px 0 10px 20px" }}>
+                                Hasil Simulasi
+                              </h4>
+                              <div className="row" style={{ margin: "0 0 0 5px" }}>
+                                <div className="col-md-6 d-flex align-items-center">
+                                  <div className="d-flex flex-row align-items-center">
+                                    <p className="font-weight-bold">Pembangunan</p>
+                                  </div>
+                                </div>
+                                <div className="col-md-6 d-flex align-items-center">
+                                  <div className="d-flex flex-row align-items-center">
+                                    <label className="badge badge-danger" style={{ background: hasilWarnaBangunanKemacetan }}>
+                                      {hasilSimulasiBangunanKemacetan}
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="row" style={{ margin: "0 0 0 5px" }}>
+                                <div className="col-md-12 d-flex align-items-center">
+                                  <p>Berdasarkan hasil analisis, dalam rencana pembangunan yang diajukan</p>
+                                </div>
+                              </div>
+                              <div className="table-responsive">
+                                <table className="table">
+                                  <tbody>
+                                    {contentBangunanKemacetan.map((fieldMap, i) => (
+                                      <tr key={i}>
+                                        <td>{fieldMap.field_name}</td>
+                                        <td>{fieldMap.field_value}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </TabModuleContent>
+                          <TabModuleContent
+                            activeTab={activeModuleResTab === 1}
+                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
+                          >
+                            <div className="fade-in">
+                              <div className="table-responsive">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>{contentHasilPersilTanahKemacetan.field_name}</td>
+                                      <td>{contentHasilPersilTanahKemacetan.field_value}</td>
+                                    </tr>
+                                    {contentPersilTanah.map((fieldMap, i) => (
+                                      <tr key={i}>
+                                        <td>{fieldMap.field_name}</td>
+                                        <td>{fieldMap.field_value}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </TabModuleContent>
+                          <TabModuleContent
+                            activeTab={activeModuleResTab === 2}
+                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
+                          >
+                            <div className="fade-in">
+                              <div className="table-responsive">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>{contentHasilPolaRuangKemacetan.field_name}</td>
+                                      <td>{contentHasilPolaRuangKemacetan.field_value}</td>
+                                    </tr>
+                                    {contentPolaRuang.map((fieldMap, i) => (
+                                      <tr key={i}>
+                                        <td>{fieldMap.field_name}</td>
+                                        <td>{fieldMap.field_value}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </TabModuleContent>
+                        </>
+                      </TabModuleContent>
+                      <TabModuleContent activeTab={activeTab === 2}>
+                        <TabsModule style={{ height: "45px" }}>
+                          <TabModuleButton
+                            onClick={handleClickActiveModuleResTab}
+                            activeTab={activeModuleResTab === 0}
+                            id={0}
+                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                          >
+                            Bangunan
+                          </TabModuleButton>
+                          <TabModuleButton
+                            onClick={handleClickActiveModuleResTab}
+                            activeTab={activeModuleResTab === 1}
+                            id={1}
+                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                          >
+                            Persil Tanah
+                          </TabModuleButton>
+                          <TabModuleButton
+                            onClick={handleClickActiveModuleResTab}
+                            activeTab={activeModuleResTab === 2}
+                            id={2}
+                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
+                          >
+                            Pola Ruang
+                          </TabModuleButton>
+                        </TabsModule>
+                        <>
+                          <TabModuleContent
+                            activeTab={activeModuleResTab === 0}
+                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
+                          >
+                            <div className="fade-in">
+                              <h4 className="card-title" style={{ margin: "25px 0 10px 20px" }}>
+                                Hasil Simulasi
+                              </h4>
+                              <div className="row" style={{ margin: "0 0 0 5px" }}>
+                                <div className="col-md-6 d-flex align-items-center">
+                                  <div className="d-flex flex-row align-items-center">
+                                    <p className="font-weight-bold">Pembangunan</p>
+                                  </div>
+                                </div>
+                                <div className="col-md-6 d-flex align-items-center">
+                                  <div className="d-flex flex-row align-items-center">
+                                    <label className="badge badge-danger" style={{ background: hasilWarnaBangunanAirBersih }}>
+                                      {hasilSimulasiBangunanAirBersih}
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="row" style={{ margin: "0 0 0 5px" }}>
+                                <div className="col-md-12 d-flex align-items-center">
+                                  <p>Berdasarkan hasil analisis, dalam rencana pembangunan yang diajukan</p>
+                                </div>
+                              </div>
+                              <div className="table-responsive">
+                                <table className="table">
+                                  <tbody>
+                                    {contentBangunanAirBersih.map((fieldMap, i) => (
+                                      <tr key={i}>
+                                        <td>{fieldMap.field_name}</td>
+                                        <td>{fieldMap.field_value}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </TabModuleContent>
+                          <TabModuleContent
+                            activeTab={activeModuleResTab === 1}
+                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
+                          >
+                            <div className="fade-in">
+                              <div className="table-responsive">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>{contentHasilPersilTanahAirBersih.field_name}</td>
+                                      <td>{contentHasilPersilTanahAirBersih.field_value}</td>
+                                    </tr>
+                                    {contentPersilTanah.map((fieldMap, i) => (
+                                      <tr key={i}>
+                                        <td>{fieldMap.field_name}</td>
+                                        <td>{fieldMap.field_value}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </TabModuleContent>
+                          <TabModuleContent
+                            activeTab={activeModuleResTab === 2}
+                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
+                          >
+                            <div className="fade-in">
+                              <div className="table-responsive">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>{contentHasilPolaRuangAirBersih.field_name}</td>
+                                      <td>{contentHasilPolaRuangAirBersih.field_value}</td>
+                                    </tr>
+                                    {contentPolaRuang.map((fieldMap, i) => (
+                                      <tr key={i}>
+                                        <td>{fieldMap.field_name}</td>
+                                        <td>{fieldMap.field_value}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </TabModuleContent>
+                        </>
+                      </TabModuleContent>
+                    </>
+                  </>
+                ) : (
+                  <div className="table-responsive" style={{ position: "absolute", height: "calc(100% - 105px)", width: "350px", overflow: "auto" }}>
+                    <table className="table">
+                      <tbody>
+                        {contentGeneral.map((fieldMap, i) => (
+                          <tr key={i}>
+                            <td>{fieldMap.field_name}</td>
+                            <td>{fieldMap.field_value}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
             <div id="layerListExpDiv" className="esri-widget"></div>
             <div id="legendExpDiv" className="esri-widget"></div>
             <div id="buildingsExpDiv" className="esri-widget">
