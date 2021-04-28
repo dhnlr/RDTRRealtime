@@ -2283,13 +2283,13 @@ const SimulasiMap = () => {
                     [
                       {
                         title: "Increase Transparency",
-                        className: "esri-icon-up",
-                        id: "increase-opacity-bangunan-envelope",
+                        className: "esri-icon-down",
+                        id: "decrease-opacity-bangunan-envelope",
                       },
                       {
                         title: "Decrease Transparency",
-                        className: "esri-icon-down",
-                        id: "decrease-opacity-bangunan-envelope",
+                        className: "esri-icon-up",
+                        id: "increase-opacity-bangunan-envelope",
                       },
                     ],
                   ];
@@ -2298,13 +2298,13 @@ const SimulasiMap = () => {
                     [
                       {
                         title: "Increase Transparency",
-                        className: "esri-icon-up",
-                        id: "increase-opacity-zonasi-envelope",
+                        className: "esri-icon-down",
+                        id: "decrease-opacity-zonasi-envelope",
                       },
                       {
                         title: "Decrease Transparency",
-                        className: "esri-icon-down",
-                        id: "decrease-opacity-zonasi-envelope",
+                        className: "esri-icon-up",
+                        id: "increase-opacity-zonasi-envelope",
                       },
                     ],
                   ];
@@ -2335,25 +2335,25 @@ const SimulasiMap = () => {
                 // if the increase-opacity action is triggered, then
                 // increase the opacity of the GroupLayer by 0.25
                 if (buildingsEnvelopeLayer.opacity < 1) {
-                  buildingsEnvelopeLayer.opacity -= 0.25;
+                  buildingsEnvelopeLayer.opacity += 0.25;
                 }
               } else if (id === "decrease-opacity-bangunan-envelope") {
                 // if the decrease-opacity action is triggered, then
                 // decrease the opacity of the GroupLayer by 0.25
                 if (buildingsEnvelopeLayer.opacity > 0) {
-                  buildingsEnvelopeLayer.opacity += 0.25;
+                  buildingsEnvelopeLayer.opacity -= 0.25;
                 }
               } else if (id === "increase-opacity-zonasi-envelope") {
                 // if the increase-opacity action is triggered, then
                 // increase the opacity of the GroupLayer by 0.25
                 if (polaRuangEnvelopeLayer.opacity < 1) {
-                  polaRuangEnvelopeLayer.opacity -= 0.25;
+                  polaRuangEnvelopeLayer.opacity += 0.25;
                 }
               } else if (id === "decrease-opacity-zonasi-envelope") {
                 // if the decrease-opacity action is triggered, then
                 // decrease the opacity of the GroupLayer by 0.25
                 if (polaRuangEnvelopeLayer.opacity > 0) {
-                  polaRuangEnvelopeLayer.opacity += 0.25;
+                  polaRuangEnvelopeLayer.opacity -= 0.25;
                 }
               }
             });
