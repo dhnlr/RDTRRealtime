@@ -2283,12 +2283,12 @@ const SimulasiMap = () => {
                     [
                       {
                         title: "Increase Transparency",
-                        className: "esri-icon-down",
+                        className: "esri-icon-up",
                         id: "decrease-opacity-bangunan-envelope",
                       },
                       {
                         title: "Decrease Transparency",
-                        className: "esri-icon-up",
+                        className: "esri-icon-down",
                         id: "increase-opacity-bangunan-envelope",
                       },
                     ],
@@ -2298,12 +2298,12 @@ const SimulasiMap = () => {
                     [
                       {
                         title: "Increase Transparency",
-                        className: "esri-icon-down",
+                        className: "esri-icon-up",
                         id: "decrease-opacity-zonasi-envelope",
                       },
                       {
                         title: "Decrease Transparency",
-                        className: "esri-icon-up",
+                        className: "esri-icon-down",
                         id: "increase-opacity-zonasi-envelope",
                       },
                     ],
