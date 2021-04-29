@@ -2722,9 +2722,9 @@ const SimulasiMap = () => {
 
           const airBersihPdamLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/Air/airbersih_pdam/FeatureServer/0",
-            title: "Air Bersih PDAM",
+            title: "PDAM",
             popupTemplate: {
-              title: "Air Bersih PDAM",
+              title: "PDAM",
               content: [
                 {
                   type: "fields",
@@ -2868,18 +2868,16 @@ const SimulasiMap = () => {
           });
           let kemacetanGroupLayer = new GroupLayer({
             title: "Transportasi",
-            layers: [polaRuangKemacetanLayer, persilTanahKemacetanLayer, buildingsKemacetanLayer],
+            layers: [kemacetanJaringanJalanLayer, polaRuangKemacetanLayer, persilTanahKemacetanLayer, buildingsKemacetanLayer],
           });
           let airBersihGroupLayer = new GroupLayer({
             title: "Air Bersih",
-            layers: [polaRuangAirBersihLayer, persilTanahAirBersihLayer, buildingsAirBersihLayer],
+            layers: [airBersihPdamLayer, polaRuangAirBersihLayer, persilTanahAirBersihLayer, buildingsAirBersihLayer],
           });
 
           map.addMany([
             basemapPolaRuangLayer,
             polaRuangVersioningLayer,
-            airBersihPdamLayer,
-            kemacetanJaringanJalanLayer,
             polaRuangEnvelopeLayer,
             persilTanahBpn,
             airBersihGroupLayer,
