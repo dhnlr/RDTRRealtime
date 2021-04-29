@@ -4557,6 +4557,93 @@ const SimulasiMap = () => {
                     // handle error
                     console.log("error check", error);
                   });
+              } else if (features[0].layer.title === "Pola Ruang Versioning") {
+                setContentGeneral([
+                  {
+                    field_name: "objectid",
+                    field_value: features[0].attributes.objectid,
+                  },
+                  {
+                    field_name: "id_polaruang",
+                    field_value: features[0].attributes.id_polaruang,
+                  },
+                  {
+                    field_name: "namazona",
+                    field_value: features[0].attributes.namazona,
+                  },
+                  {
+                    field_name: "kdzona",
+                    field_value: features[0].attributes.kdzona,
+                  },
+                  {
+                    field_name: "namaszona",
+                    field_value: features[0].attributes.namaszona,
+                  },
+                  {
+                    field_name: "kdszona",
+                    field_value: features[0].attributes.kdszona,
+                  },
+                  {
+                    field_name: "luasha",
+                    field_value: features[0].attributes.luasha,
+                  },
+                  {
+                    field_name: "kdb",
+                    field_value: features[0].attributes.kdb,
+                  },
+                  {
+                    field_name: "kdb_sebelum",
+                    field_value: features[0].attributes.kdb_sebelum,
+                  },
+                  {
+                    field_name: "klb",
+                    field_value: features[0].attributes.klb,
+                  },
+                  {
+                    field_name: "klb_sebelum",
+                    field_value: features[0].attributes.klb_sebelum,
+                  },
+                  {
+                    field_name: "kdh",
+                    field_value: features[0].attributes.kdh,
+                  },
+                  {
+                    field_name: "kdh_sebelum",
+                    field_value: features[0].attributes.kdh_sebelum,
+                  },
+                  {
+                    field_name: "lantai_max",
+                    field_value: features[0].attributes.lantai_max,
+                  },
+                  {
+                    field_name: "status_pemb_optimum",
+                    field_value: features[0].attributes.status_pemb_optimum,
+                  },
+                  {
+                    field_name: "status_pemb_optimum_sebelum",
+                    field_value: features[0].attributes.status_pemb_optimum_sebelum,
+                  },
+                  {
+                    field_name: "izin_air",
+                    field_value: features[0].attributes.izin_air,
+                  },
+                  {
+                    field_name: "izin_air_sebelum",
+                    field_value: features[0].attributes.izin_air_sebelum,
+                  },
+                  {
+                    field_name: "izin_macet",
+                    field_value: features[0].attributes.izin_macet,
+                  },
+                  {
+                    field_name: "izin_macet_sebelum",
+                    field_value: features[0].attributes.izin_macet_sebelum,
+                  },
+                  {
+                    field_name: "kabkot",
+                    field_value: features[0].attributes.kabkot,
+                  },
+                ]);
               } else {
                 setContentGeneral(fieldsArr);
               }
