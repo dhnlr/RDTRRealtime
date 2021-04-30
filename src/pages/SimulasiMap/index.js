@@ -3593,11 +3593,11 @@ const SimulasiMap = () => {
                 ]);
                 setHasilSimulasiBangunanKdbKlb(features[0].attributes.melampaui_tinggi);
                 if (features[0].attributes.melampaui_tinggi === "Belum melampaui jumlah lantai maksimal") {
-                  setHasilWarnaBangunanKdbKlb("#4CE600");
+                  setHasilWarnaBangunanKdbKlb("#FFFF00");
                 } else if (features[0].attributes.melampaui_tinggi === "Melampaui jumlah lantai maksimal") {
                   setHasilWarnaBangunanKdbKlb("#FF0000");
                 } else if (features[0].attributes.melampaui_tinggi === "Jumlah lantai sudah maksimal") {
-                  setHasilWarnaBangunanKdbKlb("#FFFF00");
+                  setHasilWarnaBangunanKdbKlb("#4CE600");
                 } else {
                   setHasilWarnaBangunanKdbKlb("#B2B2B2");
                   setHasilSimulasiBangunanKdbKlb("Eksisting");
