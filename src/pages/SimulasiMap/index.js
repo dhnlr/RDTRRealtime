@@ -334,7 +334,7 @@ const SimulasiMap = () => {
                 {
                   type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
                   material: {
-                    color: "rgba(178, 178, 178, 0.5)",
+                    color: "rgba(178, 178, 178, 1)",
                   },
                   edges: {
                     type: "solid",
@@ -434,17 +434,17 @@ const SimulasiMap = () => {
             uniqueValueInfos: [
               {
                 value: "Belum melampaui jumlah lantai maksimal",
-                symbol: getSymbolKdbKlb("#4CE600"),
+                symbol: getSymbolKdbKlb([255, 255, 0]),
                 label: "Belum melampaui jumlah lantai maksimal",
               },
               {
                 value: "Melampaui jumlah lantai maksimal",
-                symbol: getSymbolKdbKlb("#FF0000"),
+                symbol: getSymbolKdbKlb([255, 0, 0]),
                 label: "Melampaui jumlah lantai maksimal",
               },
               {
                 value: "Jumlah lantai sudah maksimal",
-                symbol: getSymbolKdbKlb("#FFFF00"),
+                symbol: getSymbolKdbKlb([76, 230, 0]),
                 label: "Jumlah lantai sudah maksimal",
               },
             ],
@@ -2901,7 +2901,6 @@ const SimulasiMap = () => {
           buildingsKemacetanLayer.visible = false;
           buildingsAirBersihLayer.visible = false;
           buildingsKdbKlbLayer.visible = false;
-          buildingsEnvelopeLayer.visible = false;
 
           async function finishLayer() {
             if (isMounted) {
@@ -3288,10 +3287,6 @@ const SimulasiMap = () => {
               ) {
                 setContentBangunanKdbKlb([
                   {
-                    field_name: "id_bangunan",
-                    field_value: features[0].attributes.id_bangunan,
-                  },
-                  {
                     field_name: "jenis",
                     field_value: features[0].attributes.jenis,
                   },
@@ -3300,8 +3295,60 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.jenis_bang,
                   },
                   {
-                    field_name: "sumber",
-                    field_value: features[0].attributes.sumber,
+                    field_name: "status_kdbklb_sebelum",
+                    field_value: features[0].attributes.status_kdbklb_sebelum,
+                  },
+                  {
+                    field_name: "status_kdbklb",
+                    field_value: features[0].attributes.status_kdbklb,
+                  },
+                  {
+                    field_name: "melampaui_fa_sebelum",
+                    field_value: features[0].attributes.melampaui_fa_sebelum,
+                  },
+                  {
+                    field_name: "melampaui_fa",
+                    field_value: features[0].attributes.melampaui_fa,
+                  },
+                  {
+                    field_name: "melampaui_tinggi_sebelum",
+                    field_value: features[0].attributes.melampaui_tinggi_sebelum,
+                  },
+                  {
+                    field_name: "melampaui_tinggi",
+                    field_value: features[0].attributes.melampaui_tinggi,
+                  },
+                  {
+                    field_name: "izin_air_y5_sebelum",
+                    field_value: features[0].attributes.izin_air_y5_sebelum,
+                  },
+                  {
+                    field_name: "izin_air_y5",
+                    field_value: features[0].attributes.izin_air_y5,
+                  },
+                  {
+                    field_name: "izin_macet_sebelum",
+                    field_value: features[0].attributes.izin_macet_sebelum,
+                  },
+                  {
+                    field_name: "izin_macet",
+                    field_value: features[0].attributes.izin_macet,
+                  },
+                  {
+                    field_name: "los_num_sebelum",
+                    field_value: features[0].attributes.los_num_sebelum,
+                  },
+                  {
+                    field_name: "los_num",
+                    field_value: features[0].attributes.los_num,
+                  },
+                  {
+                    field_name: "los_sebelum",
+                    field_value: features[0].attributes.los_sebelum,
+                  },
+                  {
+                    field_name: "los",
+                    field_value: features[0].attributes.los,
                   },
                   {
                     field_name: "jlh_lantai_sebelum",
@@ -3328,28 +3375,8 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.fa,
                   },
                   {
-                    field_name: "melampaui_fa_sebelum",
-                    field_value: features[0].attributes.melampaui_fa_sebelum,
-                  },
-                  {
-                    field_name: "melampaui_fa",
-                    field_value: features[0].attributes.melampaui_fa,
-                  },
-                  {
-                    field_name: "melampaui_tinggi_sebelum",
-                    field_value: features[0].attributes.melampaui_tinggi_sebelum,
-                  },
-                  {
-                    field_name: "melampaui_tinggi",
-                    field_value: features[0].attributes.melampaui_tinggi,
-                  },
-                  {
-                    field_name: "status_kdbklb_sebelum",
-                    field_value: features[0].attributes.status_kdbklb_sebelum,
-                  },
-                  {
-                    field_name: "status_kdbklb",
-                    field_value: features[0].attributes.status_kdbklb,
+                    field_name: "id_bangunan",
+                    field_value: features[0].attributes.id_bangunan,
                   },
                   {
                     field_name: "penduduk_y1",
@@ -3432,10 +3459,6 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.keb_air_harian_y10,
                   },
                   {
-                    field_name: "izin_air_y5",
-                    field_value: features[0].attributes.izin_air_y5,
-                  },
-                  {
                     field_name: "izin_air_y6",
                     field_value: features[0].attributes.izin_air_y6,
                   },
@@ -3476,30 +3499,6 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.kapasitas,
                   },
                   {
-                    field_name: "los_num_sebelum",
-                    field_value: features[0].attributes.los_num_sebelum,
-                  },
-                  {
-                    field_name: "los_num",
-                    field_value: features[0].attributes.los_num,
-                  },
-                  {
-                    field_name: "los_sebelum",
-                    field_value: features[0].attributes.los_sebelum,
-                  },
-                  {
-                    field_name: "los",
-                    field_value: features[0].attributes.los,
-                  },
-                  {
-                    field_name: "izin_macet_sebelum",
-                    field_value: features[0].attributes.izin_macet_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet",
-                    field_value: features[0].attributes.izin_macet,
-                  },
-                  {
                     field_name: "bangkitan_ruasjalan_y6",
                     field_value: features[0].attributes.bangkitan_ruasjalan_y6,
                   },
@@ -3538,10 +3537,6 @@ const SimulasiMap = () => {
                   {
                     field_name: "izin_macet_y10",
                     field_value: features[0].attributes.izin_macet_y10,
-                  },
-                  {
-                    field_name: "izin_air_y5_sebelum",
-                    field_value: features[0].attributes.izin_air_y5_sebelum,
                   },
                   {
                     field_name: "izin_air_y6_sebelum",
@@ -3586,6 +3581,10 @@ const SimulasiMap = () => {
                   {
                     field_name: "izin_macet_y10_sebelum",
                     field_value: features[0].attributes.izin_macet_y10_sebelum,
+                  },
+                  {
+                    field_name: "sumber",
+                    field_value: features[0].attributes.sumber,
                   },
                   {
                     field_name: "kabkot",
@@ -3606,10 +3605,6 @@ const SimulasiMap = () => {
 
                 setContentBangunanKemacetan([
                   {
-                    field_name: "id_bangunan",
-                    field_value: features[0].attributes.id_bangunan,
-                  },
-                  {
                     field_name: "jenis",
                     field_value: features[0].attributes.jenis,
                   },
@@ -3618,8 +3613,60 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.jenis_bang,
                   },
                   {
-                    field_name: "sumber",
-                    field_value: features[0].attributes.sumber,
+                    field_name: "status_kdbklb_sebelum",
+                    field_value: features[0].attributes.status_kdbklb_sebelum,
+                  },
+                  {
+                    field_name: "status_kdbklb",
+                    field_value: features[0].attributes.status_kdbklb,
+                  },
+                  {
+                    field_name: "melampaui_fa_sebelum",
+                    field_value: features[0].attributes.melampaui_fa_sebelum,
+                  },
+                  {
+                    field_name: "melampaui_fa",
+                    field_value: features[0].attributes.melampaui_fa,
+                  },
+                  {
+                    field_name: "melampaui_tinggi_sebelum",
+                    field_value: features[0].attributes.melampaui_tinggi_sebelum,
+                  },
+                  {
+                    field_name: "melampaui_tinggi",
+                    field_value: features[0].attributes.melampaui_tinggi,
+                  },
+                  {
+                    field_name: "izin_air_y5_sebelum",
+                    field_value: features[0].attributes.izin_air_y5_sebelum,
+                  },
+                  {
+                    field_name: "izin_air_y5",
+                    field_value: features[0].attributes.izin_air_y5,
+                  },
+                  {
+                    field_name: "izin_macet_sebelum",
+                    field_value: features[0].attributes.izin_macet_sebelum,
+                  },
+                  {
+                    field_name: "izin_macet",
+                    field_value: features[0].attributes.izin_macet,
+                  },
+                  {
+                    field_name: "los_num_sebelum",
+                    field_value: features[0].attributes.los_num_sebelum,
+                  },
+                  {
+                    field_name: "los_num",
+                    field_value: features[0].attributes.los_num,
+                  },
+                  {
+                    field_name: "los_sebelum",
+                    field_value: features[0].attributes.los_sebelum,
+                  },
+                  {
+                    field_name: "los",
+                    field_value: features[0].attributes.los,
                   },
                   {
                     field_name: "jlh_lantai_sebelum",
@@ -3646,28 +3693,8 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.fa,
                   },
                   {
-                    field_name: "melampaui_fa_sebelum",
-                    field_value: features[0].attributes.melampaui_fa_sebelum,
-                  },
-                  {
-                    field_name: "melampaui_fa",
-                    field_value: features[0].attributes.melampaui_fa,
-                  },
-                  {
-                    field_name: "melampaui_tinggi_sebelum",
-                    field_value: features[0].attributes.melampaui_tinggi_sebelum,
-                  },
-                  {
-                    field_name: "melampaui_tinggi",
-                    field_value: features[0].attributes.melampaui_tinggi,
-                  },
-                  {
-                    field_name: "status_kdbklb_sebelum",
-                    field_value: features[0].attributes.status_kdbklb_sebelum,
-                  },
-                  {
-                    field_name: "status_kdbklb",
-                    field_value: features[0].attributes.status_kdbklb,
+                    field_name: "id_bangunan",
+                    field_value: features[0].attributes.id_bangunan,
                   },
                   {
                     field_name: "penduduk_y1",
@@ -3750,10 +3777,6 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.keb_air_harian_y10,
                   },
                   {
-                    field_name: "izin_air_y5",
-                    field_value: features[0].attributes.izin_air_y5,
-                  },
-                  {
                     field_name: "izin_air_y6",
                     field_value: features[0].attributes.izin_air_y6,
                   },
@@ -3794,30 +3817,6 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.kapasitas,
                   },
                   {
-                    field_name: "los_num_sebelum",
-                    field_value: features[0].attributes.los_num_sebelum,
-                  },
-                  {
-                    field_name: "los_num",
-                    field_value: features[0].attributes.los_num,
-                  },
-                  {
-                    field_name: "los_sebelum",
-                    field_value: features[0].attributes.los_sebelum,
-                  },
-                  {
-                    field_name: "los",
-                    field_value: features[0].attributes.los,
-                  },
-                  {
-                    field_name: "izin_macet_sebelum",
-                    field_value: features[0].attributes.izin_macet_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet",
-                    field_value: features[0].attributes.izin_macet,
-                  },
-                  {
                     field_name: "bangkitan_ruasjalan_y6",
                     field_value: features[0].attributes.bangkitan_ruasjalan_y6,
                   },
@@ -3856,10 +3855,6 @@ const SimulasiMap = () => {
                   {
                     field_name: "izin_macet_y10",
                     field_value: features[0].attributes.izin_macet_y10,
-                  },
-                  {
-                    field_name: "izin_air_y5_sebelum",
-                    field_value: features[0].attributes.izin_air_y5_sebelum,
                   },
                   {
                     field_name: "izin_air_y6_sebelum",
@@ -3904,6 +3899,10 @@ const SimulasiMap = () => {
                   {
                     field_name: "izin_macet_y10_sebelum",
                     field_value: features[0].attributes.izin_macet_y10_sebelum,
+                  },
+                  {
+                    field_name: "sumber",
+                    field_value: features[0].attributes.sumber,
                   },
                   {
                     field_name: "kabkot",
@@ -3922,10 +3921,6 @@ const SimulasiMap = () => {
 
                 setContentBangunanAirBersih([
                   {
-                    field_name: "id_bangunan",
-                    field_value: features[0].attributes.id_bangunan,
-                  },
-                  {
                     field_name: "jenis",
                     field_value: features[0].attributes.jenis,
                   },
@@ -3934,8 +3929,60 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.jenis_bang,
                   },
                   {
-                    field_name: "sumber",
-                    field_value: features[0].attributes.sumber,
+                    field_name: "status_kdbklb_sebelum",
+                    field_value: features[0].attributes.status_kdbklb_sebelum,
+                  },
+                  {
+                    field_name: "status_kdbklb",
+                    field_value: features[0].attributes.status_kdbklb,
+                  },
+                  {
+                    field_name: "melampaui_fa_sebelum",
+                    field_value: features[0].attributes.melampaui_fa_sebelum,
+                  },
+                  {
+                    field_name: "melampaui_fa",
+                    field_value: features[0].attributes.melampaui_fa,
+                  },
+                  {
+                    field_name: "melampaui_tinggi_sebelum",
+                    field_value: features[0].attributes.melampaui_tinggi_sebelum,
+                  },
+                  {
+                    field_name: "melampaui_tinggi",
+                    field_value: features[0].attributes.melampaui_tinggi,
+                  },
+                  {
+                    field_name: "izin_air_y5_sebelum",
+                    field_value: features[0].attributes.izin_air_y5_sebelum,
+                  },
+                  {
+                    field_name: "izin_air_y5",
+                    field_value: features[0].attributes.izin_air_y5,
+                  },
+                  {
+                    field_name: "izin_macet_sebelum",
+                    field_value: features[0].attributes.izin_macet_sebelum,
+                  },
+                  {
+                    field_name: "izin_macet",
+                    field_value: features[0].attributes.izin_macet,
+                  },
+                  {
+                    field_name: "los_num_sebelum",
+                    field_value: features[0].attributes.los_num_sebelum,
+                  },
+                  {
+                    field_name: "los_num",
+                    field_value: features[0].attributes.los_num,
+                  },
+                  {
+                    field_name: "los_sebelum",
+                    field_value: features[0].attributes.los_sebelum,
+                  },
+                  {
+                    field_name: "los",
+                    field_value: features[0].attributes.los,
                   },
                   {
                     field_name: "jlh_lantai_sebelum",
@@ -3962,28 +4009,8 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.fa,
                   },
                   {
-                    field_name: "melampaui_fa_sebelum",
-                    field_value: features[0].attributes.melampaui_fa_sebelum,
-                  },
-                  {
-                    field_name: "melampaui_fa",
-                    field_value: features[0].attributes.melampaui_fa,
-                  },
-                  {
-                    field_name: "melampaui_tinggi_sebelum",
-                    field_value: features[0].attributes.melampaui_tinggi_sebelum,
-                  },
-                  {
-                    field_name: "melampaui_tinggi",
-                    field_value: features[0].attributes.melampaui_tinggi,
-                  },
-                  {
-                    field_name: "status_kdbklb_sebelum",
-                    field_value: features[0].attributes.status_kdbklb_sebelum,
-                  },
-                  {
-                    field_name: "status_kdbklb",
-                    field_value: features[0].attributes.status_kdbklb,
+                    field_name: "id_bangunan",
+                    field_value: features[0].attributes.id_bangunan,
                   },
                   {
                     field_name: "penduduk_y1",
@@ -4066,10 +4093,6 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.keb_air_harian_y10,
                   },
                   {
-                    field_name: "izin_air_y5",
-                    field_value: features[0].attributes.izin_air_y5,
-                  },
-                  {
                     field_name: "izin_air_y6",
                     field_value: features[0].attributes.izin_air_y6,
                   },
@@ -4110,30 +4133,6 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.kapasitas,
                   },
                   {
-                    field_name: "los_num_sebelum",
-                    field_value: features[0].attributes.los_num_sebelum,
-                  },
-                  {
-                    field_name: "los_num",
-                    field_value: features[0].attributes.los_num,
-                  },
-                  {
-                    field_name: "los_sebelum",
-                    field_value: features[0].attributes.los_sebelum,
-                  },
-                  {
-                    field_name: "los",
-                    field_value: features[0].attributes.los,
-                  },
-                  {
-                    field_name: "izin_macet_sebelum",
-                    field_value: features[0].attributes.izin_macet_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet",
-                    field_value: features[0].attributes.izin_macet,
-                  },
-                  {
                     field_name: "bangkitan_ruasjalan_y6",
                     field_value: features[0].attributes.bangkitan_ruasjalan_y6,
                   },
@@ -4172,10 +4171,6 @@ const SimulasiMap = () => {
                   {
                     field_name: "izin_macet_y10",
                     field_value: features[0].attributes.izin_macet_y10,
-                  },
-                  {
-                    field_name: "izin_air_y5_sebelum",
-                    field_value: features[0].attributes.izin_air_y5_sebelum,
                   },
                   {
                     field_name: "izin_air_y6_sebelum",
@@ -4220,6 +4215,10 @@ const SimulasiMap = () => {
                   {
                     field_name: "izin_macet_y10_sebelum",
                     field_value: features[0].attributes.izin_macet_y10_sebelum,
+                  },
+                  {
+                    field_name: "sumber",
+                    field_value: features[0].attributes.sumber,
                   },
                   {
                     field_name: "kabkot",
@@ -4558,14 +4557,6 @@ const SimulasiMap = () => {
               } else if (features[0].layer.title === "Pola Ruang Versioning") {
                 setContentGeneral([
                   {
-                    field_name: "objectid",
-                    field_value: features[0].attributes.objectid,
-                  },
-                  {
-                    field_name: "id_polaruang",
-                    field_value: features[0].attributes.id_polaruang,
-                  },
-                  {
                     field_name: "namazona",
                     field_value: features[0].attributes.namazona,
                   },
@@ -4582,60 +4573,68 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.kdszona,
                   },
                   {
-                    field_name: "luasha",
-                    field_value: features[0].attributes.luasha,
-                  },
-                  {
-                    field_name: "kdb",
-                    field_value: features[0].attributes.kdb,
-                  },
-                  {
-                    field_name: "kdb_sebelum",
-                    field_value: features[0].attributes.kdb_sebelum,
-                  },
-                  {
-                    field_name: "klb",
-                    field_value: features[0].attributes.klb,
-                  },
-                  {
-                    field_name: "klb_sebelum",
-                    field_value: features[0].attributes.klb_sebelum,
-                  },
-                  {
-                    field_name: "kdh",
-                    field_value: features[0].attributes.kdh,
-                  },
-                  {
-                    field_name: "kdh_sebelum",
-                    field_value: features[0].attributes.kdh_sebelum,
-                  },
-                  {
-                    field_name: "lantai_max",
-                    field_value: features[0].attributes.lantai_max,
+                    field_name: "status_pemb_optimum_sebelum",
+                    field_value: features[0].attributes.status_pemb_optimum_sebelum,
                   },
                   {
                     field_name: "status_pemb_optimum",
                     field_value: features[0].attributes.status_pemb_optimum,
                   },
                   {
-                    field_name: "status_pemb_optimum_sebelum",
-                    field_value: features[0].attributes.status_pemb_optimum_sebelum,
+                    field_name: "izin_air_sebelum",
+                    field_value: features[0].attributes.izin_air_sebelum,
                   },
                   {
                     field_name: "izin_air",
                     field_value: features[0].attributes.izin_air,
                   },
                   {
-                    field_name: "izin_air_sebelum",
-                    field_value: features[0].attributes.izin_air_sebelum,
+                    field_name: "izin_macet_sebelum",
+                    field_value: features[0].attributes.izin_macet_sebelum,
                   },
                   {
                     field_name: "izin_macet",
                     field_value: features[0].attributes.izin_macet,
                   },
                   {
-                    field_name: "izin_macet_sebelum",
-                    field_value: features[0].attributes.izin_macet_sebelum,
+                    field_name: "kdb_sebelum",
+                    field_value: features[0].attributes.kdb_sebelum,
+                  },
+                  {
+                    field_name: "kdb",
+                    field_value: features[0].attributes.kdb,
+                  },
+                  {
+                    field_name: "klb_sebelum",
+                    field_value: features[0].attributes.klb_sebelum,
+                  },
+                  {
+                    field_name: "klb",
+                    field_value: features[0].attributes.klb,
+                  },
+                  {
+                    field_name: "kdh_sebelum",
+                    field_value: features[0].attributes.kdh_sebelum,
+                  },
+                  {
+                    field_name: "kdh",
+                    field_value: features[0].attributes.kdh,
+                  },
+                  {
+                    field_name: "lantai_max_sebelum",
+                    field_value: features[0].attributes.lantai_max_sebelum,
+                  },
+                  {
+                    field_name: "lantai_max",
+                    field_value: features[0].attributes.lantai_max,
+                  },
+                  {
+                    field_name: "id_polaruang",
+                    field_value: features[0].attributes.id_polaruang,
+                  },
+                  {
+                    field_name: "luasha",
+                    field_value: features[0].attributes.luasha,
                   },
                   {
                     field_name: "kabkot",
