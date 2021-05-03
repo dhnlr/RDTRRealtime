@@ -40,7 +40,7 @@ function Home() {
           style={{ background: "#0d2946", width: "100%", flex: "1", display: "flex", alignItems: "center", padding: "0.8rem 3rem", fontSize: "14px", color: "#fff", flexWrap: "wrap", justifyContent: "space-between" }}
         >
           <div /* style={{ flex: "1" }} */>
-            <div>&copy; Hak Cipta © {new Date().getFullYear()} - Kementerian Agraria dan Tata Ruang/ Badan Pertanahan Nasional</div>
+            <div>Hak Cipta &copy; {new Date().getFullYear()} - Kementerian Agraria dan Tata Ruang/ Badan Pertanahan Nasional</div>
             <div>Jl. Sisingamangaraja No. 2 Kebayoran Baru, Jakarta Selatan</div>
           </div>
           <div /* style={{ flex: "1" }} */>

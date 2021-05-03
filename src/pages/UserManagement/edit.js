@@ -149,17 +149,11 @@ function UserManagementEdit() {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="exampleInputRole">Peranan</label>
-                                        <Controller
-                                            render={() =>
-                                                <select name="rolename" className="form-control" id="exampleInputRole" ref={register({ required: "Peran harus diisi" })}>
+                                        <select name="rolename" className="form-control" id="exampleInputRole" ref={register({ required: "Peran harus diisi" })}>
                                                     {listRole.map(role => (
-                                                        <option key={role.id} value={role.name} >{role.name}</option>
+                                                        <option key={role.id} value={role.name} selected={role.name === state["roles[0].name"]}>{role.name}</option>
                                                     ))}
-                                                </select>}
-                                            control={control}
-                                            name="rolename"
-                                            rules={{ required: "Peran harus diisi" }}
-                                        />
+                                                </select>
                                         {errors.rolename && (
                                             <small id="rolenameHelp" className="form-text text-danger">
                                                 {errors.rolename.message}

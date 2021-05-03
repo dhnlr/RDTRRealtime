@@ -46,7 +46,7 @@ function Menu(props) {
               </ul>
             </div>
         </li>
-        <li className="nav-item">
+        <li className={`nav-item ${props.active.indexOf("help") !== -1 ? "active" : ""}`}>
           <A className="nav-link" href="index.html">
             <i className="ti-help-alt menu-icon"></i>
             <span className="menu-title">Bantuan</span>
