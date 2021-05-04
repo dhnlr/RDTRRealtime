@@ -3,12 +3,12 @@ import { useHistory, Link } from "react-router-dom";
 import axios from "axios"
 import Swal from "sweetalert2"
 
-import { Header, Menu, Footer, Table } from "../../components";
+import { Header, Menu, Footer, Table, TableLoading } from "../../components";
 
 import { config } from "../../Constants";
 
 function UserManagement() {
-    const [search, setSearch] = useState(null)
+    const [search, setSearch] = useState("")
     const [isProcessing, setIsProcessing] = useState(false)
     const [processCounter, setProcessCounter] = useState(0)
     const [data, setData] = useState([]);
@@ -276,6 +276,8 @@ function UserManagement() {
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="table-responsive">
+                                                {isProcessing && data.length === 0 && <TableLoading/>}
+
                                                     {<div>
                                                         <Table
                                                             routeAdd="/user/add"
@@ -358,6 +360,7 @@ function UserManagement() {
                                                             // valueTenant={selTenant}
                                                             searchVal={search}
                                                             processCounter={processCounter}
+                                                            isProcessing={isProcessing}
                                                         />
                                                     </div>}
                                                 </div>

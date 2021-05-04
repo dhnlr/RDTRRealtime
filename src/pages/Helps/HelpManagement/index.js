@@ -3,7 +3,7 @@ import { useHistory, Link } from "react-router-dom";
 import axios from "axios"
 import Swal from "sweetalert2"
 
-import { Header, Menu, Footer, Table } from "../../../components";
+import { Header, Menu, Footer, Table, TableLoading } from "../../../components";
 
 import { config } from "../../../Constants";
 
@@ -157,7 +157,7 @@ function HelpManagement() {
                                 <div className="input-group">
                                     <div className="input-group-prepend hover-cursor" id="navbar-search-icon">
                                         <span className="input-group-text" id="search" style={{ background: "white", borderRight: "none" }}>
-                                        {!isProcessing && <i className="icon-search"></i>}
+                                            {!isProcessing && <i className="icon-search"></i>}
                                             {isProcessing && <div className="spinner-border spinner-border-sm" role="status">
                                                 <span className="sr-only">Loading...</span>
                                             </div>}
@@ -204,6 +204,7 @@ function HelpManagement() {
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="table-responsive">
+                                                    {isProcessing && data.length === 0 && <TableLoading />}
                                                     <div>
                                                         <Table
                                                             routeAdd="/user/add"
@@ -218,7 +219,7 @@ function HelpManagement() {
                                                                     Header: "Jawaban",
                                                                     accessor: "jawaban",
                                                                     width: "10%",
-                                                                    Cell: (row) => (<div>{String(row.cell.value).slice(0, 50)+"..."}</div>)
+                                                                    Cell: (row) => (<div>{String(row.cell.value).slice(0, 50) + "..."}</div>)
                                                                 },
                                                                 {
                                                                     Header: "Kategori",
@@ -263,6 +264,7 @@ function HelpManagement() {
                                                             // valueTenant={selTenant}
                                                             searchVal={search}
                                                             processCounter={processCounter}
+                                                            isProcessing={isProcessing}
                                                         />
                                                     </div>
                                                 </div>

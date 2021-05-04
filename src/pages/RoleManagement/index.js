@@ -3,7 +3,7 @@ import { useHistory, Link } from "react-router-dom";
 import axios from "axios"
 import Swal from "sweetalert2"
 
-import { Header, Menu, Footer, Table } from "../../components";
+import { Header, Menu, Footer, Table, TableLoading } from "../../components";
 
 import { config } from "../../Constants";
 
@@ -204,7 +204,8 @@ function RoleManagement() {
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="table-responsive">
-                                                    <div>
+                                                    {isProcessing && data.length === 0 && <TableLoading/>}
+                                                    { <div>
                                                         <Table
                                                             routeAdd="/user/add"
                                                             // filterTenant={site}
@@ -275,8 +276,9 @@ function RoleManagement() {
                                                             // valueTenant={selTenant}
                                                             searchVal={search}
                                                             processCounter={processCounter}
+                                                            isProcessing={isProcessing}
                                                         />
-                                                    </div>
+                                                    </div>}
                                                 </div>
                                             </div>
                                         </div>

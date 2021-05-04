@@ -20,7 +20,8 @@ function Table({
   filterTenant,
   //   filterDate
   searchVal,
-  processCounter
+  processCounter,
+  isProcessing
 }) {
   const [valueFilter, setvalueFilter] = React.useState("");
   const [valueStatus, setValueStatus] = React.useState("");
@@ -245,8 +246,11 @@ function Table({
         </div>
       </div>
       <div className="card-body">
-        {data.length === 0 && <div style={{ display: "flex", alignContent: "center", flexWrap: "wrap", flexDirection: "column", padding: "3% 30%" }}>
+        {!isProcessing && data.length === 0 && !searchVal && <div style={{ display: "flex", alignContent: "center", flexWrap: "wrap", flexDirection: "column", padding: "3% 30%" }}>
           <p>Ups... Kamu belum miliki data yang tersimpan. Silahkan membuat yang baru terlebih dahulu.</p>
+        </div>}
+        {!isProcessing && searchVal && data.length === 0 && <div style={{ display: "flex", alignContent: "center", flexWrap: "wrap", flexDirection: "column", padding: "3% 30%" }}>
+          <p>Maaf, pencarian dengan kata kunci "{searchVal.length > 20 ? searchVal.slice(0,20)+"...":searchVal}" tidak dapat ditemukan. Pastikan ejaan yang dimasukkan sudah benar lalu coba beberapa saat lagi.</p>
         </div>}
         {data.length !== 0 && <table
           {...getTableProps()}
