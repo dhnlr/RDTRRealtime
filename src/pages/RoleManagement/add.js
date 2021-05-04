@@ -86,7 +86,7 @@ function RoleManagementCreate() {
                                         <label htmlFor="name">Nama Peran</label>
                                         <input
                                             type="text"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.name ? 'is-invalid' : ''}`}
                                             id="name"
                                             aria-describedby="nameHelp"
                                             placeholder="Nama peran"

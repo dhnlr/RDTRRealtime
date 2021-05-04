@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import Editor  from "ckeditor5-custom-build";
 
 import { config } from "../../../Constants";
 
@@ -12,12 +14,18 @@ function HelpManagementCreate() {
     const { register,
         handleSubmit,
         formState: { errors },
-        control
+        control,
+        setValue,
+        getValues
     } = useForm();
 
     const [listHelp, setListHelp] = useState([])
     const [errMessage, setErrMessage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false)
+
+    useEffect(() => {
+        register('answer')
+    })
 
     useEffect(() => {
         if (!sessionStorage.token) {
@@ -48,14 +56,14 @@ function HelpManagementCreate() {
             config.url.API_URL + "/Bantuan/Create",
             {
                 "pertanyaan": question,
-                "jawaban": answer,
+                "jawaban": getValues().answer,
                 "kategoriId": kategoriId
             },
             { headers }
         )
-            .then(({data}) => {
+            .then(({ data }) => {
                 setIsProcessing(false)
-                if(data.code === 200){
+                if (data.code === 200) {
                     history.push("/helpmanagement")
                 } else {
                     setErrMessage(data?.description)
@@ -77,7 +85,7 @@ function HelpManagementCreate() {
                         <div className="row">
                             <div className="col-12">
                                 <div className="mb-4">
-                                    <h1>Tambah Peran</h1>
+                                    <h1>Tambah Bantuan</h1>
                                     <p className="text-muted">Silahkan lengkapi borang di bawah ini</p>
                                 </div>
                                 {errMessage && (
@@ -90,7 +98,7 @@ function HelpManagementCreate() {
                                         <label htmlFor="question">Pertanyaan</label>
                                         <input
                                             type="text"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.question ? 'is-invalid' : ''}`}
                                             id="question"
                                             aria-describedby="questionHelp"
                                             placeholder="Pertanyaan"
@@ -105,9 +113,22 @@ function HelpManagementCreate() {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="answer">Jawaban</label>
-                                        <textarea
+                                        <Controller
+                                            render={() =>
+                                                <CKEditor
+                                                    editor={Editor}
+                                                    config={ config.editorConfiguration }
+                                                    onChange={(value, editor) => setValue('answer', editor.getData())}
+                                                />
+                                            }
+                                            control={control}
+                                            name="answer"
+                                            rules={{ required: "Jawaban harus diisi" }}
+                                            defaultValue=""
+                                        />
+                                        {/* <textarea
                                             type="text"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.answer ? 'is-invalid' : ''}`}
                                             id="answer"
                                             placeholder="Jawaban"
                                             name="answer"
@@ -116,7 +137,7 @@ function HelpManagementCreate() {
                                             ref={register({
                                                 required: "Jawaban harus diisi",
                                             })}
-                                        />
+                                        /> */}
                                         {errors.answer && (
                                             <small id="answerHelp" className="form-text text-danger">
                                                 {errors.answer.message}
@@ -127,11 +148,11 @@ function HelpManagementCreate() {
                                         <label htmlFor="kategoriId">Kategori</label>
                                         <Controller
                                             render={() =>
-                                            <select name="kategoriId" className="form-control" id="kategoriId" ref={register({ required: "Kategori harus diisi" })}>
-                                                {listHelp.map(help => (
-                                                    <option key={help.id} value={help.id} >{help.namaKategori}</option>
-                                                ))}
-                                            </select>
+                                                <select name="kategoriId" className={`form-control ${errors.kategoriId ? 'is-invalid' : ''}`} id="kategoriId" ref={register({ required: "Kategori harus diisi" })}>
+                                                    {listHelp.map(help => (
+                                                        <option key={help.id} value={help.id} >{help.namaKategori}</option>
+                                                    ))}
+                                                </select>
                                             }
                                             control={control}
                                             name="kategoriId"

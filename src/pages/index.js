@@ -27,5 +27,6 @@ import Report from './Report'
 import HelpManagement from './Helps/HelpManagement'
 import HelpManagementCreate from './Helps/HelpManagement/add'
 import HelpManagementEdit from './Helps/HelpManagement/edit'
+import HelpData from './Helps/HelpData'
 
-export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, UserManagementCreate,RoleManagement, RoleManagementEdit, RoleManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit };
+export { NotFound, NotAuthorized, Dashboard, Login, Home, Auth, ManajemenData, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, UserManagementCreate,RoleManagement, RoleManagementEdit, RoleManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit, HelpData };

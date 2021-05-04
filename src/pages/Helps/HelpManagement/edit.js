@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Editor  from "ckeditor5-custom-build";
 
 import { config } from "../../../Constants";
 
@@ -13,7 +16,9 @@ function HelpManagementEdit() {
     const { register,
         handleSubmit,
         formState: { errors },
-        control
+        control,
+        setValue,
+        getValues
     } = useForm({
         defaultValues: {
             question: state?.pertanyaan,
@@ -25,6 +30,10 @@ function HelpManagementEdit() {
     const [listHelp, setListHelp] = useState([])
     const [errMessage, setErrMessage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false)
+
+    useEffect(() => {
+        register('answer')
+    })
 
     useEffect(() => {
         if (!sessionStorage.token) {
@@ -92,7 +101,7 @@ function HelpManagementEdit() {
                         <div className="row">
                             <div className="col-12">
                                 <div className="mb-4">
-                                    <h1>Ubah Peran</h1>
+                                    <h1>Ubah Bantuan</h1>
                                     <p className="text-muted">Silahkan lengkapi borang di bawah ini</p>
                                 </div>
                                 {errMessage && (
@@ -105,7 +114,7 @@ function HelpManagementEdit() {
                                         <label htmlFor="question">Pertanyaan</label>
                                         <input
                                             type="text"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.question ? 'is-invalid' : ''}`}
                                             id="question"
                                             aria-describedby="questionHelp"
                                             placeholder="Pertanyaan"
@@ -120,9 +129,23 @@ function HelpManagementEdit() {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="answer">Jawaban</label>
-                                        <textarea
+                                        <Controller
+                                            render={() =>
+                                                <CKEditor
+                                                    editor={Editor}
+                                                    config={ config.editorConfiguration }
+                                                    data={state?.jawaban}
+                                                    onChange={(value, editor) => setValue('answer', editor.getData())}
+                                                />
+                                            }
+                                            control={control}
+                                            name="answer"
+                                            rules={{ required: "Jawaban harus diisi" }}
+                                            defaultValue=""
+                                        />
+                                        {/* <textarea
                                             type="text"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.answer ? 'is-invalid' : ''}`}
                                             id="answer"
                                             placeholder="Jawaban"
                                             name="answer"
@@ -131,7 +154,7 @@ function HelpManagementEdit() {
                                             ref={register({
                                                 required: "Jawaban harus diisi",
                                             })}
-                                        />
+                                        /> */}
                                         {errors.answer && (
                                             <small id="answerHelp" className="form-text text-danger">
                                                 {errors.answer.message}
@@ -140,7 +163,7 @@ function HelpManagementEdit() {
                                     </div>
                                     <div id="kategoriId" className="form-group">
                                         <label htmlFor="kategoriId">Kategori</label>
-                                        <select name="kategori" className="form-control" id="kategoriId" ref={register({ required: "Kategori harus diisi" })}>
+                                        <select name="kategori" className={`form-control p-input ${errors.kategori ? 'is-invalid' : ''}`} id="kategoriId" ref={register({ required: "Kategori harus diisi" })}>
                                                 {listHelp.map(help => (
                                                     <option key={help.id} value={help.namaKategori} selected={help.namaKategori === state?.namaKategori}>{help.namaKategori}</option>
                                                 ))}

@@ -82,7 +82,7 @@ function ResetPassword() {
               <form className="forms-sample" onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
                   <label htmlFor="email">Alamat Email</label>
-                  <input id="email" type="email" className="form-control" placeholder="Alamat email" aria-label="Alamat email" name="email" ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} autoFocus />
+                  <input id="email" type="email" className={`form-control p-input ${errors.email ? 'is-invalid' : ''}`} placeholder="Alamat email" aria-label="Alamat email" name="email" ref={register({ required: "Alamat email harus diisi", pattern: { value: /^\S+@\S+$/i, message: "Format alamat email salah" } })} autoFocus />
                   {errors.email && (
                     <small id="emailHelp" className="form-text text-danger">
                       {errors.email.message}

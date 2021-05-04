@@ -200,7 +200,7 @@ function Profile() {
                                                             <label htmlFor="currentPassword">Kata Sandi Saat Ini</label>
                                                             <input
                                                                 type="password"
-                                                                className="form-control p-input"
+                                                                className={`form-control p-input ${errors.currentPassword ? 'is-invalid' : ''}`}
                                                                 id="currentPassword"
                                                                 placeholder="Kata sandi lama"
                                                                 name="currentPassword"
@@ -223,7 +223,7 @@ function Profile() {
                                                             <label htmlFor="password">Kata Sandi Baru</label>
                                                             <input
                                                                 type="password"
-                                                                className="form-control p-input"
+                                                                className={`form-control p-input ${errors.password ? 'is-invalid' : ''}`}
                                                                 id="password"
                                                                 placeholder="Kata sandi baru"
                                                                 name="password"
@@ -246,7 +246,7 @@ function Profile() {
                                                             <label htmlFor="konfirmasiPassword">Konfirmasi Kata Sandi Baru</label>
                                                             <input
                                                                 type="password"
-                                                                className="form-control p-input"
+                                                                className={`form-control p-input ${errors.konfirmasiPassword ? 'is-invalid' : ''}`}
                                                                 id="konfirmasiPassword"
                                                                 placeholder="Konfirmasi kata sandi baru"
                                                                 name="konfirmasiPassword"

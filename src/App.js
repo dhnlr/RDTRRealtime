@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, ManajemenData, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, RoleManagement, RoleManagementEdit, RoleManagementCreate, UserManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit } from "./pages";
+import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, ManajemenData, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, RoleManagement, RoleManagementEdit, RoleManagementCreate, UserManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit, HelpData } from "./pages";
 
 function App() {
   return (
@@ -32,6 +32,7 @@ function App() {
           <Route path="/helpmanagement/create" component={HelpManagementCreate} />
           <Route path="/helpmanagement/edit" component={HelpManagementEdit} />
           <Route path="/helpmanagement" component={HelpManagement} />
+          <Route path="/help" component={HelpData} />
           <Route path="/profile/edit" component={ProfileEdit} />
           <Route path="/profile" component={Profile} />
           <Route path="/report" component={Report} />

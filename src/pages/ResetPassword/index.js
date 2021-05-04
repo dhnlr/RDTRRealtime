@@ -94,7 +94,7 @@ function ForgotPassword() {
                     <label htmlFor="password">Kata Sandi Baru</label>
                     <input
                       type="password"
-                      className="form-control p-input"
+                      className={`form-control p-input ${errors.password ? 'is-invalid' : ''}`}
                       id="password"
                       placeholder="Kata sandi baru"
                       name="password"
@@ -118,7 +118,7 @@ function ForgotPassword() {
                     <label htmlFor="konfirmasiPassword">Konfirmasi Kata Sandi Baru</label>
                     <input
                       type="password"
-                      className="form-control p-input"
+                      className={`form-control p-input ${errors.konfirmasiPassword ? 'is-invalid' : ''}`}
                       id="konfirmasiPassword"
                       placeholder="Konfirmasi kata sandi baru"
                       name="konfirmasiPassword"

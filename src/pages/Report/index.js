@@ -121,7 +121,7 @@ function Report() {
                                                             <label htmlFor="name">Nama</label>
                                                             <input
                                                                 type="text"
-                                                                className="form-control p-input"
+                                                                className={`form-control p-input ${errors.name ? 'is-invalid' : ''}`}
                                                                 id="name"
                                                                 placeholder="Nama"
                                                                 name="name"
@@ -139,7 +139,7 @@ function Report() {
                                                             <label htmlFor="email">Alamat Email</label>
                                                             <input
                                                                 type="email"
-                                                                className="form-control p-input"
+                                                                className={`form-control p-input ${errors.email ? 'is-invalid' : ''}`}
                                                                 id="email"
                                                                 aria-describedby="emailHelp"
                                                                 placeholder="Alamat email"
@@ -160,7 +160,7 @@ function Report() {
                                                             <label htmlFor="agency">Instansi</label>
                                                             <input
                                                                 type="text"
-                                                                className="form-control p-input"
+                                                                className={`form-control p-input ${errors.agency ? 'is-invalid' : ''}`}
                                                                 id="agency"
                                                                 placeholder="Instansi"
                                                                 name="agency"
@@ -176,7 +176,7 @@ function Report() {
                                                         </div>
                                                         <div className="form-group">
                                                             <label htmlFor="category">Jenis Pelaporan</label>
-                                                            <select name="category" className="form-control" id="category" ref={register({ required: "Jenis pelaporan harus diisi" })}>
+                                                            <select name="category" className={`form-control ${errors.category ? 'is-invalid' : ''}`} id="category" ref={register({ required: "Jenis pelaporan harus diisi" })}>
                                                                 <option value="saran">Saran</option>
                                                                 <option value="pertanyaan">Pertanyaan</option>
                                                                 <option value="komentar">Komentar</option>
@@ -189,7 +189,7 @@ function Report() {
                                                         </div>
                                                         <div className="form-group">
                                                             <label htmlFor="feature">Fitur</label>
-                                                            <select name="feature" className="form-control" id="feature" ref={register({ required: "Fitur harus diisi" })}>
+                                                            <select name="feature" className={`form-control ${errors.feature ? 'is-invalid' : ''}`} id="feature" ref={register({ required: "Fitur harus diisi" })}>
                                                                 <option value="Analisis">Analisis</option>
                                                                 <option value="Manajemen Data">Manajemen Data</option>
                                                                 <option value="Manajemen Proyek">Manajemen Proyek</option>
@@ -205,7 +205,7 @@ function Report() {
                                                             <label htmlFor="subject">Subjek</label>
                                                             <input
                                                                 type="text"
-                                                                className="form-control p-input"
+                                                                className={`form-control p-input ${errors.subject ? 'is-invalid' : ''}`}
                                                                 id="subject"
                                                                 placeholder="Subjek"
                                                                 name="subject"
@@ -223,7 +223,7 @@ function Report() {
                                                             <label htmlFor="body">Pesan</label>
                                                             <textarea
                                                                 type="text"
-                                                                className="form-control p-input"
+                                                                className={`form-control p-input ${errors.body ? 'is-invalid' : ''}`}
                                                                 id="body"
                                                                 placeholder="Pesan"
                                                                 name="body"

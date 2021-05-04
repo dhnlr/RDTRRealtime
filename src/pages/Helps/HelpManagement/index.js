@@ -152,7 +152,7 @@ function HelpManagement() {
                 <div className="main-panel">
                     <div className="content-wrapper">
 
-                        <div className="d-flex justify-content-center" style={{ display: "none" }}>
+                        <div className="d-flex justify-content-center">
                             <div className="col-md-7 stretch-card mt-2 mb-2">
                                 <div className="input-group">
                                     <div className="input-group-prepend hover-cursor" id="navbar-search-icon">
@@ -217,7 +217,8 @@ function HelpManagement() {
                                                                 {
                                                                     Header: "Jawaban",
                                                                     accessor: "jawaban",
-                                                                    width: "60%",
+                                                                    width: "10%",
+                                                                    Cell: (row) => (<div>{String(row.cell.value).slice(0, 50)+"..."}</div>)
                                                                 },
                                                                 {
                                                                     Header: "Kategori",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 
 import { config } from "../../Constants";
@@ -13,7 +13,6 @@ function UserManagementEdit() {
     const { register,
         handleSubmit,
         formState: { errors },
-        control
     } = useForm({
         defaultValues: {
             email: state?.email,
@@ -109,7 +108,7 @@ function UserManagementEdit() {
                                         <label htmlFor="email">Alamat Email</label>
                                         <input
                                             type="email"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.email ? 'is-invalid' : ''}`}
                                             id="email"
                                             aria-describedby="emailHelp"
                                             placeholder="Alamat email"
@@ -134,7 +133,7 @@ function UserManagementEdit() {
                                         <label htmlFor="username">Username</label>
                                         <input
                                             type="text"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.username ? 'is-invalid' : ''}`}
                                             id="username"
                                             aria-describedby="usernameHelp"
                                             placeholder="Username"
@@ -149,7 +148,7 @@ function UserManagementEdit() {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="exampleInputRole">Peranan</label>
-                                        <select name="rolename" className="form-control" id="exampleInputRole" ref={register({ required: "Peran harus diisi" })}>
+                                        <select name="rolename" className={`form-control p-input ${errors.rolename ? 'is-invalid' : ''}`} id="exampleInputRole" ref={register({ required: "Peran harus diisi" })}>
                                                     {listRole.map(role => (
                                                         <option key={role.id} value={role.name} selected={role.name === state["roles[0].name"]}>{role.name}</option>
                                                     ))}

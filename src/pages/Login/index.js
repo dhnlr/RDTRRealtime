@@ -91,7 +91,7 @@ function Login() {
                     <label htmlFor="username">Username</label>
                     <input
                       type="text"
-                      className="form-control p-input"
+                      className={`form-control p-input ${errors.username ? 'is-invalid' : ''}`}
                       id="username"
                       aria-describedby="usernameHelp"
                       placeholder="Username"
@@ -110,7 +110,7 @@ function Login() {
                     <label htmlFor="password">Kata Sandi</label>
                     <input
                       type="password"
-                      className="form-control p-input"
+                      className={`form-control p-input ${errors.password ? 'is-invalid' : ''}`}
                       id="password"
                       placeholder="Kata Sandi"
                       name="password"

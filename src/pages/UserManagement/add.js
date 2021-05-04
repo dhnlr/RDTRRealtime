@@ -104,7 +104,7 @@ function UserManagementCreate() {
                                         <label htmlFor="email">Alamat Email</label>
                                         <input
                                             type="email"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.email ? 'is-invalid' : ''}`}
                                             id="email"
                                             aria-describedby="emailHelp"
                                             placeholder="Alamat email"
@@ -129,7 +129,7 @@ function UserManagementCreate() {
                                         <label htmlFor="username">Username</label>
                                         <input
                                             type="text"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.username ? 'is-invalid' : ''}`}
                                             id="username"
                                             aria-describedby="usernameHelp"
                                             placeholder="Username"
@@ -146,7 +146,7 @@ function UserManagementCreate() {
                                         <label htmlFor="exampleInputRole">Peranan</label>
                                         <Controller
                                             render={() =>
-                                                <select name="rolename" className="form-control" id="exampleInputRole" ref={register({ required: "Peran harus diisi" })}>
+                                                <select name="rolename" className={`form-control ${errors.rolename ? 'is-invalid' : ''}`} id="exampleInputRole" ref={register({ required: "Peran harus diisi" })}>
                                                     {listRole.map(role => (
                                                         <option key={role.id} value={role.name} >{role.name}</option>
                                                     ))}
@@ -165,7 +165,7 @@ function UserManagementCreate() {
                                         <label htmlFor="password">Kata Sandi</label>
                                         <input
                                             type="password"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.password ? 'is-invalid' : ''}`}
                                             id="password"
                                             placeholder="Kata sandi"
                                             name="password"
@@ -188,7 +188,7 @@ function UserManagementCreate() {
                                         <label htmlFor="konfirmasiPassword">Konfirmasi Kata Sandi</label>
                                         <input
                                             type="password"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.konfirmasiPassword ? 'is-invalid' : ''}`}
                                             id="konfirmasiPassword"
                                             placeholder="Konfirmasi kata sandi"
                                             name="konfirmasiPassword"

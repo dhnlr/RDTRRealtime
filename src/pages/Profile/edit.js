@@ -79,7 +79,7 @@ function ProfileEdit() {
                                         <label htmlFor="email">Alamat Email</label>
                                         <input
                                             type="email"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.email ? 'is-invalid' : ''}`}
                                             id="email"
                                             aria-describedby="emailHelp"
                                             placeholder="Alamat email"
@@ -104,7 +104,7 @@ function ProfileEdit() {
                                         <label htmlFor="username">Username</label>
                                         <input
                                             type="text"
-                                            className="form-control p-input"
+                                            className={`form-control p-input ${errors.username ? 'is-invalid' : ''}`}
                                             id="username"
                                             aria-describedby="usernameHelp"
                                             placeholder="Username"
