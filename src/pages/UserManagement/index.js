@@ -8,7 +8,7 @@ import { Header, Menu, Footer, Table, TableLoading } from "../../components";
 import { config } from "../../Constants";
 
 function UserManagement() {
-    const [search, setSearch] = useState("")
+    const [search, setSearch] = useState(null)
     const [isProcessing, setIsProcessing] = useState(false)
     const [processCounter, setProcessCounter] = useState(0)
     const [data, setData] = useState([]);
