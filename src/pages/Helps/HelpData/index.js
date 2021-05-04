@@ -51,7 +51,7 @@ function HelpData() {
                             <div className="card">
                                 <div className="card-body">
                                     <p className="card-title">Topik Bantuan</p>
-                                    <div className="row mb-4">
+                                    <div className="row my-4">
                                         <div className="col-6">
                                             <div className="media">
                                                 <div className="mr-3" ><i className="ti-id-badge"></i></div>
@@ -61,7 +61,7 @@ function HelpData() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-6 my-2">
                                             <div className="media">
                                                 <div className="mr-3" ><i className="ti-star"></i></div>
                                                 <div className="media-body">
@@ -76,7 +76,7 @@ function HelpData() {
                                             <div className="media">
                                                 <div className="mr-3" ><i className="ti-eye"></i></div>
                                                 <div className="media-body">
-                                                    <h5 className="mt-0">Copyright & legal</h5>
+                                                    <h5 className="mt-0">Copyright & Legal</h5>
                                                     <p>Informasi bagaimana kami menangani privasi dan data Anda.</p>
                                                 </div>
                                             </div>
