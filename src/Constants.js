@@ -6,14 +6,11 @@ const prod = {
   editorConfiguration: {
     toolbar: [
       'heading', '|',
-      'fontfamily', 'fontsize', '|',
       'alignment', '|',
-      'fontColor', 'fontBackgroundColor', '|',
       'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
       'link', '|',
       'outdent', 'indent', '|',
-      'bulletedList', 'numberedList', 'todoList', '|',
-      'code', 'codeBlock', '|',
+      'bulletedList', 'numberedList', '|',
       'insertTable', '|',
       'insertImage', 'mediaEmbed', 'blockQuote', '|',
       'undo', 'redo'
@@ -29,14 +26,11 @@ const dev = {
   editorConfiguration: {
     toolbar: [
       'heading', '|',
-      'fontfamily', 'fontsize', '|',
       'alignment', '|',
-      'fontColor', 'fontBackgroundColor', '|',
       'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
       'link', '|',
       'outdent', 'indent', '|',
-      'bulletedList', 'numberedList', 'todoList', '|',
-      'code', 'codeBlock', '|',
+      'bulletedList', 'numberedList', '|',
       'insertTable', '|',
       'insertImage', 'mediaEmbed', 'blockQuote', '|',
       'undo', 'redo'

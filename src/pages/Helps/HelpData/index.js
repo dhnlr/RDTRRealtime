@@ -1,46 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useHistory, Link } from "react-router-dom";
-import axios from "axios"
-import Swal from "sweetalert2"
 
-import { Header, Menu, Footer, Table } from "../../../components";
+import { Header, Menu, Footer } from "../../../components";
 import headerImage from "./header.svg"
 import "./style.css"
 
-import { config } from "../../../Constants";
-
 function HelpData() {
-    const a = "<strong>coba</strong>"
     let history = useHistory();
-    /* function goInputSimulasi() {
-        history.push("/helpmanagement/create");
-    } */
-
-    const [listHelp, setListHelp] = useState([])
-    const [errMessage, setErrMessage] = useState(null);
 
     useEffect(() => {
         if (!sessionStorage.token) {
             history.push("/login");
         }
     }, [history])
-
-    useEffect(() => {
-        if (listHelp.length === 0) {
-            axios.get(config.url.API_URL + '/Bantuan/GetAll', {
-                headers: { Authorization: "Bearer " + sessionStorage.token },
-            })
-                .then(({ data }) => {
-                    if(data.status.code === 200 && data.obj.length > 0) {
-                        setListHelp(data.obj)
-                    }
-                })
-                .catch(error => {
-                    error.response?.data?.status?.message ? setErrMessage(error.response?.data?.status?.message) : setErrMessage("Gagal mendapatkan bantuan. Silahkan coba beberapa saat lagi.")
-                })
-        }
-    }, [listHelp])
 
     return (
         <div className="container-scroller">
@@ -49,7 +22,7 @@ function HelpData() {
                 <Menu active="helpmanagement" />
                 <div className="main-panel">
 
-                    <div className="card rounded-0" style={{ background: "#63af9b", /* backgroundImage: "url("+headerImage+")", backgroundRepeat: "no-repeat", backgroundPosition: "right center", backgroundSize: "contain" */ }}>
+                    <div className="card rounded-0 py-3 pl-2" style={{ background: "#63af9b" }}>
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-md-6 col-sm-12">
@@ -70,46 +43,74 @@ function HelpData() {
                         </div>
                     </div>
 
-                    <div className="content-wrapper my-5">
-                        {listHelp.map((help, index) => (
+                    <div className="content-wrapper py-5">
+                    <div className="row">
 
-                        <div className="col-md-12 grid-margin stretch-card my-4" key={help.namaKategori}>
+
+                        <div className="col-md-8 grid-margin stretch-card my-4">
                             <div className="card">
                                 <div className="card-body">
-                                    <p className="card-title">{help.namaKategori}</p>
-                                    <div className="row">
-                                        <div className="col-12">
-                                            <div>
-
-                                                <div className="accordion" id="accordionExample">
-                                                    {help.bantuan.map(bantuan => (
-
-                                                    <div className="card" key={bantuan?.id}>
-                                                        <div className="card-header" id="headingOne">
-                                                            <h2 className="mb-0">
-                                                                <button className="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target={"#"+help.namaKategori.replace(/\s\W+/g, '')+bantuan?.id} aria-expanded="true" aria-controls={help.namaKategori.replace(/\s\W+/g, '')+bantuan?.id}>
-                                                                    {bantuan?.pertanyaan}
-                                                                    <i className="ti-arrow-circle-down float-right"></i>
-                                                                </button>
-                                                            </h2>
-                                                        </div>
-
-                                                        <div id={help.namaKategori.replace(/\s\W+/g, '')+bantuan?.id} className="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                                                <div className="card-body" dangerouslySetInnerHTML={{ __html: bantuan?.jawaban }}/>
-                                                        </div>
-                                                    </div>
-                                                    ))}
+                                    <p className="card-title">Topik Bantuan</p>
+                                    <div className="row mb-4">
+                                        <div className="col-6">
+                                            <div className="media">
+                                                <div className="mr-3" ><i className="ti-id-badge"></i></div>
+                                                <div className="media-body">
+                                                    <h5 className="mt-0">Akun Saya</h5>
+                                                    <p>Cara mengelola akun Anda dan fiturnya.</p>
                                                 </div>
-
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="media">
+                                                <div className="mr-3" ><i className="ti-star"></i></div>
+                                                <div className="media-body">
+                                                    <h5 className="mt-0">Tentang Aplikasi</h5>
+                                                    <p>Lebih lanjut tentang aplikasi RDTR.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <div className="media">
+                                                <div className="mr-3" ><i className="ti-eye"></i></div>
+                                                <div className="media-body">
+                                                    <h5 className="mt-0">Copyright & legal</h5>
+                                                    <p>Informasi bagaimana kami menangani privasi dan data Anda.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="media" onClick={()=>history.push("/help/faq")} style={{cursor: "pointer"}}>
+                                                <div className="mr-3" ><i className="ti-flag-alt-2"></i></div>
+                                                <div className="media-body">
+                                                    <h5 className="mt-0">FAQ</h5>
+                                                    <p>Segala pertanyaan dan jawaban berkaitan dengan RDTR.</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        ))}
 
+                        <div className="col-md-4 grid-margin my-4">
+                        <Link className="btn btn-primary btn-block mb-2" to="/helpmanagement">Manajemen Bantuan</Link>
+                            <div className="card p-3" style={{ background: "#daeaae"}}>
+                                <div className="card-body">
+                                    <p className="card-title">Butuh Bantuan?</p>
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <p>Tidak dapat menemukan jawaban yang Anda cari? Jangan khawatir kami di sini untuk membantu.</p>
+                                            <Link className="btn btn-success btn-block" to="/report">Hubungi Kami</Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
+                    </div>
                     </div>
                     <Footer />
                 </div>
@@ -120,8 +121,9 @@ function HelpData() {
 
 const ImageDiv = styled.img`
   position: absolute;
-  bottom: -100px;
-  right: -70px;
+  bottom: -130px;
+  right: -35px;
+  width: 80%;
   @media only screen and (max-width: 768px) {
     display: none;
   }

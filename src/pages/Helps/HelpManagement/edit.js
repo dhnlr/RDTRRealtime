@@ -3,7 +3,6 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Editor  from "ckeditor5-custom-build";
 
 import { config } from "../../../Constants";
@@ -18,7 +17,6 @@ function HelpManagementEdit() {
         formState: { errors },
         control,
         setValue,
-        getValues
     } = useForm({
         defaultValues: {
             question: state?.pertanyaan,
