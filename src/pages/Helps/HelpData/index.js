@@ -53,7 +53,7 @@ function HelpData() {
                                     <p className="card-title">Topik Bantuan</p>
                                     <div className="row my-4">
                                         <div className="col-6">
-                                            <div className="media">
+                                            <div className="media p-2 help-menu">
                                                 <div className="mr-3" ><i className="ti-id-badge"></i></div>
                                                 <div className="media-body">
                                                     <h5 className="mt-0">Akun Saya</h5>
@@ -62,7 +62,7 @@ function HelpData() {
                                             </div>
                                         </div>
                                         <div className="col-6 my-2">
-                                            <div className="media">
+                                            <div className="media p-2 help-menu">
                                                 <div className="mr-3" ><i className="ti-star"></i></div>
                                                 <div className="media-body">
                                                     <h5 className="mt-0">Tentang Aplikasi</h5>
@@ -73,7 +73,7 @@ function HelpData() {
                                     </div>
                                     <div className="row">
                                         <div className="col-6">
-                                            <div className="media">
+                                            <div className="media p-2 help-menu">
                                                 <div className="mr-3" ><i className="ti-eye"></i></div>
                                                 <div className="media-body">
                                                     <h5 className="mt-0">Copyright & Legal</h5>
@@ -82,7 +82,7 @@ function HelpData() {
                                             </div>
                                         </div>
                                         <div className="col-6">
-                                            <div className="media" onClick={()=>history.push("/help/faq")} style={{cursor: "pointer"}}>
+                                            <div className="media p-2 help-menu" onClick={()=>history.push("/help/faq")} style={{cursor: "pointer"}}>
                                                 <div className="mr-3" ><i className="ti-flag-alt-2"></i></div>
                                                 <div className="media-body">
                                                     <h5 className="mt-0">FAQ</h5>
