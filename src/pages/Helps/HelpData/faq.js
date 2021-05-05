@@ -34,6 +34,8 @@ function HelpDataFaq() {
                     setIsProcessing(false)
                     if (data.status.code === 200 && data.obj.length > 0) {
                         setListHelp(data.obj)
+                    } else {
+                        setErrMessage(data?.status?.message)
                     }
                 })
                 .catch(error => {
@@ -77,44 +79,48 @@ function HelpDataFaq() {
                                 {errMessage}
                             </div>
                         )}
-                        {isProcessing && <>
-                            <div className="spinner-grow text-primary" role="status">
-                                <span className="sr-only">Loading...</span>
+                        {isProcessing && <div className="col-md-12 grid-margin stretch-card my-4">
+                            <div className="card">
+                                <div className="card-body">
+                                    <div className="spinner-grow text-primary" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </div>
+                                    <div className="spinner-grow text-secondary" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </div>
+                                    <div className="spinner-grow text-success" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </div>
+                                    <div className="spinner-grow text-danger" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </div>
+                                    <div className="spinner-grow text-warning" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </div>
+                                    <div className="spinner-grow text-info" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="spinner-grow text-secondary" role="status">
-                                <span className="sr-only">Loading...</span>
-                            </div>
-                            <div className="spinner-grow text-success" role="status">
-                                <span className="sr-only">Loading...</span>
-                            </div>
-                            <div className="spinner-grow text-danger" role="status">
-                                <span className="sr-only">Loading...</span>
-                            </div>
-                            <div className="spinner-grow text-warning" role="status">
-                                <span className="sr-only">Loading...</span>
-                            </div>
-                            <div className="spinner-grow text-info" role="status">
-                                <span className="sr-only">Loading...</span>
-                            </div>
-                        </>}
+                        </div>}
 
                         {listHelp.map((help, index) => (
 
-                            <div className="col-md-12 grid-margin stretch-card my-4" key={help.namaKategori}>
+                            <div className="col-md-12 grid-margin stretch-card my-4" key={help?.namaKategori}>
                                 <div className="card">
                                     <div className="card-body">
-                                        <p className="card-title">{help.namaKategori}</p>
+                                        <p className="card-title">{help?.namaKategori}</p>
                                         <div className="row">
                                             <div className="col-12">
                                                 <div>
 
                                                     <div className="accordion" id="accordionExample">
-                                                        {help.bantuan.map(bantuan => (
+                                                        {help?.bantuan?.map(bantuan => (
 
                                                             <div className="card" key={bantuan?.id}>
                                                                 <div className="card-header" id="headingOne">
                                                                     <h2 className="mb-0">
-                                                                        <button className="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target={"#" + help.namaKategori.replace(/\s\W+/g, '') + bantuan?.id} aria-expanded="true" aria-controls={help.namaKategori.replace(/\s\W+/g, '') + bantuan?.id}>
+                                                                        <button className="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target={"#" + help?.namaKategori.replace(/\s\W+/g, '') + bantuan?.id} aria-expanded="true" aria-controls={help?.namaKategori.replace(/\s\W+/g, '') + bantuan?.id}>
                                                                             {bantuan?.pertanyaan}
                                                                             <i className="ti-arrow-circle-down float-right"></i>
                                                                         </button>
