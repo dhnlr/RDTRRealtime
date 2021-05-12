@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useTable } from "react-table";
 
@@ -92,7 +93,7 @@ function Simulasi() {
                     <div className="card-body">
                       <div className="row">
                         <div className="col-8 ">
-                          <table style={{ height: "100px" }}>
+                          <table style={{ height: "100%" }}>
                             <tbody>
                               <tr>
                           
@@ -100,7 +101,7 @@ function Simulasi() {
                                 <td className="align-top">top</td> */}
                                 <td className="align-middle text-white"><h2 className="">Simulasi</h2>
                                 <p className=" font-weight-500 mb-2">Siapapun dapat melihat perencanaan secara publik</p>
-                                <p className=" font-weight-400 mt-4"><i className="ti-help-alt"> </i>Butuh bantuan?</p>
+                                {/* <p className=" font-weight-400 mt-4"><i className="ti-help-alt"> </i>Butuh bantuan?</p> */}
                                 </td>
                                 {/* <td className="align-bottom">bottom</td>
                                 <td className="align-text-top">text-top</td>
@@ -109,8 +110,9 @@ function Simulasi() {
                             </tbody>
                           </table>
                         </div>
-                        <div className="col-4 background-icon">
-                          <img src={headerImage} alt="header" style={{ width: "50%", float: "right" }}></img>
+                        <div className="col-4 background-icon" /* style={{content:`url("${headerImage}")`, position: "absolute", right: 0, maxHeight: "10rem"}} */>
+                          {/* {<img src={headerImage} alt="header" style={{ width: "50%", float: "right" }}></img>} */}
+                          <ImageDiv src={headerImage} alt="header"></ImageDiv>
                         </div>
                       </div>
                     </div>
@@ -234,5 +236,14 @@ function Simulasi() {
     </div>
   );
 }
+
+const ImageDiv = styled.img`
+  // position: absolute;
+  float: right;
+  width: 50%;
+  @media only screen and (max-width: 768px) {
+    display: none;
+  }
+`
 
 export default Simulasi;

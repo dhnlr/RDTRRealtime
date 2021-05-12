@@ -73,7 +73,7 @@ function Header() {
           if (document.getElementById("sidebar").getAttribute("class").indexOf('active') === -1) {
             document.getElementById("sidebar").setAttribute("class", "sidebar sidebar-offcanvas active");
           } else {
-            document.getElementById("sidebar").setAttribute("class", "sidebar sidebar-offcanvas active");
+            document.getElementById("sidebar").setAttribute("class", "sidebar sidebar-offcanvas");
           }
         }}>
           <span className="icon-menu" />

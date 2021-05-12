@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, ManajemenData, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, RoleManagement, RoleManagementEdit, RoleManagementCreate, UserManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit, HelpData, HelpDataFaq } from "./pages";
+import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, ManajemenDataInput, ManajemenDataInputPhase2, ManajemenDataInputPhase3, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, RoleManagement, RoleManagementEdit, RoleManagementCreate, UserManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit, HelpData, HelpDataFaq, DataManagement } from "./pages";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/forgotpassword" component={ForgotPassword} />
           <Route path="/reset/password" component={ResetPassword} />
-          <Route path="/manajemendata" component={ManajemenData} />
+          <Route path="/manajemendata" component={DataManagement} />
           <Route path="/manajemendatainput/kebutuhandata" component={ManajemenDataInputPhase2} />
           <Route path="/manajemendatainput/uploaddata" component={ManajemenDataInputPhase3} />
           <Route path="/manajemendatainput" component={ManajemenDataInput} />
