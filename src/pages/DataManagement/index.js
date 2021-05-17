@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -286,27 +286,49 @@ function DataManagement() {
                                   accessor: "totalModul",
                                 },
                                 {
+                                  Header: "Status",
+                                  accessor: "status",
+                                  Cell: (row) =>
+                                    row.cell.value ? (
+                                      <label className="badge badge-success">
+                                        Terpublikasi
+                                      </label>
+                                    ) : (
+                                      <label className="badge badge-dark">
+                                        Rancangan
+                                      </label>
+                                    ),
+                                  /* Cell: (row) => (
+                                    <div style={{ textAlign: "center" }}>
+                                      {row.cell.value ? (
+                                        <i
+                                          className="ti-check text-success text-center"
+                                          title="Terpublikasi"
+                                        ></i>
+                                      ) : (
+                                        <i
+                                          className="ti-close text-danger text-center"
+                                          title="Rancangan"
+                                        ></i>
+                                      )}
+                                    </div>
+                                  ), */
+                                },
+                                {
                                   Header: "Privasi",
                                   accessor: "isPrivate",
                                   Cell: (row) => (
                                     <div style={{ textAlign: "center" }}>
                                       {row.cell.value ? (
-                                        <i className="ti-lock text-danger text-center" title="Privat"></i>
+                                        <i
+                                          className="ti-lock text-danger text-center"
+                                          title="Privat"
+                                        ></i>
                                       ) : (
-                                        <i className="ti-unlock text-success text-center" title="Publik"></i>
-                                      )}
-                                    </div>
-                                  ),
-                                },
-                                {
-                                  Header: "Status",
-                                  accessor: "status",
-                                  Cell: (row) => (
-                                    <div style={{ textAlign: "center" }}>
-                                      {row.cell.value ? (
-                                        <i className="ti-check text-success text-center" title="Terpublikasi"></i>
-                                      ) : (
-                                        <i className="ti-close text-danger text-center" title="Rancangan"></i>
+                                        <i
+                                          className="ti-unlock text-success text-center"
+                                          title="Publik"
+                                        ></i>
                                       )}
                                     </div>
                                   ),
@@ -317,8 +339,8 @@ function DataManagement() {
                                   width: "15%",
                                   disableGlobalFilter: true,
                                   Cell: (row) => (
-                                    <div style={{ textAlign: "right" }}>
-                                      <Link
+                                    <div style={{ textAlign: "center" }}>
+                                      {/* <Link
                                         to={{
                                           pathname: "/helpmanagement/edit",
                                           state: row.row.values,
@@ -326,14 +348,14 @@ function DataManagement() {
                                       >
                                         <button
                                           className="btn btn-outline-dark btn-xs"
-                                          title="Ubah" /* onClick={() =>  console.log(row.row.values, pI)} */
+                                          title="Ubah"
                                         >
                                           <span>
                                             <i className="ti-pencil"></i>
                                           </span>
                                         </button>
                                       </Link>
-                                      &nbsp;
+                                      &nbsp; */}
                                       <button
                                         className="btn btn-outline-danger btn-xs"
                                         title="Hapus"

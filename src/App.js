@@ -16,7 +16,7 @@ function App() {
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/forgotpassword" component={ForgotPassword} />
           <Route path="/reset/password" component={ResetPassword} />
-          <Route path="/manajemendata" component={DataManagement} />
+          <Route path="/datamanagement" component={DataManagement} />
           <Route path="/manajemendatainput/kebutuhandata" component={ManajemenDataInputPhase2} />
           <Route path="/manajemendatainput/uploaddata" component={ManajemenDataInputPhase3} />
           <Route path="/manajemendatainput" component={ManajemenDataInput} />

@@ -14,7 +14,7 @@ function Menu(props) {
           </Link>
         </li>
         <li className={`nav-item ${props.active.indexOf("manajemendata") !== -1 ? "active" : ""}`}>
-          <Link className="nav-link" to="/manajemendata">
+          <Link className="nav-link" to="/datamanagement">
             <i className="ti-folder menu-icon"></i>
             <span className="menu-title">Manajemen Data</span>
           </Link>
