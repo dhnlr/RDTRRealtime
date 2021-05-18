@@ -96,3 +96,12 @@
   }
 }
 /* end fadein */
+
+/* start table in popup */
+.table th,
+.jsgrid .jsgrid-table th,
+.table td,
+.jsgrid .jsgrid-table td {
+  white-space: normal;
+}
+/* end table in popup */

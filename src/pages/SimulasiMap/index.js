@@ -86,24 +86,18 @@ const SimulasiMap = () => {
   const [hasilWarnaBangunanKdbKlb, setHasilWarnaBangunanKdbKlb] = useState("");
   const [contentHasilPersilTanahKdbKlb, setContentHasilPersilTanahKdbKlb] = useState({});
   const [contentHasilPolaRuangKdbKlb, setContentHasilPolaRuangKdbKlb] = useState({});
-  const [hasilWarnaPersilTanahKdbKlb, setHasilWarnaPersilTanahKdbKlb] = useState("");
-  const [hasilWarnaPolaRuangKdbKlb, setHasilWarnaPolaRuangKdbKlb] = useState("");
 
   const [contentBangunanKemacetan, setContentBangunanKemacetan] = useState([]);
   const [hasilSimulasiBangunanKemacetan, setHasilSimulasiBangunanKemacetan] = useState("");
   const [hasilWarnaBangunanKemacetan, setHasilWarnaBangunanKemacetan] = useState("");
   const [contentHasilPersilTanahKemacetan, setContentHasilPersilTanahKemacetan] = useState({});
   const [contentHasilPolaRuangKemacetan, setContentHasilPolaRuangKemacetan] = useState({});
-  const [hasilWarnaPersilTanahKemacetan, setHasilWarnaPersilTanahKemacetan] = useState("");
-  const [hasilWarnaPolaRuangKemacetan, setHasilWarnaPolaRuangKemacetan] = useState("");
 
   const [contentBangunanAirBersih, setContentBangunanAirBersih] = useState([]);
   const [hasilSimulasiBangunanAirBersih, setHasilSimulasiBangunanAirBersih] = useState("");
   const [hasilWarnaBangunanAirBersih, setHasilWarnaBangunanAirBersih] = useState("");
   const [contentHasilPersilTanahAirBersih, setContentHasilPersilTanahAirBersih] = useState({});
   const [contentHasilPolaRuangAirBersih, setContentHasilPolaRuangAirBersih] = useState({});
-  const [hasilWarnaPersilTanahAirBersih, setHasilWarnaPersilTanahAirBersih] = useState("");
-  const [hasilWarnaPolaRuangAirBersih, setHasilWarnaPolaRuangAirBersih] = useState("");
   // Form related functions
   const {
     register,
@@ -3518,70 +3512,70 @@ const SimulasiMap = () => {
                     field_name: "bangkitan_ruasjalan_y10",
                     field_value: features[0].attributes.bangkitan_ruasjalan_y10,
                   },
-                  {
-                    field_name: "izin_macet_y6",
-                    field_value: features[0].attributes.izin_macet_y6,
-                  },
-                  {
-                    field_name: "izin_macet_y7",
-                    field_value: features[0].attributes.izin_macet_y7,
-                  },
-                  {
-                    field_name: "izin_macet_y8",
-                    field_value: features[0].attributes.izin_macet_y8,
-                  },
-                  {
-                    field_name: "izin_macet_y9",
-                    field_value: features[0].attributes.izin_macet_y9,
-                  },
-                  {
-                    field_name: "izin_macet_y10",
-                    field_value: features[0].attributes.izin_macet_y10,
-                  },
-                  {
-                    field_name: "izin_air_y6_sebelum",
-                    field_value: features[0].attributes.izin_air_y6_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y7_sebelum",
-                    field_value: features[0].attributes.izin_air_y7_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y8_sebelum",
-                    field_value: features[0].attributes.izin_air_y8_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y9_sebelum",
-                    field_value: features[0].attributes.izin_air_y9_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y10_sebelum",
-                    field_value: features[0].attributes.izin_air_y10_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_sebelum",
-                    field_value: features[0].attributes.izin_macet_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y6_sebelum",
-                    field_value: features[0].attributes.izin_macet_y6_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y7_sebelum",
-                    field_value: features[0].attributes.izin_macet_y7_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y8_sebelum",
-                    field_value: features[0].attributes.izin_macet_y8_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y9_sebelum",
-                    field_value: features[0].attributes.izin_macet_y9_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y10_sebelum",
-                    field_value: features[0].attributes.izin_macet_y10_sebelum,
-                  },
+                  // {
+                  //   field_name: "izin_macet_y6",
+                  //   field_value: features[0].attributes.izin_macet_y6,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y7",
+                  //   field_value: features[0].attributes.izin_macet_y7,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y8",
+                  //   field_value: features[0].attributes.izin_macet_y8,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y9",
+                  //   field_value: features[0].attributes.izin_macet_y9,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y10",
+                  //   field_value: features[0].attributes.izin_macet_y10,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y6_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y6_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y7_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y7_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y8_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y8_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y9_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y9_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y10_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y10_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y6_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y6_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y7_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y7_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y8_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y8_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y9_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y9_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y10_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y10_sebelum,
+                  // },
                   {
                     field_name: "sumber",
                     field_value: features[0].attributes.sumber,
@@ -3836,70 +3830,70 @@ const SimulasiMap = () => {
                     field_name: "bangkitan_ruasjalan_y10",
                     field_value: features[0].attributes.bangkitan_ruasjalan_y10,
                   },
-                  {
-                    field_name: "izin_macet_y6",
-                    field_value: features[0].attributes.izin_macet_y6,
-                  },
-                  {
-                    field_name: "izin_macet_y7",
-                    field_value: features[0].attributes.izin_macet_y7,
-                  },
-                  {
-                    field_name: "izin_macet_y8",
-                    field_value: features[0].attributes.izin_macet_y8,
-                  },
-                  {
-                    field_name: "izin_macet_y9",
-                    field_value: features[0].attributes.izin_macet_y9,
-                  },
-                  {
-                    field_name: "izin_macet_y10",
-                    field_value: features[0].attributes.izin_macet_y10,
-                  },
-                  {
-                    field_name: "izin_air_y6_sebelum",
-                    field_value: features[0].attributes.izin_air_y6_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y7_sebelum",
-                    field_value: features[0].attributes.izin_air_y7_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y8_sebelum",
-                    field_value: features[0].attributes.izin_air_y8_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y9_sebelum",
-                    field_value: features[0].attributes.izin_air_y9_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y10_sebelum",
-                    field_value: features[0].attributes.izin_air_y10_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_sebelum",
-                    field_value: features[0].attributes.izin_macet_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y6_sebelum",
-                    field_value: features[0].attributes.izin_macet_y6_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y7_sebelum",
-                    field_value: features[0].attributes.izin_macet_y7_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y8_sebelum",
-                    field_value: features[0].attributes.izin_macet_y8_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y9_sebelum",
-                    field_value: features[0].attributes.izin_macet_y9_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y10_sebelum",
-                    field_value: features[0].attributes.izin_macet_y10_sebelum,
-                  },
+                  // {
+                  //   field_name: "izin_macet_y6",
+                  //   field_value: features[0].attributes.izin_macet_y6,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y7",
+                  //   field_value: features[0].attributes.izin_macet_y7,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y8",
+                  //   field_value: features[0].attributes.izin_macet_y8,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y9",
+                  //   field_value: features[0].attributes.izin_macet_y9,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y10",
+                  //   field_value: features[0].attributes.izin_macet_y10,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y6_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y6_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y7_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y7_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y8_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y8_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y9_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y9_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y10_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y10_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y6_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y6_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y7_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y7_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y8_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y8_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y9_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y9_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y10_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y10_sebelum,
+                  // },
                   {
                     field_name: "sumber",
                     field_value: features[0].attributes.sumber,
@@ -4152,70 +4146,70 @@ const SimulasiMap = () => {
                     field_name: "bangkitan_ruasjalan_y10",
                     field_value: features[0].attributes.bangkitan_ruasjalan_y10,
                   },
-                  {
-                    field_name: "izin_macet_y6",
-                    field_value: features[0].attributes.izin_macet_y6,
-                  },
-                  {
-                    field_name: "izin_macet_y7",
-                    field_value: features[0].attributes.izin_macet_y7,
-                  },
-                  {
-                    field_name: "izin_macet_y8",
-                    field_value: features[0].attributes.izin_macet_y8,
-                  },
-                  {
-                    field_name: "izin_macet_y9",
-                    field_value: features[0].attributes.izin_macet_y9,
-                  },
-                  {
-                    field_name: "izin_macet_y10",
-                    field_value: features[0].attributes.izin_macet_y10,
-                  },
-                  {
-                    field_name: "izin_air_y6_sebelum",
-                    field_value: features[0].attributes.izin_air_y6_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y7_sebelum",
-                    field_value: features[0].attributes.izin_air_y7_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y8_sebelum",
-                    field_value: features[0].attributes.izin_air_y8_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y9_sebelum",
-                    field_value: features[0].attributes.izin_air_y9_sebelum,
-                  },
-                  {
-                    field_name: "izin_air_y10_sebelum",
-                    field_value: features[0].attributes.izin_air_y10_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_sebelum",
-                    field_value: features[0].attributes.izin_macet_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y6_sebelum",
-                    field_value: features[0].attributes.izin_macet_y6_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y7_sebelum",
-                    field_value: features[0].attributes.izin_macet_y7_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y8_sebelum",
-                    field_value: features[0].attributes.izin_macet_y8_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y9_sebelum",
-                    field_value: features[0].attributes.izin_macet_y9_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet_y10_sebelum",
-                    field_value: features[0].attributes.izin_macet_y10_sebelum,
-                  },
+                  // {
+                  //   field_name: "izin_macet_y6",
+                  //   field_value: features[0].attributes.izin_macet_y6,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y7",
+                  //   field_value: features[0].attributes.izin_macet_y7,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y8",
+                  //   field_value: features[0].attributes.izin_macet_y8,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y9",
+                  //   field_value: features[0].attributes.izin_macet_y9,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y10",
+                  //   field_value: features[0].attributes.izin_macet_y10,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y6_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y6_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y7_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y7_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y8_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y8_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y9_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y9_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_air_y10_sebelum",
+                  //   field_value: features[0].attributes.izin_air_y10_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y6_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y6_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y7_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y7_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y8_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y8_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y9_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y9_sebelum,
+                  // },
+                  // {
+                  //   field_name: "izin_macet_y10_sebelum",
+                  //   field_value: features[0].attributes.izin_macet_y10_sebelum,
+                  // },
                   {
                     field_name: "sumber",
                     field_value: features[0].attributes.sumber,
@@ -4863,9 +4857,7 @@ const SimulasiMap = () => {
                 >
                   {showingPopup.title}
                 </p>
-                {showingPopup.title === "Bangunan - Pembangunan Optimum" ||
-                showingPopup.title === "Bangunan - Air Bersih" ||
-                showingPopup.title === "Bangunan - Transportasi" ? (
+                {showingPopup.title === "Bangunan - Pembangunan Optimum" || showingPopup.title === "Bangunan - Air Bersih" || showingPopup.title === "Bangunan - Transportasi" ? (
                   <>
                     <TabsModule>
                       <div style={{ flex: "1", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -4930,10 +4922,7 @@ const SimulasiMap = () => {
                           </TabModuleButton>
                         </TabsModule>
                         <>
-                          <TabModuleContent
-                            activeTab={activeModuleResTab === 0}
-                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
-                          >
+                          <TabModuleContent activeTab={activeModuleResTab === 0} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
                             <div className="fade-in">
                               <h4 className="card-title" style={{ margin: "25px 0 10px 20px" }}>
                                 Hasil Simulasi
@@ -4960,21 +4949,105 @@ const SimulasiMap = () => {
                               <div className="table-responsive">
                                 <table className="table">
                                   <tbody>
-                                    {contentBangunanKdbKlb.map((fieldMap, i) => (
-                                      <tr key={i}>
-                                        <td>{fieldMap.field_name}</td>
-                                        <td>{fieldMap.field_value}</td>
-                                      </tr>
-                                    ))}
+                                    {contentBangunanKdbKlb.map((fieldMap, i) =>
+                                      fieldMap.field_name !== "status_kdbklb_sebelum" &&
+                                      fieldMap.field_name !== "status_kdbklb" &&
+                                      fieldMap.field_name !== "melampaui_fa_sebelum" &&
+                                      fieldMap.field_name !== "melampaui_fa" &&
+                                      fieldMap.field_name !== "melampaui_tinggi_sebelum" &&
+                                      fieldMap.field_name !== "melampaui_tinggi" &&
+                                      fieldMap.field_name !== "izin_air_y5_sebelum" &&
+                                      fieldMap.field_name !== "izin_air_y5" &&
+                                      fieldMap.field_name !== "izin_macet_sebelum" &&
+                                      fieldMap.field_name !== "izin_macet" &&
+                                      fieldMap.field_name !== "los_num_sebelum" &&
+                                      fieldMap.field_name !== "los_num" &&
+                                      fieldMap.field_name !== "los_sebelum" &&
+                                      fieldMap.field_name !== "los" &&
+                                      fieldMap.field_name !== "jlh_lantai_sebelum" &&
+                                      fieldMap.field_name !== "jlh_lantai" &&
+                                      fieldMap.field_name !== "luas_m2_sebelum" &&
+                                      fieldMap.field_name !== "luas_m2" &&
+                                      fieldMap.field_name !== "fa_sebelum" &&
+                                      fieldMap.field_name !== "fa" ? (
+                                        <tr key={i}>
+                                          <td>{fieldMap.field_name}</td>
+                                          <td>{fieldMap.field_value}</td>
+                                        </tr>
+                                      ) : null
+                                    )}
+                                    <tr>
+                                      <td colSpan="2">
+                                        <table className="table table-bordered">
+                                          <thead>
+                                            <tr>
+                                              <th style={{ whiteSpace: "normal" }}>&nbsp;</th>
+                                              <th style={{ whiteSpace: "normal" }}>Sebelum</th>
+                                              <th style={{ whiteSpace: "normal" }}>Sesudah</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                              <td>status_kdbklb</td>
+                                              <td>{contentBangunanKdbKlb[2].field_value}</td>
+                                              <td>{contentBangunanKdbKlb[3].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>melampaui_fa</td>
+                                              <td>{contentBangunanKdbKlb[4].field_value}</td>
+                                              <td>{contentBangunanKdbKlb[5].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>melampaui_tinggi</td>
+                                              <td>{contentBangunanKdbKlb[6].field_value}</td>
+                                              <td>{contentBangunanKdbKlb[7].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>izin_air_y5</td>
+                                              <td>{contentBangunanKdbKlb[8].field_value}</td>
+                                              <td>{contentBangunanKdbKlb[9].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>izin_macet</td>
+                                              <td>{contentBangunanKdbKlb[10].field_value}</td>
+                                              <td>{contentBangunanKdbKlb[11].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>los_num</td>
+                                              <td>{contentBangunanKdbKlb[12].field_value}</td>
+                                              <td>{contentBangunanKdbKlb[13].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>los</td>
+                                              <td>{contentBangunanKdbKlb[14].field_value}</td>
+                                              <td>{contentBangunanKdbKlb[15].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>jlh_lantai</td>
+                                              <td>{contentBangunanKdbKlb[16].field_value}</td>
+                                              <td>{contentBangunanKdbKlb[17].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>luas_m2</td>
+                                              <td>{contentBangunanKdbKlb[18].field_value}</td>
+                                              <td>{contentBangunanKdbKlb[19].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>fa</td>
+                                              <td>{contentBangunanKdbKlb[20].field_value}</td>
+                                              <td>{contentBangunanKdbKlb[21].field_value}</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                    </tr>
                                   </tbody>
                                 </table>
                               </div>
+                              {/* disini disini */}
                             </div>
                           </TabModuleContent>
-                          <TabModuleContent
-                            activeTab={activeModuleResTab === 1}
-                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
-                          >
+                          <TabModuleContent activeTab={activeModuleResTab === 1} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
                             <div className="fade-in">
                               <div className="table-responsive">
                                 <table className="table">
@@ -4994,10 +5067,7 @@ const SimulasiMap = () => {
                               </div>
                             </div>
                           </TabModuleContent>
-                          <TabModuleContent
-                            activeTab={activeModuleResTab === 2}
-                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
-                          >
+                          <TabModuleContent activeTab={activeModuleResTab === 2} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
                             <div className="fade-in">
                               <div className="table-responsive">
                                 <table className="table">
@@ -5047,10 +5117,7 @@ const SimulasiMap = () => {
                           </TabModuleButton>
                         </TabsModule>
                         <>
-                          <TabModuleContent
-                            activeTab={activeModuleResTab === 0}
-                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
-                          >
+                          <TabModuleContent activeTab={activeModuleResTab === 0} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
                             <div className="fade-in">
                               <h4 className="card-title" style={{ margin: "25px 0 10px 20px" }}>
                                 Hasil Simulasi
@@ -5077,21 +5144,104 @@ const SimulasiMap = () => {
                               <div className="table-responsive">
                                 <table className="table">
                                   <tbody>
-                                    {contentBangunanKemacetan.map((fieldMap, i) => (
-                                      <tr key={i}>
-                                        <td>{fieldMap.field_name}</td>
-                                        <td>{fieldMap.field_value}</td>
-                                      </tr>
-                                    ))}
+                                    {contentBangunanKemacetan.map((fieldMap, i) =>
+                                      fieldMap.field_name !== "status_kdbklb_sebelum" &&
+                                      fieldMap.field_name !== "status_kdbklb" &&
+                                      fieldMap.field_name !== "melampaui_fa_sebelum" &&
+                                      fieldMap.field_name !== "melampaui_fa" &&
+                                      fieldMap.field_name !== "melampaui_tinggi_sebelum" &&
+                                      fieldMap.field_name !== "melampaui_tinggi" &&
+                                      fieldMap.field_name !== "izin_air_y5_sebelum" &&
+                                      fieldMap.field_name !== "izin_air_y5" &&
+                                      fieldMap.field_name !== "izin_macet_sebelum" &&
+                                      fieldMap.field_name !== "izin_macet" &&
+                                      fieldMap.field_name !== "los_num_sebelum" &&
+                                      fieldMap.field_name !== "los_num" &&
+                                      fieldMap.field_name !== "los_sebelum" &&
+                                      fieldMap.field_name !== "los" &&
+                                      fieldMap.field_name !== "jlh_lantai_sebelum" &&
+                                      fieldMap.field_name !== "jlh_lantai" &&
+                                      fieldMap.field_name !== "luas_m2_sebelum" &&
+                                      fieldMap.field_name !== "luas_m2" &&
+                                      fieldMap.field_name !== "fa_sebelum" &&
+                                      fieldMap.field_name !== "fa" ? (
+                                        <tr key={i}>
+                                          <td>{fieldMap.field_name}</td>
+                                          <td>{fieldMap.field_value}</td>
+                                        </tr>
+                                      ) : null
+                                    )}
+                                    <tr>
+                                      <td colSpan="2">
+                                        <table className="table table-bordered">
+                                          <thead>
+                                            <tr>
+                                              <th style={{ whiteSpace: "normal" }}>&nbsp;</th>
+                                              <th style={{ whiteSpace: "normal" }}>Sebelum</th>
+                                              <th style={{ whiteSpace: "normal" }}>Sesudah</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                              <td>status_kdbklb</td>
+                                              <td>{contentBangunanKemacetan[2].field_value}</td>
+                                              <td>{contentBangunanKemacetan[3].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>melampaui_fa</td>
+                                              <td>{contentBangunanKemacetan[4].field_value}</td>
+                                              <td>{contentBangunanKemacetan[5].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>melampaui_tinggi</td>
+                                              <td>{contentBangunanKemacetan[6].field_value}</td>
+                                              <td>{contentBangunanKemacetan[7].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>izin_air_y5</td>
+                                              <td>{contentBangunanKemacetan[8].field_value}</td>
+                                              <td>{contentBangunanKemacetan[9].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>izin_macet</td>
+                                              <td>{contentBangunanKemacetan[10].field_value}</td>
+                                              <td>{contentBangunanKemacetan[11].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>los_num</td>
+                                              <td>{contentBangunanKemacetan[12].field_value}</td>
+                                              <td>{contentBangunanKemacetan[13].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>los</td>
+                                              <td>{contentBangunanKemacetan[14].field_value}</td>
+                                              <td>{contentBangunanKemacetan[15].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>jlh_lantai</td>
+                                              <td>{contentBangunanKemacetan[16].field_value}</td>
+                                              <td>{contentBangunanKemacetan[17].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>luas_m2</td>
+                                              <td>{contentBangunanKemacetan[18].field_value}</td>
+                                              <td>{contentBangunanKemacetan[19].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>fa</td>
+                                              <td>{contentBangunanKemacetan[20].field_value}</td>
+                                              <td>{contentBangunanKemacetan[21].field_value}</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                    </tr>
                                   </tbody>
                                 </table>
                               </div>
                             </div>
                           </TabModuleContent>
-                          <TabModuleContent
-                            activeTab={activeModuleResTab === 1}
-                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
-                          >
+                          <TabModuleContent activeTab={activeModuleResTab === 1} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
                             <div className="fade-in">
                               <div className="table-responsive">
                                 <table className="table">
@@ -5111,10 +5261,7 @@ const SimulasiMap = () => {
                               </div>
                             </div>
                           </TabModuleContent>
-                          <TabModuleContent
-                            activeTab={activeModuleResTab === 2}
-                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
-                          >
+                          <TabModuleContent activeTab={activeModuleResTab === 2} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
                             <div className="fade-in">
                               <div className="table-responsive">
                                 <table className="table">
@@ -5164,10 +5311,7 @@ const SimulasiMap = () => {
                           </TabModuleButton>
                         </TabsModule>
                         <>
-                          <TabModuleContent
-                            activeTab={activeModuleResTab === 0}
-                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
-                          >
+                          <TabModuleContent activeTab={activeModuleResTab === 0} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
                             <div className="fade-in">
                               <h4 className="card-title" style={{ margin: "25px 0 10px 20px" }}>
                                 Hasil Simulasi
@@ -5194,21 +5338,104 @@ const SimulasiMap = () => {
                               <div className="table-responsive">
                                 <table className="table">
                                   <tbody>
-                                    {contentBangunanAirBersih.map((fieldMap, i) => (
-                                      <tr key={i}>
-                                        <td>{fieldMap.field_name}</td>
-                                        <td>{fieldMap.field_value}</td>
-                                      </tr>
-                                    ))}
+                                    {contentBangunanAirBersih.map((fieldMap, i) =>
+                                      fieldMap.field_name !== "status_kdbklb_sebelum" &&
+                                      fieldMap.field_name !== "status_kdbklb" &&
+                                      fieldMap.field_name !== "melampaui_fa_sebelum" &&
+                                      fieldMap.field_name !== "melampaui_fa" &&
+                                      fieldMap.field_name !== "melampaui_tinggi_sebelum" &&
+                                      fieldMap.field_name !== "melampaui_tinggi" &&
+                                      fieldMap.field_name !== "izin_air_y5_sebelum" &&
+                                      fieldMap.field_name !== "izin_air_y5" &&
+                                      fieldMap.field_name !== "izin_macet_sebelum" &&
+                                      fieldMap.field_name !== "izin_macet" &&
+                                      fieldMap.field_name !== "los_num_sebelum" &&
+                                      fieldMap.field_name !== "los_num" &&
+                                      fieldMap.field_name !== "los_sebelum" &&
+                                      fieldMap.field_name !== "los" &&
+                                      fieldMap.field_name !== "jlh_lantai_sebelum" &&
+                                      fieldMap.field_name !== "jlh_lantai" &&
+                                      fieldMap.field_name !== "luas_m2_sebelum" &&
+                                      fieldMap.field_name !== "luas_m2" &&
+                                      fieldMap.field_name !== "fa_sebelum" &&
+                                      fieldMap.field_name !== "fa" ? (
+                                        <tr key={i}>
+                                          <td>{fieldMap.field_name}</td>
+                                          <td>{fieldMap.field_value}</td>
+                                        </tr>
+                                      ) : null
+                                    )}
+                                    <tr>
+                                      <td colSpan="2">
+                                        <table className="table table-bordered">
+                                          <thead>
+                                            <tr>
+                                              <th style={{ whiteSpace: "normal" }}>&nbsp;</th>
+                                              <th style={{ whiteSpace: "normal" }}>Sebelum</th>
+                                              <th style={{ whiteSpace: "normal" }}>Sesudah</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                              <td>status_kdbklb</td>
+                                              <td>{contentBangunanAirBersih[2].field_value}</td>
+                                              <td>{contentBangunanAirBersih[3].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>melampaui_fa</td>
+                                              <td>{contentBangunanAirBersih[4].field_value}</td>
+                                              <td>{contentBangunanAirBersih[5].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>melampaui_tinggi</td>
+                                              <td>{contentBangunanAirBersih[6].field_value}</td>
+                                              <td>{contentBangunanAirBersih[7].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>izin_air_y5</td>
+                                              <td>{contentBangunanAirBersih[8].field_value}</td>
+                                              <td>{contentBangunanAirBersih[9].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>izin_macet</td>
+                                              <td>{contentBangunanAirBersih[10].field_value}</td>
+                                              <td>{contentBangunanAirBersih[11].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>los_num</td>
+                                              <td>{contentBangunanAirBersih[12].field_value}</td>
+                                              <td>{contentBangunanAirBersih[13].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>los</td>
+                                              <td>{contentBangunanAirBersih[14].field_value}</td>
+                                              <td>{contentBangunanAirBersih[15].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>jlh_lantai</td>
+                                              <td>{contentBangunanAirBersih[16].field_value}</td>
+                                              <td>{contentBangunanAirBersih[17].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>luas_m2</td>
+                                              <td>{contentBangunanAirBersih[18].field_value}</td>
+                                              <td>{contentBangunanAirBersih[19].field_value}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>fa</td>
+                                              <td>{contentBangunanAirBersih[20].field_value}</td>
+                                              <td>{contentBangunanAirBersih[21].field_value}</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                    </tr>
                                   </tbody>
                                 </table>
                               </div>
                             </div>
                           </TabModuleContent>
-                          <TabModuleContent
-                            activeTab={activeModuleResTab === 1}
-                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
-                          >
+                          <TabModuleContent activeTab={activeModuleResTab === 1} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
                             <div className="fade-in">
                               <div className="table-responsive">
                                 <table className="table">
@@ -5228,10 +5455,7 @@ const SimulasiMap = () => {
                               </div>
                             </div>
                           </TabModuleContent>
-                          <TabModuleContent
-                            activeTab={activeModuleResTab === 2}
-                            style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}
-                          >
+                          <TabModuleContent activeTab={activeModuleResTab === 2} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
                             <div className="fade-in">
                               <div className="table-responsive">
                                 <table className="table">
