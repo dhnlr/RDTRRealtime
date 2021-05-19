@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 
@@ -9,13 +9,19 @@ import { Header, Menu, Footer } from "../../components";
 
 function ManajemenDataInput() {
   let history = useHistory();
-  const { register, errors, control, handleSubmit } = useForm();
+  const { state } = useLocation();
+
+  const { register, errors, control, handleSubmit } = useForm({
+    defaultValues: {
+      projectName: state?.projectName,
+    },
+  });
 
   const [listProvince, setListProvince] = useState([]);
   const [listCity, setListCity] = useState([]);
   const [{ province, city }, setData] = useState({
-    province: 2,
-    city: 1,
+    province: state?.kotaKabupaten?.provinsi?.id,
+    city: state?.kotaKabupaten?.id,
   });
   const [errMessage, setErrMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -28,30 +34,9 @@ function ManajemenDataInput() {
       Authorization: "Bearer " + sessionStorage.token,
       "Content-Type": "application/json",
     };
-    axios
-      .post(
-        config.url.API_URL + "/Project/Create",
-        {
-          projectName,
-          status: 0,
-          isPrivate: true,
-          kotaKabupatenId: city,
-          ownerId: sessionStorage.userId,
-        },
-        { headers }
-      )
-      .then(() => {
-        setIsProcessing(false);
-        goManajemenDataPhase2();
-      })
-      .catch((error) => {
-        setIsProcessing(false);
-        error.response?.data?.status?.message
-          ? setErrMessage(error.response?.data?.status?.message)
-          : setErrMessage(
-              "Gagal mendaftarkan proyek. Silahkan coba beberapa saat lagi."
-            );
-      });
+    state?.id
+      ? updateProject(projectName, province, city, headers)
+      : createProject(projectName, province, city, headers);
   };
 
   useEffect(() => {
@@ -128,6 +113,61 @@ function ManajemenDataInput() {
   function handleCityChange(event) {
     setData((data) => ({ ...data, city: event.target.value }));
   }
+
+  const createProject = (projectName, province, city, headers) => {
+    axios
+      .post(
+        config.url.API_URL + "/Project/Create",
+        {
+          projectName,
+          status: 0,
+          isPrivate: state?.isPrivate,
+          kotaKabupatenId: city,
+          ownerId: sessionStorage.userId,
+        },
+        { headers }
+      )
+      .then(() => {
+        setIsProcessing(false);
+        goManajemenDataPhase2();
+      })
+      .catch((error) => {
+        setIsProcessing(false);
+        error.response?.data?.status?.message
+          ? setErrMessage(error.response?.data?.status?.message)
+          : setErrMessage(
+              "Gagal mendaftarkan proyek. Silahkan coba beberapa saat lagi."
+            );
+      });
+  };
+
+  const updateProject = (projectName, province, city, headers) => {
+    axios
+      .put(
+        config.url.API_URL + "/Project/Update",
+        {
+          id: state?.id,
+          projectName,
+          status: 0,
+          isPrivate: true,
+          kotaKabupatenId: city,
+          ownerId: sessionStorage.userId,
+        },
+        { headers }
+      )
+      .then(() => {
+        setIsProcessing(false);
+        goManajemenDataPhase2();
+      })
+      .catch((error) => {
+        setIsProcessing(false);
+        error.response?.data?.status?.message
+          ? setErrMessage(error.response?.data?.status?.message)
+          : setErrMessage(
+              "Gagal mendaftarkan proyek. Silahkan coba beberapa saat lagi."
+            );
+      });
+  };
 
   const provinces = listProvince.map((province) => (
     <option key={province.id} value={province.id}>

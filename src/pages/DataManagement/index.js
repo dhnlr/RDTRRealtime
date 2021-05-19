@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -120,8 +120,8 @@ function DataManagement() {
   const handleDelete = ({ id }) => {
     try {
       Swal.fire({
-        title: "Hapus Bantuan",
-        text: "Bantuan yang dihapus tidak dapat dikembalikan. Apakah Anda yakin untuk menghapus bantuan?",
+        title: "Hapus Proyek",
+        text: "Proyek yang dihapus tidak dapat dikembalikan. Apakah Anda yakin untuk menghapus proyel?",
         icon: "warning",
         showCancelButton: true,
         showLoaderOnConfirm: true,
@@ -145,7 +145,7 @@ function DataManagement() {
               if (response.data.code === 200) {
                 Swal.fire({
                   title: "Berhasil",
-                  text: "Bantuan berhasil dihapus",
+                  text: "Proyek berhasil dihapus",
                   icon: "success",
                   confirmButtonText: "OK",
                   allowOutsideClick: false,
@@ -163,6 +163,57 @@ function DataManagement() {
     } catch (errorForm) {
       Swal.fire("Maaf", errorForm.response.data.error.message, "error");
     }
+  };
+
+  const handlePublic = ({
+    id,
+    projectName,
+    kotaKabupaten,
+    status,
+    isPrivate,
+  }) => {
+    const headers = {
+      Authorization: "Bearer " + sessionStorage.token,
+      "Content-Type": "application/json",
+    };
+
+    axios
+      .put(
+        config.url.API_URL + "/Project/Update",
+        {
+          id,
+          projectName,
+          status,
+          kotaKabupatenId: kotaKabupaten.id,
+          isPrivate: !isPrivate,
+          ownerId: sessionStorage.userId,
+        },
+        { headers }
+      )
+      .then(() => {
+        setIsProcessing(false);
+        Swal.fire({
+          title: "Berhasil",
+          text: "Proyek berhasil dipublikasi",
+          icon: "success",
+          confirmButtonText: "OK",
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.value) {
+            setProcessCounter(processCounter + 1);
+          }
+        });
+      })
+      .catch((error) => {
+        setIsProcessing(false);
+        error.response?.data?.status?.message
+          ? Swal.fire("Maaf", error.response?.data?.status?.message, "error")
+          : Swal.fire(
+              "Maaf",
+              "Gagal mendaftarkan proyek. Silahkan coba beberapa saat lagi.",
+              "error"
+            );
+      });
   };
 
   return (
@@ -219,7 +270,7 @@ function DataManagement() {
                     type="text"
                     className="form-control"
                     id="navbar-search-input"
-                    placeholder="Cari projek"
+                    placeholder="Cari proyek"
                     aria-label="search"
                     aria-describedby="search"
                     style={{ borderLeft: "none" }}
@@ -234,7 +285,7 @@ function DataManagement() {
                 <Img
                   src="images/file-icons/64/attention.png"
                   alt="Attention"
-                  aria-label="Business type: activate to sort column ascending"
+                  aria-label="Attention"
                 ></Img>
               </div>
               <div className="col-md-8">
@@ -256,7 +307,7 @@ function DataManagement() {
               <div className="col-md-12 grid-margin stretch-card my-4">
                 <div className="card">
                   <div className="card-body">
-                    <p className="card-title">Projek Yang Telah Dibuat</p>
+                    <p className="card-title">Proyek Yang Telah Dibuat</p>
                     <div className="row">
                       <div className="col-12">
                         <div className="table-responsive">
@@ -269,7 +320,7 @@ function DataManagement() {
                               // filterTenant={site}
                               columns={[
                                 {
-                                  Header: "Nama Project",
+                                  Header: "Nama Proyek",
                                   accessor: "projectName",
                                   width: "25%",
                                 },
@@ -339,11 +390,37 @@ function DataManagement() {
                                   width: "15%",
                                   disableGlobalFilter: true,
                                   Cell: (row) => (
-                                    <div style={{ textAlign: "center" }}>
-                                      {/* <Link
+                                    <div style={{ textAlign: "right" }}>
+                                      {(
+                                        <>
+                                          <button
+                                            className="btn btn-outline-dark btn-xs icons-size-16px"
+                                            title={row.row.values.isPrivate ? "Jadikan publik" : "Jadikan privat"}
+                                            onClick={() =>
+                                              handlePublic(
+                                                data.filter(
+                                                  (datum) =>
+                                                    datum.id ===
+                                                    row.row.values.id
+                                                )[0]
+                                              )
+                                            }
+                                          >
+                                            <span>
+                                              <i className="ti-key"></i>
+                                            </span>
+                                          </button>
+                                          &nbsp;
+                                        </>
+                                      )}
+                                      <Link
                                         to={{
-                                          pathname: "/helpmanagement/edit",
-                                          state: row.row.values,
+                                          pathname: "/manajemendatainput",
+                                          state: data.filter(
+                                            (datum) =>
+                                              datum.id === row.row.values.id
+                                          )[0],
+                                          // row.row.values,
                                         }}
                                       >
                                         <button
@@ -355,7 +432,7 @@ function DataManagement() {
                                           </span>
                                         </button>
                                       </Link>
-                                      &nbsp; */}
+                                      &nbsp;
                                       <button
                                         className="btn btn-outline-danger btn-xs"
                                         title="Hapus"
