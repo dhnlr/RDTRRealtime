@@ -318,21 +318,22 @@ function UserManagement() {
                                   {
                                     Header: "Email",
                                     accessor: "email",
-                                    width: "25%",
+                                    width: "20%",
                                   },
                                   {
                                     Header: "Username",
                                     accessor: "userName",
-                                    width: "25%",
+                                    width: "10%",
                                   },
                                   {
                                     Header: "Peran",
                                     accessor: "roles[0].name",
-                                    width: "15%",
+                                    width: "10%",
                                   },
                                   {
                                     Header: "Dibuat pada",
                                     accessor: "createDate",
+                                    width: "10%",
                                     Cell: (row) => (
                                       <span>
                                         {new Date(
@@ -348,7 +349,7 @@ function UserManagement() {
                                   {
                                     Header: "Status",
                                     accessor: "emailConfirmed",
-                                    width: "15%",
+                                    width: "10%",
                                     Cell: (row) =>
                                       row.cell.value ? (
                                         <label className="badge badge-success">
@@ -363,7 +364,7 @@ function UserManagement() {
                                   {
                                     Header: "Action",
                                     accessor: "id",
-                                    width: "15%",
+                                    width: "25%",
                                     disableGlobalFilter: true,
                                     Cell: (row) => (
                                       <div style={{ textAlign: "right" }}>
@@ -393,7 +394,7 @@ function UserManagement() {
                                           <span>
                                             <i className="ti-unlock"></i>
                                           </span>
-                                        </button>{" "}
+                                        </button>
                                         &nbsp;
                                         <Link
                                           to={{

@@ -194,7 +194,7 @@ function DataManagement() {
         setIsProcessing(false);
         Swal.fire({
           title: "Berhasil",
-          text: "Proyek berhasil dipublikasi",
+          text: "Proyek berhasil diubah",
           icon: "success",
           confirmButtonText: "OK",
           allowOutsideClick: false,
@@ -210,7 +210,7 @@ function DataManagement() {
           ? Swal.fire("Maaf", error.response?.data?.status?.message, "error")
           : Swal.fire(
               "Maaf",
-              "Gagal mendaftarkan proyek. Silahkan coba beberapa saat lagi.",
+              "Gagal mengubah privasi proyek. Silahkan coba beberapa saat lagi.",
               "error"
             );
       });
@@ -307,7 +307,7 @@ function DataManagement() {
               <div className="col-md-12 grid-margin stretch-card my-4">
                 <div className="card">
                   <div className="card-body">
-                    <p className="card-title">Proyek Yang Telah Dibuat</p>
+                    <p className="card-title">Data yang Telah Dibuat</p>
                     <div className="row">
                       <div className="col-12">
                         <div className="table-responsive">
@@ -322,11 +322,12 @@ function DataManagement() {
                                 {
                                   Header: "Nama Proyek",
                                   accessor: "projectName",
-                                  width: "25%",
+                                  // width: "20%",
                                 },
                                 {
                                   Header: "Provinsi",
                                   accessor: "kotaKabupaten.provinsi.name",
+                                  // width: "15%",
                                 },
                                 {
                                   Header: "Kabupaten / Kota",
@@ -335,6 +336,7 @@ function DataManagement() {
                                 {
                                   Header: "Modul Data",
                                   accessor: "totalModul",
+                                  width: "5%",
                                 },
                                 {
                                   Header: "Status",
@@ -366,36 +368,40 @@ function DataManagement() {
                                   ), */
                                 },
                                 {
-                                  Header: "Privasi",
+                                  Header: "",
                                   accessor: "isPrivate",
                                   Cell: (row) => (
                                     <div style={{ textAlign: "center" }}>
                                       {row.cell.value ? (
-                                        <i
+                                        <p><i
                                           className="ti-lock text-danger text-center"
                                           title="Privat"
-                                        ></i>
+                                        ></i> Privat </p>
                                       ) : (
-                                        <i
+                                        <p><i
                                           className="ti-unlock text-success text-center"
                                           title="Publik"
-                                        ></i>
+                                        ></i> Publik </p>
                                       )}
                                     </div>
                                   ),
                                 },
                                 {
-                                  Header: "Action",
+                                  Header: "",
                                   accessor: "id",
-                                  width: "15%",
+                                  width: "20%",
                                   disableGlobalFilter: true,
                                   Cell: (row) => (
                                     <div style={{ textAlign: "right" }}>
-                                      {(
+                                      {
                                         <>
                                           <button
                                             className="btn btn-outline-dark btn-xs icons-size-16px"
-                                            title={row.row.values.isPrivate ? "Jadikan publik" : "Jadikan privat"}
+                                            title={
+                                              row.row.values.isPrivate
+                                                ? "Jadikan publik"
+                                                : "Jadikan privat"
+                                            }
                                             onClick={() =>
                                               handlePublic(
                                                 data.filter(
@@ -412,7 +418,7 @@ function DataManagement() {
                                           </button>
                                           &nbsp;
                                         </>
-                                      )}
+                                      }
                                       <Link
                                         to={{
                                           pathname: "/manajemendatainput",

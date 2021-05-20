@@ -121,14 +121,15 @@ function ManajemenDataInput() {
         {
           projectName,
           status: 0,
-          isPrivate: state?.isPrivate,
+          isPrivate: 1,
           kotaKabupatenId: city,
           ownerId: sessionStorage.userId,
         },
         { headers }
       )
-      .then(() => {
+      .then((data) => {
         setIsProcessing(false);
+        console.log(data)
         goManajemenDataPhase2();
       })
       .catch((error) => {
@@ -148,15 +149,16 @@ function ManajemenDataInput() {
         {
           id: state?.id,
           projectName,
-          status: 0,
-          isPrivate: true,
+          status: state?.status,
+          isPrivate: state?.isPrivate,
           kotaKabupatenId: city,
-          ownerId: sessionStorage.userId,
+          ownerId: state?.owner,
         },
         { headers }
       )
-      .then(() => {
+      .then((data) => {
         setIsProcessing(false);
+        console.log(data)
         goManajemenDataPhase2();
       })
       .catch((error) => {
@@ -215,7 +217,9 @@ function ManajemenDataInput() {
   }
 
   function goManajemenDataPhase2() {
-    history.push("/manajemendatainput/kebutuhandata");
+    history.push("/manajemendatainput/kebutuhandata", {
+
+    });
   }
 
   /* function handleProvinceChange(event) {
@@ -278,7 +282,7 @@ function ManajemenDataInput() {
                     <Controller
                       name="province"
                       control={control}
-                      defaultValue={province}
+                      defaultValue={null}
                       render={(props) => (
                         <select
                           className="form-control"
@@ -309,7 +313,7 @@ function ManajemenDataInput() {
                     <Controller
                       name="city"
                       control={control}
-                      defaultValue={city}
+                      defaultValue={null}
                       render={(props) => (
                         <select
                           className="form-control"
