@@ -353,7 +353,7 @@ function Table({
                 }
                 onClick={() => gotoPage(0)}
               >
-                {"First"}
+                {"Awal"}
               </button>{" "}
             </li>
             <li className="page-item">
@@ -395,18 +395,18 @@ function Table({
                 }
                 onClick={() => gotoPage(pageCount - 1)}
               >
-                {"Last"}
+                {"Akhir"}
               </button>{" "}
             </li>
           </ul>
           <span>
-            Page{" "}
+            Laman{" "}
             <strong>
-              {pageIndex + 1} of {pageOptions.length}
+              {pageIndex + 1} dari {pageOptions.length}
             </strong>{" "}
           </span>
           <span>
-            | Show{" "}
+            | Menampilkan{" "}
             <select
               value={pageSize}
               onChange={(e) => {
@@ -422,19 +422,19 @@ function Table({
           </span>
           <span>
             {" "}
-            of{" "}
+            dari{" "}
             {recordsFiltered === recordsTotal && (
               <>
                 <strong>{recordsTotal}</strong>
-                {" total entries"}
+                {" total lema"}
               </>
             )}
             {recordsFiltered !== recordsTotal && (
               <>
                 <strong>{recordsFiltered}</strong>
-                {" entries (filtered from "}
+                {" lema (difilter dari "}
                 <strong>{recordsTotal}</strong>
-                {" total entries)"}
+                {" total lema)"}
               </>
             )}
           </span>
