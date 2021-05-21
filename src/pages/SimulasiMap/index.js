@@ -2844,6 +2844,10 @@ const SimulasiMap = () => {
                       fieldName: "kabkot",
                       label: "kabkot",
                     },
+                    {
+                      fieldName: "lantai_max_sebelum",
+                      label: "lantai_max_sebelum",
+                    },
                   ],
                 },
               ],
