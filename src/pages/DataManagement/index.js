@@ -28,12 +28,15 @@ function DataManagement() {
 
   let history = useHistory();
   function goManajemenData() {
-    history.push("/manajemendatainput");
+    history.push("/datamanagementinput");
   }
 
   useEffect(() => {
     if (!sessionStorage.token) {
       history.push("/login");
+    }
+    if(localStorage.state){
+      localStorage.removeItem("state")
     }
   }, [history]);
 
@@ -421,7 +424,7 @@ function DataManagement() {
                                       }
                                       <Link
                                         to={{
-                                          pathname: "/manajemendatainput",
+                                          pathname: "/datamanagementinput",
                                           state: data.filter(
                                             (datum) =>
                                               datum.id === row.row.values.id

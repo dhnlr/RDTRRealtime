@@ -17,10 +17,10 @@ function App() {
           <Route path="/forgotpassword" component={ForgotPassword} />
           <Route path="/reset/password" component={ResetPassword} />
           <Route path="/datamanagement" component={DataManagement} />
-          <Route path="/manajemendatainput/kebutuhandata" component={ManajemenDataInputPhase2} />
-          <Route path="/manajemendatainput/uploaddata" component={ManajemenDataInputPhase3} />
-          <Route path="/manajemendatainput" component={ManajemenDataInput} />
-          <Route path="/simulasi" component={Simulasi} />
+          <Route path="/datamanagementinput/kebutuhandata" component={ManajemenDataInputPhase2} />
+          <Route path="/datamanagementinput/uploaddata" component={ManajemenDataInputPhase3} />
+          <Route path="/datamanagementinput" component={ManajemenDataInput} />
+          <Route path="/simulation" component={Simulasi} />
           <Route path="/simulasimap" component={SimulasiMap} />
           <Route path="/resentmailconfirmation" component={ResentEmailConfirmation} />
           <Route path="/usermanagement/create" component={UserManagementCreate} />

@@ -1,94 +1,157 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import axios from "axios";
-import Swal from "sweetalert2";
 import { useForm } from "react-hook-form";
-// import Select from "react-select";
 
 import { Header, Menu, Footer } from "../../components";
 
 import { config } from "../../Constants";
 
 function ManajemenDataInputPhase3() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useForm();
+  const { state } = useLocation();
   let history = useHistory();
+  const { register, handleSubmit } = useForm();
 
   const [isProcessing, setIsProcessing] = useState(false);
-  /* const options = [
-    { value: "chocolate", label: "Banjir" },
-    { value: "strawberry", label: "Macet" },
-    { value: "vanilla", label: "Sampah" },
-  ];
+  const [errMessage, setErrMessage] = useState(null);
+  const [progress, setProgress] = useState({ loaded: null, total: null });
 
-  const customStyles = {
-    multiValueLabel: (styles) => ({
-      ...styles,
-      backgroundColor: "#4b49ac",
-      color: "white",
-    }),
-  }; */
+  useEffect(() => {
+    if (!sessionStorage.token) {
+      history.push("/login");
+    }
+  }, [history]);
 
-  const onSubmit = ({ building, persil, ruang }, e) => {
+  useEffect(() => {
+    if (!state?.id) {
+      localStorage.removeItem("state");
+      history.push("/datamanagement");
+    }
+  }, [history, state?.id]);
+
+  const onSubmit = ({ building, persil, pola_ruang }, e) => {
+    setErrMessage(null);
     setIsProcessing(true);
 
     var fd = new FormData();
     fd.set("bangunan", building[0]);
     fd.set("persil_tanah", persil[0]);
-    fd.set("pola_ruang", ruang[0]);
-    fd.set("project_id", 6)
+    fd.set("pola_ruang", pola_ruang[0]);
+    fd.set("project_id", state?.id);
 
     axios
       .post(config.url.API_URL + "/FileUploader/Kdbklb", fd, {
         headers: { Authorization: "Bearer " + sessionStorage.token },
-        onUploadProgress: progressEvent => console.log(progressEvent.loaded),
-      })
-      .then((response) => {
-        if (response.data.code === 200) {
-          Swal.fire({
-            title: "Berhasil",
-            text: "Laporan berhasil dikirim",
-            icon: "success",
-            confirmButtonText: "Selesai",
-            allowOutsideClick: false,
-          }).then((result) => {
-            if (result.value) {
-              e.target.reset();
-              setIsProcessing(false);
-            }
+        onUploadProgress: (progressEvent) => {
+          setProgress({
+            loaded: progressEvent.loaded,
+            total: progressEvent.total,
           });
+        },
+      })
+      .then(({ data }) => {
+        setIsProcessing(false);
+        setProgress({
+          loaded: null,
+          total: null,
+        });
+        if (data.status.code === 200) {
+          goSimulasi();
         } else {
-          Swal.fire("Maaf", response.data.description, "error");
-          setIsProcessing(false);
+          setErrMessage(data?.status?.description);
         }
       })
       .catch((error) => {
-        Swal.fire(
-          "Maaf",
-          error.response?.data?.status?.message
-            ? error.response?.data?.status?.message
-            : "Gagal mengirim laporan. Silahkan coba beberapa saat lagi",
-          "error"
-        );
+        error.response?.data?.status?.message
+          ? setErrMessage(error.response?.data?.status?.message)
+          : setErrMessage(
+              "Gagal mendapatkan mengunggah data. Silahkan coba beberapa saat lagi."
+            );
         setIsProcessing(false);
       });
   };
 
   function goSimulasi() {
-    history.push("/manajemendatainput/kebutuhandata");
-  }
-
-  function goManajemenData() {
-    history.push("/manajemendatainput/kebutuhandata");
+    history.push("/datamanagementinput/kebutuhandata", {
+      id: state?.id,
+    });
   }
 
   return (
     <div className="container-scroller">
       <Header />
+      {isProcessing && (
+        <div
+          className="swal2-container swal2-bottom-start"
+          style={{ overflowY: "auto" }}
+        >
+          <div
+            aria-labelledby="swal2-title"
+            aria-describedby="swal2-content"
+            className="swal2-popup swal2-toast swal2-icon-success swal2-show"
+            tabIndex="-1"
+            role="alert"
+            aria-live="polite"
+            style={{ width: "25vw", display: "flex" }}
+          >
+            <div className="swal2-header">
+              {progress.loaded && progress.loaded === progress.total && (
+                <span
+                  className="spinner-border text-primary"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              )}
+              {progress.loaded !== progress.total &&
+                (progress.loaded / progress.total) * 100 > 90 && (
+                  <div
+                    className="swal2-icon swal2-success swal2-icon-show"
+                    // style={{ display: "flex" }}
+                  >
+                    <div
+                      className="swal2-success-circular-line-left"
+                      style={{ backgroundColor: "rgb(255, 255, 255)" }}
+                    ></div>
+                    <span className="swal2-success-line-tip"></span>{" "}
+                    <span className="swal2-success-line-long"></span>
+                    <div className="swal2-success-ring"></div>{" "}
+                    <div
+                      className="swal2-success-fix"
+                      style={{ backgroundColor: "rgb(255, 255, 255)" }}
+                    ></div>
+                    <div
+                      className="swal2-success-circular-line-right"
+                      style={{ backgroundColor: "rgb(255, 255, 255)" }}
+                    ></div>
+                  </div>
+                )}
+              <div
+                className="swal2-title"
+                id="swal2-title"
+                // style={{ display: "flex" }}
+              >
+                {(progress.loaded / progress.total) * 100 <= 90 && (
+                  <div className="progress">
+                    <div
+                      className="progress-bar bg-success"
+                      role="progressbar"
+                      style={{
+                        width: (progress.loaded / progress.total) * 100 + "%",
+                      }}
+                      aria-valuenow={progress.loaded}
+                      aria-valuemin="0"
+                      aria-valuemax={progress.total}
+                    ></div>
+                  </div>
+                )}
+                {progress.loaded === progress.total
+                  ? "Proses data..."
+                  : "Unggah data..."}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="container-fluid page-body-wrapper">
         <Menu active="manajemendata" />
         <div className="main-panel">
@@ -96,9 +159,14 @@ function ManajemenDataInputPhase3() {
             <div className="row">
               <div className="col-12">
                 <div className="mb-2">
-                  <h1>Upload Data</h1>
+                  <h1>Unggah Data</h1>
                   <p className="text-muted">Masukkan kebutuhan data</p>
                 </div>
+                {errMessage && (
+                  <div className="alert alert-warning" role="alert">
+                    {errMessage}
+                  </div>
+                )}
                 <form
                   className="forms-sample"
                   onSubmit={handleSubmit(onSubmit)}
@@ -111,17 +179,17 @@ function ManajemenDataInputPhase3() {
                             className="btn btn-link collapsed"
                             type="button"
                             data-toggle="collapse"
-                            data-target="#rdtr"
+                            data-target="#polaruang"
                             aria-expanded="false"
-                            aria-controls="rdtr"
+                            aria-controls="polaruang"
                           >
-                            RDTR Kabupaten/Kota
+                            Pola Ruang RDTR Kabupaten/Kota
                           </button>
                         </h2>
                       </div>
 
                       <div
-                        id="rdtr"
+                        id="polaruang"
                         className="collapse show"
                         aria-labelledby="headingOne"
                         data-parent="#accordionExample"
@@ -131,8 +199,8 @@ function ManajemenDataInputPhase3() {
                             {/* <label>Lampiran (opsional)</label> */}
                             <div className="custom-file">
                               <label
-                                id="building"
-                                htmlFor="building"
+                                id="pola_ruang"
+                                htmlFor="pola_ruang"
                                 className="custom-file-label"
                               >
                                 Cari berkas...
@@ -141,15 +209,15 @@ function ManajemenDataInputPhase3() {
                                 className="form-control custom-file-input"
                                 ref={register}
                                 type="file"
-                                name="building"
+                                name="pola_ruang"
                                 accept=".zip"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(
-                                        "building"
+                                        "pola_ruang"
                                       ).innerHTML = e.target.files[0].name)
                                     : (document.getElementById(
-                                        "building"
+                                        "pola_ruang"
                                       ).innerHTML = "Cari berkas...");
                                 }}
                               />
@@ -202,7 +270,7 @@ function ManajemenDataInputPhase3() {
                             aria-expanded="false"
                             aria-controls="buildingfootprint"
                           >
-                            Building Footprint
+                            Bangunan yang Sudah Ada
                           </button>
                         </h2>
                       </div>
@@ -217,8 +285,8 @@ function ManajemenDataInputPhase3() {
                             {/* <label>Lampiran (opsional)</label> */}
                             <div className="custom-file">
                               <label
-                                id="persil"
-                                htmlFor="persil"
+                                id="building"
+                                htmlFor="building"
                                 className="custom-file-label"
                               >
                                 Cari berkas...
@@ -227,15 +295,15 @@ function ManajemenDataInputPhase3() {
                                 className="form-control custom-file-input"
                                 ref={register}
                                 type="file"
-                                name="persil"
+                                name="building"
                                 accept=".zip"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(
-                                        "persil"
+                                        "building"
                                       ).innerHTML = e.target.files[0].name)
                                     : (document.getElementById(
-                                        "persil"
+                                        "building"
                                       ).innerHTML = "Cari berkas...");
                                 }}
                               />
@@ -270,8 +338,8 @@ function ManajemenDataInputPhase3() {
                             {/* <label>Lampiran (opsional)</label> */}
                             <div className="custom-file">
                               <label
-                                id="ruang"
-                                htmlFor="ruang"
+                                id="persil"
+                                htmlFor="persil"
                                 className="custom-file-label"
                               >
                                 Cari berkas...
@@ -280,14 +348,14 @@ function ManajemenDataInputPhase3() {
                                 className="form-control custom-file-input"
                                 ref={register}
                                 type="file"
-                                name="ruang"
+                                name="persil"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(
-                                        "ruang"
+                                        "persil"
                                       ).innerHTML = e.target.files[0].name)
                                     : (document.getElementById(
-                                        "ruang"
+                                        "persil"
                                       ).innerHTML = "Cari berkas...");
                                 }}
                               />
@@ -302,14 +370,23 @@ function ManajemenDataInputPhase3() {
                       className="btn btn-light"
                       type="button"
                       onClick={() => goSimulasi()}
+                      disabled={isProcessing}
                     >
                       Kembali
                     </button>
                     <button
                       className="btn btn-primary"
                       type="submit"
+                      disabled={isProcessing}
                       //   onClick={() => goManajemenData()}
                     >
+                      {isProcessing && (
+                        <span
+                          className="spinner-border spinner-border-sm mr-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                      )}
                       Simpan
                     </button>
                   </div>

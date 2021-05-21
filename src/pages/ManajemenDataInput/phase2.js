@@ -1,17 +1,38 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
 import { Header, Menu, Footer } from "../../components";
 
 function ManajemenDataInputPhase2() {
+  const { state } = useLocation();
   let history = useHistory();
 
+  useEffect(() => {
+    if (!sessionStorage.token) {
+      history.push("/login");
+    }
+  }, [history]);
+
+  useEffect(() => {
+    if (!state?.id) {
+      localStorage.removeItem("state");
+      history.push("/datamanagement");
+    }
+  }, [history, state?.id]);
+
   function goSimulasi() {
-    history.push("/manajemendatainput");
+    history.push("/datamanagementinput");
   }
 
   function goManajemenData() {
-    history.push("/manajemendatainput/uploaddata");
+    history.push("/datamanagementinput/uploaddata", {
+      id: state?.id,
+    });
+  }
+
+  function handleDone() {
+    localStorage.removeItem("state")
+    history.push("/simulation")
   }
 
   return (
@@ -180,7 +201,7 @@ function ManajemenDataInputPhase2() {
                   <button
                     className="btn btn-primary"
                     type="button"
-                    onClick={() => goManajemenData()}
+                    onClick={() => {handleDone()}}
                   >
                     Lanjutkan ke Simulasi
                   </button>

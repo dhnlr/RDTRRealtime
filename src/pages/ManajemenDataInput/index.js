@@ -9,19 +9,31 @@ import { Header, Menu, Footer } from "../../components";
 
 function ManajemenDataInput() {
   let history = useHistory();
-  const { state } = useLocation();
+  let { state } = useLocation();
 
   const { register, errors, control, handleSubmit } = useForm({
     defaultValues: {
-      projectName: state?.projectName,
+      projectName: state
+        ? state?.projectName
+        : localStorage.state
+        ? JSON.parse(localStorage.state).projectName
+        : "",
     },
   });
 
   const [listProvince, setListProvince] = useState([]);
   const [listCity, setListCity] = useState([]);
   const [{ province, city }, setData] = useState({
-    province: state?.kotaKabupaten?.provinsi?.id,
-    city: state?.kotaKabupaten?.id,
+    province: state
+      ? state?.kotaKabupaten?.provinsi?.id
+      : localStorage.state
+      ? JSON.parse(localStorage.state)?.kotaKabupaten?.provinsi?.id
+      : 2,
+    city: state
+      ? state?.kotaKabupaten?.id
+      : localStorage.state
+      ? JSON.parse(localStorage.state)?.kotaKabupaten?.id
+      : "",
   });
   const [errMessage, setErrMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -34,9 +46,9 @@ function ManajemenDataInput() {
       Authorization: "Bearer " + sessionStorage.token,
       "Content-Type": "application/json",
     };
-    state?.id
-      ? updateProject(projectName, province, city, headers)
-      : createProject(projectName, province, city, headers);
+    !state?.id && !localStorage.state
+      ? createProject(projectName, province, city, headers)
+      : updateProject(projectName, province, city, headers);
   };
 
   useEffect(() => {
@@ -44,6 +56,19 @@ function ManajemenDataInput() {
       history.push("/login");
     }
   }, [history]);
+
+  useEffect(() => {
+    if (!state?.id && !localStorage.state) {
+      /* if(!localStorage.getItem("state")){
+        localStorage.removeItem("state")
+        history.push("/datamanagement");
+      }  */
+    } else {
+      if (state) {
+        localStorage.setItem("state", JSON.stringify(state));
+      }
+    }
+  }, [history, state]);
 
   useEffect(() => {
     if (listProvince.length === 0) {
@@ -129,10 +154,21 @@ function ManajemenDataInput() {
       )
       .then((data) => {
         setIsProcessing(false);
-        console.log(data)
-        goManajemenDataPhase2();
+        localStorage.setItem(
+          "state",
+          JSON.stringify({
+            id: data.data?.obj.id,
+            projectName,
+            status: 0,
+            isPrivate: 1,
+            kotaKabupatenId: city,
+            ownerId: sessionStorage.userId,
+          })
+        );
+        goManajemenDataPhase2(data.data?.obj.id);
       })
       .catch((error) => {
+        console.error(error)
         setIsProcessing(false);
         error.response?.data?.status?.message
           ? setErrMessage(error.response?.data?.status?.message)
@@ -147,19 +183,41 @@ function ManajemenDataInput() {
       .put(
         config.url.API_URL + "/Project/Update",
         {
-          id: state?.id,
+          id: state ? state?.id : JSON.parse(localStorage.state)?.id,
           projectName,
-          status: state?.status,
-          isPrivate: state?.isPrivate,
+          status: state
+            ? state?.status
+            : JSON.parse(localStorage.state)?.status,
+          isPrivate: state
+            ? state?.isPrivate
+            : JSON.parse(localStorage.state)?.isPrivate,
           kotaKabupatenId: city,
-          ownerId: state?.owner,
+          ownerId: state
+            ? state?.owner
+            : localStorage.state?.userId,
         },
         { headers }
       )
       .then((data) => {
         setIsProcessing(false);
-        console.log(data)
-        goManajemenDataPhase2();
+        localStorage.setItem(
+          "state",
+          JSON.stringify({
+            id: state ? state?.id : JSON.parse(localStorage.state)?.id,
+            projectName,
+            status: state
+              ? state?.status
+              : JSON.parse(localStorage.state)?.status,
+            isPrivate: state
+              ? state?.isPrivate
+              : JSON.parse(localStorage.state)?.isPrivate,
+            kotaKabupatenId: city,
+            ownerId: state
+              ? state?.owner
+              : JSON.parse(localStorage.state)?.ownerId,
+          })
+        );
+        goManajemenDataPhase2(state ? state?.id : JSON.parse(localStorage.state)?.id);
       })
       .catch((error) => {
         setIsProcessing(false);
@@ -213,12 +271,13 @@ function ManajemenDataInput() {
     )); */
 
   function goSimulasi() {
+    localStorage.removeItem("state");
     history.push("/datamanagement");
   }
 
-  function goManajemenDataPhase2() {
-    history.push("/manajemendatainput/kebutuhandata", {
-
+  function goManajemenDataPhase2(id) {
+    history.push("/datamanagementinput/kebutuhandata", {
+      id,
     });
   }
 
@@ -285,12 +344,14 @@ function ManajemenDataInput() {
                       defaultValue={null}
                       render={(props) => (
                         <select
-                          className="form-control"
+                        className={`form-control p-input ${
+                          errors.province ? "is-invalid" : ""
+                        }`}
                           id="province"
                           name="province"
                           value={province}
                           onChange={handleProvinceChange}
-                          ref={register}
+                          ref={register({ required: "Provinsi harus diisi"})}
                         >
                           {/* <option value="null">
                             ---
@@ -303,11 +364,12 @@ function ManajemenDataInput() {
                       )}
                       rules={{ required: "Provinsi harus diisi" }}
                     />
+                    {errors.province && (
+                      <small id="nameHelp" className="form-text text-danger">
+                        {errors.province.message}
+                      </small>
+                    )}
                   </div>
-                  {/* errors will return when field validation fails  */}
-                  {errors.exampleRequired && (
-                    <span>This field is required</span>
-                  )}
                   <div className="form-group">
                     <label htmlFor="city">Kota</label>
                     <Controller
@@ -316,18 +378,25 @@ function ManajemenDataInput() {
                       defaultValue={null}
                       render={(props) => (
                         <select
-                          className="form-control"
+                        className={`form-control p-input ${
+                          errors.city ? "is-invalid" : ""
+                        }`}
                           id="city"
                           name="city"
                           value={city}
                           onChange={handleCityChange}
-                          ref={register}
+                          ref={register({ required: "Kota/kabupaten harus diisi"})}
                         >
                           {cities}
                         </select>
                       )}
                       rules={{ required: "Kota harus diisi" }}
                     />
+                    {errors.city && (
+                      <small id="nameHelp" className="form-text text-danger">
+                        {errors.city.message}
+                      </small>
+                    )}
                   </div>
                   <div className="template-demo float-right">
                     <button
