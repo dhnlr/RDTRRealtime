@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 
@@ -9,13 +9,31 @@ import { Header, Menu, Footer } from "../../components";
 
 function ManajemenDataInput() {
   let history = useHistory();
-  const { register, errors, control, handleSubmit } = useForm();
+  let { state } = useLocation();
+
+  const { register, errors, control, handleSubmit } = useForm({
+    defaultValues: {
+      projectName: state
+        ? state?.projectName
+        : localStorage.state
+        ? JSON.parse(localStorage.state).projectName
+        : "",
+    },
+  });
 
   const [listProvince, setListProvince] = useState([]);
   const [listCity, setListCity] = useState([]);
   const [{ province, city }, setData] = useState({
-    province: 2,
-    city: 1,
+    province: state
+      ? state?.kotaKabupaten?.provinsi?.id
+      : localStorage.state
+      ? JSON.parse(localStorage.state)?.kotaKabupaten?.provinsi?.id
+      : 2,
+    city: state
+      ? state?.kotaKabupaten?.id
+      : localStorage.state
+      ? JSON.parse(localStorage.state)?.kotaKabupaten?.id
+      : "",
   });
   const [errMessage, setErrMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -28,30 +46,9 @@ function ManajemenDataInput() {
       Authorization: "Bearer " + sessionStorage.token,
       "Content-Type": "application/json",
     };
-    axios
-      .post(
-        config.url.API_URL + "/Project/Create",
-        {
-          projectName,
-          status: 0,
-          isPrivate: true,
-          kotaKabupatenId: city,
-          ownerId: sessionStorage.userId,
-        },
-        { headers }
-      )
-      .then(() => {
-        setIsProcessing(false);
-        goManajemenDataPhase2();
-      })
-      .catch((error) => {
-        setIsProcessing(false);
-        error.response?.data?.status?.message
-          ? setErrMessage(error.response?.data?.status?.message)
-          : setErrMessage(
-              "Gagal mendaftarkan proyek. Silahkan coba beberapa saat lagi."
-            );
-      });
+    !state?.id && !localStorage.state
+      ? createProject(projectName, province, city, headers)
+      : updateProject(projectName, province, city, headers);
   };
 
   useEffect(() => {
@@ -59,6 +56,19 @@ function ManajemenDataInput() {
       history.push("/login");
     }
   }, [history]);
+
+  useEffect(() => {
+    if (!state?.id && !localStorage.state) {
+      /* if(!localStorage.getItem("state")){
+        localStorage.removeItem("state")
+        history.push("/datamanagement");
+      }  */
+    } else {
+      if (state) {
+        localStorage.setItem("state", JSON.stringify(state));
+      }
+    }
+  }, [history, state]);
 
   useEffect(() => {
     if (listProvince.length === 0) {
@@ -129,6 +139,96 @@ function ManajemenDataInput() {
     setData((data) => ({ ...data, city: event.target.value }));
   }
 
+  const createProject = (projectName, province, city, headers) => {
+    axios
+      .post(
+        config.url.API_URL + "/Project/Create",
+        {
+          projectName,
+          status: 0,
+          isPrivate: 1,
+          kotaKabupatenId: city,
+          ownerId: sessionStorage.userId,
+        },
+        { headers }
+      )
+      .then((data) => {
+        setIsProcessing(false);
+        localStorage.setItem(
+          "state",
+          JSON.stringify({
+            id: data.data?.obj.id,
+            projectName,
+            status: 0,
+            isPrivate: 1,
+            kotaKabupatenId: city,
+            ownerId: sessionStorage.userId,
+          })
+        );
+        goManajemenDataPhase2(data.data?.obj.id);
+      })
+      .catch((error) => {
+        console.error(error)
+        setIsProcessing(false);
+        error.response?.data?.status?.message
+          ? setErrMessage(error.response?.data?.status?.message)
+          : setErrMessage(
+              "Gagal mendaftarkan proyek. Silahkan coba beberapa saat lagi."
+            );
+      });
+  };
+
+  const updateProject = (projectName, province, city, headers) => {
+    axios
+      .put(
+        config.url.API_URL + "/Project/Update",
+        {
+          id: state ? state?.id : JSON.parse(localStorage.state)?.id,
+          projectName,
+          status: state
+            ? state?.status
+            : JSON.parse(localStorage.state)?.status,
+          isPrivate: state
+            ? state?.isPrivate
+            : JSON.parse(localStorage.state)?.isPrivate,
+          kotaKabupatenId: city,
+          ownerId: state
+            ? state?.owner
+            : localStorage.state?.userId,
+        },
+        { headers }
+      )
+      .then((data) => {
+        setIsProcessing(false);
+        localStorage.setItem(
+          "state",
+          JSON.stringify({
+            id: state ? state?.id : JSON.parse(localStorage.state)?.id,
+            projectName,
+            status: state
+              ? state?.status
+              : JSON.parse(localStorage.state)?.status,
+            isPrivate: state
+              ? state?.isPrivate
+              : JSON.parse(localStorage.state)?.isPrivate,
+            kotaKabupatenId: city,
+            ownerId: state
+              ? state?.owner
+              : JSON.parse(localStorage.state)?.ownerId,
+          })
+        );
+        goManajemenDataPhase2(state ? state?.id : JSON.parse(localStorage.state)?.id);
+      })
+      .catch((error) => {
+        setIsProcessing(false);
+        error.response?.data?.status?.message
+          ? setErrMessage(error.response?.data?.status?.message)
+          : setErrMessage(
+              "Gagal mendaftarkan proyek. Silahkan coba beberapa saat lagi."
+            );
+      });
+  };
+
   const provinces = listProvince.map((province) => (
     <option key={province.id} value={province.id}>
       {province.name}
@@ -171,11 +271,14 @@ function ManajemenDataInput() {
     )); */
 
   function goSimulasi() {
+    localStorage.removeItem("state");
     history.push("/datamanagement");
   }
 
-  function goManajemenDataPhase2() {
-    history.push("/manajemendatainput/kebutuhandata");
+  function goManajemenDataPhase2(id) {
+    history.push("/datamanagementinput/kebutuhandata", {
+      id,
+    });
   }
 
   /* function handleProvinceChange(event) {
@@ -238,15 +341,17 @@ function ManajemenDataInput() {
                     <Controller
                       name="province"
                       control={control}
-                      defaultValue={province}
+                      defaultValue={null}
                       render={(props) => (
                         <select
-                          className="form-control"
+                        className={`form-control p-input ${
+                          errors.province ? "is-invalid" : ""
+                        }`}
                           id="province"
                           name="province"
                           value={province}
                           onChange={handleProvinceChange}
-                          ref={register}
+                          ref={register({ required: "Provinsi harus diisi"})}
                         >
                           {/* <option value="null">
                             ---
@@ -259,31 +364,39 @@ function ManajemenDataInput() {
                       )}
                       rules={{ required: "Provinsi harus diisi" }}
                     />
+                    {errors.province && (
+                      <small id="nameHelp" className="form-text text-danger">
+                        {errors.province.message}
+                      </small>
+                    )}
                   </div>
-                  {/* errors will return when field validation fails  */}
-                  {errors.exampleRequired && (
-                    <span>This field is required</span>
-                  )}
                   <div className="form-group">
                     <label htmlFor="city">Kota</label>
                     <Controller
                       name="city"
                       control={control}
-                      defaultValue={city}
+                      defaultValue={null}
                       render={(props) => (
                         <select
-                          className="form-control"
+                        className={`form-control p-input ${
+                          errors.city ? "is-invalid" : ""
+                        }`}
                           id="city"
                           name="city"
                           value={city}
                           onChange={handleCityChange}
-                          ref={register}
+                          ref={register({ required: "Kota/kabupaten harus diisi"})}
                         >
                           {cities}
                         </select>
                       )}
                       rules={{ required: "Kota harus diisi" }}
                     />
+                    {errors.city && (
+                      <small id="nameHelp" className="form-text text-danger">
+                        {errors.city.message}
+                      </small>
+                    )}
                   </div>
                   <div className="template-demo float-right">
                     <button

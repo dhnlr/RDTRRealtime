@@ -21,16 +21,16 @@ function Table({
   //   filterDate
   searchVal,
   processCounter,
-  isProcessing
+  isProcessing,
 }) {
   const [valueFilter, setvalueFilter] = React.useState("");
   const [valueStatus, setValueStatus] = React.useState("");
   const [valueTenant, setValueTenant] = React.useState("");
   const [navPagination, setNavPagination] = React.useState("");
-  const today = new Date()
-  const yesterday = new Date(today)
-  yesterday.setDate(yesterday.getDate() - 7)
-  const [valueDate, setValueDate] = React.useState([yesterday, today])
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 7);
+  // const [valueDate, setValueDate] = React.useState([yesterday, today]);
   let history = useHistory();
 
   // Use the state and functions returned from useTable to build your UI
@@ -91,10 +91,10 @@ function Table({
       pageOptLength,
       valueStatus,
       valueTenant,
-      valueDate,
+      // valueDate,
       sortBy,
       searchVal,
-      processCounter
+      processCounter,
     });
   }, [
     fetchData,
@@ -105,11 +105,11 @@ function Table({
     pageOptions,
     valueStatus,
     valueTenant,
-    valueDate,
+    // valueDate,
     sortBy,
     history,
     searchVal,
-    processCounter
+    processCounter,
   ]);
 
   // Render the UI for your table
@@ -118,36 +118,30 @@ function Table({
       <div className="card-header" style={{ display: "none" }}>
         <div className="d-flex justify-content-between row">
           <span className="card-title" style={{ float: "right" }}>
-            {
-              routeAdd ?
-                <button
-                  type="button"
-                  className="btn btn-primary btn-flat mr-2"
-                  onClick={() => handleAdd(routeAdd)}
-                >
-                  <span>
-                    <i className="fas fa-plus-circle mr-2"></i>&nbsp;
+            {routeAdd ? (
+              <button
+                type="button"
+                className="btn btn-primary btn-flat mr-2"
+                onClick={() => handleAdd(routeAdd)}
+              >
+                <span>
+                  <i className="fas fa-plus-circle mr-2"></i>&nbsp;
                 </span>
                 Add
               </button>
-                :
-                null
-            }
-            {
-              routeApprove ?
-                <button
-                  type="button"
-                  className="btn btn-info btn-flat mr-2"
-                  onClick={() => handleApprove(routeApprove)}
-                >
-                  <span>
-                    <i className="fas fa-check-circle mr-2"></i>&nbsp;
+            ) : null}
+            {routeApprove ? (
+              <button
+                type="button"
+                className="btn btn-info btn-flat mr-2"
+                onClick={() => handleApprove(routeApprove)}
+              >
+                <span>
+                  <i className="fas fa-check-circle mr-2"></i>&nbsp;
                 </span>
-                  {nameApprove ? nameApprove : 'Approve'}
-                </button>
-                :
-                null
-            }
+                {nameApprove ? nameApprove : "Approve"}
+              </button>
+            ) : null}
           </span>
           {/* filter disini */}
 
@@ -169,64 +163,81 @@ function Table({
               null
             }  */}
           <div className="col-6 row" style={{ float: "right" }}>
-            {
-              (filterTenant && filterTenant.length) ?
-                <div className={
-                  (filterStatus && filterStatus.length) ?
-                    (filterTenant && filterTenant.length) ?
-                      "input-group col-4" : "input-group col-6"
+            {filterTenant && filterTenant.length ? (
+              <div
+                className={
+                  filterStatus && filterStatus.length
+                    ? filterTenant && filterTenant.length
+                      ? "input-group col-4"
+                      : "input-group col-6"
                     : "input-group col-6"
                 }
-                >
-                  <div className="input-group-prepend ml-2">
-                    <select
-                      className="form-control"
-                      // data={filterStatus}
-                      placeholder="Select Site"
-                      onChange={e => {
-                        setValueTenant(e.target.value ? e.target.value : null);
-                      }}
-                    >
-                      {filterTenant.map((t) => <option key={t.name} value={t.id}>
+              >
+                <div className="input-group-prepend ml-2">
+                  <select
+                    className="form-control"
+                    // data={filterStatus}
+                    placeholder="Select Site"
+                    onChange={(e) => {
+                      setValueTenant(e.target.value ? e.target.value : null);
+                    }}
+                  >
+                    {filterTenant.map((t) => (
+                      <option key={t.name} value={t.id}>
                         {t.name}
-                      </option>)}
-                    </select>
-                  </div>
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                : <div className={(filterStatus && filterStatus.length) ? "null" : "col-3"}></div>
-            }
-            {
-              (filterStatus && filterStatus.length) ?
-                <div className={
-                  (filterStatus && filterStatus.length) ?
-                    (filterTenant && filterTenant.length) ?
-                      "input-group col-4" : "input-group col-6"
+              </div>
+            ) : (
+              <div
+                className={
+                  filterStatus && filterStatus.length ? "null" : "col-3"
+                }
+              ></div>
+            )}
+            {filterStatus && filterStatus.length ? (
+              <div
+                className={
+                  filterStatus && filterStatus.length
+                    ? filterTenant && filterTenant.length
+                      ? "input-group col-4"
+                      : "input-group col-6"
                     : "input-group col-6"
                 }
-                >
-                  <div className="input-group-prepend ml-2">
-                    <select
-                      className="form-control"
-                      // data={filterStatus}
-                      placeholder="Select Status"
-                      onChange={e => {
-                        setValueStatus(e.target.value);
-                      }}
-                    >
-                      {filterStatus.map((f) => <option key={f.value} value={f.value}>
+              >
+                <div className="input-group-prepend ml-2">
+                  <select
+                    className="form-control"
+                    // data={filterStatus}
+                    placeholder="Select Status"
+                    onChange={(e) => {
+                      setValueStatus(e.target.value);
+                    }}
+                  >
+                    {filterStatus.map((f) => (
+                      <option key={f.value} value={f.value}>
                         {f.id}
-                      </option>)}
-                    </select>
-                  </div>
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                : <div className={(filterTenant && filterTenant.length) ? null : "col-3"}></div>
-            }
-            <div className={
-              (filterStatus && filterStatus.length) ?
-                (filterTenant && filterTenant.length) ?
-                  "input-group col-4" : "input-group col-6"
-                : "input-group col-6"
-            }>
+              </div>
+            ) : (
+              <div
+                className={filterTenant && filterTenant.length ? null : "col-3"}
+              ></div>
+            )}
+            <div
+              className={
+                filterStatus && filterStatus.length
+                  ? filterTenant && filterTenant.length
+                    ? "input-group col-4"
+                    : "input-group col-6"
+                  : "input-group col-6"
+              }
+            >
               <input
                 type="text"
                 className="form-control"
@@ -246,155 +257,189 @@ function Table({
         </div>
       </div>
       <div className="card-body">
-        {!isProcessing && data.length === 0 && !searchVal && <div style={{ display: "flex", alignContent: "center", flexWrap: "wrap", flexDirection: "column", padding: "3% 30%" }}>
-          <p>Ups... Kamu belum miliki data yang tersimpan. Silahkan membuat yang baru terlebih dahulu.</p>
-        </div>}
-        {!isProcessing && searchVal && data.length === 0 && <div style={{ display: "flex", alignContent: "center", flexWrap: "wrap", flexDirection: "column", padding: "3% 30%" }}>
-          <p>Maaf, pencarian dengan kata kunci "{searchVal.length > 20 ? searchVal.slice(0,20)+"...":searchVal}" tidak dapat ditemukan. Pastikan ejaan yang dimasukkan sudah benar lalu coba beberapa saat lagi.</p>
-        </div>}
-        {data.length !== 0 && <table
-          {...getTableProps()}
-          className="table table-striped table-responsive"
-        >
-          <thead className="text-center">
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    width={column.width}
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                  >
-                    {column.render("Header")}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? " 🔽"
-                          : " 🔼"
-                        : ""}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>
-                        {cell.column.Header === "No"
-                          ? num[i]
-                          : cell.render("Cell")}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>}
-      </div>
-      {data.length !== 0 &&<div className="card-footer clearfix">
-        <ul className="pagination pagination-sm m-0 float-right">
-          <li className="page-item">
-            <button
-              type="button"
-              className={
-                canPreviousPage
-                  ? "btn btn-block btn-default btn-flat"
-                  : "btn btn-block btn-default btn-flat disabled"
-              }
-              onClick={() => gotoPage(0)}
-            >
-              {"First"}
-            </button>{" "}
-          </li>
-          <li className="page-item">
-            <button
-              type="button"
-              className={
-                canPreviousPage
-                  ? "btn btn-block btn-default btn-flat"
-                  : "btn btn-block btn-default btn-flat disabled"
-              }
-              onClick={() => previousPage()}
-            >
-              {"<"}
-            </button>{" "}
-          </li>
-          <li className="page-item">
-            <button
-              type="button"
-              className={
-                canNextPage
-                  ? "btn btn-block btn-default btn-flat"
-                  : "btn btn-block btn-default btn-flat disabled"
-              }
-              onClick={() => {
-                setNavPagination("Y");
-                nextPage();
-              }}
-            >
-              {">"}
-            </button>{" "}
-          </li>
-          <li className="page-item">
-            <button
-              type="button"
-              className={
-                canNextPage
-                  ? "btn btn-block btn-default btn-flat"
-                  : "btn btn-block btn-default btn-flat disabled"
-              }
-              onClick={() => gotoPage(pageCount - 1)}
-            >
-              {"Last"}
-            </button>{" "}
-          </li>
-        </ul>
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <span>
-          | Show{" "}
-          <select
-            value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
+        {!isProcessing && data.length === 0 && !searchVal && (
+          <div
+            style={{
+              display: "flex",
+              alignContent: "center",
+              flexWrap: "wrap",
+              flexDirection: "column",
+              padding: "3% 30%",
             }}
           >
-            {[5, 10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                {pageSize}
-              </option>
-            ))}
-          </select>
-        </span>
-        <span>
-          {" "}
-          of{" "}
-          {recordsFiltered === recordsTotal && (
-            <>
-              <strong>{recordsTotal}</strong>
-              {" total entries"}
-            </>
-          )}
-          {recordsFiltered !== recordsTotal && (
-            <>
-              <strong>{recordsFiltered}</strong>
-              {" entries (filtered from "}
-              <strong>{recordsTotal}</strong>
-              {" total entries)"}
-            </>
-          )}
-        </span>
-      </div>}
+            <p>
+              Ups... Kamu belum miliki data yang tersimpan. Silahkan membuat
+              yang baru terlebih dahulu.
+            </p>
+          </div>
+        )}
+        {!isProcessing && searchVal && data.length === 0 && (
+          <div
+            style={{
+              display: "flex",
+              alignContent: "center",
+              flexWrap: "wrap",
+              flexDirection: "column",
+              padding: "3% 30%",
+            }}
+          >
+            <p>
+              Maaf, pencarian dengan kata kunci "
+              {searchVal.length > 20
+                ? searchVal.slice(0, 20) + "..."
+                : searchVal}
+              " tidak dapat ditemukan. Pastikan ejaan yang dimasukkan sudah
+              benar lalu coba beberapa saat lagi.
+            </p>
+          </div>
+        )}
+        {data.length !== 0 && (
+          <table
+            {...getTableProps()}
+            className="table table-striped table-responsive"
+          >
+            <thead className="text-center">
+              {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th
+                      width={column.width}
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                    >
+                      {column.render("Header")}
+                      <span>
+                        {column.isSorted
+                          ? column.isSortedDesc
+                            ? " 🔽"
+                            : " 🔼"
+                          : ""}
+                      </span>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {page.map((row, i) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => {
+                      return (
+                        <td {...cell.getCellProps()}>
+                          {cell.column.Header === "No"
+                            ? num[i]
+                            : cell.render("Cell")}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+      {data.length !== 0 && (
+        <div className="card-footer clearfix">
+          <ul className="pagination pagination-sm m-0 float-right">
+            <li className="page-item">
+              <button
+                type="button"
+                className={
+                  canPreviousPage
+                    ? "btn btn-block btn-default btn-flat"
+                    : "btn btn-block btn-default btn-flat disabled"
+                }
+                onClick={() => gotoPage(0)}
+              >
+                {"Awal"}
+              </button>{" "}
+            </li>
+            <li className="page-item">
+              <button
+                type="button"
+                className={
+                  canPreviousPage
+                    ? "btn btn-block btn-default btn-flat"
+                    : "btn btn-block btn-default btn-flat disabled"
+                }
+                onClick={() => previousPage()}
+              >
+                {"<"}
+              </button>{" "}
+            </li>
+            <li className="page-item">
+              <button
+                type="button"
+                className={
+                  canNextPage
+                    ? "btn btn-block btn-default btn-flat"
+                    : "btn btn-block btn-default btn-flat disabled"
+                }
+                onClick={() => {
+                  setNavPagination("Y");
+                  nextPage();
+                }}
+              >
+                {">"}
+              </button>{" "}
+            </li>
+            <li className="page-item">
+              <button
+                type="button"
+                className={
+                  canNextPage
+                    ? "btn btn-block btn-default btn-flat"
+                    : "btn btn-block btn-default btn-flat disabled"
+                }
+                onClick={() => gotoPage(pageCount - 1)}
+              >
+                {"Akhir"}
+              </button>{" "}
+            </li>
+          </ul>
+          <span>
+            Laman{" "}
+            <strong>
+              {pageIndex + 1} dari {pageOptions.length}
+            </strong>{" "}
+          </span>
+          <span>
+            | Menampilkan{" "}
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+              }}
+            >
+              {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  {pageSize}
+                </option>
+              ))}
+            </select>
+          </span>
+          <span>
+            {" "}
+            dari{" "}
+            {recordsFiltered === recordsTotal && (
+              <>
+                <strong>{recordsTotal}</strong>
+                {" total lema"}
+              </>
+            )}
+            {recordsFiltered !== recordsTotal && (
+              <>
+                <strong>{recordsFiltered}</strong>
+                {" lema (difilter dari "}
+                <strong>{recordsTotal}</strong>
+                {" total lema)"}
+              </>
+            )}
+          </span>
+        </div>
+      )}
     </>
   );
 }
