@@ -145,8 +145,8 @@ function ManajemenDataInputPhase3() {
                   </div>
                 )}
                 {progress.loaded === progress.total
-                  ? "Proses data..."
-                  : "Unggah data..."}
+                  ? "Proses data"
+                  : "Unggah data"}
               </div>
             </div>
           </div>
