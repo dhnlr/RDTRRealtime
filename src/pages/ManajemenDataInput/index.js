@@ -5,7 +5,8 @@ import axios from "axios";
 
 import { config } from "../../Constants";
 
-import { Header, Menu, Footer } from "../../components";
+import { Header, Menu, Footer, ProgressCircle } from "../../components";
+import Image from "./Group 3735.svg";
 
 function ManajemenDataInput() {
   let history = useHistory();
@@ -168,7 +169,7 @@ function ManajemenDataInput() {
         goManajemenDataPhase2(data.data?.obj.id);
       })
       .catch((error) => {
-        console.error(error)
+        console.error(error);
         setIsProcessing(false);
         error.response?.data?.status?.message
           ? setErrMessage(error.response?.data?.status?.message)
@@ -192,9 +193,7 @@ function ManajemenDataInput() {
             ? state?.isPrivate
             : JSON.parse(localStorage.state)?.isPrivate,
           kotaKabupatenId: city,
-          ownerId: state
-            ? state?.owner
-            : localStorage.state?.userId,
+          ownerId: state ? state?.owner : localStorage.state?.userId,
         },
         { headers }
       )
@@ -217,7 +216,9 @@ function ManajemenDataInput() {
               : JSON.parse(localStorage.state)?.ownerId,
           })
         );
-        goManajemenDataPhase2(state ? state?.id : JSON.parse(localStorage.state)?.id);
+        goManajemenDataPhase2(
+          state ? state?.id : JSON.parse(localStorage.state)?.id
+        );
       })
       .catch((error) => {
         setIsProcessing(false);
@@ -299,6 +300,11 @@ function ManajemenDataInput() {
             <div className="row">
               <div className="col-12">
                 <div className="mb-2">
+                  <div className="float-right">
+                    <ProgressCircle className="text-primary"></ProgressCircle>
+                    <ProgressCircle className="text-muted"></ProgressCircle>
+                    <ProgressCircle className="text-muted"></ProgressCircle>
+                  </div>
                   <h1>Proyek Saya</h1>
                   <p className="text-muted">
                     Silahkan lengkapi borang di bawah ini
@@ -309,120 +315,140 @@ function ManajemenDataInput() {
                     {errMessage}
                   </div>
                 )}
-                <form
-                  className="forms-sample"
-                  onSubmit={handleSubmit(onSubmit)}
-                >
-                  {/* register your input into the hook by invoking the "register" function */}
-                  <div className="form-group">
-                    <label htmlFor="projectName">Nama Proyek</label>
-                    <input
-                      className={`form-control p-input ${
-                        errors.projectName ? "is-invalid" : ""
-                      }`}
-                      id="projectName"
-                      name="projectName"
-                      defaultValue=""
-                      placeholder="Nama Proyek"
-                      ref={register({
-                        required: "Nama proyek harus diisi",
-                      })}
-                    />
-                    {errors.projectName && (
-                      <small id="nameHelp" className="form-text text-danger">
-                        {errors.projectName.message}
-                      </small>
-                    )}
+                <div className="row">
+                  <div className="col-5 d-none d-md-block d-lg-block">
+                    <img src={Image} alt="input project" width="100%"></img>
                   </div>
+                  <div className="col-7">
+                    <form
+                      className="forms-sample"
+                      onSubmit={handleSubmit(onSubmit)}
+                    >
+                      {/* register your input into the hook by invoking the "register" function */}
+                      <div className="form-group">
+                        <label htmlFor="projectName">Nama Proyek</label>
+                        <input
+                          className={`form-control p-input ${
+                            errors.projectName ? "is-invalid" : ""
+                          }`}
+                          id="projectName"
+                          name="projectName"
+                          defaultValue=""
+                          placeholder="Nama Proyek"
+                          ref={register({
+                            required: "Nama proyek harus diisi",
+                          })}
+                        />
+                        {errors.projectName && (
+                          <small
+                            id="nameHelp"
+                            className="form-text text-danger"
+                          >
+                            {errors.projectName.message}
+                          </small>
+                        )}
+                      </div>
 
-                  {/* include validation with required or other standard HTML validation rules */}
-                  <div className="form-group">
-                    <label htmlFor="province">Provinsi</label>
-                    <Controller
-                      name="province"
-                      control={control}
-                      defaultValue={null}
-                      render={(props) => (
-                        <select
-                        className={`form-control p-input ${
-                          errors.province ? "is-invalid" : ""
-                        }`}
-                          id="province"
+                      {/* include validation with required or other standard HTML validation rules */}
+                      <div className="form-group">
+                        <label htmlFor="province">Provinsi</label>
+                        <Controller
                           name="province"
-                          value={province}
-                          onChange={handleProvinceChange}
-                          ref={register({ required: "Provinsi harus diisi"})}
-                        >
-                          {/* <option value="null">
+                          control={control}
+                          defaultValue={null}
+                          render={(props) => (
+                            <select
+                              className={`form-control p-input ${
+                                errors.province ? "is-invalid" : ""
+                              }`}
+                              id="province"
+                              name="province"
+                              value={province}
+                              onChange={handleProvinceChange}
+                              ref={register({
+                                required: "Provinsi harus diisi",
+                              })}
+                            >
+                              {/* <option value="null">
                             ---
                           </option>
                           <option value="1">
                             aaa
                           </option> */}
-                          {provinces}
-                        </select>
-                      )}
-                      rules={{ required: "Provinsi harus diisi" }}
-                    />
-                    {errors.province && (
-                      <small id="nameHelp" className="form-text text-danger">
-                        {errors.province.message}
-                      </small>
-                    )}
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="city">Kota</label>
-                    <Controller
-                      name="city"
-                      control={control}
-                      defaultValue={null}
-                      render={(props) => (
-                        <select
-                        className={`form-control p-input ${
-                          errors.city ? "is-invalid" : ""
-                        }`}
-                          id="city"
+                              {provinces}
+                            </select>
+                          )}
+                          rules={{ required: "Provinsi harus diisi" }}
+                        />
+                        {errors.province && (
+                          <small
+                            id="nameHelp"
+                            className="form-text text-danger"
+                          >
+                            {errors.province.message}
+                          </small>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="city">Kota</label>
+                        <Controller
                           name="city"
-                          value={city}
-                          onChange={handleCityChange}
-                          ref={register({ required: "Kota/kabupaten harus diisi"})}
+                          control={control}
+                          defaultValue={null}
+                          render={(props) => (
+                            <select
+                              className={`form-control p-input ${
+                                errors.city ? "is-invalid" : ""
+                              }`}
+                              id="city"
+                              name="city"
+                              value={city}
+                              onChange={handleCityChange}
+                              ref={register({
+                                required: "Kota/kabupaten harus diisi",
+                              })}
+                            >
+                              {cities}
+                            </select>
+                          )}
+                          rules={{ required: "Kota harus diisi" }}
+                        />
+                        {errors.city && (
+                          <small
+                            id="nameHelp"
+                            className="form-text text-danger"
+                          >
+                            {errors.city.message}
+                          </small>
+                        )}
+                      </div>
+                      <div className="template-demo float-sm-left float-md-right">
+                        <button
+                          className="btn btn-light"
+                          type="button"
+                          onClick={() => goSimulasi()}
                         >
-                          {cities}
-                        </select>
-                      )}
-                      rules={{ required: "Kota harus diisi" }}
-                    />
-                    {errors.city && (
-                      <small id="nameHelp" className="form-text text-danger">
-                        {errors.city.message}
-                      </small>
-                    )}
-                  </div>
-                  <div className="template-demo float-right">
-                    <button
-                      className="btn btn-light"
-                      type="button"
-                      onClick={() => goSimulasi()}
-                    >
-                      Kembali
-                    </button>
+                          Kembali
+                        </button>
 
-                    <button
-                      className="btn btn-primary"
-                      type="submit"
-                      disabled={isProcessing}
-                    >
-                      {isProcessing && (
-                        <span
-                          className="spinner-border spinner-border-sm mr-2"
-                          role="status"
-                          aria-hidden="true"
-                        ></span>
-                      )}
-                      Selanjutnya
-                    </button>
+                        <button
+                          className="btn btn-primary"
+                          type="submit"
+                          disabled={isProcessing}
+                        >
+                          {isProcessing && (
+                            <span
+                              className="spinner-border spinner-border-sm mr-2"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
+                          )}
+                          Selanjutnya
+                        </button>
+                      </div>
+                    </form>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
-import { Header, Menu, Footer } from "../../components";
+import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
 function ManajemenDataInputPhase2() {
   const { state } = useLocation();
@@ -31,8 +31,8 @@ function ManajemenDataInputPhase2() {
   }
 
   function handleDone() {
-    localStorage.removeItem("state")
-    history.push("/simulation")
+    localStorage.removeItem("state");
+    history.push("/simulation");
   }
 
   return (
@@ -45,6 +45,11 @@ function ManajemenDataInputPhase2() {
             <div className="row">
               <div className="col-12">
                 <div className="mb-2">
+                  <div className="float-right">
+                    <ProgressCircle className="text-muted"></ProgressCircle>
+                    <ProgressCircle className="text-primary"></ProgressCircle>
+                    <ProgressCircle className="text-muted"></ProgressCircle>
+                  </div>
                   <h1>Kebutuhan Data</h1>
                   <p className="text-muted">
                     Pilih kebutuhan data di bawah ini
@@ -75,6 +80,10 @@ function ManajemenDataInputPhase2() {
                         width: "100%",
                         padding: "20px",
                         color: "white",
+                        background:
+                          "linear-gradient(0deg, rgb(0, 0, 0, 1) 0%, rgba(181,181,181,0.01) 96%)",
+                        borderBottomLeftRadius: "20px",
+                        borderBottomRightRadius: "20px",
                       }}
                     >
                       Modul Kemacetan
@@ -102,6 +111,10 @@ function ManajemenDataInputPhase2() {
                         width: "100%",
                         padding: "20px",
                         color: "white",
+                        background:
+                          "linear-gradient(0deg, rgb(0, 0, 0, 1) 0%, rgba(181,181,181,0.01) 96%)",
+                        borderBottomLeftRadius: "20px",
+                        borderBottomRightRadius: "20px",
                       }}
                     >
                       Modul Kebutuhan Air
@@ -129,6 +142,10 @@ function ManajemenDataInputPhase2() {
                         width: "100%",
                         padding: "20px",
                         color: "white",
+                        background:
+                          "linear-gradient(0deg, rgb(0, 0, 0, 1) 0%, rgba(181,181,181,0.01) 96%)",
+                        borderBottomLeftRadius: "20px",
+                        borderBottomRightRadius: "20px",
                       }}
                     >
                       Modul Persampahan
@@ -156,6 +173,10 @@ function ManajemenDataInputPhase2() {
                         width: "100%",
                         padding: "20px",
                         color: "white",
+                        background:
+                          "linear-gradient(0deg, rgb(0, 0, 0, 1) 0%, rgba(181,181,181,0.01) 96%)",
+                        borderBottomLeftRadius: "20px",
+                        borderBottomRightRadius: "20px",
                       }}
                     >
                       Modul Banjir
@@ -184,13 +205,17 @@ function ManajemenDataInputPhase2() {
                         width: "100%",
                         padding: "20px",
                         color: "white",
+                        background:
+                          "linear-gradient(0deg, rgb(0, 0, 0, 1) 0%, rgba(181,181,181,0.01) 96%)",
+                        borderBottomLeftRadius: "20px",
+                        borderBottomRightRadius: "20px",
                       }}
                     >
                       Modul Simulasi KDB & KDLB
                     </div>
                   </div>
                 </div>
-                <div className="template-demo float-right">
+                <div className="template-demo float-sm-left float-md-right">
                   <button
                     className="btn btn-light"
                     type="button"
@@ -201,7 +226,9 @@ function ManajemenDataInputPhase2() {
                   <button
                     className="btn btn-primary"
                     type="button"
-                    onClick={() => {handleDone()}}
+                    onClick={() => {
+                      handleDone();
+                    }}
                   >
                     Lanjutkan ke Simulasi
                   </button>

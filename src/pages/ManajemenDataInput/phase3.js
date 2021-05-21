@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import axios from "axios";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
-import { Header, Menu, Footer } from "../../components";
+import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
 import { config } from "../../Constants";
 
@@ -159,6 +159,11 @@ function ManajemenDataInputPhase3() {
             <div className="row">
               <div className="col-12">
                 <div className="mb-2">
+                  <div className="float-right">
+                    <ProgressCircle className="text-muted"></ProgressCircle>
+                    <ProgressCircle className="text-muted"></ProgressCircle>
+                    <ProgressCircle className="text-primary"></ProgressCircle>
+                  </div>
                   <h1>Unggah Data</h1>
                   <p className="text-muted">Masukkan kebutuhan data</p>
                 </div>
@@ -365,7 +370,7 @@ function ManajemenDataInputPhase3() {
                       </div>
                     </div>
                   </div>
-                  <div className="template-demo float-right">
+                  <div className="template-demo float-sm-left float-md-right">
                     <button
                       className="btn btn-light"
                       type="button"
