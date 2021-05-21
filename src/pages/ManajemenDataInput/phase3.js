@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+import CreatableSelect from "react-select/creatable";
 
 import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
@@ -10,7 +11,7 @@ import { config } from "../../Constants";
 function ManajemenDataInputPhase3() {
   const { state } = useLocation();
   let history = useHistory();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, control, errors } = useForm();
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [errMessage, setErrMessage] = useState(null);
@@ -29,14 +30,27 @@ function ManajemenDataInputPhase3() {
     }
   }, [history, state?.id]);
 
-  const onSubmit = ({ building, persil, pola_ruang }, e) => {
+  const onSubmit = ({ building, building_year, building_desc, building_tag, persil, persil_year, persil_desc, persil_tag, pola_ruang, pola_ruang_year, pola_ruang_desc, pola_ruang_tag, }, e) => {
     setErrMessage(null);
     setIsProcessing(true);
 
+    building_tag = building_tag.map(tag => tag.value)
+    persil_tag = persil_tag.map(tag => tag.value)
+    pola_ruang_tag = pola_ruang_tag.map(tag => tag.value)
+
     var fd = new FormData();
     fd.set("bangunan", building[0]);
+    fd.set("tahun_bangunan", building_year)
+    fd.set("deskripsi_bangunan", building_desc)
+    fd.set("tag_bangunan", building_tag)
     fd.set("persil_tanah", persil[0]);
+    fd.set("tahun_persil_tanah", persil_year)
+    fd.set("deskripsi_persil_tanah", persil_desc)
+    fd.set("tag_persil_tanah", persil_tag)
     fd.set("pola_ruang", pola_ruang[0]);
+    fd.set("tahun_pola_ruang", pola_ruang_year)
+    fd.set("deskripsi_pola_ruang", pola_ruang_desc)
+    fd.set("tag_pola_ruang", pola_ruang_tag)
     fd.set("project_id", state?.id);
 
     axios
@@ -58,7 +72,7 @@ function ManajemenDataInputPhase3() {
         if (data.status.code === 200) {
           goSimulasi();
         } else {
-          setErrMessage(data?.status?.description);
+          setErrMessage(data?.status?.description ?? data?.status?.message);
         }
       })
       .catch((error) => {
@@ -201,7 +215,7 @@ function ManajemenDataInputPhase3() {
                       >
                         <div className="card-body">
                           <div className="form-group">
-                            {/* <label>Lampiran (opsional)</label> */}
+                            <label>Lampiran</label>
                             <div className="custom-file">
                               <label
                                 id="pola_ruang"
@@ -212,7 +226,9 @@ function ManajemenDataInputPhase3() {
                               </label>
                               <input
                                 className="form-control custom-file-input"
-                                ref={register}
+                                ref={register({
+                                  required: "Berkas pola ruang harus diisi",
+                                })}
                                 type="file"
                                 name="pola_ruang"
                                 accept=".zip"
@@ -226,41 +242,70 @@ function ManajemenDataInputPhase3() {
                                       ).innerHTML = "Cari berkas...");
                                 }}
                               />
+                              {errors.pola_ruang && (
+                                <small
+                                  id="nameHelp"
+                                  className="form-text text-danger"
+                                >
+                                  {errors.pola_ruang.message}
+                                </small>
+                              )}
                             </div>
                           </div>
-                          {/* <h4>Rincian Data</h4> */}
-                          {/* <div className="form-group" data-select2-id="7">
-                          <label>Tag (opsional)</label>
-                          <Select
-                            defaultValue={[options[1], options[2]]}
-                            isMulti
-                            name="tag"
-                            options={options}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            styles={customStyles}
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label htmlFor="tahun">Tahun (optional)</label>
-                          <input
-                            id="tahun"
-                            type="number"
-                            name="tahun"
-                            className="form-control p-input"
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label htmlFor="deskripsi">
-                            Deskripsi (opsional)
-                          </label>
-                          <textarea
-                            id="deskripsi"
-                            name="deskripsi"
-                            className="form-control"
-                            rows="4"
-                          />
-                        </div> */}
+                          <h4>Rincian Data</h4>
+                          <div className="form-row">
+                            <div className="form-group col-md-6">
+                              <label htmlFor="pola_ruang_year">
+                                Tahun (opsional)
+                              </label>
+                              <input
+                                id="pola_ruang_year"
+                                className="form-control"
+                                name="pola_ruang_year"
+                                placeholder="Tahun pola ruang"
+                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
+                              />
+                              {errors.pola_ruang_year && (
+                                <small
+                                  id="nameHelp"
+                                  className="form-text text-danger"
+                                >
+                                  {errors.pola_ruang_year.message}
+                                </small>
+                              )}
+                            </div>
+                            <div className="form-group col-md-6">
+                              <label htmlFor="pola_ruang_desc">
+                                Deskripsi (opsional)
+                              </label>
+                              <input
+                                id="pola_ruang_desc"
+                                className="form-control"
+                                name="pola_ruang_desc"
+                                placeholder="Deskripsi pola ruang"
+                                ref={register}
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="pola_ruang_tag">
+                              Tag (opsional)
+                            </label>
+                            <Controller
+                              id="pola_ruang_tag"
+                              as={CreatableSelect}
+                              name="pola_ruang_tag"
+                              components={{
+                                DropdownIndicator: null,
+                              }}
+                              control={control}
+                              defaultValue={null}
+                              isMulti
+                              isClearable
+                              placeholder="Tag pola ruang"
+                              className=""
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -287,7 +332,7 @@ function ManajemenDataInputPhase3() {
                       >
                         <div className="card-body">
                           <div className="form-group">
-                            {/* <label>Lampiran (opsional)</label> */}
+                            <label>Lampiran</label>
                             <div className="custom-file">
                               <label
                                 id="building"
@@ -298,7 +343,9 @@ function ManajemenDataInputPhase3() {
                               </label>
                               <input
                                 className="form-control custom-file-input"
-                                ref={register}
+                                ref={register({
+                                  required: "Berkas bangunan harus ada",
+                                })}
                                 type="file"
                                 name="building"
                                 accept=".zip"
@@ -313,6 +360,66 @@ function ManajemenDataInputPhase3() {
                                 }}
                               />
                             </div>
+                            {errors.building && (
+                              <small
+                                id="nameHelp"
+                                className="form-text text-danger"
+                              >
+                                {errors.building.message}
+                              </small>
+                            )}
+                          </div>
+                          <h4>Rincian Data</h4>
+                          <div className="form-row">
+                            <div className="form-group col-md-6">
+                              <label htmlFor="building_year">
+                                Tahun (opsional)
+                              </label>
+                              <input
+                                id="building_year"
+                                className="form-control"
+                                name="building_year"
+                                placeholder="Tahun bangunan yang sudah ada"
+                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
+                              />
+                              {errors.building_year && (
+                                <small
+                                  id="nameHelp"
+                                  className="form-text text-danger"
+                                >
+                                  {errors.building_year.message}
+                                </small>
+                              )}
+                            </div>
+                            <div className="form-group col-md-6">
+                              <label htmlFor="building_desc">
+                                Deskripsi (opsional)
+                              </label>
+                              <input
+                                id="building_desc"
+                                className="form-control"
+                                name="building_desc"
+                                placeholder="Deskripsi bangunan yang sudah ada"
+                                ref={register}
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="building_tag">Tag (opsional)</label>
+                            <Controller
+                              id="building_tag"
+                              as={CreatableSelect}
+                              name="building_tag"
+                              components={{
+                                DropdownIndicator: null,
+                              }}
+                              control={control}
+                              defaultValue={null}
+                              isMulti
+                              isClearable
+                              placeholder="Tag bangunan"
+                              className=""
+                            />
                           </div>
                         </div>
                       </div>
@@ -340,7 +447,7 @@ function ManajemenDataInputPhase3() {
                       >
                         <div className="card-body">
                           <div className="form-group">
-                            {/* <label>Lampiran (opsional)</label> */}
+                            <label>Lampiran</label>
                             <div className="custom-file">
                               <label
                                 id="persil"
@@ -351,7 +458,9 @@ function ManajemenDataInputPhase3() {
                               </label>
                               <input
                                 className="form-control custom-file-input"
-                                ref={register}
+                                ref={register({
+                                  required: "Berkas persil tanah harus ada",
+                                })}
                                 type="file"
                                 name="persil"
                                 onChange={(e) => {
@@ -365,6 +474,66 @@ function ManajemenDataInputPhase3() {
                                 }}
                               />
                             </div>
+                            {errors.persil && (
+                              <small
+                                id="nameHelp"
+                                className="form-text text-danger"
+                              >
+                                {errors.persil.message}
+                              </small>
+                            )}
+                          </div>
+                          <h4>Rincian Data</h4>
+                          <div className="form-row">
+                            <div className="form-group col-md-6">
+                              <label htmlFor="persil_year">
+                                Tahun (opsional)
+                              </label>
+                              <input
+                                id="persil_year"
+                                className="form-control"
+                                name="persil_year"
+                                placeholder="Tahun persil tanah"
+                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
+                              />
+                              {errors.persil_year && (
+                                <small
+                                  id="nameHelp"
+                                  className="form-text text-danger"
+                                >
+                                  {errors.persil_year.message}
+                                </small>
+                              )}
+                            </div>
+                            <div className="form-group col-md-6">
+                              <label htmlFor="persil_desc">
+                                Deskripsi (opsional)
+                              </label>
+                              <input
+                                id="persil_desc"
+                                className="form-control"
+                                name="persil_desc"
+                                placeholder="Deskripsi persil tanah"
+                                ref={register}
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="persil_tag">Tag (opsional)</label>
+                            <Controller
+                              id="persil_tag"
+                              as={CreatableSelect}
+                              name="persil_tag"
+                              components={{
+                                DropdownIndicator: null,
+                              }}
+                              control={control}
+                              defaultValue={null}
+                              isMulti
+                              isClearable
+                              placeholder="Tag persil tanah"
+                              className=""
+                            />
                           </div>
                         </div>
                       </div>
