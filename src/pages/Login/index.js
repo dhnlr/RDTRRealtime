@@ -20,7 +20,7 @@ function Login() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.token) {
+    if (sessionStorage.token && sessionStorage.userId) {
       handleDashboard();
     }
   });
@@ -50,27 +50,19 @@ function Login() {
       )
       .then((resp) => {
         sessionStorage.setItem("token", resp.data.obj.accessToken);
-        axios
-          .get(config.url.API_URL + "/Profile/Get", {
-            headers: { Authorization: "Bearer " + sessionStorage.token },
-          })
-          .then((response) => {
-            setIsProcessing(false);
-            if (response.data.status.code === 200) {
-              sessionStorage.setItem("userId", response.data.obj.id);
-              handleDashboard();
-            } else {
-              setErrMessage(response.data.status.message);
-            }
-          })
-          .catch((error) => {
-            error.response?.data?.status?.message
-              ? setErrMessage(error.response?.data?.status?.message)
-              : setErrMessage(
-                  "Gagal mendapatkan profil. Silahkan coba beberapa saat lagi."
-                );
-            setIsProcessing(false);
-          });
+        return axios
+        .get(config.url.API_URL + "/Profile/Get", {
+          headers: { Authorization: "Bearer " + sessionStorage.token },
+        })
+      })
+      .then((response) => {
+        setIsProcessing(false);
+        if (response.data.status.code === 200) {
+          sessionStorage.setItem("userId", response.data.obj.id);
+          handleDashboard();
+        } else {
+          setErrMessage(response.data.status.message);
+        }
       })
       .catch((error) => {
         error.response?.data?.status?.message
