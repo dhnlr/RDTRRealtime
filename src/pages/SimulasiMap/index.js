@@ -356,9 +356,9 @@ const SimulasiMap = () => {
             elevationInfo: {
               mode: "on-the-ground",
             },
-            title: "Bangunan - Envelope",
+            title: "Bangunan - Amplop",
             popupTemplate: {
-              title: "Bangunan - Envelope",
+              title: "Bangunan - Amplop",
               content: [
                 {
                   type: "fields",
@@ -1923,9 +1923,9 @@ const SimulasiMap = () => {
             elevationInfo: {
               mode: "on-the-ground",
             },
-            title: "Zonasi - Envelope",
+            title: "Zonasi - Amplop",
             popupTemplate: {
-              title: "Zonasi - Envelope",
+              title: "Zonasi - Amplop",
               content: [
                 {
                   type: "fields",
@@ -2924,7 +2924,7 @@ const SimulasiMap = () => {
               view: view,
               listItemCreatedFunction: function (event) {
                 var item = event.item;
-                if (item.title === "Bangunan - Envelope") {
+                if (item.title === "Bangunan - Amplop") {
                   item.actionsSections = [
                     [
                       {
@@ -2939,7 +2939,7 @@ const SimulasiMap = () => {
                       },
                     ],
                   ];
-                } else if (item.title === "Zonasi - Envelope") {
+                } else if (item.title === "Zonasi - Amplop") {
                   item.actionsSections = [
                     [
                       {
