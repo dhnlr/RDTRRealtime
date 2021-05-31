@@ -8,7 +8,11 @@ import Register from "./Register";
 import DataManagement from "./DataManagement";
 import ManajemenDataInput from "./ManajemenDataInput";
 import ManajemenDataInputPhase2 from "./ManajemenDataInput/phase2";
-import ManajemenDataInputPhase3 from "./ManajemenDataInput/phase3";
+import ManajemenDataInputKdb from "./ManajemenDataInput/kdb";
+import ManajemenDataInputCongestion from "./ManajemenDataInput/congestion";
+import ManajemenDataInputFlood from "./ManajemenDataInput/flood";
+import ManajemenDataInputTrash from "./ManajemenDataInput/trash";
+import ManajemenDataInputWater from "./ManajemenDataInput/water";
 import Simulasi from "./Simulasi";
 import SimulasiMap from "./SimulasiMap";
 import ConfirmByCode from "./ConfirmByCode";
@@ -41,7 +45,11 @@ export {
   Register,
   ManajemenDataInput,
   ManajemenDataInputPhase2,
-  ManajemenDataInputPhase3,
+  ManajemenDataInputKdb,
+  ManajemenDataInputCongestion,
+  ManajemenDataInputFlood,
+  ManajemenDataInputTrash,
+  ManajemenDataInputWater,
   Simulasi,
   SimulasiMap,
   ConfirmByCode,

@@ -24,8 +24,8 @@ function ManajemenDataInputPhase2() {
     history.push("/datamanagementinput");
   }
 
-  function goManajemenData() {
-    history.push("/datamanagementinput/uploaddata", {
+  function goManajemenData(url) {
+    history.push("/datamanagementinput/"+url, {
       id: state?.id,
     });
   }
@@ -64,6 +64,7 @@ function ManajemenDataInputPhase2() {
                       margin: "25px",
                       cursor: "pointer",
                     }}
+                    onClick={() => goManajemenData("congestion")}
                   >
                     <img
                       src="../images/manajemendata/kemacetan.png"
@@ -95,6 +96,7 @@ function ManajemenDataInputPhase2() {
                       margin: "25px",
                       cursor: "pointer",
                     }}
+                    onClick={() => goManajemenData("water")}
                   >
                     <img
                       src="../images/manajemendata/air.png"
@@ -126,6 +128,7 @@ function ManajemenDataInputPhase2() {
                       margin: "25px",
                       cursor: "pointer",
                     }}
+                    onClick={() => goManajemenData("trash")}
                   >
                     <img
                       src="../images/manajemendata/sampah.png"
@@ -157,6 +160,7 @@ function ManajemenDataInputPhase2() {
                       margin: "25px",
                       cursor: "pointer",
                     }}
+                    onClick={() => goManajemenData("flood")}
                   >
                     <img
                       src="../images/manajemendata/banjir.png"
@@ -188,7 +192,7 @@ function ManajemenDataInputPhase2() {
                       margin: "25px",
                       cursor: "pointer",
                     }}
-                    onClick={() => goManajemenData()}
+                    onClick={() => goManajemenData("kdbklb")}
                   >
                     <img
                       src="../images/manajemendata/kemacetan.png"

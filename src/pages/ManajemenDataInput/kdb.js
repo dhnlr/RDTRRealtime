@@ -8,7 +8,7 @@ import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
 import { config } from "../../Constants";
 
-function ManajemenDataInputPhase3() {
+function ManajemenDataInputKdb() {
   const { state } = useLocation();
   let history = useHistory();
   const { register, handleSubmit, control, errors } = useForm();
@@ -178,8 +178,8 @@ function ManajemenDataInputPhase3() {
                     <ProgressCircle className="text-muted"></ProgressCircle>
                     <ProgressCircle className="text-primary"></ProgressCircle>
                   </div>
-                  <h1>Unggah Data</h1>
-                  <p className="text-muted">Masukkan kebutuhan data</p>
+                  <h1>Modul KDB dan KLB</h1>
+                  <p className="text-muted">Unggah kebutuhan data</p>
                 </div>
                 {errMessage && (
                   <div className="alert alert-warning" role="alert">
@@ -575,4 +575,4 @@ function ManajemenDataInputPhase3() {
   );
 }
 
-export default ManajemenDataInputPhase3;
+export default ManajemenDataInputKdb;
