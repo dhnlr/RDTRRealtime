@@ -175,6 +175,7 @@ const SimulasiMap = () => {
           "esri/widgets/Bookmarks",
           "esri/webmap/Bookmark",
           "esri/layers/GroupLayer",
+          "esri/layers/SceneLayer",
         ],
         {
           css: true,
@@ -199,10 +200,11 @@ const SimulasiMap = () => {
           Bookmarks,
           Bookmark,
           GroupLayer,
+          SceneLayer,
         ]) => {
           const map = new Map({
             basemap: "topo-vector",
-            ground: "world-elevation",
+            // ground: "world-elevation",
           });
 
           const view = new SceneView({
@@ -230,6 +232,11 @@ const SimulasiMap = () => {
                 breakpoint: false,
               },
             },
+          });
+
+          const buildings3dLayer = new SceneLayer({
+            url: config.url.ARCGIS_URL + "/Hosted/testbangunan3d/SceneServer/layers/0",
+            title: "Bangunan Segmentasi",
           });
 
           function getSymbol(color) {
@@ -2711,7 +2718,7 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["namobj", "kapasitas"],
-            editingEnabled: false,
+            editingEnabled: true,
           });
 
           const airBersihPdamLayer = new FeatureLayer({
@@ -2883,6 +2890,7 @@ const SimulasiMap = () => {
             kdbKlbGroupLayer,
             buildingsEnvelopeLayer,
             buildingsLayer,
+            buildings3dLayer,
           ]);
 
           basemapPolaRuangLayer.visible = false;
@@ -2899,6 +2907,7 @@ const SimulasiMap = () => {
           buildingsKemacetanLayer.visible = false;
           buildingsAirBersihLayer.visible = false;
           buildingsKdbKlbLayer.visible = false;
+          buildings3dLayer.visible = false;
 
           async function finishLayer() {
             if (isMounted) {
@@ -3035,6 +3044,27 @@ const SimulasiMap = () => {
                   ],
                 },
                 {
+                  layer: kemacetanJaringanJalanLayer,
+                  enabled: true,
+                  addEnabled: true,
+                  updateEnabled: true,
+                  deleteEnabled: true,
+                  fieldConfig: [
+                    {
+                      name: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      name: "lebar",
+                      label: "lebar",
+                    },
+                    {
+                      name: "jalan_lhr",
+                      label: "jalan_lhr",
+                    },
+                  ],
+                },
+                {
                   layer: polaRuangVersioningLayer,
                   enabled: true,
                   addEnabled: true,
@@ -3104,6 +3134,7 @@ const SimulasiMap = () => {
               buildingsKdbKlbLayer.popupEnabled = false;
               buildingsEnvelopeLayer.popupEnabled = false;
               buildingsLayer.popupEnabled = false;
+              buildings3dLayer.popupEnabled = false;
               view.on("click", function (event) {
                 // Remove the previous highlights
                 if (highlight) {
@@ -3160,6 +3191,7 @@ const SimulasiMap = () => {
                 { layer: buildingsAirBersihLayer },
                 { layer: buildingsKdbKlbLayer },
                 { layer: buildingsLayer },
+                { layer: buildings3dLayer },
               ],
             });
             const legendExpand = new Expand({
