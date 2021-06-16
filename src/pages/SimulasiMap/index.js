@@ -98,6 +98,11 @@ const SimulasiMap = () => {
   const [hasilWarnaBangunanAirBersih, setHasilWarnaBangunanAirBersih] = useState("");
   const [contentHasilPersilTanahAirBersih, setContentHasilPersilTanahAirBersih] = useState({});
   const [contentHasilPolaRuangAirBersih, setContentHasilPolaRuangAirBersih] = useState({});
+
+  const [activeSebelumSesudah, setActiveSebelumSesudah] = useState({
+    activeSebelum: false,
+  });
+
   // Form related functions
   const {
     register,
@@ -4759,6 +4764,12 @@ const SimulasiMap = () => {
     setShowingPopop({ ...showingPopup, show: false, title: "" });
   };
   // end close showing popup
+  const handleSebelumSesudah = () => {
+    setActiveSebelumSesudah({
+      ...activeSebelumSesudah,
+      activeSebelum: !activeSebelumSesudah.activeSebelum,
+    });
+  };
 
   return (
     <div className="container-scroller">
@@ -4895,625 +4906,120 @@ const SimulasiMap = () => {
                 </p>
                 {showingPopup.title === "Bangunan - Pembangunan Optimum" || showingPopup.title === "Bangunan - Air Bersih" || showingPopup.title === "Bangunan - Transportasi" ? (
                   <>
-                    <TabsModule>
-                      <div style={{ flex: "1", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <TabModuleButton onClick={handleClickActiveTab} activeTab={activeTab === 0} id={0} style={{ background: "#6D8392" }}>
-                          <img onClick={handleClickActiveTab} activeTab={activeTab === 0} id={0} src="./images/office-building.svg" alt="KDB/KLB" />
-                        </TabModuleButton>
-                        <TabModuleText onClick={handleClickActiveTab} activeTab={activeTab === 0} id={0}>
-                          KDB/KLB
-                        </TabModuleText>
+                    {/* start popup sebelumsesudah */}
+                    <div className="switch-sebelum-sesudah">
+                      <div className="switch-button">
+                        <input className="switch-button-checkbox" type="checkbox" onClick={handleSebelumSesudah} />
+                        <label className="switch-button-label" htmlFor style={{ marginBottom: "0px" }}>
+                          <span className="switch-button-label-span">Sebelum</span>
+                        </label>
                       </div>
-                      <div
-                        style={{
-                          flex: "1",
-                          textAlign: "center",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                        }}
-                      >
-                        <TabModuleButton onClick={handleClickActiveTab} activeTab={activeTab === 1} id={1} style={{ background: "#EB5569" }}>
-                          <img onClick={handleClickActiveTab} activeTab={activeTab === 1} id={1} src="./images/traffic-lights.svg" alt="KEMACETAN" />
-                        </TabModuleButton>
-                        <TabModuleText onClick={handleClickActiveTab} activeTab={activeTab === 1} id={1}>
-                          KEMACETAN
-                        </TabModuleText>
+                    </div>
+
+                    <div className="accordion accordion-bordered" id="accordionExample">
+                      <div className="fade-in">
+                        <div className="card" style={{ margin: "0 0.2rem" }}>
+                          <div className="card-header" role="tab" id="headingOne" style={{ padding: "0px" }}>
+                            <h6 className="mb-0">
+                              <button
+                                className="btn btn-block text-left btn-sm"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target={"#sebelum"}
+                                aria-expanded="true"
+                                aria-controls={"sebelum"}
+                                style={{ fontSize: "14px" }}
+                              >
+                                <img src="./images/office-building.svg" alt="KDB/KLB" style={{ marginRight: "10px" }} />
+                                KDB/KLB
+                                <i className="ti-arrow-circle-down float-right"></i>
+                              </button>
+                            </h6>
+                          </div>
+
+                          <div id="sebelum" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                            <div className="card-body">
+                              <table className="table">
+                                <tbody>
+                                  <tr>
+                                    <td>Status KDB/KLB</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[2].field_value : contentBangunanKdbKlb[3].field_value}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="card" style={{ margin: "0 0.2rem" }}>
+                          <div className="card-header" role="tab" id="headingTwo" style={{ padding: "0px" }}>
+                            <h6 className="mb-0">
+                              <button
+                                className="btn btn-block text-left collapsed btn-sm"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target={"#sebelumDua"}
+                                aria-expanded="true"
+                                aria-controls={"sebelumDua"}
+                                style={{ fontSize: "14px" }}
+                              >
+                                <img src="./images/Traffic-lights.svg" alt="Kemacetan" style={{ marginRight: "10px" }} />
+                                Kemacetan
+                                <i className="ti-arrow-circle-down float-right"></i>
+                              </button>
+                            </h6>
+                          </div>
+
+                          <div id="sebelumDua" className="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                            <div className="card-body">
+                              <table className="table">
+                                <tbody>
+                                  <tr>
+                                    <td>Status Kemacetan</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td>
+                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="card" style={{ margin: "0 0.2rem" }}>
+                          <div className="card-header" role="tab" id="headingThree" style={{ padding: "0px" }}>
+                            <h6 className="mb-0">
+                              <button
+                                className="btn btn-block text-left collapsed btn-sm"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target={"#sebelumTiga"}
+                                aria-expanded="true"
+                                aria-controls={"sebelumTiga"}
+                                style={{ fontSize: "14px" }}
+                              >
+                                <img src="./images/water.svg" alt="Air Bersih" style={{ marginRight: "10px" }} />
+                                Air Bersih
+                                <i className="ti-arrow-circle-down float-right"></i>
+                              </button>
+                            </h6>
+                          </div>
+
+                          <div id="sebelumTiga" className="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                            <div className="card-body">
+                              <table className="table">
+                                <tbody>
+                                  <tr>
+                                    <td>Status Air Bersih</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div style={{ flex: "1", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <TabModuleButton onClick={handleClickActiveTab} activeTab={activeTab === 2} id={2} style={{ background: "#6EAABA" }}>
-                          <img onClick={handleClickActiveTab} activeTab={activeTab === 2} id={2} src="./images/water.svg" alt="AIR BERSIH" />
-                        </TabModuleButton>
-                        <TabModuleText onClick={handleClickActiveTab} activeTab={activeTab === 2} id={2}>
-                          AIR BERSIH
-                        </TabModuleText>
-                      </div>
-                    </TabsModule>
-                    <>
-                      <TabModuleContent activeTab={activeTab === 0}>
-                        <TabsModule style={{ height: "45px" }}>
-                          <TabModuleButton
-                            onClick={handleClickActiveModuleResTab}
-                            activeTab={activeModuleResTab === 0}
-                            id={0}
-                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
-                          >
-                            Bangunan
-                          </TabModuleButton>
-                          <TabModuleButton
-                            onClick={handleClickActiveModuleResTab}
-                            activeTab={activeModuleResTab === 1}
-                            id={1}
-                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
-                          >
-                            Persil Tanah
-                          </TabModuleButton>
-                          <TabModuleButton
-                            onClick={handleClickActiveModuleResTab}
-                            activeTab={activeModuleResTab === 2}
-                            id={2}
-                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
-                          >
-                            Pola Ruang
-                          </TabModuleButton>
-                        </TabsModule>
-                        <>
-                          <TabModuleContent activeTab={activeModuleResTab === 0} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
-                            <div className="fade-in">
-                              <h4 className="card-title" style={{ margin: "25px 0 10px 20px" }}>
-                                Hasil Simulasi
-                              </h4>
-                              <div className="row" style={{ margin: "0 0 0 5px" }}>
-                                <div className="col-md-6 d-flex align-items-center">
-                                  <div className="d-flex flex-row align-items-center">
-                                    <p className="font-weight-bold">Pembangunan</p>
-                                  </div>
-                                </div>
-                                <div className="col-md-6 d-flex align-items-center">
-                                  <div className="d-flex flex-row align-items-center">
-                                    <label className="badge badge-danger" style={{ background: hasilWarnaBangunanKdbKlb }}>
-                                      {hasilSimulasiBangunanKdbKlb}
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="row" style={{ margin: "0 0 0 5px" }}>
-                                <div className="col-md-12 d-flex align-items-center">
-                                  <p>Berdasarkan hasil analisis, dalam rencana pembangunan yang diajukan</p>
-                                </div>
-                              </div>
-                              <div className="table-responsive">
-                                <table className="table">
-                                  <tbody>
-                                    {contentBangunanKdbKlb.map((fieldMap, i) =>
-                                      fieldMap.field_name !== "status_kdbklb_sebelum" &&
-                                      fieldMap.field_name !== "status_kdbklb" &&
-                                      fieldMap.field_name !== "melampaui_fa_sebelum" &&
-                                      fieldMap.field_name !== "melampaui_fa" &&
-                                      fieldMap.field_name !== "melampaui_tinggi_sebelum" &&
-                                      fieldMap.field_name !== "melampaui_tinggi" &&
-                                      fieldMap.field_name !== "izin_air_y5_sebelum" &&
-                                      fieldMap.field_name !== "izin_air_y5" &&
-                                      fieldMap.field_name !== "izin_macet_sebelum" &&
-                                      fieldMap.field_name !== "izin_macet" &&
-                                      fieldMap.field_name !== "los_num_sebelum" &&
-                                      fieldMap.field_name !== "los_num" &&
-                                      fieldMap.field_name !== "los_sebelum" &&
-                                      fieldMap.field_name !== "los" &&
-                                      fieldMap.field_name !== "jlh_lantai_sebelum" &&
-                                      fieldMap.field_name !== "jlh_lantai" &&
-                                      fieldMap.field_name !== "luas_m2_sebelum" &&
-                                      fieldMap.field_name !== "luas_m2" &&
-                                      fieldMap.field_name !== "fa_sebelum" &&
-                                      fieldMap.field_name !== "fa" ? (
-                                        <tr key={i}>
-                                          <td>{fieldMap.field_name}</td>
-                                          <td>{fieldMap.field_value}</td>
-                                        </tr>
-                                      ) : null
-                                    )}
-                                    <tr>
-                                      <td colSpan="2">
-                                        <table className="table table-bordered">
-                                          <thead>
-                                            <tr>
-                                              <th style={{ whiteSpace: "normal" }}>&nbsp;</th>
-                                              <th style={{ whiteSpace: "normal" }}>Sebelum</th>
-                                              <th style={{ whiteSpace: "normal" }}>Sesudah</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr>
-                                              <td>status_kdbklb</td>
-                                              <td>{contentBangunanKdbKlb[2].field_value}</td>
-                                              <td>{contentBangunanKdbKlb[3].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>melampaui_fa</td>
-                                              <td>{contentBangunanKdbKlb[4].field_value}</td>
-                                              <td>{contentBangunanKdbKlb[5].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>melampaui_tinggi</td>
-                                              <td>{contentBangunanKdbKlb[6].field_value}</td>
-                                              <td>{contentBangunanKdbKlb[7].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>izin_air_y5</td>
-                                              <td>{contentBangunanKdbKlb[8].field_value}</td>
-                                              <td>{contentBangunanKdbKlb[9].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>izin_macet</td>
-                                              <td>{contentBangunanKdbKlb[10].field_value}</td>
-                                              <td>{contentBangunanKdbKlb[11].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>los_num</td>
-                                              <td>{contentBangunanKdbKlb[12].field_value}</td>
-                                              <td>{contentBangunanKdbKlb[13].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>los</td>
-                                              <td>{contentBangunanKdbKlb[14].field_value}</td>
-                                              <td>{contentBangunanKdbKlb[15].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>jlh_lantai</td>
-                                              <td>{contentBangunanKdbKlb[16].field_value}</td>
-                                              <td>{contentBangunanKdbKlb[17].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>luas_m2</td>
-                                              <td>{contentBangunanKdbKlb[18].field_value}</td>
-                                              <td>{contentBangunanKdbKlb[19].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>fa</td>
-                                              <td>{contentBangunanKdbKlb[20].field_value}</td>
-                                              <td>{contentBangunanKdbKlb[21].field_value}</td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                              {/* disini disini */}
-                            </div>
-                          </TabModuleContent>
-                          <TabModuleContent activeTab={activeModuleResTab === 1} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
-                            <div className="fade-in">
-                              <div className="table-responsive">
-                                <table className="table">
-                                  <tbody>
-                                    <tr>
-                                      <td>{contentHasilPersilTanahKdbKlb.field_name}</td>
-                                      <td>{contentHasilPersilTanahKdbKlb.field_value}</td>
-                                    </tr>
-                                    {contentPersilTanah.map((fieldMap, i) => (
-                                      <tr key={i}>
-                                        <td>{fieldMap.field_name}</td>
-                                        <td>{fieldMap.field_value}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </TabModuleContent>
-                          <TabModuleContent activeTab={activeModuleResTab === 2} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
-                            <div className="fade-in">
-                              <div className="table-responsive">
-                                <table className="table">
-                                  <tbody>
-                                    <tr>
-                                      <td>{contentHasilPolaRuangKdbKlb.field_name}</td>
-                                      <td>{contentHasilPolaRuangKdbKlb.field_value}</td>
-                                    </tr>
-                                    {contentPolaRuang.map((fieldMap, i) => (
-                                      <tr key={i}>
-                                        <td>{fieldMap.field_name}</td>
-                                        <td>{fieldMap.field_value}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </TabModuleContent>
-                        </>
-                      </TabModuleContent>
-                      <TabModuleContent activeTab={activeTab === 1}>
-                        <TabsModule style={{ height: "45px" }}>
-                          <TabModuleButton
-                            onClick={handleClickActiveModuleResTab}
-                            activeTab={activeModuleResTab === 0}
-                            id={0}
-                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
-                          >
-                            Bangunan
-                          </TabModuleButton>
-                          <TabModuleButton
-                            onClick={handleClickActiveModuleResTab}
-                            activeTab={activeModuleResTab === 1}
-                            id={1}
-                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
-                          >
-                            Persil Tanah
-                          </TabModuleButton>
-                          <TabModuleButton
-                            onClick={handleClickActiveModuleResTab}
-                            activeTab={activeModuleResTab === 2}
-                            id={2}
-                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
-                          >
-                            Pola Ruang
-                          </TabModuleButton>
-                        </TabsModule>
-                        <>
-                          <TabModuleContent activeTab={activeModuleResTab === 0} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
-                            <div className="fade-in">
-                              <h4 className="card-title" style={{ margin: "25px 0 10px 20px" }}>
-                                Hasil Simulasi
-                              </h4>
-                              <div className="row" style={{ margin: "0 0 0 5px" }}>
-                                <div className="col-md-6 d-flex align-items-center">
-                                  <div className="d-flex flex-row align-items-center">
-                                    <p className="font-weight-bold">Kemacetan</p>
-                                  </div>
-                                </div>
-                                <div className="col-md-6 d-flex align-items-center">
-                                  <div className="d-flex flex-row align-items-center">
-                                    <label className="badge badge-danger" style={{ background: hasilWarnaBangunanKemacetan }}>
-                                      {hasilSimulasiBangunanKemacetan}
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="row" style={{ margin: "0 0 0 5px" }}>
-                                <div className="col-md-12 d-flex align-items-center">
-                                  <p>Berdasarkan hasil analisis, dalam rencana pembangunan yang diajukan</p>
-                                </div>
-                              </div>
-                              <div className="table-responsive">
-                                <table className="table">
-                                  <tbody>
-                                    {contentBangunanKemacetan.map((fieldMap, i) =>
-                                      fieldMap.field_name !== "status_kdbklb_sebelum" &&
-                                      fieldMap.field_name !== "status_kdbklb" &&
-                                      fieldMap.field_name !== "melampaui_fa_sebelum" &&
-                                      fieldMap.field_name !== "melampaui_fa" &&
-                                      fieldMap.field_name !== "melampaui_tinggi_sebelum" &&
-                                      fieldMap.field_name !== "melampaui_tinggi" &&
-                                      fieldMap.field_name !== "izin_air_y5_sebelum" &&
-                                      fieldMap.field_name !== "izin_air_y5" &&
-                                      fieldMap.field_name !== "izin_macet_sebelum" &&
-                                      fieldMap.field_name !== "izin_macet" &&
-                                      fieldMap.field_name !== "los_num_sebelum" &&
-                                      fieldMap.field_name !== "los_num" &&
-                                      fieldMap.field_name !== "los_sebelum" &&
-                                      fieldMap.field_name !== "los" &&
-                                      fieldMap.field_name !== "jlh_lantai_sebelum" &&
-                                      fieldMap.field_name !== "jlh_lantai" &&
-                                      fieldMap.field_name !== "luas_m2_sebelum" &&
-                                      fieldMap.field_name !== "luas_m2" &&
-                                      fieldMap.field_name !== "fa_sebelum" &&
-                                      fieldMap.field_name !== "fa" ? (
-                                        <tr key={i}>
-                                          <td>{fieldMap.field_name}</td>
-                                          <td>{fieldMap.field_value}</td>
-                                        </tr>
-                                      ) : null
-                                    )}
-                                    <tr>
-                                      <td colSpan="2">
-                                        <table className="table table-bordered">
-                                          <thead>
-                                            <tr>
-                                              <th style={{ whiteSpace: "normal" }}>&nbsp;</th>
-                                              <th style={{ whiteSpace: "normal" }}>Sebelum</th>
-                                              <th style={{ whiteSpace: "normal" }}>Sesudah</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr>
-                                              <td>status_kdbklb</td>
-                                              <td>{contentBangunanKemacetan[2].field_value}</td>
-                                              <td>{contentBangunanKemacetan[3].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>melampaui_fa</td>
-                                              <td>{contentBangunanKemacetan[4].field_value}</td>
-                                              <td>{contentBangunanKemacetan[5].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>melampaui_tinggi</td>
-                                              <td>{contentBangunanKemacetan[6].field_value}</td>
-                                              <td>{contentBangunanKemacetan[7].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>izin_air_y5</td>
-                                              <td>{contentBangunanKemacetan[8].field_value}</td>
-                                              <td>{contentBangunanKemacetan[9].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>izin_macet</td>
-                                              <td>{contentBangunanKemacetan[10].field_value}</td>
-                                              <td>{contentBangunanKemacetan[11].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>los_num</td>
-                                              <td>{contentBangunanKemacetan[12].field_value}</td>
-                                              <td>{contentBangunanKemacetan[13].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>los</td>
-                                              <td>{contentBangunanKemacetan[14].field_value}</td>
-                                              <td>{contentBangunanKemacetan[15].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>jlh_lantai</td>
-                                              <td>{contentBangunanKemacetan[16].field_value}</td>
-                                              <td>{contentBangunanKemacetan[17].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>luas_m2</td>
-                                              <td>{contentBangunanKemacetan[18].field_value}</td>
-                                              <td>{contentBangunanKemacetan[19].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>fa</td>
-                                              <td>{contentBangunanKemacetan[20].field_value}</td>
-                                              <td>{contentBangunanKemacetan[21].field_value}</td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </TabModuleContent>
-                          <TabModuleContent activeTab={activeModuleResTab === 1} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
-                            <div className="fade-in">
-                              <div className="table-responsive">
-                                <table className="table">
-                                  <tbody>
-                                    <tr>
-                                      <td>{contentHasilPersilTanahKemacetan.field_name}</td>
-                                      <td>{contentHasilPersilTanahKemacetan.field_value}</td>
-                                    </tr>
-                                    {contentPersilTanah.map((fieldMap, i) => (
-                                      <tr key={i}>
-                                        <td>{fieldMap.field_name}</td>
-                                        <td>{fieldMap.field_value}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </TabModuleContent>
-                          <TabModuleContent activeTab={activeModuleResTab === 2} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
-                            <div className="fade-in">
-                              <div className="table-responsive">
-                                <table className="table">
-                                  <tbody>
-                                    <tr>
-                                      <td>{contentHasilPolaRuangKemacetan.field_name}</td>
-                                      <td>{contentHasilPolaRuangKemacetan.field_value}</td>
-                                    </tr>
-                                    {contentPolaRuang.map((fieldMap, i) => (
-                                      <tr key={i}>
-                                        <td>{fieldMap.field_name}</td>
-                                        <td>{fieldMap.field_value}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </TabModuleContent>
-                        </>
-                      </TabModuleContent>
-                      <TabModuleContent activeTab={activeTab === 2}>
-                        <TabsModule style={{ height: "45px" }}>
-                          <TabModuleButton
-                            onClick={handleClickActiveModuleResTab}
-                            activeTab={activeModuleResTab === 0}
-                            id={0}
-                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
-                          >
-                            Bangunan
-                          </TabModuleButton>
-                          <TabModuleButton
-                            onClick={handleClickActiveModuleResTab}
-                            activeTab={activeModuleResTab === 1}
-                            id={1}
-                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
-                          >
-                            Persil Tanah
-                          </TabModuleButton>
-                          <TabModuleButton
-                            onClick={handleClickActiveModuleResTab}
-                            activeTab={activeModuleResTab === 2}
-                            id={2}
-                            style={{ borderRadius: "0px", fontSize: "14px", background: "#0A156A", width: "auto" }}
-                          >
-                            Pola Ruang
-                          </TabModuleButton>
-                        </TabsModule>
-                        <>
-                          <TabModuleContent activeTab={activeModuleResTab === 0} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
-                            <div className="fade-in">
-                              <h4 className="card-title" style={{ margin: "25px 0 10px 20px" }}>
-                                Hasil Simulasi
-                              </h4>
-                              <div className="row" style={{ margin: "0 0 0 5px" }}>
-                                <div className="col-md-6 d-flex align-items-center">
-                                  <div className="d-flex flex-row align-items-center">
-                                    <p className="font-weight-bold">Air Bersih</p>
-                                  </div>
-                                </div>
-                                <div className="col-md-6 d-flex align-items-center">
-                                  <div className="d-flex flex-row align-items-center">
-                                    <label className="badge badge-danger" style={{ background: hasilWarnaBangunanAirBersih }}>
-                                      {hasilSimulasiBangunanAirBersih}
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="row" style={{ margin: "0 0 0 5px" }}>
-                                <div className="col-md-12 d-flex align-items-center">
-                                  <p>Berdasarkan hasil analisis, dalam rencana pembangunan yang diajukan</p>
-                                </div>
-                              </div>
-                              <div className="table-responsive">
-                                <table className="table">
-                                  <tbody>
-                                    {contentBangunanAirBersih.map((fieldMap, i) =>
-                                      fieldMap.field_name !== "status_kdbklb_sebelum" &&
-                                      fieldMap.field_name !== "status_kdbklb" &&
-                                      fieldMap.field_name !== "melampaui_fa_sebelum" &&
-                                      fieldMap.field_name !== "melampaui_fa" &&
-                                      fieldMap.field_name !== "melampaui_tinggi_sebelum" &&
-                                      fieldMap.field_name !== "melampaui_tinggi" &&
-                                      fieldMap.field_name !== "izin_air_y5_sebelum" &&
-                                      fieldMap.field_name !== "izin_air_y5" &&
-                                      fieldMap.field_name !== "izin_macet_sebelum" &&
-                                      fieldMap.field_name !== "izin_macet" &&
-                                      fieldMap.field_name !== "los_num_sebelum" &&
-                                      fieldMap.field_name !== "los_num" &&
-                                      fieldMap.field_name !== "los_sebelum" &&
-                                      fieldMap.field_name !== "los" &&
-                                      fieldMap.field_name !== "jlh_lantai_sebelum" &&
-                                      fieldMap.field_name !== "jlh_lantai" &&
-                                      fieldMap.field_name !== "luas_m2_sebelum" &&
-                                      fieldMap.field_name !== "luas_m2" &&
-                                      fieldMap.field_name !== "fa_sebelum" &&
-                                      fieldMap.field_name !== "fa" ? (
-                                        <tr key={i}>
-                                          <td>{fieldMap.field_name}</td>
-                                          <td>{fieldMap.field_value}</td>
-                                        </tr>
-                                      ) : null
-                                    )}
-                                    <tr>
-                                      <td colSpan="2">
-                                        <table className="table table-bordered">
-                                          <thead>
-                                            <tr>
-                                              <th style={{ whiteSpace: "normal" }}>&nbsp;</th>
-                                              <th style={{ whiteSpace: "normal" }}>Sebelum</th>
-                                              <th style={{ whiteSpace: "normal" }}>Sesudah</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr>
-                                              <td>status_kdbklb</td>
-                                              <td>{contentBangunanAirBersih[2].field_value}</td>
-                                              <td>{contentBangunanAirBersih[3].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>melampaui_fa</td>
-                                              <td>{contentBangunanAirBersih[4].field_value}</td>
-                                              <td>{contentBangunanAirBersih[5].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>melampaui_tinggi</td>
-                                              <td>{contentBangunanAirBersih[6].field_value}</td>
-                                              <td>{contentBangunanAirBersih[7].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>izin_air_y5</td>
-                                              <td>{contentBangunanAirBersih[8].field_value}</td>
-                                              <td>{contentBangunanAirBersih[9].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>izin_macet</td>
-                                              <td>{contentBangunanAirBersih[10].field_value}</td>
-                                              <td>{contentBangunanAirBersih[11].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>los_num</td>
-                                              <td>{contentBangunanAirBersih[12].field_value}</td>
-                                              <td>{contentBangunanAirBersih[13].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>los</td>
-                                              <td>{contentBangunanAirBersih[14].field_value}</td>
-                                              <td>{contentBangunanAirBersih[15].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>jlh_lantai</td>
-                                              <td>{contentBangunanAirBersih[16].field_value}</td>
-                                              <td>{contentBangunanAirBersih[17].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>luas_m2</td>
-                                              <td>{contentBangunanAirBersih[18].field_value}</td>
-                                              <td>{contentBangunanAirBersih[19].field_value}</td>
-                                            </tr>
-                                            <tr>
-                                              <td>fa</td>
-                                              <td>{contentBangunanAirBersih[20].field_value}</td>
-                                              <td>{contentBangunanAirBersih[21].field_value}</td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </TabModuleContent>
-                          <TabModuleContent activeTab={activeModuleResTab === 1} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
-                            <div className="fade-in">
-                              <div className="table-responsive">
-                                <table className="table">
-                                  <tbody>
-                                    <tr>
-                                      <td>{contentHasilPersilTanahAirBersih.field_name}</td>
-                                      <td>{contentHasilPersilTanahAirBersih.field_value}</td>
-                                    </tr>
-                                    {contentPersilTanah.map((fieldMap, i) => (
-                                      <tr key={i}>
-                                        <td>{fieldMap.field_name}</td>
-                                        <td>{fieldMap.field_value}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </TabModuleContent>
-                          <TabModuleContent activeTab={activeModuleResTab === 2} style={{ position: "absolute", height: "calc(100% - 240px)", width: "350px", overflow: "auto" }}>
-                            <div className="fade-in">
-                              <div className="table-responsive">
-                                <table className="table">
-                                  <tbody>
-                                    <tr>
-                                      <td>{contentHasilPolaRuangAirBersih.field_name}</td>
-                                      <td>{contentHasilPolaRuangAirBersih.field_value}</td>
-                                    </tr>
-                                    {contentPolaRuang.map((fieldMap, i) => (
-                                      <tr key={i}>
-                                        <td>{fieldMap.field_name}</td>
-                                        <td>{fieldMap.field_value}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </TabModuleContent>
-                        </>
-                      </TabModuleContent>
-                    </>
+                    </div>
+                    {/* end popup sebelumsesudah */}
                   </>
                 ) : (
                   <div className="table-responsive" style={{ position: "absolute", height: "calc(100% - 105px)", width: "350px", overflow: "auto" }}>
