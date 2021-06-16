@@ -3178,8 +3178,8 @@ const SimulasiMap = () => {
 
             // start print simulasi
             const printExp = new Expand({
-              expandIconClass: "esri-icon-map-pin",
-              expandTooltip: "Pilih Gedung",
+              expandIconClass: "esri-icon-printer",
+              expandTooltip: "Cetak Hasil Simulasi",
               content: document.getElementById("printExpDiv"),
               view: view,
             });
