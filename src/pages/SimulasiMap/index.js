@@ -3195,10 +3195,7 @@ const SimulasiMap = () => {
                   var obj = dataScreenshot
                   obj.photo[this.id] = photo.dataUrl
                   setDataScreenshot(obj)
-                  // this.style.display = "none"
                   var img = document.getElementById("photo_"+this.id)
-                  console.log(img, photo.dataUrl)
-
                   img.src = photo.dataUrl
                   img.style.display = "block"
                   img.style.maxWidth = "100%"
@@ -3226,13 +3223,8 @@ const SimulasiMap = () => {
               buildingsLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
               view.on("click", function (event) {
-                // Remove the previous highlights
-                if (highlight) {
-                  highlight.remove();
-                }
                 let pointBuildings = event.mapPoint;
 
-                // view.whenLayerView(buildingsLayer).then(function (buildingsLayerView) {
                   var query = buildingsLayer.createQuery();
                   query.geometry = pointBuildings;
                   buildingsLayer.queryFeatures(query).then(function (result) {
@@ -3243,16 +3235,12 @@ const SimulasiMap = () => {
                         getScreenshotData(dataScreenshot, id_bangunan).then(result => {
                           console.log(result)
                           setDataScreenshot(result)
-                          document.getElementById("pilih_bangunan_print").style.display = "none"
                           view.container.classList.remove("screenshotCursor");
                           document.getElementById("id_bangunan_print").innerText = "ID bangunan: " + id_bangunan
                         })
-                        // Highlight the feature passing the objectId to the method
-                        // highlight = buildingsLayerView.highlight(objectId);
                       });
                     }
                   });
-                // });
               });
             };
 
