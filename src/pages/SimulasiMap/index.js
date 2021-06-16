@@ -13,6 +13,9 @@ import { config } from "../../Constants";
 import styled, { css } from "styled-components";
 
 import { TabsModule, TabModuleButton, TabModuleText, TabModuleContent } from "./tabModule";
+import Pdf from "./pdf"
+import dataScreenshotTemplate from "./data"
+import getScreenshotData from "./QueryLayer"
 
 const DarkBackground = styled.div`
   display: none; /* Hidden by default */
@@ -56,6 +59,7 @@ const SimulasiMap = () => {
   const [resultAnalysis, setResultAnalysis] = useState(false);
   const [resPersilTanah, setResPersilTanah] = useState({});
   const [loaded, setLoaded] = useState(true);
+  const [dataScreenshot, setDataScreenshot] = useState(dataScreenshotTemplate)
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -151,6 +155,7 @@ const SimulasiMap = () => {
     setData((data) => ({ ...data, city: event.target.value }));
   }
   // end form related functions
+
 
   useEffect(() => {
     let isMounted = true;
@@ -3171,6 +3176,106 @@ const SimulasiMap = () => {
             document.getElementById("markingBuildings").addEventListener("click", handleMarking);
             // end marking building
 
+            // start print simulasi
+            const printExp = new Expand({
+              expandIconClass: "esri-icon-map-pin",
+              expandTooltip: "Pilih Gedung",
+              content: document.getElementById("printExpDiv"),
+              view: view,
+            });
+            view.ui.add({
+              component: printExp,
+              position: "top-left",
+            });
+
+            var screenshot = document.getElementsByClassName("screenshot")
+            for(var i=0; i<screenshot.length; i++){
+              screenshot[i].addEventListener("click", function(){
+                view.takeScreenshot().then(photo => {
+                  var obj = dataScreenshot
+                  obj.photo[this.id] = photo.dataUrl
+                  setDataScreenshot(obj)
+                  // this.style.display = "none"
+                  var img = document.getElementById("photo_"+this.id)
+                  console.log(img, photo.dataUrl)
+
+                  img.src = photo.dataUrl
+                  img.style.display = "block"
+                  img.style.maxWidth = "100%"
+                })
+              })
+            }
+
+            const selectBuildingPrint = () => {
+              view.container.classList.add("screenshotCursor");
+              polaRuangVersioningLayer.popupEnabled = false;
+              airBersihPdamLayer.popupEnabled = false;
+              kemacetanJaringanJalanLayer.popupEnabled = false;
+              polaRuangKemacetanLayer.popupEnabled = false;
+              polaRuangAirBersihLayer.popupEnabled = false;
+              polaRuangKdbKlbLayer.popupEnabled = false;
+              polaRuangEnvelopeLayer.popupEnabled = false;
+              persilTanahBpn.popupEnabled = false;
+              persilTanahKemacetanLayer.popupEnabled = false;
+              persilTanahAirBersihLayer.popupEnabled = false;
+              persilTanahKdbKlbLayer.popupEnabled = false;
+              buildingsKemacetanLayer.popupEnabled = false;
+              buildingsAirBersihLayer.popupEnabled = false;
+              buildingsKdbKlbLayer.popupEnabled = false;
+              buildingsEnvelopeLayer.popupEnabled = false;
+              buildingsLayer.popupEnabled = false;
+              buildings3dLayer.popupEnabled = false;
+              view.on("click", function (event) {
+                // Remove the previous highlights
+                if (highlight) {
+                  highlight.remove();
+                }
+                let pointBuildings = event.mapPoint;
+
+                // view.whenLayerView(buildingsLayer).then(function (buildingsLayerView) {
+                  var query = buildingsLayer.createQuery();
+                  query.geometry = pointBuildings;
+                  buildingsLayer.queryFeatures(query).then(function (result) {
+                    if (result.features.length > 0) {
+                      result.features.forEach(function (feature) {
+                        var objectId = feature.attributes.objectid_1;
+                        var id_bangunan = feature.attributes.id_bangunan;
+                        getScreenshotData(dataScreenshot, id_bangunan).then(result => {
+                          console.log(result)
+                          setDataScreenshot(result)
+                          document.getElementById("pilih_bangunan_print").style.display = "none"
+                          view.container.classList.remove("screenshotCursor");
+                          document.getElementById("id_bangunan_print").innerText = "ID bangunan: " + id_bangunan
+                        })
+                        // Highlight the feature passing the objectId to the method
+                        // highlight = buildingsLayerView.highlight(objectId);
+                      });
+                    }
+                  });
+                // });
+              });
+            };
+
+            var cetak = () => {
+              if(
+                dataScreenshot.photo.pembangunan_optimum_sebelum && 
+                dataScreenshot.photo.pembangunan_optimum_sesudah &&  
+                dataScreenshot.photo.kemacetan_sebelum &&
+                dataScreenshot.photo.kemacetan_sesudah &&
+                dataScreenshot.photo.air_bersih_sebelum &&
+                dataScreenshot.photo.air_bersih_sesudah &&
+                dataScreenshot.id_bangunan
+                ){
+                Pdf(dataScreenshot)
+              } else {
+                Swal.fire("Maaf", "Lengkapi foto dan pilih bangunan untuk mencetak hasil simulasi", "error");
+              }
+            }
+
+            document.getElementById("pilih_bangunan_print").addEventListener("click", selectBuildingPrint)
+            document.getElementById("print_simulasi").addEventListener("click", cetak)
+            // end print simulasi
+
             // start legend
             const legend = new Legend({
               container: document.createElement("div"),
@@ -5607,6 +5712,186 @@ const SimulasiMap = () => {
                   <input name="inputY" id="inputY" type="hidden" defaultValue={inputY === 0 ? 0 : inputY} />
                 </form>
               </div>
+            </div>
+            <div id="printExpDiv" className="esri-widget">
+              <div
+              style={{
+                backgroundColor: "#fff",
+                paddingTop: "10px",
+                textAlign: "center"
+              }}>
+                <h3 className="esri-widget__heading">Cetak Hasil Simulasi</h3>
+              </div>
+              <div className="esri-component esri-widget" style={{ background: "#f3f3f3", width: "300px", maxHeight: "180px", overflowX: "auto", padding: "0px" }}>
+                  <div
+                    style={{
+                      backgroundColor: "#fff",
+                      margin: "5px",
+                      padding: "10px"
+                    }}
+                  >
+                    <p>Bangunan Optimum (sebelum)</p>
+                    <img id="photo_pembangunan_optimum_sebelum" style={{display: "none"}}  alt="bangunan optimum sebelum" src={dataScreenshot.photo.pembangunan_optimum_sebelum}/>
+                    {!dataScreenshot.photo.pembangunan_optimum_sebelum && <button
+                    className="esri-button screenshot"
+                    id="pembangunan_optimum_sebelum"
+                    type="button"
+                    title="Ambil Tangkapan Layar"
+                    style={{
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                      marginRight: "2px",
+                    }}
+                    >
+                      Ambil Tangkapan Layar
+                    </button>}
+                  </div>
+                  <div
+                  style={{
+                    backgroundColor: "#fff",
+                    margin: "5px",
+                    padding: "10px"
+                  }}>
+                    <p>Bangunan Optimum (sesudah)</p>
+                    <img id="photo_pembangunan_optimum_sesudah" style={{display: "none"}}  alt="bangunan optimum sesudah" src={dataScreenshot.photo.pembangunan_optimum_sesudah}/>
+                    {!dataScreenshot.photo.pembangunan_optimum_sesudah && <button
+                    className="esri-button screenshot"
+                    id="pembangunan_optimum_sesudah"
+                    type="button"
+                    title="Ambil Tangkapan Layar"
+                    style={{
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                      marginRight: "2px",
+                    }}
+                    >
+                      Ambil Tangkapan Layar
+                    </button>}
+                  </div>
+                  <div
+                  style={{
+                    backgroundColor: "#fff",
+                    margin: "5px",
+                    padding: "10px"
+                  }}>
+                    <p>Kemacetan (sebelum)</p>
+                    <img id="photo_kemacetan_sebelum" style={{display: "none"}}  alt="bangunan optimum sebelum" src={dataScreenshot.photo.kemacetan_sebelum}/>
+                    {!dataScreenshot.photo.kemacetan_sebelum && <button
+                    className="esri-button screenshot"
+                    id="kemacetan_sebelum"
+                    type="button"
+                    title="Ambil Tangkapan Layar"
+                    style={{
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                      marginRight: "2px",
+                    }}
+                    >
+                      Ambil Tangkapan Layar
+                    </button>}
+                  </div>
+                  <div
+                  style={{
+                    backgroundColor: "#fff",
+                    margin: "5px",
+                    padding: "10px"
+                  }}>
+                    <p>Kemacetan (sesudah)</p>
+                    <img id="photo_kemacetan_sesudah" style={{display: "none"}}  alt="bangunan optimum sebelum" src={dataScreenshot.photo.kemacetan_sesudah}/>
+                    {!dataScreenshot.photo.kemacetan_sesudah && <button
+                    className="esri-button screenshot"
+                    id="kemacetan_sesudah"
+                    type="button"
+                    title="Ambil Tangkapan Layar"
+                    style={{
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                      marginRight: "2px",
+                    }}
+                    >
+                      Ambil Tangkapan Layar
+                    </button>}
+                  </div>
+                  <div
+                  style={{
+                    backgroundColor: "#fff",
+                    margin: "5px",
+                    padding: "10px"
+                  }}>
+                    <p>Air Bersih (sebelum)</p>
+                    <img id="photo_air_bersih_sebelum" style={{display: "none"}}  alt="bangunan optimum sebelum" src={dataScreenshot.photo.air_bersih_sebelum}/>
+                    {!dataScreenshot.photo.air_bersih_sebelum && <button
+                    className="esri-button screenshot"
+                    id="air_bersih_sebelum"
+                    type="button"
+                    title="Ambil Tangkapan Layar"
+                    style={{
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                      marginRight: "2px",
+                    }}
+                    >
+                      Ambil Tangkapan Layar
+                    </button>}
+                  </div>
+                  <div
+                  style={{
+                    backgroundColor: "#fff",
+                    margin: "5px",
+                    padding: "10px"
+                  }}>
+                    <p>Air Bersih (sesudah)</p>
+                    <img id="photo_air_bersih_sesudah" style={{display: "none"}} alt="bangunan optimum sebelum" src={dataScreenshot.photo.air_bersih_sesudah}/>
+                    {!dataScreenshot.photo.air_bersih_sesudah && <button
+                    className="esri-button screenshot"
+                    id="air_bersih_sesudah"
+                    type="button"
+                    title="Ambil Tangkapan Layar"
+                    style={{
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                      marginRight: "2px",
+                    }}
+                    >
+                      Ambil Tangkapan Layar
+                    </button>}
+                  </div>
+                  <div
+                  style={{
+                    backgroundColor: "#fff",
+                    margin: "5px",
+                    padding: "10px"
+                  }}>
+                    <p>Bangunan yang Akan Dicetak</p>
+                    <p id="id_bangunan_print">ID Bangunan: </p>
+                    <button
+                    className="esri-button"
+                    id="pilih_bangunan_print"
+                    type="button"
+                    title="Pilih Bangunan"
+                    style={{
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                      marginRight: "2px",
+                    }}
+                    >
+                      Pilih Bangunan
+                    </button>
+                  </div>
+              </div>
+              <button
+                className="esri-button"
+                id="print_simulasi"
+                type="button"
+                title="Cetak Hasil Simulasi"
+                style={{
+                  marginTop: "5px",
+                  marginBottom: "5px",
+                  marginRight: "2px",
+                }}
+                >
+                  Cetak Hasil Simulasi
+              </button>
             </div>
             {resultAnalysis && (
               <div
