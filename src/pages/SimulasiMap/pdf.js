@@ -23,9 +23,23 @@ function Pdf(data) {
 
   doc.setFontSize(12);
   doc.text("Peta 3D sebelum pembangunan", 15, 32);
-  doc.addImage(data.photo.pembangunan_optimum_sebelum, "JPEG", 15, 34, 140, 160);
+  doc.addImage(
+    data.photo.pembangunan_optimum_sebelum,
+    "JPEG",
+    15,
+    34,
+    140,
+    160
+  );
   doc.text("Peta 3D setelah pembangunan", 165, 32);
-  doc.addImage(data.photo.pembangunan_optimum_sesudah, "JPEG", 165, 34, 140, 160);
+  doc.addImage(
+    data.photo.pembangunan_optimum_sesudah,
+    "JPEG",
+    165,
+    34,
+    140,
+    160
+  );
 
   doc.text("Projek", 310, 36);
   doc.text("Kota/kabupaten", 310, 41);
@@ -63,10 +77,7 @@ function Pdf(data) {
   });
   doc.text("Rangkuman Hasil Analisis", 310, doc.lastAutoTable.finalY + 10);
   doc.text(
-    doc.splitTextToSize(
-      data.rangkuman.semua,
-      80
-    ),
+    doc.splitTextToSize(data.rangkuman.semua, 80),
     310,
     doc.lastAutoTable.finalY + 15
   );
@@ -165,9 +176,23 @@ function Pdf(data) {
 
   doc.setFontSize(12);
   doc.text("Peta 3D sebelum pembangunan", 15, 32);
-  doc.addImage(data.photo.pembangunan_optimum_sebelum, "JPEG", 15, 34, 140, 160);
+  doc.addImage(
+    data.photo.pembangunan_optimum_sebelum,
+    "JPEG",
+    15,
+    34,
+    140,
+    160
+  );
   doc.text("Peta 3D setelah pembangunan", 165, 32);
-  doc.addImage(data.photo.pembangunan_optimum_sesudah, "JPEG", 165, 34, 140, 160);
+  doc.addImage(
+    data.photo.pembangunan_optimum_sesudah,
+    "JPEG",
+    165,
+    34,
+    140,
+    160
+  );
 
   doc.text("Projek", 310, 36);
   doc.text("Kota/kabupaten", 310, 41);
@@ -204,29 +229,37 @@ function Pdf(data) {
   doc.text(data.floor_area_maks_sebelum, 360, 116);
   doc.text(data.floor_area_maks, 390, 116);
   doc.text("Status Pembangunan", 310, 126);
-  doc.text(doc.splitTextToSize(data.simulasi.pembangunan_optimum_sebelum, 30), 360, 126);
-  doc.text(doc.splitTextToSize(data.simulasi.pembangunan_optimum, 30), 390, 126);
-  doc.text("Nilai Maksimum yang Diatur dalam Pola Ruang RDTR", 310, 145);
-  doc.text("Nama & Kode Zona: ", 310, 151);
-  doc.text(doc.splitTextToSize(`${data.zona} (${data.kodezona})`, 60), 310, 156)
-  doc.text("Nama & Kode Subzona: ", 310, 166);
-  doc.text(doc.splitTextToSize(`${data.subzona} (${data.kodesubzona})`, 60), 310, 171)
-  doc.text("KDB: ", 310, 181);
-  doc.text(data.kdb, 310, 186)
-  doc.text("KLB: ", 310, 191);
-  doc.text(data.klb, 310, 196)
-  doc.text("KDH: ", 310, 201);
-  doc.text(data.kdh, 310, 206)
-  doc.text("Jumlah Lantai: ", 310, 211);
-  doc.text(data.lantai_max, 310, 216)
-  doc.text("Rangkuman Hasil Analisis", 310, 226);
+  doc.text(
+    doc.splitTextToSize(data.simulasi.pembangunan_optimum_sebelum, 30),
+    360,
+    126
+  );
+  doc.text(
+    doc.splitTextToSize(data.simulasi.pembangunan_optimum, 30),
+    390,
+    126
+  );
+  //   doc.text("Nilai Maksimum yang Diatur dalam Pola Ruang RDTR", 310, 145);
+  //   doc.text("Nama & Kode Zona: ", 310, 151);
+  //   doc.text(doc.splitTextToSize(`${data.zona} (${data.kodezona})`, 60), 310, 156)
+  //   doc.text("Nama & Kode Subzona: ", 310, 166);
+  //   doc.text(doc.splitTextToSize(`${data.subzona} (${data.kodesubzona})`, 60), 310, 171)
+  //   doc.text("KDB: ", 310, 181);
+  //   doc.text(data.kdb, 310, 186)
+  //   doc.text("KLB: ", 310, 191);
+  //   doc.text(data.klb, 310, 196)
+  //   doc.text("KDH: ", 310, 201);
+  //   doc.text(data.kdh, 310, 206)
+  //   doc.text("Jumlah Lantai: ", 310, 211);
+  //   doc.text(data.lantai_max, 310, 216)
+  doc.text("Rangkuman Hasil Analisis", 310, 146);
   doc.text(
     doc.splitTextToSize(
       data.rangkuman.pembangunan_optimum + " dan " + data.rangkuman.floor_area,
       80
     ),
     310,
-    231
+    151
   );
 
   doc.setFontSize(20);
@@ -264,6 +297,42 @@ function Pdf(data) {
   doc.setFontSize(12);
   doc.text("Intensitas KDB dan/atau KLB", 133, 238);
   doc.text("belum melebihi maksimal", 133, 243);
+
+  doc.setFontSize(14);
+  doc.text("Nilai Maksimum yang Diatur dalam Pola Ruang RDTR", 220, 215);
+  doc.setFontSize(12);
+  doc.setFont("", "bold");
+  doc.text("Nama & Kode Zona: ", 220, 221);
+  doc.setFont("", "normal");
+  doc.text(
+    doc.splitTextToSize(`${data.zona} (${data.kodezona})`, 60),
+    220,
+    226
+  );
+  doc.setFont("", "bold");
+  doc.text("Nama & Kode Subzona: ", 220, 236);
+  doc.setFont("", "normal");
+  doc.text(
+    doc.splitTextToSize(`${data.subzona} (${data.kodesubzona})`, 60),
+    220,
+    241
+  );
+  doc.setFont("", "bold");
+  doc.text("KDB: ", 220, 251);
+  doc.setFont("", "normal");
+  doc.text(data.kdb, 220, 256);
+  doc.setFont("", "bold");
+  doc.text("KLB: ", 220, 261);
+  doc.setFont("", "normal");
+  doc.text(data.klb, 220, 266);
+  doc.setFont("", "bold");
+  doc.text("KDH: ", 220, 271);
+  doc.setFont("", "normal");
+  doc.text(data.kdh, 220, 276);
+  doc.setFont("", "bold");
+  doc.text("Jumlah Lantai: ", 220, 281);
+  doc.setFont("", "normal");
+  doc.text(data.lantai_max, 220, 286);
 
   doc.addPage();
 
@@ -332,14 +401,7 @@ function Pdf(data) {
   doc.text(doc.splitTextToSize(data.simulasi.kemacetan_sebelum, 30), 360, 161);
   doc.text(doc.splitTextToSize(data.simulasi.kemacetan, 30), 390, 161);
   doc.text("Rangkuman Hasil Analisis", 310, 181);
-  doc.text(
-    doc.splitTextToSize(
-      data.rangkuman.kemacetan ?? "-",
-      80
-    ),
-    310,
-    187
-  );
+  doc.text(doc.splitTextToSize(data.rangkuman.kemacetan ?? "-", 80), 310, 187);
 
   doc.setFontSize(20);
   doc.text("Legenda", 15, 208);
@@ -472,14 +534,7 @@ function Pdf(data) {
   doc.text(doc.splitTextToSize(data.simulasi.air_sebelum, 30), 360, 151);
   doc.text(doc.splitTextToSize(data.simulasi.air, 30), 390, 151);
   doc.text("Rangkuman Hasil Analisis", 310, 171);
-  doc.text(
-    doc.splitTextToSize(
-      data.rangkuman.air,
-      80
-    ),
-    310,
-    177
-  );
+  doc.text(doc.splitTextToSize(data.rangkuman.air, 80), 310, 177);
 
   doc.setFontSize(20);
   doc.text("Legenda", 230, 208);

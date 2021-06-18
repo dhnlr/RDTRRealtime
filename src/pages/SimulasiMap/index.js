@@ -5207,7 +5207,7 @@ const SimulasiMap = () => {
                 </form>
               </div>
             </div>
-            <div id="printExpDiv" className="esri-widget">
+            <div id="printExpDiv" className="esri-widget print">
               <div
               style={{
                 backgroundColor: "#fff",
@@ -5216,7 +5216,7 @@ const SimulasiMap = () => {
               }}>
                 <h3 className="esri-widget__heading">Cetak Hasil Simulasi</h3>
               </div>
-              <div className="esri-component esri-widget" style={{ background: "#f3f3f3", width: "300px", maxHeight: "180px", overflowX: "auto", padding: "0px" }}>
+              <div className="" style={{ background: "#f3f3f3", width: "300px", maxHeight: "180px", overflowX: "auto", padding: "0px" }}>
                   <div
                     style={{
                       backgroundColor: "#fff",
@@ -5226,8 +5226,8 @@ const SimulasiMap = () => {
                   >
                     <p>Bangunan Optimum (sebelum)</p>
                     <img id="photo_pembangunan_optimum_sebelum" style={{display: "none"}}  alt="bangunan optimum sebelum" src={dataScreenshot.photo.pembangunan_optimum_sebelum}/>
-                    {!dataScreenshot.photo.pembangunan_optimum_sebelum && <button
-                    className="esri-button screenshot"
+                    {<button
+                    className="btn btn-outline-primary btn-sm screenshot"
                     id="pembangunan_optimum_sebelum"
                     type="button"
                     title="Ambil Tangkapan Layar"
@@ -5248,8 +5248,8 @@ const SimulasiMap = () => {
                   }}>
                     <p>Bangunan Optimum (sesudah)</p>
                     <img id="photo_pembangunan_optimum_sesudah" style={{display: "none"}}  alt="bangunan optimum sesudah" src={dataScreenshot.photo.pembangunan_optimum_sesudah}/>
-                    {!dataScreenshot.photo.pembangunan_optimum_sesudah && <button
-                    className="esri-button screenshot"
+                    {<button
+                    className="btn btn-outline-primary btn-sm screenshot"
                     id="pembangunan_optimum_sesudah"
                     type="button"
                     title="Ambil Tangkapan Layar"
@@ -5270,8 +5270,8 @@ const SimulasiMap = () => {
                   }}>
                     <p>Kemacetan (sebelum)</p>
                     <img id="photo_kemacetan_sebelum" style={{display: "none"}}  alt="bangunan optimum sebelum" src={dataScreenshot.photo.kemacetan_sebelum}/>
-                    {!dataScreenshot.photo.kemacetan_sebelum && <button
-                    className="esri-button screenshot"
+                    {<button
+                    className="btn btn-outline-primary btn-sm screenshot"
                     id="kemacetan_sebelum"
                     type="button"
                     title="Ambil Tangkapan Layar"
@@ -5292,8 +5292,8 @@ const SimulasiMap = () => {
                   }}>
                     <p>Kemacetan (sesudah)</p>
                     <img id="photo_kemacetan_sesudah" style={{display: "none"}}  alt="bangunan optimum sebelum" src={dataScreenshot.photo.kemacetan_sesudah}/>
-                    {!dataScreenshot.photo.kemacetan_sesudah && <button
-                    className="esri-button screenshot"
+                    {<button
+                    className="btn btn-outline-primary btn-sm screenshot"
                     id="kemacetan_sesudah"
                     type="button"
                     title="Ambil Tangkapan Layar"
@@ -5314,8 +5314,8 @@ const SimulasiMap = () => {
                   }}>
                     <p>Air Bersih (sebelum)</p>
                     <img id="photo_air_bersih_sebelum" style={{display: "none"}}  alt="bangunan optimum sebelum" src={dataScreenshot.photo.air_bersih_sebelum}/>
-                    {!dataScreenshot.photo.air_bersih_sebelum && <button
-                    className="esri-button screenshot"
+                    {<button
+                    className="btn btn-outline-primary btn-sm screenshot"
                     id="air_bersih_sebelum"
                     type="button"
                     title="Ambil Tangkapan Layar"
@@ -5336,8 +5336,8 @@ const SimulasiMap = () => {
                   }}>
                     <p>Air Bersih (sesudah)</p>
                     <img id="photo_air_bersih_sesudah" style={{display: "none"}} alt="bangunan optimum sebelum" src={dataScreenshot.photo.air_bersih_sesudah}/>
-                    {!dataScreenshot.photo.air_bersih_sesudah && <button
-                    className="esri-button screenshot"
+                    {<button
+                    className="btn btn-outline-primary btn-sm screenshot"
                     id="air_bersih_sesudah"
                     type="button"
                     title="Ambil Tangkapan Layar"
@@ -5357,9 +5357,9 @@ const SimulasiMap = () => {
                     padding: "10px"
                   }}>
                     <p>Bangunan yang Akan Dicetak</p>
-                    <p id="id_bangunan_print">ID Bangunan: </p>
+                    <p id="id_bangunan_print">ID Bangunan: Belum ada yang dipilih</p>
                     <button
-                    className="esri-button"
+                    className="btn btn-outline-primary btn-sm"
                     id="pilih_bangunan_print"
                     type="button"
                     title="Pilih Bangunan"
@@ -5374,7 +5374,7 @@ const SimulasiMap = () => {
                   </div>
               </div>
               <button
-                className="esri-button"
+                className="btn btn-primary btn-block rounded-0"
                 id="print_simulasi"
                 type="button"
                 title="Cetak Hasil Simulasi"
