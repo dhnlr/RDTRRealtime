@@ -404,7 +404,7 @@ function Pdf(data) {
   doc.text(doc.splitTextToSize(data.rangkuman.kemacetan ?? "-", 80), 310, 187);
 
   doc.setFontSize(20);
-  doc.text("Legenda", 15, 208);
+  doc.text("Legenda", 230, 208);
 
   doc.setFontSize(14);
   doc.setLineWidth(0.1);

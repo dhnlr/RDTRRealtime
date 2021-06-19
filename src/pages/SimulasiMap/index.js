@@ -5214,7 +5214,7 @@ const SimulasiMap = () => {
                 paddingTop: "10px",
                 textAlign: "center"
               }}>
-                <h3 className="esri-widget__heading">Cetak Hasil Simulasi</h3>
+                <h3 className="esri-widget__heading">Hasil Simulasi</h3>
               </div>
               <div className="" style={{ background: "#f3f3f3", width: "300px", maxHeight: "180px", overflowX: "auto", padding: "0px" }}>
                   <div
@@ -5374,17 +5374,13 @@ const SimulasiMap = () => {
                   </div>
               </div>
               <button
-                className="btn btn-primary btn-block rounded-0"
+                className="btn btn-primary btn-block btn-icon-text rounded-0"
                 id="print_simulasi"
                 type="button"
-                title="Cetak Hasil Simulasi"
-                style={{
-                  marginTop: "5px",
-                  marginBottom: "5px",
-                  marginRight: "2px",
-                }}
+                title="Unduh Hasil Simulasi"
                 >
-                  Cetak Hasil Simulasi
+                  <i class="ti-download btn-icon-prepend"></i>
+                  Unduh Hasil Simulasi
               </button>
             </div>
             {resultAnalysis && (
