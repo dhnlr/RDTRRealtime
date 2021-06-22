@@ -214,6 +214,7 @@ function ManajemenDataInput() {
             ownerId: state
               ? state?.owner
               : JSON.parse(localStorage.state)?.ownerId,
+            ...JSON.parse(localStorage.state)
           })
         );
         goManajemenDataPhase2(

@@ -30,17 +30,26 @@ function ManajemenDataInputCongestion() {
     }
   }, [history, state?.id]);
 
-  const onSubmit = ({ jaringan_jalan, jaringan_jalan_year, jaringan_jalan_desc, jaringan_jalan_tag }, e) => {
+  const onSubmit = (
+    {
+      jaringan_jalan,
+      jaringan_jalan_year,
+      jaringan_jalan_desc,
+      jaringan_jalan_tag,
+    },
+    e
+  ) => {
     setErrMessage(null);
     setIsProcessing(true);
 
-    jaringan_jalan_tag = jaringan_jalan_tag.map(tag => tag.value)
+    if (jaringan_jalan_tag)
+      jaringan_jalan_tag = jaringan_jalan_tag.map((tag) => tag.value);
 
     var fd = new FormData();
     fd.set("jaringan_jalan", jaringan_jalan[0]);
-    fd.set("tahun_jaringan_jalan", jaringan_jalan_year)
-    fd.set("deskripsi_jaringan_jalan", jaringan_jalan_desc)
-    fd.set("tag_jaringan_jalan", jaringan_jalan_tag)
+    fd.set("tahun_jaringan_jalan", jaringan_jalan_year);
+    fd.set("deskripsi_jaringan_jalan", jaringan_jalan_desc);
+    fd.set("tag_jaringan_jalan", jaringan_jalan_tag);
     fd.set("project_id", state?.id);
 
     axios
@@ -251,7 +260,12 @@ function ManajemenDataInputCongestion() {
                                 className="form-control"
                                 name="jaringan_jalan_year"
                                 placeholder="Tahun jaringan jalan"
-                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
+                                ref={register({
+                                  pattern: {
+                                    value: /^\d{4}$/,
+                                    message: "Format tahun salah",
+                                  },
+                                })}
                               />
                               {errors.jaringan_jalan_year && (
                                 <small
@@ -276,7 +290,9 @@ function ManajemenDataInputCongestion() {
                             </div>
                           </div>
                           <div className="form-group">
-                            <label htmlFor="jaringan_jalan_tag">Tag (opsional)</label>
+                            <label htmlFor="jaringan_jalan_tag">
+                              Tag (opsional)
+                            </label>
                             <Controller
                               id="jaringan_jalan_tag"
                               as={CreatableSelect}

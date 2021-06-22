@@ -1,4 +1,4 @@
-export default {
+var data = {
     "nama_proyek": "xxx",
     "id_bangunan": null,
     "kabkot": "Kota Bogor",
@@ -80,3 +80,5 @@ export default {
         "air_bersih_sesudah": null,
     }
 }
+
+export default data;

@@ -18,7 +18,7 @@ function App() {
           <Route path="/reset/password" component={ResetPassword} />
           <Route path="/datamanagement" component={DataManagement} />
           <Route path="/datamanagementinput/kebutuhandata" component={ManajemenDataInputPhase2} />
-          <Route path="/datamanagementinput/kdb" component={ManajemenDataInputKdb} />
+          <Route path="/datamanagementinput/kdbklb" component={ManajemenDataInputKdb} />
           <Route path="/datamanagementinput/water" component={ManajemenDataInputWater} />
           <Route path="/datamanagementinput/trash" component={ManajemenDataInputTrash} />
           <Route path="/datamanagementinput/flood" component={ManajemenDataInputFlood} />
