@@ -50,10 +50,9 @@ function Login() {
       )
       .then((resp) => {
         sessionStorage.setItem("token", resp.data.obj.accessToken);
-        return axios
-        .get(config.url.API_URL + "/Profile/Get", {
+        return axios.get(config.url.API_URL + "/Profile/Get", {
           headers: { Authorization: "Bearer " + sessionStorage.token },
-        })
+        });
       })
       .then((response) => {
         setIsProcessing(false);
@@ -83,7 +82,6 @@ function Login() {
           <div
             style={{
               flex: "1.2",
-              padding: "0.85rem 4.28rem 0",
               display: "flex",
               flexDirection: "column",
             }}
@@ -93,19 +91,15 @@ function Login() {
                 justifyContent: "space-between",
                 display: "flex",
                 alignItems: "center",
+                padding: "0.85rem 0.7rem 0.85rem 0.7rem",
               }}
             >
               <img src="./images/logo-atrbpn.svg" style={{}} alt="ATR BPN" />
-              <Link to="home">&lt; Kembali ke Halaman Utama</Link>
+              <Link to="home" style={{}}>
+                &lt; Kembali ke Beranda
+              </Link>
             </div>
-            <div
-              style={{
-                flex: "1",
-                justifyContent: "center",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
+            <LoginDiv>
               <div style={{ display: "flex", margin: "20px 0" }}>
                 <img
                   style={{ float: "left", display: "inline", width: "50px" }}
@@ -237,7 +231,7 @@ function Login() {
                   </div>
                 </form>
               </div>
-            </div>
+            </LoginDiv>
           </div>
           {/* <div style={{ flex: "1", backgroundImage: "url('./images/Image 8.png')", backgroundRepeat: "no-repeat", backgroundSize: "100% 100%" }}>
           </div> */}
@@ -260,8 +254,19 @@ const ImageDiv = styled.div`
   flex: 1;
   background-image: url("${bgImage}");
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: cover;
+  background-position: bottom;
   @media only screen and (max-width: 768px) {
     display: none;
+  }
+`;
+const LoginDiv = styled.div`
+  flex: 1;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 8rem 0.5rem;
+  @media only screen and (max-width: 768px) {
+    padding: 0.5rem 3rem 0.5rem;
   }
 `;

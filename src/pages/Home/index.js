@@ -37,13 +37,13 @@ function Home() {
           <div style={{ flex: "1" }}></div>
         </div>
         <div
-          style={{ background: "#0d2946", width: "100%", flex: "1", display: "flex", alignItems: "center", padding: "0.8rem 3rem", fontSize: "14px", color: "#fff", flexWrap: "wrap", justifyContent: "space-between" }}
+          style={{ background: "#0d2946", width: "100%", flex: "1", display: "flex", alignItems: "center", padding: "1rem 3rem", fontSize: "14px", color: "#fff", flexWrap: "wrap", justifyContent: "space-between" }}
         >
-          <div /* style={{ flex: "1" }} */>
+          <div style={{ paddingTop: "0.5rem" }}>
             <div>Hak Cipta &copy; {new Date().getFullYear()} - Kementerian Agraria dan Tata Ruang/ Badan Pertanahan Nasional</div>
             <div>Jl. Sisingamangaraja No. 2 Kebayoran Baru, Jakarta Selatan</div>
           </div>
-          <div /* style={{ flex: "1" }} */>
+          <div style={{ paddingTop: "0.5rem" }}>
             <div>Oleh Pusdatin</div>
           </div>
         </div>

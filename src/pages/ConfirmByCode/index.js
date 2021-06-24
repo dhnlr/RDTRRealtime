@@ -98,7 +98,7 @@ function ConfirmByCode() {
                   Akun berhasil dikonfirmasi. Anda sekarang dapat menggunakan RDTR Realtime. Sistem ini menyediakan informasi lengkap mengenai rencana detail tata ruang meliputi hampir seluruh provinsi di Indonesia
             </div>
                 <button type="submit" className="btn btn-success btn-block" onClick={() => handleLogin()}>
-                  Lanjutkan ke Halaman Login
+                  Lanjutkan ke Masuk
                     </button>
               </div>)}
             </div>
