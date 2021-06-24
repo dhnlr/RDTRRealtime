@@ -38,6 +38,13 @@ const DarkBackground = styled.div`
 
 const SimulasiMap = () => {
   let history = useHistory();
+
+  useEffect(() => {
+    if (!sessionStorage.token) {
+      history.push("/login");
+    }
+  }, [history]);
+
   // Form State
   const [form, setForm] = useState({
     namaproyek: null,
@@ -244,7 +251,7 @@ const SimulasiMap = () => {
           });
 
           const buildings3dLayer = new SceneLayer({
-            url: config.url.ARCGIS_URL + "/Hosted/testbangunan3d/SceneServer/layers/0",
+            url: config.url.ARCGIS_URL + "/Hosted/bangunan3d_mp/SceneServer/layers/0",
             title: "Bangunan Segmentasi",
           });
 
@@ -3176,7 +3183,7 @@ const SimulasiMap = () => {
           });
 
           const jalanSebelumLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sesudah/jaringan_jalan/FeatureServer/0",
+            url: config.url.ARCGIS_URL + "/sebelum/jaringan_jalan_sebelum/FeatureServer/0",
             title: "Jaringan Jalan - Sebelum",
             popupTemplate: {
               title: "Jaringan Jalan - Sebelum",
@@ -3471,24 +3478,24 @@ const SimulasiMap = () => {
           }
           const rendererBangunanSesudah = {
             type: "unique-value", // autocasts as new UniqueValueRenderer()
-            defaultSymbol: getSymbolBangunanSesudah("#B2B2B2"),
-            defaultLabel: "Eksisting",
-            field: "melampaui_tinggi",
+            defaultSymbol: getSymbolBangunanSesudah("#e60000"),
+            defaultLabel: "0",
+            field: "jlh_izin_diterima",
             uniqueValueInfos: [
               {
-                value: "Belum melampaui jumlah lantai maksimal",
-                symbol: getSymbolBangunanSesudah([255, 255, 0]),
-                label: "Belum melampaui jumlah lantai maksimal",
+                value: "1",
+                symbol: getSymbolBangunanSesudah([255, 85, 0]),
+                label: "1",
               },
               {
-                value: "Melampaui jumlah lantai maksimal",
-                symbol: getSymbolBangunanSesudah([255, 0, 0]),
-                label: "Melampaui jumlah lantai maksimal",
+                value: "2",
+                symbol: getSymbolBangunanSesudah([230, 230, 0]),
+                label: "2",
               },
               {
-                value: "Jumlah lantai sudah maksimal",
-                symbol: getSymbolBangunanSesudah([76, 230, 0]),
-                label: "Jumlah lantai sudah maksimal",
+                value: "3",
+                symbol: getSymbolBangunanSesudah([56, 168, 0]),
+                label: "3",
               },
             ],
             visualVariables: [
@@ -5967,7 +5974,11 @@ const SimulasiMap = () => {
           console.log(featuresPersilTanah[0].attributes.nib);
           //setResultAnalysis(true);
           //setResPersilTanah(featuresPersilTanah[0].attributes);
-          Axios.post(config.url.API_URL + "/Pembangunan/ExecuteSpPembangunanOptimum?nib=" + featuresPersilTanah[0].attributes.nib)
+          const headers = {
+            Authorization: "Bearer " + sessionStorage.token,
+            "Content-Type": "application/json",
+          };
+          Axios.post(config.url.API_URL + "/Pembangunan/ExecuteSpPembangunanOptimum?nib=" + featuresPersilTanah[0].attributes.nib, {}, { headers })
             .then(function (response) {
               console.log(response);
               if (response.status === 200) {
