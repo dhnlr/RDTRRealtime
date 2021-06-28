@@ -8,7 +8,7 @@ import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
 import { config } from "../../Constants";
 
-function ManajemenDataInputCongestion() {
+function DataManagementInputCongestion() {
   const { state } = useLocation();
   let history = useHistory();
   const { register, handleSubmit, control, errors } = useForm();
@@ -348,4 +348,4 @@ function ManajemenDataInputCongestion() {
   );
 }
 
-export default ManajemenDataInputCongestion;
+export default DataManagementInputCongestion;

@@ -8,7 +8,7 @@ import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
 import { config } from "../../Constants";
 
-function ManajemenDataInputTrash() {
+function DataManagementInputFlood() {
   const { state } = useLocation();
   let history = useHistory();
   const { register, handleSubmit, control, errors } = useForm();
@@ -178,7 +178,7 @@ function ManajemenDataInputTrash() {
                     <ProgressCircle className="text-muted"></ProgressCircle>
                     <ProgressCircle className="text-primary"></ProgressCircle>
                   </div>
-                  <h1>Modul Persampahan</h1>
+                  <h1>Modul Banjir</h1>
                   <p className="text-muted">Unggah kebutuhan data</p>
                 </div>
                 {errMessage && (
@@ -575,4 +575,4 @@ function ManajemenDataInputTrash() {
   );
 }
 
-export default ManajemenDataInputTrash;
+export default DataManagementInputFlood;

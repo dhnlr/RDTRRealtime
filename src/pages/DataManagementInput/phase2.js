@@ -3,7 +3,7 @@ import { useHistory, useLocation } from "react-router-dom";
 
 import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
-function ManajemenDataInputPhase2() {
+function DataManagementInputPhase2() {
   const { state } = useLocation();
   let history = useHistory();
 
@@ -247,4 +247,4 @@ function ManajemenDataInputPhase2() {
   );
 }
 
-export default ManajemenDataInputPhase2;
+export default DataManagementInputPhase2;

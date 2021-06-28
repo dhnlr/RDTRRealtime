@@ -8,7 +8,7 @@ import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
 import { config } from "../../Constants";
 
-function ManajemenDataInputWater() {
+function DataManagementInputWater() {
   const { state } = useLocation();
   let history = useHistory();
   const { register, handleSubmit, control, errors } = useForm();
@@ -575,4 +575,4 @@ function ManajemenDataInputWater() {
   );
 }
 
-export default ManajemenDataInputWater;
+export default DataManagementInputWater;

@@ -6,14 +6,15 @@ import Home from "./Home";
 import Auth from "./Auth";
 import Register from "./Register";
 import DataManagement from "./DataManagement";
-import ManajemenDataInput from "./ManajemenDataInput";
-import ManajemenDataInputPhase2 from "./ManajemenDataInput/phase2";
-import ManajemenDataInputKdb from "./ManajemenDataInput/kdb";
-import ManajemenDataInputCongestion from "./ManajemenDataInput/congestion";
-import ManajemenDataInputFlood from "./ManajemenDataInput/flood";
-import ManajemenDataInputTrash from "./ManajemenDataInput/trash";
-import ManajemenDataInputWater from "./ManajemenDataInput/water";
-import Simulasi from "./Simulasi";
+import DataManagementInput from "./DataManagementInput";
+import DataManagementInputPhase2 from "./DataManagementInput/phase2";
+import DataManagementInputKdb from "./DataManagementInput/kdb";
+import DataManagementInputCongestion from "./DataManagementInput/congestion";
+import DataManagementInputFlood from "./DataManagementInput/flood";
+import DataManagementInputTrash from "./DataManagementInput/trash";
+import DataManagementInputWater from "./DataManagementInput/water";
+import SimulationTable from "./Simulation/SimulationTable";
+import SimulationInput from "./Simulation/SimulationInput";
 import SimulasiMap from "./SimulasiMap";
 import ConfirmByCode from "./ConfirmByCode";
 import ResentEmailConfirmation from "./ResentEmailConfirmation";
@@ -43,14 +44,15 @@ export {
   Auth,
   DataManagement,
   Register,
-  ManajemenDataInput,
-  ManajemenDataInputPhase2,
-  ManajemenDataInputKdb,
-  ManajemenDataInputCongestion,
-  ManajemenDataInputFlood,
-  ManajemenDataInputTrash,
-  ManajemenDataInputWater,
-  Simulasi,
+  DataManagementInput,
+  DataManagementInputPhase2,
+  DataManagementInputKdb,
+  DataManagementInputCongestion,
+  DataManagementInputFlood,
+  DataManagementInputTrash,
+  DataManagementInputWater,
+  SimulationTable,
+  SimulationInput,
   SimulasiMap,
   ConfirmByCode,
   ResentEmailConfirmation,
