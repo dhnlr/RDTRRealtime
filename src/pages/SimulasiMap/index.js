@@ -227,7 +227,8 @@ const SimulasiMap = () => {
             container: mapRef.current,
             map: map,
             camera: {
-              position: [106.7936983, -6.5969447, 682.98652],
+              position: [106.7936983, -6.5989447, 682.98652],
+              // position: [106.7936983, -6.5969447, 682.98652],
               heading: 0,
               tilt: 48.52,
             },
@@ -255,7 +256,7 @@ const SimulasiMap = () => {
             title: "Bangunan Segmentasi",
           });
 
-          function getSymbol(color) {
+          function getSymbolBangunanSesudah(color) {
             return {
               type: "polygon-3d", // autocasts as new PolygonSymbol3D()
               symbolLayers: [
@@ -273,9 +274,28 @@ const SimulasiMap = () => {
               ],
             };
           }
-          const renderer = {
-            type: "simple", // autocasts as new UniqueValueRenderer()
-            symbol: getSymbol("#B2B2B2"),
+          const rendererBangunanSesudah = {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            defaultSymbol: getSymbolBangunanSesudah("#e60000"),
+            defaultLabel: "0",
+            field: "jlh_izin_diterima",
+            uniqueValueInfos: [
+              {
+                value: "1",
+                symbol: getSymbolBangunanSesudah([255, 85, 0]),
+                label: "1",
+              },
+              {
+                value: "2",
+                symbol: getSymbolBangunanSesudah([230, 230, 0]),
+                label: "2",
+              },
+              {
+                value: "3",
+                symbol: getSymbolBangunanSesudah([56, 168, 0]),
+                label: "3",
+              },
+            ],
             visualVariables: [
               {
                 type: "size",
@@ -284,9 +304,9 @@ const SimulasiMap = () => {
               },
             ],
           };
-          const buildingsLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Bangunan/FeatureServer/0",
-            renderer: renderer,
+          const bangunanSesudahLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/sesudah/bangunan/FeatureServer/0",
+            renderer: rendererBangunanSesudah,
             elevationInfo: {
               mode: "on-the-ground",
             },
@@ -337,11 +357,424 @@ const SimulasiMap = () => {
                       fieldName: "luas_m2",
                       label: "luas_m2",
                     },
+                    {
+                      fieldName: "jlh_lantai_sebelum",
+                      label: "jlh_lantai_sebelum",
+                    },
+                    {
+                      fieldName: "luas_m2_sebelum",
+                      label: "luas_m2_sebelum",
+                    },
+                    {
+                      fieldName: "fa_sebelum",
+                      label: "fa_sebelum",
+                    },
+                    {
+                      fieldName: "melampaui_fa_sebelum",
+                      label: "melampaui_fa_sebelum",
+                    },
+                    {
+                      fieldName: "melampaui_tinggi_sebelum",
+                      label: "melampaui_tinggi_sebelum",
+                    },
+                    {
+                      fieldName: "status_kdbklb_sebelum",
+                      label: "status_kdbklb_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y5_sebelum",
+                      label: "izin_air_y5_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y6_sebelum",
+                      label: "izin_air_y6_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y7_sebelum",
+                      label: "izin_air_y7_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y8_sebelum",
+                      label: "izin_air_y8_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y9_sebelum",
+                      label: "izin_air_y9_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y10_sebelum",
+                      label: "izin_air_y10_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_sebelum",
+                      label: "izin_macet_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_y6_sebelum",
+                      label: "izin_macet_y6_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_y7_sebelum",
+                      label: "izin_macet_y7_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_y8_sebelum",
+                      label: "izin_macet_y8_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_y9_sebelum",
+                      label: "izin_macet_y9_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_y10_sebelum",
+                      label: "izin_macet_y10_sebelum",
+                    },
+                    {
+                      fieldName: "namaszona",
+                      label: "namaszona",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "fa_max",
+                      label: "fa_max",
+                    },
+                    {
+                      fieldName: "q_arus",
+                      label: "q_arus",
+                    },
                   ],
                 },
               ],
             },
-            outFields: ["status_kdbklb", "jlh_lantai"],
+            outFields: ["*"],
+            editingEnabled: false,
+          });
+
+          const kapasitasAirLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/kapasitas_air/FeatureServer/0",
+            title: "Kapasitas Air",
+            popupTemplate: {
+              title: "Kapasitas Air",
+            },
+            outFields: ["*"],
+            editingEnabled: false,
+          });
+
+          const persilTanahSesudahLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/persiltanah/FeatureServer/0",
+            title: "Persil Tanah",
+            popupTemplate: {
+              title: "Persil Tanah",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      fieldName: "namzon",
+                      label: "namzon",
+                    },
+                    {
+                      fieldName: "kodzon",
+                      label: "kodzon",
+                    },
+                    {
+                      fieldName: "namszn",
+                      label: "namszn",
+                    },
+                    {
+                      fieldName: "kodszn",
+                      label: "kodszn",
+                    },
+                    {
+                      fieldName: "nambwp",
+                      label: "nambwp",
+                    },
+                    {
+                      fieldName: "nasbwp",
+                      label: "nasbwp",
+                    },
+                    {
+                      fieldName: "kodblk",
+                      label: "kodblk",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                    {
+                      fieldName: "nib",
+                      label: "nib",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum",
+                      label: "status_pemb_optimum",
+                    },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_sampah",
+                      label: "izin_sampah",
+                    },
+                    {
+                      fieldName: "izin_banjir",
+                      label: "izin_banjir",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum_sebelum",
+                      label: "status_pemb_optimum_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_sebelum",
+                      label: "izin_air_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_sebelum",
+                      label: "izin_macet_sebelum",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+            editingEnabled: false,
+          });
+
+          const polaRuangVersioningLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/PolaRuang_verioning/FeatureServer/0",
+            title: "Pola Ruang Versioning",
+            popupTemplate: {
+              title: "Pola Ruang Versioning",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "objectid",
+                      label: "objectid",
+                    },
+                    {
+                      fieldName: "id_polaruang",
+                      label: "id_polaruang",
+                    },
+                    {
+                      fieldName: "namazona",
+                      label: "namazona",
+                    },
+                    {
+                      fieldName: "kdzona",
+                      label: "kdzona",
+                    },
+                    {
+                      fieldName: "namaszona",
+                      label: "namaszona",
+                    },
+                    {
+                      fieldName: "kdszona",
+                      label: "kdszona",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "kdb_sebelum",
+                      label: "kdb_sebelum",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "klb_sebelum",
+                      label: "klb_sebelum",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "kdh_sebelum",
+                      label: "kdh_sebelum",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum",
+                      label: "status_pemb_optimum",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum_sebelum",
+                      label: "status_pemb_optimum_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_air_sebelum",
+                      label: "izin_air_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_macet_sebelum",
+                      label: "izin_macet_sebelum",
+                    },
+                    {
+                      fieldName: "kabkot",
+                      label: "kabkot",
+                    },
+                    {
+                      fieldName: "lantai_max_sebelum",
+                      label: "lantai_max_sebelum",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["id_polaruang", "namazona"],
+          });
+
+          const jalanSesudahLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/sesudah/jaringan_jalan/FeatureServer/0",
+            title: "Jaringan Jalan",
+            popupTemplate: {
+              title: "Jaringan Jalan",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      fieldName: "orde01",
+                      label: "orde01",
+                    },
+                    {
+                      fieldName: "orde02",
+                      label: "orde02",
+                    },
+                    {
+                      fieldName: "jnsrsr",
+                      label: "jnsrsr",
+                    },
+                    {
+                      fieldName: "stsjrn",
+                      label: "stsjrn",
+                    },
+                    {
+                      fieldName: "sbdata",
+                      label: "sbdata",
+                    },
+                    {
+                      fieldName: "lebar",
+                      label: "lebar",
+                    },
+                    {
+                      fieldName: "los",
+                      label: "los",
+                    },
+                    {
+                      fieldName: "bangkitan",
+                      label: "bangkitan",
+                    },
+                    {
+                      fieldName: "bangkitan_ruasjalan",
+                      label: "bangkitan_ruasjalan",
+                    },
+                    {
+                      fieldName: "kapasitas",
+                      label: "kapasitas",
+                    },
+                    {
+                      fieldName: "los_num",
+                      label: "los_num",
+                    },
+                    {
+                      fieldName: "x1",
+                      label: "x1",
+                    },
+                    {
+                      fieldName: "x2",
+                      label: "x2",
+                    },
+                    {
+                      fieldName: "y1",
+                      label: "y1",
+                    },
+                    {
+                      fieldName: "y2",
+                      label: "y2",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["namobj", "kapasitas"],
+            editingEnabled: false,
           });
 
           function getSymbolBuildingsEnvelope(color) {
@@ -374,7 +807,7 @@ const SimulasiMap = () => {
             ],
           };
           const buildingsEnvelopeLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Hosted/Amplop_Bangunan_WFL1/FeatureServer/0",
+            url: config.url.ARCGIS_URL + "/Bangunan_Envelope/FeatureServer/0",
             renderer: rendererBuildingsEnvelope,
             elevationInfo: {
               mode: "on-the-ground",
@@ -422,1124 +855,7 @@ const SimulasiMap = () => {
                 },
               ],
             },
-            outFields: ["status_kdbklb", "jlh_lantai"],
-          });
-
-          function getSymbolKdbKlb(color) {
-            return {
-              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-              symbolLayers: [
-                {
-                  type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-                  material: {
-                    color: color,
-                  },
-                  edges: {
-                    type: "solid",
-                    color: "#999",
-                    size: 0.5,
-                  },
-                },
-              ],
-            };
-          }
-          const rendererKdbKlb = {
-            type: "unique-value", // autocasts as new UniqueValueRenderer()
-            defaultSymbol: getSymbolKdbKlb("#B2B2B2"),
-            defaultLabel: "Eksisting",
-            field: "melampaui_tinggi",
-            uniqueValueInfos: [
-              {
-                value: "Belum melampaui jumlah lantai maksimal",
-                symbol: getSymbolKdbKlb([255, 255, 0]),
-                label: "Belum melampaui jumlah lantai maksimal",
-              },
-              {
-                value: "Melampaui jumlah lantai maksimal",
-                symbol: getSymbolKdbKlb([255, 0, 0]),
-                label: "Melampaui jumlah lantai maksimal",
-              },
-              {
-                value: "Jumlah lantai sudah maksimal",
-                symbol: getSymbolKdbKlb([76, 230, 0]),
-                label: "Jumlah lantai sudah maksimal",
-              },
-            ],
-            visualVariables: [
-              {
-                type: "size",
-                field: "jlh_lantai",
-                valueUnit: "meters", // Converts and extrudes all data values in meters
-              },
-            ],
-          };
-          const buildingsKdbKlbLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_Bangunan/FeatureServer/0",
-            renderer: rendererKdbKlb,
-            elevationInfo: {
-              mode: "on-the-ground",
-            },
-            title: "Bangunan - Pembangunan Optimum",
-            popupTemplate: {
-              title: "Bangunan - Pembangunan Optimum",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "jenis",
-                      label: "jenis",
-                    },
-                    {
-                      fieldName: "jenis_bang",
-                      label: "jenis_bang",
-                    },
-                    {
-                      fieldName: "toponim",
-                      label: "toponim",
-                    },
-                    {
-                      fieldName: "sumber",
-                      label: "sumber",
-                    },
-                    {
-                      fieldName: "jlh_lantai",
-                      label: "jlh_lantai",
-                    },
-                    {
-                      fieldName: "melampaui_fa",
-                      label: "melampaui_fa",
-                    },
-                    {
-                      fieldName: "melampaui_tinggi",
-                      label: "melampaui_tinggi",
-                    },
-                    {
-                      fieldName: "status_kdbklb",
-                      label: "Status",
-                    },
-                    {
-                      fieldName: "id_bangunan",
-                      label: "id_bangunan",
-                    },
-                    {
-                      fieldName: "luas_m2",
-                      label: "luas_m2",
-                    },
-                    {
-                      fieldName: "jlh_lantai_sebelum",
-                      label: "jlh_lantai_sebelum",
-                    },
-                    {
-                      fieldName: "luas_m2_sebelum",
-                      label: "luas_m2_sebelum",
-                    },
-                    {
-                      fieldName: "fa_sebelum",
-                      label: "fa_sebelum",
-                    },
-                    {
-                      fieldName: "melampaui_fa_sebelum",
-                      label: "melampaui_fa_sebelum",
-                    },
-                    {
-                      fieldName: "melampaui_tinggi_sebelum",
-                      label: "melampaui_tinggi_sebelum",
-                    },
-                    {
-                      fieldName: "status_kdbklb_sebelum",
-                      label: "status_kdbklb_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y5_sebelum",
-                      label: "izin_air_y5_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y6_sebelum",
-                      label: "izin_air_y6_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y7_sebelum",
-                      label: "izin_air_y7_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y8_sebelum",
-                      label: "izin_air_y8_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y9_sebelum",
-                      label: "izin_air_y9_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y10_sebelum",
-                      label: "izin_air_y10_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y6_sebelum",
-                      label: "izin_macet_y6_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y7_sebelum",
-                      label: "izin_macet_y7_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y8_sebelum",
-                      label: "izin_macet_y8_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y9_sebelum",
-                      label: "izin_macet_y9_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y10_sebelum",
-                      label: "izin_macet_y10_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          function getSymbolAirBersih(color) {
-            return {
-              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-              symbolLayers: [
-                {
-                  type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-                  material: {
-                    color: color,
-                  },
-                  edges: {
-                    type: "solid",
-                    color: "#999",
-                    size: 0.5,
-                  },
-                },
-              ],
-            };
-          }
-          const rendererAirBersih = {
-            type: "unique-value", // autocasts as new UniqueValueRenderer()
-            defaultSymbol: getSymbolAirBersih("#B2B2B2"),
-            defaultLabel: "Eksisting",
-            field: "izin_air_y5",
-            uniqueValueInfos: [
-              {
-                value: "Diizinkan",
-                symbol: getSymbolAirBersih("#00A884"),
-                label: "Diizinkan",
-              },
-              {
-                value: "Ditolak/rekomendasi",
-                symbol: getSymbolAirBersih("#730000"),
-                label: "Ditolak/rekomendasi",
-              },
-            ],
-            visualVariables: [
-              {
-                type: "size",
-                field: "jlh_lantai",
-                valueUnit: "meters", // Converts and extrudes all data values in meters
-              },
-            ],
-          };
-          const buildingsAirBersihLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Air/airbersih_bangunan/FeatureServer/0",
-            renderer: rendererAirBersih,
-            elevationInfo: {
-              mode: "on-the-ground",
-            },
-            title: "Bangunan - Air Bersih",
-            popupTemplate: {
-              title: "Bangunan - Air Bersih",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "jenis",
-                      label: "jenis",
-                    },
-                    {
-                      fieldName: "jenis_bang",
-                      label: "jenis_bang",
-                    },
-                    {
-                      fieldName: "toponim",
-                      label: "toponim",
-                    },
-                    {
-                      fieldName: "sumber",
-                      label: "sumber",
-                    },
-                    {
-                      fieldName: "jlh_lantai",
-                      label: "jlh_lantai",
-                    },
-                    {
-                      fieldName: "melampaui_fa",
-                      label: "melampaui_fa",
-                    },
-                    {
-                      fieldName: "melampaui_tinggi",
-                      label: "melampaui_tinggi",
-                    },
-                    {
-                      fieldName: "id_bangunan",
-                      label: "id_bangunan",
-                    },
-                    {
-                      fieldName: "luas_m2",
-                      label: "luas_m2",
-                    },
-                    {
-                      fieldName: "pdam_kapasitas_harian",
-                      label: "pdam_kapasitas_harian",
-                    },
-                    {
-                      fieldName: "keb_air_harian_y5",
-                      label: "keb_air_harian_y5",
-                    },
-                    {
-                      fieldName: "keb_air_harian_y6",
-                      label: "keb_air_harian_y6",
-                    },
-                    {
-                      fieldName: "keb_air_harian_y7",
-                      label: "keb_air_harian_y7",
-                    },
-                    {
-                      fieldName: "keb_air_harian_y8",
-                      label: "keb_air_harian_y8",
-                    },
-                    {
-                      fieldName: "keb_air_harian_y9",
-                      label: "keb_air_harian_y9",
-                    },
-                    {
-                      fieldName: "keb_air_harian_y10",
-                      label: "keb_air_harian_y10",
-                    },
-                    {
-                      fieldName: "izin_air_y5",
-                      label: "izin_air_y5",
-                    },
-                    {
-                      fieldName: "izin_air_y6",
-                      label: "izin_air_y6",
-                    },
-                    {
-                      fieldName: "izin_air_y7",
-                      label: "izin_air_y7",
-                    },
-                    {
-                      fieldName: "izin_air_y8",
-                      label: "izin_air_y8",
-                    },
-                    {
-                      fieldName: "izin_air_y9",
-                      label: "izin_air_y9",
-                    },
-                    {
-                      fieldName: "izin_air_y10",
-                      label: "izin_air_y10",
-                    },
-                    {
-                      fieldName: "jlh_lantai_sebelum",
-                      label: "jlh_lantai_sebelum",
-                    },
-                    {
-                      fieldName: "luas_m2_sebelum",
-                      label: "luas_m2_sebelum",
-                    },
-                    {
-                      fieldName: "fa_sebelum",
-                      label: "fa_sebelum",
-                    },
-                    {
-                      fieldName: "melampaui_fa_sebelum",
-                      label: "melampaui_fa_sebelum",
-                    },
-                    {
-                      fieldName: "melampaui_tinggi_sebelum",
-                      label: "melampaui_tinggi_sebelum",
-                    },
-                    {
-                      fieldName: "status_kdbklb_sebelum",
-                      label: "status_kdbklb_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y5_sebelum",
-                      label: "izin_air_y5_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y6_sebelum",
-                      label: "izin_air_y6_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y7_sebelum",
-                      label: "izin_air_y7_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y8_sebelum",
-                      label: "izin_air_y8_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y9_sebelum",
-                      label: "izin_air_y9_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y10_sebelum",
-                      label: "izin_air_y10_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y6_sebelum",
-                      label: "izin_macet_y6_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y7_sebelum",
-                      label: "izin_macet_y7_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y8_sebelum",
-                      label: "izin_macet_y8_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y9_sebelum",
-                      label: "izin_macet_y9_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y10_sebelum",
-                      label: "izin_macet_y10_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          function getSymbolKemacetan(color) {
-            return {
-              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-              symbolLayers: [
-                {
-                  type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-                  material: {
-                    color: color,
-                  },
-                  edges: {
-                    type: "solid",
-                    color: "#999",
-                    size: 0.5,
-                  },
-                },
-              ],
-            };
-          }
-          const rendererKemacetan = {
-            type: "unique-value", // autocasts as new UniqueValueRenderer()
-            defaultSymbol: getSymbolKemacetan("#B2B2B2"),
-            defaultLabel: "Eksisting",
-            field: "izin_macet",
-            uniqueValueInfos: [
-              {
-                value: "Diizinkan",
-                symbol: getSymbolKemacetan("#00A884"),
-                label: "Diizinkan",
-              },
-              {
-                value: "Ditolak/rekomendasi",
-                symbol: getSymbolKemacetan("#A80000"),
-                label: "Ditolak/rekomendasi",
-              },
-            ],
-            visualVariables: [
-              {
-                type: "size",
-                field: "jlh_lantai",
-                valueUnit: "meters", // Converts and extrudes all data values in meters
-              },
-            ],
-          };
-          const buildingsKemacetanLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Kemacetan/kemacetan_bangunan/FeatureServer/0",
-            renderer: rendererKemacetan,
-            elevationInfo: {
-              mode: "on-the-ground",
-            },
-            title: "Bangunan - Transportasi",
-            popupTemplate: {
-              title: "Bangunan - Transportasi",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "jenis",
-                      label: "jenis",
-                    },
-                    {
-                      fieldName: "jenis_bang",
-                      label: "jenis_bang",
-                    },
-                    {
-                      fieldName: "toponim",
-                      label: "toponim",
-                    },
-                    {
-                      fieldName: "sumber",
-                      label: "sumber",
-                    },
-                    {
-                      fieldName: "jlh_lantai",
-                      label: "jlh_lantai",
-                    },
-                    {
-                      fieldName: "melampaui_fa",
-                      label: "melampaui_fa",
-                    },
-                    {
-                      fieldName: "melampaui_tinggi",
-                      label: "melampaui_tinggi",
-                    },
-                    {
-                      fieldName: "id_bangunan",
-                      label: "id_bangunan",
-                    },
-                    {
-                      fieldName: "luas_m2",
-                      label: "luas_m2",
-                    },
-                    {
-                      fieldName: "lebar_jalan",
-                      label: "lebar_jalan",
-                    },
-                    {
-                      fieldName: "panjang_jalan",
-                      label: "panjang_jalan",
-                    },
-                    {
-                      fieldName: "bangkitan",
-                      label: "bangkitan",
-                    },
-                    {
-                      fieldName: "bangkitan_ruasjalan",
-                      label: "bangkitan_ruasjalan",
-                    },
-                    {
-                      fieldName: "kapasitas",
-                      label: "kapasitas",
-                    },
-                    {
-                      fieldName: "los_num",
-                      label: "los_num",
-                    },
-                    {
-                      fieldName: "los",
-                      label: "los",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "bangkitan_ruasjalan_y6",
-                      label: "bangkitan_ruasjalan_y6",
-                    },
-                    {
-                      fieldName: "bangkitan_ruasjalan_y7",
-                      label: "bangkitan_ruasjalan_y7",
-                    },
-                    {
-                      fieldName: "bangkitan_ruasjalan_y8",
-                      label: "bangkitan_ruasjalan_y8",
-                    },
-                    {
-                      fieldName: "bangkitan_ruasjalan_y9",
-                      label: "bangkitan_ruasjalan_y9",
-                    },
-                    {
-                      fieldName: "bangkitan_ruasjalan_y10",
-                      label: "bangkitan_ruasjalan_y10",
-                    },
-                    {
-                      fieldName: "izin_macet_y6",
-                      label: "izin_macet_y6",
-                    },
-                    {
-                      fieldName: "izin_macet_y7",
-                      label: "izin_macet_y7",
-                    },
-                    {
-                      fieldName: "izin_macet_y8",
-                      label: "izin_macet_y8",
-                    },
-                    {
-                      fieldName: "izin_macet_y9",
-                      label: "izin_macet_y9",
-                    },
-                    {
-                      fieldName: "izin_macet_y10",
-                      label: "izin_macet_y10",
-                    },
-                    {
-                      fieldName: "jlh_lantai_sebelum",
-                      label: "jlh_lantai_sebelum",
-                    },
-                    {
-                      fieldName: "luas_m2_sebelum",
-                      label: "luas_m2_sebelum",
-                    },
-                    {
-                      fieldName: "fa_sebelum",
-                      label: "fa_sebelum",
-                    },
-                    {
-                      fieldName: "melampaui_fa_sebelum",
-                      label: "melampaui_fa_sebelum",
-                    },
-                    {
-                      fieldName: "melampaui_tinggi_sebelum",
-                      label: "melampaui_tinggi_sebelum",
-                    },
-                    {
-                      fieldName: "status_kdbklb_sebelum",
-                      label: "status_kdbklb_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y5_sebelum",
-                      label: "izin_air_y5_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y6_sebelum",
-                      label: "izin_air_y6_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y7_sebelum",
-                      label: "izin_air_y7_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y8_sebelum",
-                      label: "izin_air_y8_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y9_sebelum",
-                      label: "izin_air_y9_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y10_sebelum",
-                      label: "izin_air_y10_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y6_sebelum",
-                      label: "izin_macet_y6_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y7_sebelum",
-                      label: "izin_macet_y7_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y8_sebelum",
-                      label: "izin_macet_y8_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y9_sebelum",
-                      label: "izin_macet_y9_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y10_sebelum",
-                      label: "izin_macet_y10_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const persilTanahKdbKlbLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PersilTanah_Pabaton/FeatureServer/0",
-            title: "Persil Tanah - Pembangunan Optimum",
-            popupTemplate: {
-              title: "Persil Tanah - Pembangunan Optimum",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
-                    },
-                    {
-                      fieldName: "nib",
-                      label: "nib",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_sampah",
-                      label: "izin_sampah",
-                    },
-                    {
-                      fieldName: "izin_banjir",
-                      label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const persilTanahAirBersihLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Air/Persil_Tanah_Air_Bersih/FeatureServer/0",
-            title: "Persil Tanah - Air Bersih",
-            popupTemplate: {
-              title: "Persil Tanah - Air Bersih",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
-                    },
-                    {
-                      fieldName: "nib",
-                      label: "nib",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_sampah",
-                      label: "izin_sampah",
-                    },
-                    {
-                      fieldName: "izin_banjir",
-                      label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const persilTanahKemacetanLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Kemacetan/PersilTanah_Transportasi/FeatureServer/0",
-            title: "Persil Tanah - Transportasi",
-            popupTemplate: {
-              title: "Persil Tanah - Transportasi",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
-                    },
-                    {
-                      fieldName: "nib",
-                      label: "nib",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_sampah",
-                      label: "izin_sampah",
-                    },
-                    {
-                      fieldName: "izin_banjir",
-                      label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const persilTanahBpn = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/persil_tanah_bpn/FeatureServer/0",
-            title: "Persil Tanah - BPN",
-            popupTemplate: {
-              title: "Persil Tanah - BPN",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "penggunaan",
-                      label: "penggunaan",
-                    },
-                    {
-                      fieldName: "nilai",
-                      label: "nilai",
-                    },
-                    {
-                      fieldName: "tipehak",
-                      label: "tipehak",
-                    },
-                    {
-                      fieldName: "numerikid",
-                      label: "numerikid",
-                    },
-                    {
-                      fieldName: "sumbergeom",
-                      label: "sumbergeom",
-                    },
-                    {
-                      fieldName: "wilayahid",
-                      label: "wilayahid",
-                    },
-                    {
-                      fieldName: "kantorid",
-                      label: "kantorid",
-                    },
-                    {
-                      fieldName: "kantorindu",
-                      label: "kantorindu",
-                    },
-                    {
-                      fieldName: "tipeproduk",
-                      label: "tipeproduk",
-                    },
-                    {
-                      fieldName: "tahun",
-                      label: "tahun",
-                    },
-                    {
-                      fieldName: "luas",
-                      label: "luas",
-                    },
-                    {
-                      fieldName: "luaspeta",
-                      label: "luaspeta",
-                    },
-                    {
-                      fieldName: "nib",
-                      label: "nib",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_sampah",
-                      label: "izin_sampah",
-                    },
-                    {
-                      fieldName: "izin_banjir",
-                      label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      fieldName: "gsb",
-                      label: "gsb",
-                    },
-                    {
-                      fieldName: "ktb",
-                      label: "ktb",
-                    },
-                    {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
+            outFields: ["jlh_lantai"],
           });
 
           function getSymbolPolaRuangEnvelope(color) {
@@ -2089,1060 +1405,77 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
-          const polaRuangKdbKlbLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/KDBKLB/KDBKLB_PolaRuang/FeatureServer/0",
-            title: "Zonasi - Pembangunan Optimum",
-            popupTemplate: {
-              title: "Zonasi - Pembangunan Optimum",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "kkop_1",
-                      label: "kkop_1",
-                    },
-                    {
-                      fieldName: "lp2b_2",
-                      label: "lp2b_2",
-                    },
-                    {
-                      fieldName: "krb_03",
-                      label: "krb_03",
-                    },
-                    {
-                      fieldName: "tod_04",
-                      label: "tod_04",
-                    },
-                    {
-                      fieldName: "teb_05",
-                      label: "teb_05",
-                    },
-                    {
-                      fieldName: "cagbud",
-                      label: "cagbud",
-                    },
-                    {
-                      fieldName: "hankam",
-                      label: "hankam",
-                    },
-                    {
-                      fieldName: "puslit",
-                      label: "puslit",
-                    },
-                    {
-                      fieldName: "tpz_00",
-                      label: "tpz_00",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_sampah",
-                      label: "izin_sampah",
-                    },
-                    {
-                      fieldName: "izin_banjir",
-                      label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "namazona_sebelum",
-                      label: "namazona_sebelum",
-                    },
-                    {
-                      fieldName: "kdzona_sebelum",
-                      label: "kdzona_sebelum",
-                    },
-                    {
-                      fieldName: "namaszona_sebelum",
-                      label: "namaszona_sebelum",
-                    },
-                    {
-                      fieldName: "kdszona_sebelum",
-                      label: "kdszona_sebelum",
-                    },
-                    {
-                      fieldName: "kdb_sebelum",
-                      label: "kdb_sebelum",
-                    },
-                    {
-                      fieldName: "klb_sebelum",
-                      label: "klb_sebelum",
-                    },
-                    {
-                      fieldName: "kdh_sebelum",
-                      label: "kdh_sebelum",
-                    },
-                    {
-                      fieldName: "gsb_sebelum",
-                      label: "gsb_sebelum",
-                    },
-                    {
-                      fieldName: "ktb_sebelum",
-                      label: "ktb_sebelum",
-                    },
-                    {
-                      fieldName: "lantai_max_sebelum",
-                      label: "lantai_max_sebelum",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const polaRuangAirBersihLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Air/Zonasi_AirBersih/FeatureServer/0",
-            title: "Zonasi - Air Bersih",
-            popupTemplate: {
-              title: "Zonasi - Air Bersih",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "kkop_1",
-                      label: "kkop_1",
-                    },
-                    {
-                      fieldName: "lp2b_2",
-                      label: "lp2b_2",
-                    },
-                    {
-                      fieldName: "krb_03",
-                      label: "krb_03",
-                    },
-                    {
-                      fieldName: "tod_04",
-                      label: "tod_04",
-                    },
-                    {
-                      fieldName: "teb_05",
-                      label: "teb_05",
-                    },
-                    {
-                      fieldName: "cagbud",
-                      label: "cagbud",
-                    },
-                    {
-                      fieldName: "hankam",
-                      label: "hankam",
-                    },
-                    {
-                      fieldName: "puslit",
-                      label: "puslit",
-                    },
-                    {
-                      fieldName: "tpz_00",
-                      label: "tpz_00",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_sampah",
-                      label: "izin_sampah",
-                    },
-                    {
-                      fieldName: "izin_banjir",
-                      label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "namazona_sebelum",
-                      label: "namazona_sebelum",
-                    },
-                    {
-                      fieldName: "kdzona_sebelum",
-                      label: "kdzona_sebelum",
-                    },
-                    {
-                      fieldName: "namaszona_sebelum",
-                      label: "namaszona_sebelum",
-                    },
-                    {
-                      fieldName: "kdszona_sebelum",
-                      label: "kdszona_sebelum",
-                    },
-                    {
-                      fieldName: "kdb_sebelum",
-                      label: "kdb_sebelum",
-                    },
-                    {
-                      fieldName: "klb_sebelum",
-                      label: "klb_sebelum",
-                    },
-                    {
-                      fieldName: "kdh_sebelum",
-                      label: "kdh_sebelum",
-                    },
-                    {
-                      fieldName: "gsb_sebelum",
-                      label: "gsb_sebelum",
-                    },
-                    {
-                      fieldName: "ktb_sebelum",
-                      label: "ktb_sebelum",
-                    },
-                    {
-                      fieldName: "lantai_max_sebelum",
-                      label: "lantai_max_sebelum",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const polaRuangKemacetanLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Kemacetan/Zonasi_Transportasi/FeatureServer/0",
-            title: "Zonasi - Transportasi",
-            popupTemplate: {
-              title: "Zonasi - Transportasi",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "kkop_1",
-                      label: "kkop_1",
-                    },
-                    {
-                      fieldName: "lp2b_2",
-                      label: "lp2b_2",
-                    },
-                    {
-                      fieldName: "krb_03",
-                      label: "krb_03",
-                    },
-                    {
-                      fieldName: "tod_04",
-                      label: "tod_04",
-                    },
-                    {
-                      fieldName: "teb_05",
-                      label: "teb_05",
-                    },
-                    {
-                      fieldName: "cagbud",
-                      label: "cagbud",
-                    },
-                    {
-                      fieldName: "hankam",
-                      label: "hankam",
-                    },
-                    {
-                      fieldName: "puslit",
-                      label: "puslit",
-                    },
-                    {
-                      fieldName: "tpz_00",
-                      label: "tpz_00",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_sampah",
-                      label: "izin_sampah",
-                    },
-                    {
-                      fieldName: "izin_banjir",
-                      label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "namazona_sebelum",
-                      label: "namazona_sebelum",
-                    },
-                    {
-                      fieldName: "kdzona_sebelum",
-                      label: "kdzona_sebelum",
-                    },
-                    {
-                      fieldName: "namaszona_sebelum",
-                      label: "namaszona_sebelum",
-                    },
-                    {
-                      fieldName: "kdszona_sebelum",
-                      label: "kdszona_sebelum",
-                    },
-                    {
-                      fieldName: "kdb_sebelum",
-                      label: "kdb_sebelum",
-                    },
-                    {
-                      fieldName: "klb_sebelum",
-                      label: "klb_sebelum",
-                    },
-                    {
-                      fieldName: "kdh_sebelum",
-                      label: "kdh_sebelum",
-                    },
-                    {
-                      fieldName: "gsb_sebelum",
-                      label: "gsb_sebelum",
-                    },
-                    {
-                      fieldName: "ktb_sebelum",
-                      label: "ktb_sebelum",
-                    },
-                    {
-                      fieldName: "lantai_max_sebelum",
-                      label: "lantai_max_sebelum",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const kemacetanJaringanJalanLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Kemacetan/kemacetan_jaringan_jalan/FeatureServer/0",
-            title: "Jaringan Jalan",
-            popupTemplate: {
-              title: "Jaringan Jalan",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "orde01",
-                      label: "orde01",
-                    },
-                    {
-                      fieldName: "orde02",
-                      label: "orde02",
-                    },
-                    {
-                      fieldName: "jnsrsr",
-                      label: "jnsrsr",
-                    },
-                    {
-                      fieldName: "stsjrn",
-                      label: "stsjrn",
-                    },
-                    {
-                      fieldName: "sbdata",
-                      label: "sbdata",
-                    },
-                    {
-                      fieldName: "lebar",
-                      label: "lebar",
-                    },
-                    {
-                      fieldName: "los",
-                      label: "los",
-                    },
-                    {
-                      fieldName: "bangkitan",
-                      label: "bangkitan",
-                    },
-                    {
-                      fieldName: "bangkitan_ruasjalan",
-                      label: "bangkitan_ruasjalan",
-                    },
-                    {
-                      fieldName: "kapasitas",
-                      label: "kapasitas",
-                    },
-                    {
-                      fieldName: "los_num",
-                      label: "los_num",
-                    },
-                    {
-                      fieldName: "x1",
-                      label: "x1",
-                    },
-                    {
-                      fieldName: "x2",
-                      label: "x2",
-                    },
-                    {
-                      fieldName: "y1",
-                      label: "y1",
-                    },
-                    {
-                      fieldName: "y2",
-                      label: "y2",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["namobj", "kapasitas"],
-            editingEnabled: true,
-          });
-
-          const airBersihPdamLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Air/airbersih_pdam/FeatureServer/0",
-            title: "PDAM",
-            popupTemplate: {
-              title: "PDAM",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "wpdam_id",
-                      label: "wpdam_id",
-                    },
-                    {
-                      fieldName: "wpdam_nama",
-                      label: "wpdam_nama",
-                    },
-                    {
-                      fieldName: "wpdam_kapasitas_harian",
-                      label: "wpdam_kapasitas_harian",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const polaRuangVersioningLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/PolaRuang_verioning/FeatureServer/0",
-            title: "Pola Ruang Versioning",
-            popupTemplate: {
-              title: "Pola Ruang Versioning",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "objectid",
-                      label: "objectid",
-                    },
-                    {
-                      fieldName: "id_polaruang",
-                      label: "id_polaruang",
-                    },
-                    {
-                      fieldName: "namazona",
-                      label: "namazona",
-                    },
-                    {
-                      fieldName: "kdzona",
-                      label: "kdzona",
-                    },
-                    {
-                      fieldName: "namaszona",
-                      label: "namaszona",
-                    },
-                    {
-                      fieldName: "kdszona",
-                      label: "kdszona",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "kdb_sebelum",
-                      label: "kdb_sebelum",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "klb_sebelum",
-                      label: "klb_sebelum",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      fieldName: "kdh_sebelum",
-                      label: "kdh_sebelum",
-                    },
-                    {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                    {
-                      fieldName: "kabkot",
-                      label: "kabkot",
-                    },
-                    {
-                      fieldName: "lantai_max_sebelum",
-                      label: "lantai_max_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["id_polaruang", "namazona"],
-          });
-
           const basemapPolaRuangLayer = new VectorTileLayer({
             url: config.url.ARCGIS_URL + "/Hosted/KDBKLB_PolaRuang_base/VectorTileServer",
             title: "Basemap Pola Ruang",
           });
 
-          //layer sebelum
-          function getSymbolBangunanSebelum(color) {
-            return {
-              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-              symbolLayers: [
-                {
-                  type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-                  material: {
-                    color: color,
-                  },
-                  edges: {
-                    type: "solid",
-                    color: "#999",
-                    size: 0.5,
-                  },
-                },
-              ],
-            };
-          }
-          const rendererBangunanSebelum = {
-            type: "unique-value", // autocasts as new UniqueValueRenderer()
-            defaultSymbol: getSymbolBangunanSebelum("#B2B2B2"),
-            defaultLabel: "Eksisting",
-            field: "melampaui_tinggi",
-            uniqueValueInfos: [
-              {
-                value: "Belum melampaui jumlah lantai maksimal",
-                symbol: getSymbolBangunanSebelum([255, 255, 0]),
-                label: "Belum melampaui jumlah lantai maksimal",
-              },
-              {
-                value: "Melampaui jumlah lantai maksimal",
-                symbol: getSymbolBangunanSebelum([255, 0, 0]),
-                label: "Melampaui jumlah lantai maksimal",
-              },
-              {
-                value: "Jumlah lantai sudah maksimal",
-                symbol: getSymbolBangunanSebelum([76, 230, 0]),
-                label: "Jumlah lantai sudah maksimal",
-              },
-            ],
-            visualVariables: [
-              {
-                type: "size",
-                field: "jlh_lantai",
-                valueUnit: "meters", // Converts and extrudes all data values in meters
-              },
-            ],
-          };
-          const bangunanSebelumLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sebelum/bangunan_sebelum/FeatureServer/0",
-            renderer: rendererBangunanSebelum,
-            elevationInfo: {
-              mode: "on-the-ground",
-            },
-            title: "Bangunan - Sebelum",
+          const persilTanahBpn = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/persil_tanah_bpn/FeatureServer/0",
+            title: "Persil Tanah - BPN",
             popupTemplate: {
-              title: "Bangunan",
+              title: "Persil Tanah - BPN",
               content: [
                 {
                   type: "fields",
                   fieldInfos: [
                     {
-                      fieldName: "jenis",
-                      label: "jenis",
+                      fieldName: "penggunaan",
+                      label: "penggunaan",
                     },
                     {
-                      fieldName: "jenis_bang",
-                      label: "jenis_bang",
+                      fieldName: "nilai",
+                      label: "nilai",
                     },
                     {
-                      fieldName: "toponim",
-                      label: "toponim",
+                      fieldName: "tipehak",
+                      label: "tipehak",
                     },
                     {
-                      fieldName: "sumber",
-                      label: "sumber",
+                      fieldName: "numerikid",
+                      label: "numerikid",
                     },
                     {
-                      fieldName: "jlh_lantai",
-                      label: "jlh_lantai",
+                      fieldName: "sumbergeom",
+                      label: "sumbergeom",
                     },
                     {
-                      fieldName: "melampaui_fa",
-                      label: "melampaui_fa",
+                      fieldName: "wilayahid",
+                      label: "wilayahid",
                     },
                     {
-                      fieldName: "melampaui_tinggi",
-                      label: "melampaui_tinggi",
+                      fieldName: "kantorid",
+                      label: "kantorid",
                     },
                     {
-                      fieldName: "status_kdbklb",
-                      label: "Status",
+                      fieldName: "kantorindu",
+                      label: "kantorindu",
                     },
                     {
-                      fieldName: "id_bangunan",
-                      label: "id_bangunan",
+                      fieldName: "tipeproduk",
+                      label: "tipeproduk",
                     },
                     {
-                      fieldName: "luas_m2",
-                      label: "luas_m2",
+                      fieldName: "tahun",
+                      label: "tahun",
                     },
                     {
-                      fieldName: "jlh_lantai_sebelum",
-                      label: "jlh_lantai_sebelum",
+                      fieldName: "luas",
+                      label: "luas",
                     },
                     {
-                      fieldName: "luas_m2_sebelum",
-                      label: "luas_m2_sebelum",
-                    },
-                    {
-                      fieldName: "fa_sebelum",
-                      label: "fa_sebelum",
-                    },
-                    {
-                      fieldName: "melampaui_fa_sebelum",
-                      label: "melampaui_fa_sebelum",
-                    },
-                    {
-                      fieldName: "melampaui_tinggi_sebelum",
-                      label: "melampaui_tinggi_sebelum",
-                    },
-                    {
-                      fieldName: "status_kdbklb_sebelum",
-                      label: "status_kdbklb_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y5_sebelum",
-                      label: "izin_air_y5_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y6_sebelum",
-                      label: "izin_air_y6_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y7_sebelum",
-                      label: "izin_air_y7_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y8_sebelum",
-                      label: "izin_air_y8_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y9_sebelum",
-                      label: "izin_air_y9_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y10_sebelum",
-                      label: "izin_air_y10_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y6_sebelum",
-                      label: "izin_macet_y6_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y7_sebelum",
-                      label: "izin_macet_y7_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y8_sebelum",
-                      label: "izin_macet_y8_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y9_sebelum",
-                      label: "izin_macet_y9_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y10_sebelum",
-                      label: "izin_macet_y10_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const persilSebelumLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sebelum/persiltanah_izin_sebelum/FeatureServer/0",
-            title: "Persil Tanah - Sebelum",
-            popupTemplate: {
-              title: "Persil Tanah - Sebelum",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
+                      fieldName: "luaspeta",
+                      label: "luaspeta",
                     },
                     {
                       fieldName: "nib",
                       label: "nib",
                     },
                     {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
                       fieldName: "status_pemb_optimum",
                       label: "status_pemb_optimum",
                     },
@@ -3161,200 +1494,6 @@ const SimulasiMap = () => {
                     {
                       fieldName: "izin_banjir",
                       label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const jalanSebelumLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sebelum/jaringan_jalan_sebelum/FeatureServer/0",
-            title: "Jaringan Jalan - Sebelum",
-            popupTemplate: {
-              title: "Jaringan Jalan - Sebelum",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "orde01",
-                      label: "orde01",
-                    },
-                    {
-                      fieldName: "orde02",
-                      label: "orde02",
-                    },
-                    {
-                      fieldName: "jnsrsr",
-                      label: "jnsrsr",
-                    },
-                    {
-                      fieldName: "stsjrn",
-                      label: "stsjrn",
-                    },
-                    {
-                      fieldName: "sbdata",
-                      label: "sbdata",
-                    },
-                    {
-                      fieldName: "lebar",
-                      label: "lebar",
-                    },
-                    {
-                      fieldName: "los",
-                      label: "los",
-                    },
-                    {
-                      fieldName: "bangkitan",
-                      label: "bangkitan",
-                    },
-                    {
-                      fieldName: "bangkitan_ruasjalan",
-                      label: "bangkitan_ruasjalan",
-                    },
-                    {
-                      fieldName: "kapasitas",
-                      label: "kapasitas",
-                    },
-                    {
-                      fieldName: "los_num",
-                      label: "los_num",
-                    },
-                    {
-                      fieldName: "x1",
-                      label: "x1",
-                    },
-                    {
-                      fieldName: "x2",
-                      label: "x2",
-                    },
-                    {
-                      fieldName: "y1",
-                      label: "y1",
-                    },
-                    {
-                      fieldName: "y2",
-                      label: "y2",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["namobj", "kapasitas"],
-            editingEnabled: false,
-          });
-
-          const polaRuangSebelumLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sebelum/zonasi_izin_sebelum/FeatureServer/0",
-            title: "Zonasi - Sebelum",
-            popupTemplate: {
-              title: "Zonasi - Sebelum",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "kkop_1",
-                      label: "kkop_1",
-                    },
-                    {
-                      fieldName: "lp2b_2",
-                      label: "lp2b_2",
-                    },
-                    {
-                      fieldName: "krb_03",
-                      label: "krb_03",
-                    },
-                    {
-                      fieldName: "tod_04",
-                      label: "tod_04",
-                    },
-                    {
-                      fieldName: "teb_05",
-                      label: "teb_05",
-                    },
-                    {
-                      fieldName: "cagbud",
-                      label: "cagbud",
-                    },
-                    {
-                      fieldName: "hankam",
-                      label: "hankam",
-                    },
-                    {
-                      fieldName: "puslit",
-                      label: "puslit",
-                    },
-                    {
-                      fieldName: "tpz_00",
-                      label: "tpz_00",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
                     },
                     {
                       fieldName: "kdb",
@@ -3369,385 +1508,17 @@ const SimulasiMap = () => {
                       label: "kdh",
                     },
                     {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
+                      fieldName: "gsb",
+                      label: "gsb",
                     },
                     {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_sampah",
-                      label: "izin_sampah",
-                    },
-                    {
-                      fieldName: "izin_banjir",
-                      label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "namazona_sebelum",
-                      label: "namazona_sebelum",
-                    },
-                    {
-                      fieldName: "kdzona_sebelum",
-                      label: "kdzona_sebelum",
-                    },
-                    {
-                      fieldName: "namaszona_sebelum",
-                      label: "namaszona_sebelum",
-                    },
-                    {
-                      fieldName: "kdszona_sebelum",
-                      label: "kdszona_sebelum",
-                    },
-                    {
-                      fieldName: "kdb_sebelum",
-                      label: "kdb_sebelum",
-                    },
-                    {
-                      fieldName: "klb_sebelum",
-                      label: "klb_sebelum",
-                    },
-                    {
-                      fieldName: "kdh_sebelum",
-                      label: "kdh_sebelum",
-                    },
-                    {
-                      fieldName: "gsb_sebelum",
-                      label: "gsb_sebelum",
-                    },
-                    {
-                      fieldName: "ktb_sebelum",
-                      label: "ktb_sebelum",
-                    },
-                    {
-                      fieldName: "lantai_max_sebelum",
-                      label: "lantai_max_sebelum",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          let sebelumGroupLayer = new GroupLayer({
-            title: "Sebelum",
-            layers: [polaRuangSebelumLayer, jalanSebelumLayer, persilSebelumLayer, bangunanSebelumLayer],
-          });
-
-          //layer sesudah
-          function getSymbolBangunanSesudah(color) {
-            return {
-              type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-              symbolLayers: [
-                {
-                  type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-                  material: {
-                    color: color,
-                  },
-                  edges: {
-                    type: "solid",
-                    color: "#999",
-                    size: 0.5,
-                  },
-                },
-              ],
-            };
-          }
-          const rendererBangunanSesudah = {
-            type: "unique-value", // autocasts as new UniqueValueRenderer()
-            defaultSymbol: getSymbolBangunanSesudah("#e60000"),
-            defaultLabel: "0",
-            field: "jlh_izin_diterima",
-            uniqueValueInfos: [
-              {
-                value: "1",
-                symbol: getSymbolBangunanSesudah([255, 85, 0]),
-                label: "1",
-              },
-              {
-                value: "2",
-                symbol: getSymbolBangunanSesudah([230, 230, 0]),
-                label: "2",
-              },
-              {
-                value: "3",
-                symbol: getSymbolBangunanSesudah([56, 168, 0]),
-                label: "3",
-              },
-            ],
-            visualVariables: [
-              {
-                type: "size",
-                field: "jlh_lantai",
-                valueUnit: "meters", // Converts and extrudes all data values in meters
-              },
-            ],
-          };
-          const bangunanSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sesudah/bangunan/FeatureServer/0",
-            renderer: rendererBangunanSesudah,
-            elevationInfo: {
-              mode: "on-the-ground",
-            },
-            title: "Bangunan - Sesudah",
-            popupTemplate: {
-              title: "Bangunan",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "jenis",
-                      label: "jenis",
-                    },
-                    {
-                      fieldName: "jenis_bang",
-                      label: "jenis_bang",
-                    },
-                    {
-                      fieldName: "toponim",
-                      label: "toponim",
-                    },
-                    {
-                      fieldName: "sumber",
-                      label: "sumber",
-                    },
-                    {
-                      fieldName: "jlh_lantai",
-                      label: "jlh_lantai",
-                    },
-                    {
-                      fieldName: "melampaui_fa",
-                      label: "melampaui_fa",
-                    },
-                    {
-                      fieldName: "melampaui_tinggi",
-                      label: "melampaui_tinggi",
-                    },
-                    {
-                      fieldName: "status_kdbklb",
-                      label: "Status",
-                    },
-                    {
-                      fieldName: "id_bangunan",
-                      label: "id_bangunan",
-                    },
-                    {
-                      fieldName: "luas_m2",
-                      label: "luas_m2",
-                    },
-                    {
-                      fieldName: "jlh_lantai_sebelum",
-                      label: "jlh_lantai_sebelum",
-                    },
-                    {
-                      fieldName: "luas_m2_sebelum",
-                      label: "luas_m2_sebelum",
-                    },
-                    {
-                      fieldName: "fa_sebelum",
-                      label: "fa_sebelum",
-                    },
-                    {
-                      fieldName: "melampaui_fa_sebelum",
-                      label: "melampaui_fa_sebelum",
-                    },
-                    {
-                      fieldName: "melampaui_tinggi_sebelum",
-                      label: "melampaui_tinggi_sebelum",
-                    },
-                    {
-                      fieldName: "status_kdbklb_sebelum",
-                      label: "status_kdbklb_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y5_sebelum",
-                      label: "izin_air_y5_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y6_sebelum",
-                      label: "izin_air_y6_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y7_sebelum",
-                      label: "izin_air_y7_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y8_sebelum",
-                      label: "izin_air_y8_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y9_sebelum",
-                      label: "izin_air_y9_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_y10_sebelum",
-                      label: "izin_air_y10_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y6_sebelum",
-                      label: "izin_macet_y6_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y7_sebelum",
-                      label: "izin_macet_y7_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y8_sebelum",
-                      label: "izin_macet_y8_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y9_sebelum",
-                      label: "izin_macet_y9_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_y10_sebelum",
-                      label: "izin_macet_y10_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
-
-          const persilSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sesudah/persiltanah_izin/FeatureServer/0",
-            title: "Persil Tanah - Sesudah",
-            popupTemplate: {
-              title: "Persil Tanah - Sesudah",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
+                      fieldName: "ktb",
+                      label: "ktb",
                     },
                     {
                       fieldName: "lantai_max",
                       label: "lantai_max",
                     },
-                    {
-                      fieldName: "nib",
-                      label: "nib",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_sampah",
-                      label: "izin_sampah",
-                    },
-                    {
-                      fieldName: "izin_banjir",
-                      label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
                   ],
                 },
               ],
@@ -3756,332 +1527,26 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
-          const jalanSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sesudah/jaringan_jalan/FeatureServer/0",
-            title: "Jaringan Jalan - Sesudah",
-            popupTemplate: {
-              title: "Jaringan Jalan - Sesudah",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "orde01",
-                      label: "orde01",
-                    },
-                    {
-                      fieldName: "orde02",
-                      label: "orde02",
-                    },
-                    {
-                      fieldName: "jnsrsr",
-                      label: "jnsrsr",
-                    },
-                    {
-                      fieldName: "stsjrn",
-                      label: "stsjrn",
-                    },
-                    {
-                      fieldName: "sbdata",
-                      label: "sbdata",
-                    },
-                    {
-                      fieldName: "lebar",
-                      label: "lebar",
-                    },
-                    {
-                      fieldName: "los",
-                      label: "los",
-                    },
-                    {
-                      fieldName: "bangkitan",
-                      label: "bangkitan",
-                    },
-                    {
-                      fieldName: "bangkitan_ruasjalan",
-                      label: "bangkitan_ruasjalan",
-                    },
-                    {
-                      fieldName: "kapasitas",
-                      label: "kapasitas",
-                    },
-                    {
-                      fieldName: "los_num",
-                      label: "los_num",
-                    },
-                    {
-                      fieldName: "x1",
-                      label: "x1",
-                    },
-                    {
-                      fieldName: "x2",
-                      label: "x2",
-                    },
-                    {
-                      fieldName: "y1",
-                      label: "y1",
-                    },
-                    {
-                      fieldName: "y2",
-                      label: "y2",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["namobj", "kapasitas"],
-            editingEnabled: false,
+          let utamaGroupLayer = new GroupLayer({
+            title: "Layer Utama",
+            layers: [polaRuangVersioningLayer, persilTanahSesudahLayer, kapasitasAirLayer, jalanSesudahLayer, bangunanSesudahLayer],
+          });
+          let tambahanGroupLayer = new GroupLayer({
+            title: "Layer Tambahan",
+            layers: [basemapPolaRuangLayer, polaRuangEnvelopeLayer, persilTanahBpn, buildingsEnvelopeLayer],
           });
 
-          const polaRuangSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sesudah/zonasi_izin/FeatureServer/0",
-            title: "Zonasi - Sesudah",
-            popupTemplate: {
-              title: "Zonasi - Sesudah",
-              content: [
-                {
-                  type: "fields",
-                  fieldInfos: [
-                    {
-                      fieldName: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      fieldName: "namzon",
-                      label: "namzon",
-                    },
-                    {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
-                    },
-                    {
-                      fieldName: "wadmkc",
-                      label: "wadmkc",
-                    },
-                    {
-                      fieldName: "wadmkd",
-                      label: "wadmkd",
-                    },
-                    {
-                      fieldName: "kkop_1",
-                      label: "kkop_1",
-                    },
-                    {
-                      fieldName: "lp2b_2",
-                      label: "lp2b_2",
-                    },
-                    {
-                      fieldName: "krb_03",
-                      label: "krb_03",
-                    },
-                    {
-                      fieldName: "tod_04",
-                      label: "tod_04",
-                    },
-                    {
-                      fieldName: "teb_05",
-                      label: "teb_05",
-                    },
-                    {
-                      fieldName: "cagbud",
-                      label: "cagbud",
-                    },
-                    {
-                      fieldName: "hankam",
-                      label: "hankam",
-                    },
-                    {
-                      fieldName: "puslit",
-                      label: "puslit",
-                    },
-                    {
-                      fieldName: "tpz_00",
-                      label: "tpz_00",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
-                    },
-                    {
-                      fieldName: "kdb",
-                      label: "kdb",
-                    },
-                    {
-                      fieldName: "klb",
-                      label: "klb",
-                    },
-                    {
-                      fieldName: "kdh",
-                      label: "kdh",
-                    },
-                    {
-                      fieldName: "lantai_max",
-                      label: "lantai_max",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_sampah",
-                      label: "izin_sampah",
-                    },
-                    {
-                      fieldName: "izin_banjir",
-                      label: "izin_banjir",
-                    },
-                    {
-                      fieldName: "namazona_sebelum",
-                      label: "namazona_sebelum",
-                    },
-                    {
-                      fieldName: "kdzona_sebelum",
-                      label: "kdzona_sebelum",
-                    },
-                    {
-                      fieldName: "namaszona_sebelum",
-                      label: "namaszona_sebelum",
-                    },
-                    {
-                      fieldName: "kdszona_sebelum",
-                      label: "kdszona_sebelum",
-                    },
-                    {
-                      fieldName: "kdb_sebelum",
-                      label: "kdb_sebelum",
-                    },
-                    {
-                      fieldName: "klb_sebelum",
-                      label: "klb_sebelum",
-                    },
-                    {
-                      fieldName: "kdh_sebelum",
-                      label: "kdh_sebelum",
-                    },
-                    {
-                      fieldName: "gsb_sebelum",
-                      label: "gsb_sebelum",
-                    },
-                    {
-                      fieldName: "ktb_sebelum",
-                      label: "ktb_sebelum",
-                    },
-                    {
-                      fieldName: "lantai_max_sebelum",
-                      label: "lantai_max_sebelum",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                  ],
-                },
-              ],
-            },
-            outFields: ["*"],
-            editingEnabled: false,
-          });
+          map.addMany([tambahanGroupLayer, utamaGroupLayer, buildings3dLayer]);
 
-          let sesudahGroupLayer = new GroupLayer({
-            title: "Sesudah",
-            layers: [polaRuangSesudahLayer, jalanSesudahLayer, persilSesudahLayer, bangunanSesudahLayer],
-          });
-
-          let kdbKlbGroupLayer = new GroupLayer({
-            title: "Pembangunan Optimum",
-            layers: [polaRuangKdbKlbLayer, persilTanahKdbKlbLayer, buildingsKdbKlbLayer],
-          });
-          let kemacetanGroupLayer = new GroupLayer({
-            title: "Transportasi",
-            layers: [kemacetanJaringanJalanLayer, polaRuangKemacetanLayer, persilTanahKemacetanLayer, buildingsKemacetanLayer],
-          });
-          let airBersihGroupLayer = new GroupLayer({
-            title: "Air Bersih",
-            layers: [airBersihPdamLayer, polaRuangAirBersihLayer, persilTanahAirBersihLayer, buildingsAirBersihLayer],
-          });
-
-          map.addMany([
-            basemapPolaRuangLayer,
-            polaRuangVersioningLayer,
-            polaRuangEnvelopeLayer,
-            persilTanahBpn,
-            airBersihGroupLayer,
-            kemacetanGroupLayer,
-            kdbKlbGroupLayer,
-            sesudahGroupLayer,
-            sebelumGroupLayer,
-            buildingsEnvelopeLayer,
-            buildingsLayer,
-            buildings3dLayer,
-          ]);
-
-          basemapPolaRuangLayer.visible = false;
-          airBersihPdamLayer.visible = false;
-          kemacetanJaringanJalanLayer.visible = false;
-          polaRuangKemacetanLayer.visible = false;
-          polaRuangAirBersihLayer.visible = false;
-          polaRuangKdbKlbLayer.visible = false;
-          polaRuangEnvelopeLayer.visible = false;
-          persilTanahBpn.visible = false;
-          persilTanahKemacetanLayer.visible = false;
-          persilTanahAirBersihLayer.visible = false;
-          persilTanahKdbKlbLayer.visible = false;
-          buildingsKemacetanLayer.visible = false;
-          buildingsAirBersihLayer.visible = false;
-          buildingsKdbKlbLayer.visible = false;
-          buildings3dLayer.visible = false;
-          polaRuangSebelumLayer.visible = false;
-          jalanSebelumLayer.visible = false;
-          persilSebelumLayer.visible = false;
-          bangunanSebelumLayer.visible = false;
-          polaRuangSesudahLayer.visible = false;
           jalanSesudahLayer.visible = false;
-          persilSesudahLayer.visible = false;
-          bangunanSesudahLayer.visible = false;
+          polaRuangVersioningLayer.visible = false;
+          persilTanahSesudahLayer.visible = false;
+          kapasitasAirLayer.visible = false;
+          persilTanahBpn.visible = false;
+          buildingsEnvelopeLayer.visible = false;
+          basemapPolaRuangLayer.visible = false;
+          polaRuangEnvelopeLayer.visible = false;
+          buildings3dLayer.visible = false;
 
           async function finishLayer() {
             if (isMounted) {
@@ -4091,7 +1556,7 @@ const SimulasiMap = () => {
 
           var highlight = null;
           view
-            .whenLayerView(buildingsLayer)
+            .whenLayerView(bangunanSesudahLayer)
             .then((layerView) => {
               return watchUtils.whenFalseOnce(layerView, "updating");
             })
@@ -4197,7 +1662,7 @@ const SimulasiMap = () => {
               view: view,
               layerInfos: [
                 {
-                  layer: buildingsLayer,
+                  layer: bangunanSesudahLayer,
                   enabled: true,
                   addEnabled: true,
                   updateEnabled: true,
@@ -4218,7 +1683,7 @@ const SimulasiMap = () => {
                   ],
                 },
                 {
-                  layer: kemacetanJaringanJalanLayer,
+                  layer: jalanSesudahLayer,
                   enabled: true,
                   addEnabled: true,
                   updateEnabled: true,
@@ -4292,22 +1757,15 @@ const SimulasiMap = () => {
             });
             const handleMarking = () => {
               view.container.classList.add("screenshotCursor");
+              jalanSesudahLayer.popupEnabled = false;
               polaRuangVersioningLayer.popupEnabled = false;
-              airBersihPdamLayer.popupEnabled = false;
-              kemacetanJaringanJalanLayer.popupEnabled = false;
-              polaRuangKemacetanLayer.popupEnabled = false;
-              polaRuangAirBersihLayer.popupEnabled = false;
-              polaRuangKdbKlbLayer.popupEnabled = false;
-              polaRuangEnvelopeLayer.popupEnabled = false;
+              persilTanahSesudahLayer.popupEnabled = false;
+              kapasitasAirLayer.popupEnabled = false;
               persilTanahBpn.popupEnabled = false;
-              persilTanahKemacetanLayer.popupEnabled = false;
-              persilTanahAirBersihLayer.popupEnabled = false;
-              persilTanahKdbKlbLayer.popupEnabled = false;
-              buildingsKemacetanLayer.popupEnabled = false;
-              buildingsAirBersihLayer.popupEnabled = false;
-              buildingsKdbKlbLayer.popupEnabled = false;
               buildingsEnvelopeLayer.popupEnabled = false;
-              buildingsLayer.popupEnabled = false;
+              basemapPolaRuangLayer.popupEnabled = false;
+              polaRuangEnvelopeLayer.popupEnabled = false;
+              bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
               view.on("click", function (event) {
                 // Remove the previous highlights
@@ -4316,7 +1774,7 @@ const SimulasiMap = () => {
                 }
                 let pointBuildings = event.mapPoint;
 
-                view.whenLayerView(buildingsLayer).then(function (buildingsLayerView) {
+                /* view.whenLayerView(buildingsLayer).then(function (buildingsLayerView) {
                   var query = buildingsLayer.createQuery();
                   query.geometry = pointBuildings;
                   buildingsLayerView.queryFeatures(query).then(function (result) {
@@ -4339,7 +1797,7 @@ const SimulasiMap = () => {
                       setResPersilTanah({});
                     }
                   });
-                });
+                }); */
               });
             };
             document.getElementById("markingBuildings").addEventListener("click", handleMarking);
@@ -4374,29 +1832,22 @@ const SimulasiMap = () => {
 
             const selectBuildingPrint = () => {
               view.container.classList.add("screenshotCursor");
+              jalanSesudahLayer.popupEnabled = false;
               polaRuangVersioningLayer.popupEnabled = false;
-              airBersihPdamLayer.popupEnabled = false;
-              kemacetanJaringanJalanLayer.popupEnabled = false;
-              polaRuangKemacetanLayer.popupEnabled = false;
-              polaRuangAirBersihLayer.popupEnabled = false;
-              polaRuangKdbKlbLayer.popupEnabled = false;
-              polaRuangEnvelopeLayer.popupEnabled = false;
+              persilTanahSesudahLayer.popupEnabled = false;
+              kapasitasAirLayer.popupEnabled = false;
               persilTanahBpn.popupEnabled = false;
-              persilTanahKemacetanLayer.popupEnabled = false;
-              persilTanahAirBersihLayer.popupEnabled = false;
-              persilTanahKdbKlbLayer.popupEnabled = false;
-              buildingsKemacetanLayer.popupEnabled = false;
-              buildingsAirBersihLayer.popupEnabled = false;
-              buildingsKdbKlbLayer.popupEnabled = false;
               buildingsEnvelopeLayer.popupEnabled = false;
-              buildingsLayer.popupEnabled = false;
+              basemapPolaRuangLayer.popupEnabled = false;
+              polaRuangEnvelopeLayer.popupEnabled = false;
+              bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
               view.on("click", function (event) {
                 let pointBuildings = event.mapPoint;
 
-                var query = buildingsLayer.createQuery();
+                var query = bangunanSesudahLayer.createQuery();
                 query.geometry = pointBuildings;
-                buildingsLayer.queryFeatures(query).then(function (result) {
+                bangunanSesudahLayer.queryFeatures(query).then(function (result) {
                   if (result.features.length > 0) {
                     result.features.forEach(function (feature) {
                       var objectId = feature.attributes.objectid_1;
@@ -4438,21 +1889,15 @@ const SimulasiMap = () => {
               container: document.createElement("div"),
               view: view,
               layerInfos: [
+                { layer: jalanSesudahLayer },
                 { layer: polaRuangVersioningLayer },
-                { layer: airBersihPdamLayer },
-                { layer: kemacetanJaringanJalanLayer },
-                { layer: polaRuangKemacetanLayer },
-                { layer: polaRuangAirBersihLayer },
-                { layer: polaRuangKdbKlbLayer },
-                { layer: polaRuangEnvelopeLayer },
+                { layer: persilTanahSesudahLayer },
+                { layer: kapasitasAirLayer },
                 { layer: persilTanahBpn },
-                { layer: persilTanahKemacetanLayer },
-                { layer: persilTanahAirBersihLayer },
-                { layer: persilTanahKdbKlbLayer },
-                { layer: buildingsKemacetanLayer },
-                { layer: buildingsAirBersihLayer },
-                { layer: buildingsKdbKlbLayer },
-                { layer: buildingsLayer },
+                { layer: buildingsEnvelopeLayer },
+                { layer: basemapPolaRuangLayer },
+                { layer: polaRuangEnvelopeLayer },
+                { layer: bangunanSesudahLayer },
                 { layer: buildings3dLayer },
               ],
             });
@@ -4572,11 +2017,7 @@ const SimulasiMap = () => {
                   fieldsArr.push({ field_name: fieldVal.name, field_value: features[0].attributes[fieldVal.name] });
                 }
               });
-              if (
-                features[0].layer.title === "Bangunan - Pembangunan Optimum" ||
-                features[0].layer.title === "Bangunan - Air Bersih" ||
-                features[0].layer.title === "Bangunan - Transportasi"
-              ) {
+              if (features[0].layer.title === "Bangunan") {
                 setContentBangunanKdbKlb([
                   {
                     field_name: "jenis",
@@ -4881,6 +2322,34 @@ const SimulasiMap = () => {
                   {
                     field_name: "kabkot",
                     field_value: features[0].attributes.kabkot,
+                  },
+                  {
+                    field_name: "namaszona",
+                    field_value: features[0].attributes.namaszona,
+                  },
+                  {
+                    field_name: "lantai_max",
+                    field_value: features[0].attributes.lantai_max,
+                  },
+                  {
+                    field_name: "kdb",
+                    field_value: features[0].attributes.kdb,
+                  },
+                  {
+                    field_name: "klb",
+                    field_value: features[0].attributes.klb,
+                  },
+                  {
+                    field_name: "kdh",
+                    field_value: features[0].attributes.kdh,
+                  },
+                  {
+                    field_name: "fa_max",
+                    field_value: features[0].attributes.fa_max,
+                  },
+                  {
+                    field_name: "q_arus",
+                    field_value: features[0].attributes.q_arus,
                   },
                 ]);
                 setHasilSimulasiBangunanKdbKlb(features[0].attributes.melampaui_tinggi);
@@ -6129,8 +3598,9 @@ const SimulasiMap = () => {
                   bottom: "0",
                   zIndex: "9999",
                   width: "350px",
-                  height: "100vh",
-                  minHeight: "100%",
+                  height: "90vh",
+                  overflow: "auto",
+                  /* minHeight: "100%", */
                   background: "#F8FAFC",
                 }}
               >
@@ -6165,7 +3635,7 @@ const SimulasiMap = () => {
                 >
                   {showingPopup.title}
                 </p>
-                {showingPopup.title === "Bangunan - Pembangunan Optimum" || showingPopup.title === "Bangunan - Air Bersih" || showingPopup.title === "Bangunan - Transportasi" ? (
+                {showingPopup.title === "Bangunan" ? (
                   <>
                     {/* start popup sebelumsesudah */}
                     <div className="switch-sebelum-sesudah">
@@ -6206,6 +3676,46 @@ const SimulasiMap = () => {
                                     <td>Status KDB/KLB</td>
                                     <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[2].field_value : contentBangunanKdbKlb[3].field_value}</td>
                                   </tr>
+                                  <tr>
+                                    <td>Jenis Bangunan</td>
+                                    <td>{contentBangunanKdbKlb[1].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Nama Sub Zoba</td>
+                                    <td>{contentBangunanKdbKlb[60].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Jumlah Lantai</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[16].field_value : contentBangunanKdbKlb[17].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Floor Area</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[20].field_value : contentBangunanKdbKlb[21].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Jumlah Lantai Max</td>
+                                    <td>{contentBangunanKdbKlb[61].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Floor Area Max</td>
+                                    <td>{contentBangunanKdbKlb[65].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>KDB</td>
+                                    <td>{contentBangunanKdbKlb[62].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>KLB</td>
+                                    <td>{contentBangunanKdbKlb[63].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>KDH</td>
+                                    <td>{contentBangunanKdbKlb[64].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Luas Tapak</td>
+                                    <td>{contentBangunanKdbKlb[19].field_value}</td>
+                                  </tr>
                                 </tbody>
                               </table>
                             </div>
@@ -6237,8 +3747,33 @@ const SimulasiMap = () => {
                                 <tbody>
                                   <tr>
                                     <td>Status Kemacetan</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[10].field_value : contentBangunanKdbKlb[11].field_value}</td>
+                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
+                                  </tr>
+                                  <tr>
+                                    <td>Jenis Bangunan</td>
+                                    <td>{contentBangunanKdbKlb[1].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Nama Sub Zoba</td>
+                                    <td>{contentBangunanKdbKlb[60].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>LOS</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[14].field_value : contentBangunanKdbKlb[15].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>LOS Num</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[12].field_value : contentBangunanKdbKlb[13].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Arus</td>
+                                    <td>{contentBangunanKdbKlb[66].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Kapasitas</td>
+                                    <td>{contentBangunanKdbKlb[52].field_value}</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -6271,7 +3806,24 @@ const SimulasiMap = () => {
                                 <tbody>
                                   <tr>
                                     <td>Status Air Bersih</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[8].field_value : contentBangunanKdbKlb[9].field_value}</td>
+                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
+                                  </tr>
+                                  <tr>
+                                    <td>Jenis Bangunan</td>
+                                    <td>{contentBangunanKdbKlb[1].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Nama Sub Zoba</td>
+                                    <td>{contentBangunanKdbKlb[60].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Kebutuhan Air Harian</td>
+                                    <td>{contentBangunanKdbKlb[37].field_value}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Supply Air PDAM Harian</td>
+                                    <td>{contentBangunanKdbKlb[36].field_value}</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -6283,7 +3835,7 @@ const SimulasiMap = () => {
                     {/* end popup sebelumsesudah */}
                   </>
                 ) : (
-                  <div className="table-responsive" style={{ position: "absolute", height: "calc(100% - 105px)", width: "350px", overflow: "auto" }}>
+                  <div className="table-responsive" style={{ position: "absolute", height: "calc(100% - 50px)", overflow: "auto" }}>
                     <table className="table">
                       <tbody>
                         {contentGeneral.map((fieldMap, i) => (
