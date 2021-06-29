@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, ManajemenDataInput, ManajemenDataInputPhase2, Simulasi, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, RoleManagement, RoleManagementEdit, RoleManagementCreate, UserManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit, HelpData, HelpDataFaq, DataManagement, ManajemenDataInputWater, ManajemenDataInputTrash, ManajemenDataInputFlood, ManajemenDataInputCongestion, ManajemenDataInputKdb } from "./pages";
+import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, DataManagementInput, DataManagementInputPhase2, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, RoleManagement, RoleManagementEdit, RoleManagementCreate, UserManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit, HelpData, HelpDataFaq, DataManagement, DataManagementInputWater, DataManagementInputTrash, DataManagementInputFlood, DataManagementInputCongestion, DataManagementInputKdb, SimulationTable, SimulationInput } from "./pages";
 
 function App() {
   return (
@@ -17,15 +17,16 @@ function App() {
           <Route path="/forgotpassword" component={ForgotPassword} />
           <Route path="/reset/password" component={ResetPassword} />
           <Route path="/datamanagement" component={DataManagement} />
-          <Route path="/datamanagementinput/kebutuhandata" component={ManajemenDataInputPhase2} />
-          <Route path="/datamanagementinput/kdbklb" component={ManajemenDataInputKdb} />
-          <Route path="/datamanagementinput/water" component={ManajemenDataInputWater} />
-          <Route path="/datamanagementinput/trash" component={ManajemenDataInputTrash} />
-          <Route path="/datamanagementinput/flood" component={ManajemenDataInputFlood} />
-          <Route path="/datamanagementinput/congestion" component={ManajemenDataInputCongestion} />
-          <Route path="/datamanagementinput" component={ManajemenDataInput} />
-          <Route path="/simulation" component={Simulasi} />
+          <Route path="/datamanagementinput/kebutuhandata" component={DataManagementInputPhase2} />
+          <Route path="/datamanagementinput/kdbklb" component={DataManagementInputKdb} />
+          <Route path="/datamanagementinput/water" component={DataManagementInputWater} />
+          <Route path="/datamanagementinput/trash" component={DataManagementInputTrash} />
+          <Route path="/datamanagementinput/flood" component={DataManagementInputFlood} />
+          <Route path="/datamanagementinput/congestion" component={DataManagementInputCongestion} />
+          <Route path="/datamanagementinput" component={DataManagementInput} />
+          <Route path="/simulation" component={SimulationTable} />
           <Route path="/simulasimap" component={SimulasiMap} />
+          <Route path="/simulationinput" component={SimulationInput} />
           <Route path="/resentmailconfirmation" component={ResentEmailConfirmation} />
           <Route path="/usermanagement/create" component={UserManagementCreate} />
           <Route path="/usermanagement/edit" render={props => <UserManagementEdit {...props}/>} />

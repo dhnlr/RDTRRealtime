@@ -8,7 +8,7 @@ import { config } from "../../Constants";
 import { Header, Menu, Footer, ProgressCircle } from "../../components";
 import Image from "./Group 3735.svg";
 
-function ManajemenDataInput() {
+function DataManagementInput() {
   let history = useHistory();
   let { state } = useLocation();
 
@@ -107,7 +107,7 @@ function ManajemenDataInput() {
           error.response?.data?.status?.message
             ? setErrMessage(error.response?.data?.status?.message)
             : setErrMessage(
-                "Gagal mendapatkan provinsi. Silahkan coba beberapa saat lagi."
+                "Gagal mendapatkan kota/kabupaten. Silahkan coba beberapa saat lagi."
               );
         });
     }
@@ -391,7 +391,7 @@ function ManajemenDataInput() {
                         )}
                       </div>
                       <div className="form-group">
-                        <label htmlFor="city">Kota</label>
+                        <label htmlFor="city">Kota / kabupaten</label>
                         <Controller
                           name="city"
                           control={control}
@@ -460,4 +460,4 @@ function ManajemenDataInput() {
   );
 }
 
-export default ManajemenDataInput;
+export default DataManagementInput;
