@@ -31,8 +31,7 @@ function SimulationTable() {
     if (!sessionStorage.token) {
       history.push("/login");
     }
-  }, [history])
-
+  }, [history]);
 
   const fetchData = React.useCallback(
     ({
@@ -75,16 +74,19 @@ function SimulationTable() {
                     headers: { Authorization: "Bearer " + sessionStorage.token }
                 }); */
           setIsProcessing(true);
-          const datas = await axios.get(config.url.API_URL + "/Simulasi/GetList", {
-            headers: { Authorization: "Bearer " + sessionStorage.token },
-            params: {
-              "input.pageSize": pageSize,
-              "input.page": pageIndexTbl + 1,
-              "input.orderProperty": sort,
-              "input.orderType": orderType,
-              "input.keyword": searchVal,
-            },
-          });
+          const datas = await axios.get(
+            config.url.API_URL + "/Simulasi/GetList",
+            {
+              headers: { Authorization: "Bearer " + sessionStorage.token },
+              params: {
+                "input.pageSize": pageSize,
+                "input.page": pageIndexTbl + 1,
+                "input.orderProperty": sort,
+                "input.orderType": orderType,
+                "input.keyword": searchVal,
+              },
+            }
+          );
 
           const fetchId = ++fetchIdRef.current;
           if (fetchId === fetchIdRef.current) {
@@ -165,19 +167,22 @@ function SimulationTable() {
             <div className="row">
               <div className="col-md-12 stretch-card mb-4">
                 {
-                  <div className="card" style={{background: "#80c3d1"}}>
+                  <div className="card" style={{ background: "#80c3d1" }}>
                     <div className="card-body">
                       <div className="row">
                         <div className="col-8 ">
                           <table style={{ height: "100%" }}>
                             <tbody>
                               <tr>
-                          
                                 {/* <td className="align-baseline">baseline</td>
                                 <td className="align-top">top</td> */}
-                                <td className="align-middle text-white"><h2 className="">Simulasi</h2>
-                                <p className=" font-weight-500 mb-2">Siapapun dapat melihat perencanaan secara publik</p>
-                                {/* <p className=" font-weight-400 mt-4"><i className="ti-help-alt"> </i>Butuh bantuan?</p> */}
+                                <td className="align-middle text-white">
+                                  <h2 className="">Simulasi</h2>
+                                  <p className=" font-weight-500 mb-2">
+                                    Siapapun dapat melihat perencanaan secara
+                                    publik
+                                  </p>
+                                  {/* <p className=" font-weight-400 mt-4"><i className="ti-help-alt"> </i>Butuh bantuan?</p> */}
                                 </td>
                                 {/* <td className="align-bottom">bottom</td>
                                 <td className="align-text-top">text-top</td>
@@ -186,7 +191,9 @@ function SimulationTable() {
                             </tbody>
                           </table>
                         </div>
-                        <div className="col-4 background-icon" /* style={{content:`url("${headerImage}")`, position: "absolute", right: 0, maxHeight: "10rem"}} */>
+                        <div
+                          className="col-4 background-icon" /* style={{content:`url("${headerImage}")`, position: "absolute", right: 0, maxHeight: "10rem"}} */
+                        >
                           {/* {<img src={headerImage} alt="header" style={{ width: "50%", float: "right" }}></img>} */}
                           <ImageDiv src={headerImage} alt="header"></ImageDiv>
                         </div>
@@ -247,10 +254,18 @@ function SimulationTable() {
 
             <div className="row">
               <div className="col-md-12 stretch-card mt-4 mb-2">
-                <img className="mr-2" src={buildingIcon} alt="building icon" style={{ float: "left", width: "3rem" }} />
+                <img
+                  className="mr-2"
+                  src={buildingIcon}
+                  alt="building icon"
+                  style={{ float: "left", width: "3rem" }}
+                />
                 <p>
-                  <span className="font-weight-bold ml-1 mr-1 align-middle" style={{ fontSize: 20 }}>
-                    Buat simulasi Anda
+                  <span
+                    className="font-weight-bold ml-1 mr-1 align-middle"
+                    style={{ fontSize: 20 }}
+                  >
+                    Buat Simulasi Anda
                   </span>
                   <button
                     className="btn btn-success ml-2"
@@ -303,8 +318,27 @@ function SimulationTable() {
                                 },
                                 {
                                   Header: "",
+                                  accessor: "action",
+                                  width: "15%",
+                                  disableGlobalFilter: true,
+                                  Cell: (row) => (
+                                    <div style={{ textAlign: "right" }}>
+                                      <Link to="/simulasimap">
+                                        <button
+                                          className="btn btn-outline-light btn-xs"
+                                          title="Peta Simulasi"
+                                        >
+                                            Lihat Simulasi
+                                        </button>
+                                      </Link>
+                                      &nbsp;
+                                    </div>
+                                  ),
+                                },
+                                {
+                                  Header: "",
                                   accessor: "id",
-                                  width: "20%",
+                                  width: "15%",
                                   disableGlobalFilter: true,
                                   Cell: (row) => (
                                     <div style={{ textAlign: "right" }}>
@@ -363,7 +397,6 @@ function SimulationTable() {
                 </div>
               </div>
             </div>
-
           </div>
           <Footer />
         </div>
@@ -379,6 +412,6 @@ const ImageDiv = styled.img`
   @media only screen and (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 export default SimulationTable;

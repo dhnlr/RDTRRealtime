@@ -13,7 +13,6 @@ function getScreenshotData(screenshot, id){
             }
         })
         .then(({data}) => {
-            console.log(data)
             var attr = data.features[0].attributes
             screenshot.id_bangunan = attr.id_bangunan
             screenshot.kabkot = attr.kabkot
