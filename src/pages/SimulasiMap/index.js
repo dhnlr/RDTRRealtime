@@ -3681,24 +3681,24 @@ const SimulasiMap = () => {
                                     <td>{contentBangunanKdbKlb[1].field_value}</td>
                                   </tr>
                                   <tr>
-                                    <td>Nama Sub Zoba</td>
+                                    <td>Nama Sub Zona</td>
                                     <td>{contentBangunanKdbKlb[60].field_value}</td>
                                   </tr>
                                   <tr>
                                     <td>Jumlah Lantai</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[16].field_value : contentBangunanKdbKlb[17].field_value}</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[16].field_value : contentBangunanKdbKlb[17].field_value} lantai</td>
                                   </tr>
                                   <tr>
-                                    <td>Floor Area</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[20].field_value : contentBangunanKdbKlb[21].field_value}</td>
+                                    <td>Luas Total Bangunan</td>
+                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[20].field_value : contentBangunanKdbKlb[21].field_value} m2</td>
                                   </tr>
                                   <tr>
-                                    <td>Jumlah Lantai Max</td>
-                                    <td>{contentBangunanKdbKlb[61].field_value}</td>
+                                    <td>Jumlah Lantai Maks</td>
+                                    <td>{contentBangunanKdbKlb[61].field_value} lantai</td>
                                   </tr>
                                   <tr>
-                                    <td>Floor Area Max</td>
-                                    <td>{contentBangunanKdbKlb[65].field_value}</td>
+                                    <td>Luas Total Bangunan Maks</td>
+                                    <td>{contentBangunanKdbKlb[65].field_value} m2</td>
                                   </tr>
                                   <tr>
                                     <td>KDB</td>
@@ -3714,7 +3714,7 @@ const SimulasiMap = () => {
                                   </tr>
                                   <tr>
                                     <td>Luas Tapak</td>
-                                    <td>{contentBangunanKdbKlb[19].field_value}</td>
+                                    <td>{contentBangunanKdbKlb[19].field_value} m2</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -3756,7 +3756,7 @@ const SimulasiMap = () => {
                                     <td>{contentBangunanKdbKlb[1].field_value}</td>
                                   </tr>
                                   <tr>
-                                    <td>Nama Sub Zoba</td>
+                                    <td>Nama Sub Zona</td>
                                     <td>{contentBangunanKdbKlb[60].field_value}</td>
                                   </tr>
                                   <tr>
@@ -3814,16 +3814,16 @@ const SimulasiMap = () => {
                                     <td>{contentBangunanKdbKlb[1].field_value}</td>
                                   </tr>
                                   <tr>
-                                    <td>Nama Sub Zoba</td>
+                                    <td>Nama Sub Zona</td>
                                     <td>{contentBangunanKdbKlb[60].field_value}</td>
                                   </tr>
                                   <tr>
                                     <td>Kebutuhan Air Harian</td>
-                                    <td>{contentBangunanKdbKlb[37].field_value}</td>
+                                    <td>{contentBangunanKdbKlb[37].field_value} liter/hari</td>
                                   </tr>
                                   <tr>
-                                    <td>Supply Air PDAM Harian</td>
-                                    <td>{contentBangunanKdbKlb[36].field_value}</td>
+                                    <td>Ketersediaan Air PDAM Harian</td>
+                                    <td>{contentBangunanKdbKlb[36].field_value} liter/hari</td>
                                   </tr>
                                 </tbody>
                               </table>
