@@ -9,10 +9,6 @@ import { Header, Menu, Footer, ProgressCircle } from "../../../components";
 import Image from "../../DataManagementInput/Group 3735.svg";
 
 function SimulationInput() {
-  const defaultVal = {
-    province: 2,
-    city: 1,
-  };
   let history = useHistory();
   let { state } = useLocation();
 
@@ -26,10 +22,8 @@ function SimulationInput() {
   const [listCity, setListCity] = useState([]);
   const [listProject, setListProject] = useState([]);
   const [{ province, city, project }, setData] = useState({
-    province: state
-      ? String(state?.project?.kotaKabupaten?.provinsi?.id)
-      : defaultVal.province,
-    city: state ? String(state?.project?.kotaKabupaten?.id) : defaultVal.city,
+    province: state ? String(state?.project?.kotaKabupaten?.provinsi?.id) : "",
+    city: state ? String(state?.project?.kotaKabupaten?.id) : "",
     project: state ? state?.projectId : "",
   });
   const [errMessage, setErrMessage] = useState(null);
@@ -232,11 +226,7 @@ function SimulationInput() {
     <option
       key={province.id}
       value={province.id}
-      selected={
-        province.id === (state
-          ? state?.project?.kotaKabupaten?.provinsi?.id
-          : defaultVal.province)
-      }
+      selected={province.id === state?.project?.kotaKabupaten?.provinsi?.id}
     >
       {province.name}
     </option>
@@ -246,9 +236,7 @@ function SimulationInput() {
     <option
       key={city.id}
       value={city.id}
-      selected={
-        city.id === (state ? state?.project?.kotaKabupaten?.id : defaultVal.city)
-      }
+      selected={city.id === state?.project?.kotaKabupaten?.id}
     >
       {city.name}
     </option>
@@ -338,7 +326,7 @@ function SimulationInput() {
                   <div className="col-5 d-none d-md-block d-lg-block">
                     <img src={Image} alt="input project" width="100%"></img>
                   </div>
-                  <div className="col-7">
+                  <div className="col-md-7">
                     <form
                       className="forms-sample"
                       onSubmit={handleSubmit(onSubmit)}
@@ -381,7 +369,7 @@ function SimulationInput() {
                           rules={{ required: "Provinsi harus diisi" }}
                         /> */}
                         <select
-                          className={`form-control p-input ${
+                          className={`form-control ${
                             errors.province ? "is-invalid" : ""
                           }`}
                           id="province"
@@ -392,6 +380,9 @@ function SimulationInput() {
                             required: "Provinsi harus diisi",
                           })}
                         >
+                          <option value="" disabled selected>
+                            Pilih provinsi
+                          </option>
                           {provinces}
                         </select>
                         {errors.province && (
@@ -415,7 +406,7 @@ function SimulationInput() {
                           rules={{ required: "Kota harus diisi" }}
                         /> */}
                         <select
-                          className={`form-control p-input ${
+                          className={`form-control ${
                             errors.city ? "is-invalid" : ""
                           }`}
                           id="city"
@@ -426,6 +417,9 @@ function SimulationInput() {
                             required: "Kota/kabupaten harus diisi",
                           })}
                         >
+                          <option value="" disabled selected>
+                            Pilih kota
+                          </option>
                           {cities}
                         </select>
                         {errors.city && (
@@ -449,7 +443,7 @@ function SimulationInput() {
                           rules={{ required: "Proyek harus diisi" }}
                         /> */}
                         <select
-                          className={`form-control p-input ${
+                          className={`form-control ${
                             errors.project ? "is-invalid" : ""
                           }`}
                           id="project"
@@ -460,6 +454,9 @@ function SimulationInput() {
                             required: "Proyek harus diisi",
                           })}
                         >
+                          <option value="" disabled selected>
+                            {city === "" ? "Pilih proyek" : "Tidak ada proyek"}
+                          </option>
                           {projects}
                         </select>
                         {errors.project && (

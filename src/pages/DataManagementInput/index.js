@@ -320,7 +320,7 @@ function DataManagementInput() {
                   <div className="col-5 d-none d-md-block d-lg-block">
                     <img src={Image} alt="input project" width="100%"></img>
                   </div>
-                  <div className="col-7">
+                  <div className="col-md-7">
                     <form
                       className="forms-sample"
                       onSubmit={handleSubmit(onSubmit)}
