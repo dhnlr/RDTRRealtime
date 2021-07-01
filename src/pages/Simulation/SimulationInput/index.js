@@ -78,8 +78,8 @@ function SimulationInput() {
         .then(({ data }) => {
           if (data.status.code === 200 && data.obj.length > 0) {
             setListCity(data.obj);
-            if (city === "")
-              setData((state) => ({ ...state, city: String(data.obj[0].id) }));
+            // if (city === "")
+            //   setData((state) => ({ ...state, city: String(data.obj[0].id) }));
           }
         })
         .catch((error) => {
@@ -94,7 +94,7 @@ function SimulationInput() {
 
   useEffect(() => {
     console.log("aa", city, province, listCity.length, listProvince.length);
-    if (listCity.length !== 0 && listProvince.length !== 0 && province !== "") {
+    if (listCity.length !== 0 && city!== "" && listProvince.length !== 0 && province !== "") {
       axios
         .get(config.url.API_URL + "/Project/GetAll", {
           headers: { Authorization: "Bearer " + sessionStorage.token },
@@ -128,8 +128,8 @@ function SimulationInput() {
       .then(({ data }) => {
         if (data.status.code === 200 && data.obj.length > 0) {
           setListCity(data.obj);
-          if (city === "")
-            setData((state) => ({ ...state, city: String(data.obj[0].id) }));
+          // if (city === "")
+          //   setData((state) => ({ ...state, city: String(data.obj[0].id) }));
         }
       })
       .catch((error) => {
@@ -455,7 +455,7 @@ function SimulationInput() {
                           })}
                         >
                           <option value="" disabled selected>
-                            {city === "" ? "Pilih proyek" : "Tidak ada proyek"}
+                            {city === "" || listProject.length !== 0 ? "Pilih proyek" : "Tidak ada proyek"}
                           </option>
                           {projects}
                         </select>
