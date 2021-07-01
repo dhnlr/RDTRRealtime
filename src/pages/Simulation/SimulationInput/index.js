@@ -9,14 +9,16 @@ import { Header, Menu, Footer, ProgressCircle } from "../../../components";
 import Image from "../../DataManagementInput/Group 3735.svg";
 
 function SimulationInput() {
+  const defaultVal = {
+    province: 2,
+    city: 1,
+  };
   let history = useHistory();
   let { state } = useLocation();
 
   const { register, errors, control, handleSubmit } = useForm({
     defaultValues: {
-      name: state
-        ? state?.name
-        : "",
+      name: state ? state?.name : "",
     },
   });
 
@@ -24,9 +26,11 @@ function SimulationInput() {
   const [listCity, setListCity] = useState([]);
   const [listProject, setListProject] = useState([]);
   const [{ province, city, project }, setData] = useState({
-    province: state ? String(state?.project?.kotaKabupaten?.provinsi?.id) : "2",
-    city: state ? String(state?.project?.kotaKabupaten?.id) : "2",
-    project: state ? state?.projectId : ""
+    province: state
+      ? String(state?.project?.kotaKabupaten?.provinsi?.id)
+      : defaultVal.province,
+    city: state ? String(state?.project?.kotaKabupaten?.id) : defaultVal.city,
+    project: state ? state?.projectId : "",
   });
   const [errMessage, setErrMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -80,7 +84,8 @@ function SimulationInput() {
         .then(({ data }) => {
           if (data.status.code === 200 && data.obj.length > 0) {
             setListCity(data.obj);
-            if(city === "") setData((state) => ({ ...state, city: String(data.obj[0].id) }))
+            if (city === "")
+              setData((state) => ({ ...state, city: String(data.obj[0].id) }));
           }
         })
         .catch((error) => {
@@ -91,31 +96,32 @@ function SimulationInput() {
               );
         });
     }
-  }, [listProvince, province,]);
+  }, [listProvince, province]);
 
   useEffect(() => {
-    if (listCity.length !== 0 && city !== "" && listProvince.length !== 0 && province !== "") {
-        axios
-          .get(config.url.API_URL + "/Project/GetAll", {
-            headers: { Authorization: "Bearer " + sessionStorage.token },
-            params: {
-                KotaKabupatenId: city,
-            },
-          })
-          .then(({ data }) => {
-            if (data.status.code === 200) {
-              setListProject(data.obj);
-            }
-          })
-          .catch((error) => {
-            error.response?.data?.status?.message
-              ? setErrMessage(error.response?.data?.status?.message)
-              : setErrMessage(
-                  "Gagal mendapatkan proyek. Silahkan coba beberapa saat lagi."
-                );
-          });
-      }
-  }, [listCity, city,]);
+    console.log("aa", city, province, listCity.length, listProvince.length);
+    if (listCity.length !== 0 && listProvince.length !== 0 && province !== "") {
+      axios
+        .get(config.url.API_URL + "/Project/GetAll", {
+          headers: { Authorization: "Bearer " + sessionStorage.token },
+          params: {
+            KotaKabupatenId: city,
+          },
+        })
+        .then(({ data }) => {
+          if (data.status.code === 200) {
+            setListProject(data.obj);
+          }
+        })
+        .catch((error) => {
+          error.response?.data?.status?.message
+            ? setErrMessage(error.response?.data?.status?.message)
+            : setErrMessage(
+                "Gagal mendapatkan proyek. Silahkan coba beberapa saat lagi."
+              );
+        });
+    }
+  }, [listCity]);
 
   const handleProvinceChange = (event) => {
     axios
@@ -128,7 +134,8 @@ function SimulationInput() {
       .then(({ data }) => {
         if (data.status.code === 200 && data.obj.length > 0) {
           setListCity(data.obj);
-          if(city === "") setData((state) => ({ ...state, city: String(data.obj[0].id) }))
+          if (city === "")
+            setData((state) => ({ ...state, city: String(data.obj[0].id) }));
         }
       })
       .catch((error) => {
@@ -143,24 +150,24 @@ function SimulationInput() {
 
   function handleCityChange(event) {
     axios
-    .get(config.url.API_URL + "/Project/GetAll", {
-      headers: { Authorization: "Bearer " + sessionStorage.token },
-      params: {
+      .get(config.url.API_URL + "/Project/GetAll", {
+        headers: { Authorization: "Bearer " + sessionStorage.token },
+        params: {
           KotaKabupatenId: event.target.value,
-      },
-    })
-    .then(({ data }) => {
-      if (data.status.code === 200) {
-        setListProject(data.obj);
-      }
-    })
-    .catch((error) => {
-      error.response?.data?.status?.message
-        ? setErrMessage(error.response?.data?.status?.message)
-        : setErrMessage(
-            "Gagal mendapatkan proyek. Silahkan coba beberapa saat lagi."
-          );
-    });
+        },
+      })
+      .then(({ data }) => {
+        if (data.status.code === 200) {
+          setListProject(data.obj);
+        }
+      })
+      .catch((error) => {
+        error.response?.data?.status?.message
+          ? setErrMessage(error.response?.data?.status?.message)
+          : setErrMessage(
+              "Gagal mendapatkan proyek. Silahkan coba beberapa saat lagi."
+            );
+      });
     setData((data) => ({ ...data, city: event.target.value }));
   }
 
@@ -222,19 +229,37 @@ function SimulationInput() {
   };
 
   const provinces = listProvince.map((province) => (
-    <option key={province.id} value={province.id} selected={province.id === state?.project?.kotaKabupaten?.provinsi?.id}>
+    <option
+      key={province.id}
+      value={province.id}
+      selected={
+        province.id === (state
+          ? state?.project?.kotaKabupaten?.provinsi?.id
+          : defaultVal.province)
+      }
+    >
       {province.name}
     </option>
   ));
 
   const cities = listCity.map((city) => (
-    <option key={city.id} value={city.id} selected={city.id === state?.project?.kotaKabupaten?.id}>
+    <option
+      key={city.id}
+      value={city.id}
+      selected={
+        city.id === (state ? state?.project?.kotaKabupaten?.id : defaultVal.city)
+      }
+    >
       {city.name}
     </option>
   ));
 
   const projects = listProject.map((project) => (
-    <option key={project.id} value={project.id} selected={project.id === state?.projectId}>
+    <option
+      key={project.id}
+      value={project.id}
+      selected={project.id === state?.projectId}
+    >
       {project.projectName}
     </option>
   ));
@@ -356,19 +381,19 @@ function SimulationInput() {
                           rules={{ required: "Provinsi harus diisi" }}
                         /> */}
                         <select
-                              className={`form-control p-input ${
-                                errors.province ? "is-invalid" : ""
-                              }`}
-                              id="province"
-                              name="province"
-                              // value  ={province}
-                              onChange={handleProvinceChange}
-                              ref={register({
-                                required: "Provinsi harus diisi",
-                              })}
-                            >
-                              {provinces}
-                            </select>
+                          className={`form-control p-input ${
+                            errors.province ? "is-invalid" : ""
+                          }`}
+                          id="province"
+                          name="province"
+                          // value  ={province}
+                          onChange={handleProvinceChange}
+                          ref={register({
+                            required: "Provinsi harus diisi",
+                          })}
+                        >
+                          {provinces}
+                        </select>
                         {errors.province && (
                           <small
                             id="nameHelp"
@@ -390,19 +415,19 @@ function SimulationInput() {
                           rules={{ required: "Kota harus diisi" }}
                         /> */}
                         <select
-                              className={`form-control p-input ${
-                                errors.city ? "is-invalid" : ""
-                              }`}
-                              id="city"
-                              name="city"
-                              // value={city}
-                              onChange={handleCityChange}
-                              ref={register({
-                                required: "Kota/kabupaten harus diisi",
-                              })}
-                            >
-                              {cities}
-                            </select>
+                          className={`form-control p-input ${
+                            errors.city ? "is-invalid" : ""
+                          }`}
+                          id="city"
+                          name="city"
+                          // value={city}
+                          onChange={handleCityChange}
+                          ref={register({
+                            required: "Kota/kabupaten harus diisi",
+                          })}
+                        >
+                          {cities}
+                        </select>
                         {errors.city && (
                           <small
                             id="nameHelp"
@@ -424,19 +449,19 @@ function SimulationInput() {
                           rules={{ required: "Proyek harus diisi" }}
                         /> */}
                         <select
-                              className={`form-control p-input ${
-                                errors.project ? "is-invalid" : ""
-                              }`}
-                              id="project"
-                              name="project"
-                              // value={project}
-                              onChange={handleProjectChange}
-                              ref={register({
-                                required: "Proyek harus diisi",
-                              })}
-                            >
-                              {projects}
-                            </select>
+                          className={`form-control p-input ${
+                            errors.project ? "is-invalid" : ""
+                          }`}
+                          id="project"
+                          name="project"
+                          // value={project}
+                          onChange={handleProjectChange}
+                          ref={register({
+                            required: "Proyek harus diisi",
+                          })}
+                        >
+                          {projects}
+                        </select>
                         {errors.project && (
                           <small
                             id="nameHelp"
