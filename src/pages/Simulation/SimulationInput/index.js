@@ -93,7 +93,6 @@ function SimulationInput() {
   }, [listProvince, province]);
 
   useEffect(() => {
-    console.log("aa", city, province, listCity.length, listProvince.length);
     if (listCity.length !== 0 && city!== "" && listProvince.length !== 0 && province !== "") {
       axios
         .get(config.url.API_URL + "/Project/GetAll", {
