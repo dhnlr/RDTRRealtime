@@ -462,7 +462,6 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["*"],
-            editingEnabled: false,
           });
 
           const kapasitasAirLayer = new FeatureLayer({
@@ -1774,15 +1773,15 @@ const SimulasiMap = () => {
                 }
                 let pointBuildings = event.mapPoint;
 
-                /* view.whenLayerView(buildingsLayer).then(function (buildingsLayerView) {
-                  var query = buildingsLayer.createQuery();
+                view.whenLayerView(bangunanSesudahLayer).then(function (bangunanSesudahLayerView) {
+                  var query = bangunanSesudahLayer.createQuery();
                   query.geometry = pointBuildings;
-                  buildingsLayerView.queryFeatures(query).then(function (result) {
+                  bangunanSesudahLayerView.queryFeatures(query).then(function (result) {
                     if (result.features.length > 0) {
                       result.features.forEach(function (feature) {
                         var objectId = feature.attributes.objectid_1;
                         // Highlight the feature passing the objectId to the method
-                        highlight = buildingsLayerView.highlight(objectId);
+                        highlight = bangunanSesudahLayerView.highlight(objectId);
                         setSelectBuildings(false);
                         setRunAnalysis(true);
                         setInputX(event.mapPoint.x);
@@ -1797,7 +1796,7 @@ const SimulasiMap = () => {
                       setResPersilTanah({});
                     }
                   });
-                }); */
+                });
               });
             };
             document.getElementById("markingBuildings").addEventListener("click", handleMarking);
