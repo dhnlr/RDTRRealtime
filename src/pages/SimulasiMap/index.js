@@ -1959,22 +1959,22 @@ const SimulasiMap = () => {
                   },
                 }),
                 new Bookmark({
-                  name: "Bengkalis",
+                  name: "Kel. Kebon Kalapa",
                   viewpoint: {
                     targetGeometry: {
                       type: "extent",
                       spatialReference: {
                         wkid: 102100,
                       },
-                      xmin: 11307182.57,
-                      ymin: 212556.4,
-                      xmax: 11341104.52,
-                      ymax: 239168.92,
+                      xmin: 11887075.39,
+                      ymin: -735077.55,
+                      xmax: 11887416.27,
+                      ymax: -735323.69,
                     },
                   },
                 }),
                 new Bookmark({
-                  name: "Kota Kediri",
+                  name: "Kel. Babakan",
                   viewpoint: {
                     targetGeometry: {
                       type: "extent",
@@ -1982,10 +1982,10 @@ const SimulasiMap = () => {
                         latestWkid: 3857,
                         wkid: 102100,
                       },
-                      xmin: 12459226.85,
-                      ymin: -882133.1,
-                      xmax: 12480936.9,
-                      ymax: -865101.09,
+                      xmin: 11888886.98,
+                      ymin: -735127.74,
+                      xmax: 11889492.98,
+                      ymax: -735565.32,
                     },
                   },
                 }),
