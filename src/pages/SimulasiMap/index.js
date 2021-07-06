@@ -3676,7 +3676,8 @@ const SimulasiMap = () => {
                 lantai,
                 lantaiAtas,
               ],
-              blendMode: "destination-over"
+              blendMode: "destination-over",
+              listMode: "hide"
             })
 
             map.add(segmentationGroupLayer)
