@@ -226,7 +226,7 @@ const SimulasiMap = () => {
         ],
         {
           css: true,
-          version: "4.18",
+          version: "4.20",
         }
       ).then(
         ([
@@ -277,7 +277,8 @@ const SimulasiMap = () => {
             },
             highlightOptions: {
               color: [0, 255, 255],
-              fillOpacity: 0.6,
+              haloColor: [0, 255, 255],
+              fillOpacity: 0.1,
             },
             popup: {
               dockEnabled: true,
@@ -3603,18 +3604,22 @@ const SimulasiMap = () => {
               new Graphic({
                 geometry: polygon,
                 symbol: getSymbol(
-                  attributes.jlh_lantai_sebelum,
-                  attributes.jlh_lantai === attributes.jlh_lantai_sebelum &&
-                            attributes.jlh_lantai_sebelum > attributes.lantai_max
-                            ? [251, 0, 0, 1]
-                            : [0, 248, 4, 1]
+                  attributes.jlh_lantai_sebelum && attributes.lantai_max
+                    ? attributes.jlh_lantai_sebelum
+                    : attributes.jlh_lantai,
+                    (attributes.jlh_lantai === attributes.jlh_lantai_sebelum ||
+                      !attributes.jlh_lantai_sebelum) &&
+                      (attributes.jlh_lantai_sebelum > attributes.lantai_max ||
+                        attributes.jlh_lantai > attributes.lantai_max)
+                    ? [251, 0, 0, 1]
+                    : [0, 248, 4, 1]
                 ), //lantai sebelum
               })
             );
             // map.add(lantaiSebelum);
 
             lantai = new GraphicsLayer({
-              title: "Penambahan lantai yang diizinkan",
+              title: "Lantai Maksimum",
               elevationInfo: {
                 mode: "relative-to-ground",
                 featureExpressionInfo: {
@@ -3627,7 +3632,8 @@ const SimulasiMap = () => {
               new Graphic({
                 geometry: polygon,
                 symbol: getSymbol(
-                  attributes.jlh_lantai > attributes.jlh_lantai_sebelum
+                  attributes.jlh_lantai > attributes.jlh_lantai_sebelum &&
+                    attributes.jlh_lantai_sebelum
                     ? attributes.lantai_max - attributes.jlh_lantai_sebelum
                     : -1,
                   [251, 245, 0, 1]
@@ -3637,8 +3643,7 @@ const SimulasiMap = () => {
             // map.add(lantai);
 
             lantaiAtas = new GraphicsLayer({
-              title: "Penambahan lantai yang melebihi maksimal",
-              blendMode: "destination-over",
+              title: "Lantai Sesudah",
               elevationInfo: {
                 mode: "relative-to-ground",
                 featureExpressionInfo: {
@@ -3655,7 +3660,7 @@ const SimulasiMap = () => {
               new Graphic({
                 geometry: polygon,
                 symbol: getSymbol(
-                  attributes.jlh_lantai > attributes.jlh_lantai_sebelum
+                  attributes.jlh_lantai > attributes.jlh_lantai_sebelum && attributes.jlh_lantai_sebelum
                     ? attributes.jlh_lantai -
                         attributes.jlh_lantai_sebelum -
                         (attributes.lantai_max - attributes.jlh_lantai_sebelum >
