@@ -72,7 +72,7 @@ const SimulasiMap = () => {
   const [resPersilTanah, setResPersilTanah] = useState({});
   const [loaded, setLoaded] = useState(true);
   const [dataScreenshot, setDataScreenshot] = useState(dataScreenshotTemplate);
-  const [fun, setFun] = useState()
+  const [removeSegmentationFunc, setRemoveSegmentationFunc] = useState()
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -1787,6 +1787,11 @@ const SimulasiMap = () => {
                 },
               ],
             });
+            editor.viewModel.watch("state", function(){
+              if(editor.viewModel.state === "awaiting-feature-to-update" && segmentationGroupLayer){
+                map.remove(segmentationGroupLayer);
+              }
+            })
             const editorExpand = new Expand({
               expandIconClass: "esri-icon-edit",
               expandTooltip: "Edit Layer",
@@ -2091,7 +2096,7 @@ const SimulasiMap = () => {
               console.log(features[0]);
 
               // start segmentation drawing function
-              bangunanSesudahLayer.definitionExpression = "";
+              // bangunanSesudahLayer.definitionExpression = "";
               map.remove(segmentationGroupLayer);
               // end segmentation drawing function
             
@@ -3430,13 +3435,13 @@ const SimulasiMap = () => {
                 // start segmentation drawing function
                 console.log("Popup buka bangunan");
                 if(features[0].attributes.id_bangunan){
-                  setFun(()=>() => {
-                    bangunanSesudahLayer.definitionExpression = "";
+                  setRemoveSegmentationFunc(()=>() => {
+                    // bangunanSesudahLayer.definitionExpression = "";
                     map.remove(segmentationGroupLayer);
                   })
                   getRing(features[0].attributes.id_bangunan);
-                  features[0].layer.definitionExpression =
-                    "NOT id_bangunan = " + features[0].attributes.id_bangunan;
+                  // features[0].layer.definitionExpression =
+                  //   "NOT id_bangunan = " + features[0].attributes.id_bangunan;
                 }
                 // end segmentation drawing function
 
@@ -3782,9 +3787,9 @@ const SimulasiMap = () => {
   // start close showing popup
   const handleCloseShowingPopup = () => {
     console.log(stateView);
+    removeSegmentationFunc()
     stateView.popup.close();
     setShowingPopop({ ...showingPopup, show: false, title: "" });
-    fun()
   };
   // end close showing popup
   const handleSebelumSesudah = () => {
