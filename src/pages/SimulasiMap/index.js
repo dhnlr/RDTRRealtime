@@ -1934,12 +1934,12 @@ const SimulasiMap = () => {
                           result.features.forEach(function (feature) {
                             var objectId = feature.attributes.objectid_1;
                             var id_bangunan = feature.attributes.id_bangunan;
-                            bangunanSesudahLayerView.highlight(objectId);
                             getScreenshotData(dataScreenshot, id_bangunan).then(
                               (result) => {
-                                console.log(result);
                                 setDataScreenshot(result);
                                 view.container.classList.remove("screenshotCursor");
+                                highlight =
+                                  bangunanSesudahLayerView.highlight(objectId);
                                 document.getElementById(
                                   "id_bangunan_print"
                                 ).innerText = "ID bangunan: " + id_bangunan;
