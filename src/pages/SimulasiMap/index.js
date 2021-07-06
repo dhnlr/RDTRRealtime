@@ -1790,7 +1790,8 @@ const SimulasiMap = () => {
             editor.viewModel.watch("state", function(){
               if(editor.viewModel.state === "awaiting-feature-to-update" && segmentationGroupLayer){
                 map.remove(segmentationGroupLayer);
-              }
+                bangunanSesudahLayer.definitionExpression = "";
+            }
             })
             const editorExpand = new Expand({
               expandIconClass: "esri-icon-edit",
@@ -1829,6 +1830,8 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
+              map.remove(segmentationGroupLayer);
+              bangunanSesudahLayer.definitionExpression = "";
               view.on("click", function (event) {
                 // Remove the previous highlights
                 if (highlight) {
@@ -1911,31 +1914,51 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
+              map.remove(segmentationGroupLayer);
+              bangunanSesudahLayer.definitionExpression = "";
               view.on("click", function (event) {
+                if (highlight) {
+                  highlight.remove();
+                }
                 let pointBuildings = event.mapPoint;
 
                 var query = bangunanSesudahLayer.createQuery();
                 query.geometry = pointBuildings;
-                bangunanSesudahLayer
-                  .queryFeatures(query)
-                  .then(function (result) {
-                    if (result.features.length > 0) {
-                      result.features.forEach(function (feature) {
-                        var objectId = feature.attributes.objectid_1;
-                        var id_bangunan = feature.attributes.id_bangunan;
-                        getScreenshotData(dataScreenshot, id_bangunan).then(
-                          (result) => {
-                            console.log(result);
-                            setDataScreenshot(result);
-                            view.container.classList.remove("screenshotCursor");
-                            document.getElementById(
-                              "id_bangunan_print"
-                            ).innerText = "ID bangunan: " + id_bangunan;
-                          }
-                        );
+                view
+                  .whenLayerView(bangunanSesudahLayer)
+                  .then(function (bangunanSesudahLayerView) {
+                    bangunanSesudahLayer
+                      .queryFeatures(query)
+                      .then(function (result) {
+                        if (result.features.length > 0) {
+                          result.features.forEach(function (feature) {
+                            var objectId = feature.attributes.objectid_1;
+                            var id_bangunan = feature.attributes.id_bangunan;
+                            bangunanSesudahLayerView.highlight(objectId);
+                            getScreenshotData(dataScreenshot, id_bangunan).then(
+                              (result) => {
+                                console.log(result);
+                                setDataScreenshot(result);
+                                view.container.classList.remove("screenshotCursor");
+                                document.getElementById(
+                                  "id_bangunan_print"
+                                ).innerText = "ID bangunan: " + id_bangunan;
+                              }
+                            );
+                          });
+                        }
+                        jalanSesudahLayer.popupEnabled = true;
+                        polaRuangVersioningLayer.popupEnabled = true;
+                        persilTanahSesudahLayer.popupEnabled = true;
+                        kapasitasAirLayer.popupEnabled = true;
+                        persilTanahBpn.popupEnabled = true;
+                        buildingsEnvelopeLayer.popupEnabled = true;
+                        basemapPolaRuangLayer.popupEnabled = true;
+                        polaRuangEnvelopeLayer.popupEnabled = true;
+                        bangunanSesudahLayer.popupEnabled = true;
+                        buildings3dLayer.popupEnabled = true;
                       });
-                    }
-                  });
+                })
               });
             };
 
@@ -2096,7 +2119,7 @@ const SimulasiMap = () => {
               console.log(features[0]);
 
               // start segmentation drawing function
-              // bangunanSesudahLayer.definitionExpression = "";
+              bangunanSesudahLayer.definitionExpression = "";
               map.remove(segmentationGroupLayer);
               // end segmentation drawing function
             
@@ -3433,15 +3456,14 @@ const SimulasiMap = () => {
                   });
                 
                 // start segmentation drawing function
-                console.log("Popup buka bangunan");
                 if(features[0].attributes.id_bangunan){
                   setRemoveSegmentationFunc(()=>() => {
-                    // bangunanSesudahLayer.definitionExpression = "";
+                    bangunanSesudahLayer.definitionExpression = "";
                     map.remove(segmentationGroupLayer);
                   })
                   getRing(features[0].attributes.id_bangunan);
-                  // features[0].layer.definitionExpression =
-                  //   "NOT id_bangunan = " + features[0].attributes.id_bangunan;
+                  features[0].layer.definitionExpression =
+                    "NOT id_bangunan = " + features[0].attributes.id_bangunan;
                 }
                 // end segmentation drawing function
 
