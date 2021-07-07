@@ -276,9 +276,9 @@ const SimulasiMap = () => {
               },
             },
             highlightOptions: {
-              color: [0, 255, 255],
+              color: [0, 0, 0],
               haloColor: [0, 255, 255],
-              fillOpacity: 0.1,
+              fillOpacity: 0.2,
             },
             popup: {
               dockEnabled: true,
