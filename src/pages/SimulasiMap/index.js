@@ -12,7 +12,12 @@ import { config } from "../../Constants";
 
 import styled, { css } from "styled-components";
 
-import { TabsModule, TabModuleButton, TabModuleText, TabModuleContent } from "./tabModule";
+import {
+  TabsModule,
+  TabModuleButton,
+  TabModuleText,
+  TabModuleContent,
+} from "./tabModule";
 import Pdf from "./pdf";
 import dataScreenshotTemplate from "./data";
 import getScreenshotData from "./QueryLayer";
@@ -67,6 +72,7 @@ const SimulasiMap = () => {
   const [resPersilTanah, setResPersilTanah] = useState({});
   const [loaded, setLoaded] = useState(true);
   const [dataScreenshot, setDataScreenshot] = useState(dataScreenshotTemplate);
+  const [removeSegmentationFunc, setRemoveSegmentationFunc] = useState()
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -93,22 +99,37 @@ const SimulasiMap = () => {
   const [contentPolaRuang, setContentPolaRuang] = useState([]);
 
   const [contentBangunanKdbKlb, setContentBangunanKdbKlb] = useState([]);
-  const [hasilSimulasiBangunanKdbKlb, setHasilSimulasiBangunanKdbKlb] = useState("");
+  const [hasilSimulasiBangunanKdbKlb, setHasilSimulasiBangunanKdbKlb] =
+    useState("");
   const [hasilWarnaBangunanKdbKlb, setHasilWarnaBangunanKdbKlb] = useState("");
-  const [contentHasilPersilTanahKdbKlb, setContentHasilPersilTanahKdbKlb] = useState({});
-  const [contentHasilPolaRuangKdbKlb, setContentHasilPolaRuangKdbKlb] = useState({});
+  const [contentHasilPersilTanahKdbKlb, setContentHasilPersilTanahKdbKlb] =
+    useState({});
+  const [contentHasilPolaRuangKdbKlb, setContentHasilPolaRuangKdbKlb] =
+    useState({});
 
   const [contentBangunanKemacetan, setContentBangunanKemacetan] = useState([]);
-  const [hasilSimulasiBangunanKemacetan, setHasilSimulasiBangunanKemacetan] = useState("");
-  const [hasilWarnaBangunanKemacetan, setHasilWarnaBangunanKemacetan] = useState("");
-  const [contentHasilPersilTanahKemacetan, setContentHasilPersilTanahKemacetan] = useState({});
-  const [contentHasilPolaRuangKemacetan, setContentHasilPolaRuangKemacetan] = useState({});
+  const [hasilSimulasiBangunanKemacetan, setHasilSimulasiBangunanKemacetan] =
+    useState("");
+  const [hasilWarnaBangunanKemacetan, setHasilWarnaBangunanKemacetan] =
+    useState("");
+  const [
+    contentHasilPersilTanahKemacetan,
+    setContentHasilPersilTanahKemacetan,
+  ] = useState({});
+  const [contentHasilPolaRuangKemacetan, setContentHasilPolaRuangKemacetan] =
+    useState({});
 
   const [contentBangunanAirBersih, setContentBangunanAirBersih] = useState([]);
-  const [hasilSimulasiBangunanAirBersih, setHasilSimulasiBangunanAirBersih] = useState("");
-  const [hasilWarnaBangunanAirBersih, setHasilWarnaBangunanAirBersih] = useState("");
-  const [contentHasilPersilTanahAirBersih, setContentHasilPersilTanahAirBersih] = useState({});
-  const [contentHasilPolaRuangAirBersih, setContentHasilPolaRuangAirBersih] = useState({});
+  const [hasilSimulasiBangunanAirBersih, setHasilSimulasiBangunanAirBersih] =
+    useState("");
+  const [hasilWarnaBangunanAirBersih, setHasilWarnaBangunanAirBersih] =
+    useState("");
+  const [
+    contentHasilPersilTanahAirBersih,
+    setContentHasilPersilTanahAirBersih,
+  ] = useState({});
+  const [contentHasilPolaRuangAirBersih, setContentHasilPolaRuangAirBersih] =
+    useState({});
 
   const [activeSebelumSesudah, setActiveSebelumSesudah] = useState({
     activeSebelum: false,
@@ -128,7 +149,13 @@ const SimulasiMap = () => {
   const provinceData = [
     {
       name: "DKI Jakarta",
-      city: ["Jakarta Utara", "Jakarta Barat", "Jakarta Pusat", "Jakarta Timur", "Jakarta Selatan"],
+      city: [
+        "Jakarta Utara",
+        "Jakarta Barat",
+        "Jakarta Pusat",
+        "Jakarta Timur",
+        "Jakarta Selatan",
+      ],
     },
     {
       name: "Banten",
@@ -192,10 +219,14 @@ const SimulasiMap = () => {
           "esri/webmap/Bookmark",
           "esri/layers/GroupLayer",
           "esri/layers/SceneLayer",
+          "esri/geometry/Polygon",
+          "esri/symbols/PolygonSymbol3D",
+          "esri/symbols/ExtrudeSymbol3DLayer",
+          "esri/layers/GraphicsLayer",
         ],
         {
           css: true,
-          version: "4.18",
+          version: "4.20",
         }
       ).then(
         ([
@@ -217,7 +248,13 @@ const SimulasiMap = () => {
           Bookmark,
           GroupLayer,
           SceneLayer,
+          Polygon,
+          PolygonSymbol3D,
+          ExtrudeSymbol3DLayer,
+          GraphicsLayer,
         ]) => {
+          var lantaiSebelum, lantai, lantaiAtas, segmentationGroupLayer;
+
           const map = new Map({
             basemap: "topo-vector",
             // ground: "world-elevation",
@@ -239,8 +276,9 @@ const SimulasiMap = () => {
               },
             },
             highlightOptions: {
-              color: [0, 255, 255],
-              fillOpacity: 0.6,
+              color: [0, 0, 0],
+              haloColor: [0, 255, 255],
+              fillOpacity: 0.2,
             },
             popup: {
               dockEnabled: true,
@@ -252,7 +290,9 @@ const SimulasiMap = () => {
           });
 
           const buildings3dLayer = new SceneLayer({
-            url: config.url.ARCGIS_URL + "/Hosted/bangunan3d_mp/SceneServer/layers/0",
+            url:
+              config.url.ARCGIS_URL +
+              "/Hosted/bangunan3d_mp/SceneServer/layers/0",
             title: "Bangunan Segmentasi",
           });
 
@@ -696,7 +736,8 @@ const SimulasiMap = () => {
           });
 
           const jalanSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sesudah/jaringan_jalan/FeatureServer/0",
+            url:
+              config.url.ARCGIS_URL + "/sesudah/jaringan_jalan/FeatureServer/0",
             title: "Jaringan Jalan",
             popupTemplate: {
               title: "Jaringan Jalan",
@@ -1405,7 +1446,9 @@ const SimulasiMap = () => {
           });
 
           const basemapPolaRuangLayer = new VectorTileLayer({
-            url: config.url.ARCGIS_URL + "/Hosted/KDBKLB_PolaRuang_base/VectorTileServer",
+            url:
+              config.url.ARCGIS_URL +
+              "/Hosted/KDBKLB_PolaRuang_base/VectorTileServer",
             title: "Basemap Pola Ruang",
           });
 
@@ -1528,11 +1571,22 @@ const SimulasiMap = () => {
 
           let utamaGroupLayer = new GroupLayer({
             title: "Layer Utama",
-            layers: [polaRuangVersioningLayer, persilTanahSesudahLayer, kapasitasAirLayer, jalanSesudahLayer, bangunanSesudahLayer],
+            layers: [
+              polaRuangVersioningLayer,
+              persilTanahSesudahLayer,
+              kapasitasAirLayer,
+              jalanSesudahLayer,
+              bangunanSesudahLayer,
+            ],
           });
           let tambahanGroupLayer = new GroupLayer({
             title: "Layer Tambahan",
-            layers: [basemapPolaRuangLayer, polaRuangEnvelopeLayer, persilTanahBpn, buildingsEnvelopeLayer],
+            layers: [
+              basemapPolaRuangLayer,
+              polaRuangEnvelopeLayer,
+              persilTanahBpn,
+              buildingsEnvelopeLayer,
+            ],
           });
 
           map.addMany([tambahanGroupLayer, utamaGroupLayer, buildings3dLayer]);
@@ -1608,7 +1662,11 @@ const SimulasiMap = () => {
                     item.watch("visible", function (event) {
                       if (event === false) {
                         view.popup.close();
-                        setShowingPopop({ ...showingPopup, show: false, title: "" });
+                        setShowingPopop({
+                          ...showingPopup,
+                          show: false,
+                          title: "",
+                        });
                       }
                     });
                   }
@@ -1729,6 +1787,12 @@ const SimulasiMap = () => {
                 },
               ],
             });
+            editor.viewModel.watch("state", function(){
+              if(editor.viewModel.state === "awaiting-feature-to-update" && segmentationGroupLayer){
+                map.remove(segmentationGroupLayer);
+                bangunanSesudahLayer.definitionExpression = "";
+            }
+            })
             const editorExpand = new Expand({
               expandIconClass: "esri-icon-edit",
               expandTooltip: "Edit Layer",
@@ -1766,6 +1830,8 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
+              map.remove(segmentationGroupLayer);
+              bangunanSesudahLayer.definitionExpression = "";
               view.on("click", function (event) {
                 // Remove the previous highlights
                 if (highlight) {
@@ -1773,33 +1839,40 @@ const SimulasiMap = () => {
                 }
                 let pointBuildings = event.mapPoint;
 
-                view.whenLayerView(bangunanSesudahLayer).then(function (bangunanSesudahLayerView) {
-                  var query = bangunanSesudahLayer.createQuery();
-                  query.geometry = pointBuildings;
-                  bangunanSesudahLayerView.queryFeatures(query).then(function (result) {
-                    if (result.features.length > 0) {
-                      result.features.forEach(function (feature) {
-                        var objectId = feature.attributes.objectid_1;
-                        // Highlight the feature passing the objectId to the method
-                        highlight = bangunanSesudahLayerView.highlight(objectId);
-                        setSelectBuildings(false);
-                        setRunAnalysis(true);
-                        setInputX(event.mapPoint.x);
-                        setInputY(event.mapPoint.y);
+                view
+                  .whenLayerView(bangunanSesudahLayer)
+                  .then(function (bangunanSesudahLayerView) {
+                    var query = bangunanSesudahLayer.createQuery();
+                    query.geometry = pointBuildings;
+                    bangunanSesudahLayerView
+                      .queryFeatures(query)
+                      .then(function (result) {
+                        if (result.features.length > 0) {
+                          result.features.forEach(function (feature) {
+                            var objectId = feature.attributes.objectid_1;
+                            // Highlight the feature passing the objectId to the method
+                            highlight =
+                              bangunanSesudahLayerView.highlight(objectId);
+                            setSelectBuildings(false);
+                            setRunAnalysis(true);
+                            setInputX(event.mapPoint.x);
+                            setInputY(event.mapPoint.y);
+                          });
+                        } else {
+                          setSelectBuildings(true);
+                          setRunAnalysis(false);
+                          setInputX(0);
+                          setInputY(0);
+                          setResultAnalysis(false);
+                          setResPersilTanah({});
+                        }
                       });
-                    } else {
-                      setSelectBuildings(true);
-                      setRunAnalysis(false);
-                      setInputX(0);
-                      setInputY(0);
-                      setResultAnalysis(false);
-                      setResPersilTanah({});
-                    }
                   });
-                });
               });
             };
-            document.getElementById("markingBuildings").addEventListener("click", handleMarking);
+            document
+              .getElementById("markingBuildings")
+              .addEventListener("click", handleMarking);
             // end marking building
 
             // start print simulasi
@@ -1841,25 +1914,51 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
+              map.remove(segmentationGroupLayer);
+              bangunanSesudahLayer.definitionExpression = "";
               view.on("click", function (event) {
+                if (highlight) {
+                  highlight.remove();
+                }
                 let pointBuildings = event.mapPoint;
 
                 var query = bangunanSesudahLayer.createQuery();
                 query.geometry = pointBuildings;
-                bangunanSesudahLayer.queryFeatures(query).then(function (result) {
-                  if (result.features.length > 0) {
-                    result.features.forEach(function (feature) {
-                      var objectId = feature.attributes.objectid_1;
-                      var id_bangunan = feature.attributes.id_bangunan;
-                      getScreenshotData(dataScreenshot, id_bangunan).then((result) => {
-                        console.log(result);
-                        setDataScreenshot(result);
-                        view.container.classList.remove("screenshotCursor");
-                        document.getElementById("id_bangunan_print").innerText = "ID bangunan: " + id_bangunan;
+                view
+                  .whenLayerView(bangunanSesudahLayer)
+                  .then(function (bangunanSesudahLayerView) {
+                    bangunanSesudahLayer
+                      .queryFeatures(query)
+                      .then(function (result) {
+                        if (result.features.length > 0) {
+                          result.features.forEach(function (feature) {
+                            var objectId = feature.attributes.objectid_1;
+                            var id_bangunan = feature.attributes.id_bangunan;
+                            getScreenshotData(dataScreenshot, id_bangunan).then(
+                              (result) => {
+                                setDataScreenshot(result);
+                                view.container.classList.remove("screenshotCursor");
+                                highlight =
+                                  bangunanSesudahLayerView.highlight(objectId);
+                                document.getElementById(
+                                  "id_bangunan_print"
+                                ).innerText = "ID bangunan: " + id_bangunan;
+                              }
+                            );
+                          });
+                        }
+                        jalanSesudahLayer.popupEnabled = true;
+                        polaRuangVersioningLayer.popupEnabled = true;
+                        persilTanahSesudahLayer.popupEnabled = true;
+                        kapasitasAirLayer.popupEnabled = true;
+                        persilTanahBpn.popupEnabled = true;
+                        buildingsEnvelopeLayer.popupEnabled = true;
+                        basemapPolaRuangLayer.popupEnabled = true;
+                        polaRuangEnvelopeLayer.popupEnabled = true;
+                        bangunanSesudahLayer.popupEnabled = true;
+                        buildings3dLayer.popupEnabled = true;
                       });
-                    });
-                  }
-                });
+                })
               });
             };
 
@@ -1875,12 +1974,20 @@ const SimulasiMap = () => {
               ) {
                 Pdf(dataScreenshot);
               } else {
-                Swal.fire("Maaf", "Lengkapi foto dan pilih bangunan untuk mencetak hasil simulasi", "error");
+                Swal.fire(
+                  "Maaf",
+                  "Lengkapi foto dan pilih bangunan untuk mencetak hasil simulasi",
+                  "error"
+                );
               }
             };
 
-            document.getElementById("pilih_bangunan_print").addEventListener("click", selectBuildingPrint);
-            document.getElementById("print_simulasi").addEventListener("click", cetak);
+            document
+              .getElementById("pilih_bangunan_print")
+              .addEventListener("click", selectBuildingPrint);
+            document
+              .getElementById("print_simulasi")
+              .addEventListener("click", cetak);
             // end print simulasi
 
             // start legend
@@ -2010,10 +2117,19 @@ const SimulasiMap = () => {
           view.popup.watch("features", (features) => {
             if (features[0]) {
               console.log(features[0]);
+
+              // start segmentation drawing function
+              bangunanSesudahLayer.definitionExpression = "";
+              map.remove(segmentationGroupLayer);
+              // end segmentation drawing function
+            
               let fieldsArr = [];
               features[0].layer.fields.map((fieldVal) => {
                 if (features[0].attributes[fieldVal.name] !== undefined) {
-                  fieldsArr.push({ field_name: fieldVal.name, field_value: features[0].attributes[fieldVal.name] });
+                  fieldsArr.push({
+                    field_name: fieldVal.name,
+                    field_value: features[0].attributes[fieldVal.name],
+                  });
                 }
               });
               if (features[0].layer.title === "Bangunan") {
@@ -2044,7 +2160,8 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "melampaui_tinggi_sebelum",
-                    field_value: features[0].attributes.melampaui_tinggi_sebelum,
+                    field_value:
+                      features[0].attributes.melampaui_tinggi_sebelum,
                   },
                   {
                     field_name: "melampaui_tinggi",
@@ -2351,12 +2468,23 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.q_arus,
                   },
                 ]);
-                setHasilSimulasiBangunanKdbKlb(features[0].attributes.melampaui_tinggi);
-                if (features[0].attributes.melampaui_tinggi === "Belum melampaui jumlah lantai maksimal") {
+                setHasilSimulasiBangunanKdbKlb(
+                  features[0].attributes.melampaui_tinggi
+                );
+                if (
+                  features[0].attributes.melampaui_tinggi ===
+                  "Belum melampaui jumlah lantai maksimal"
+                ) {
                   setHasilWarnaBangunanKdbKlb("#FFFF00");
-                } else if (features[0].attributes.melampaui_tinggi === "Melampaui jumlah lantai maksimal") {
+                } else if (
+                  features[0].attributes.melampaui_tinggi ===
+                  "Melampaui jumlah lantai maksimal"
+                ) {
                   setHasilWarnaBangunanKdbKlb("#FF0000");
-                } else if (features[0].attributes.melampaui_tinggi === "Jumlah lantai sudah maksimal") {
+                } else if (
+                  features[0].attributes.melampaui_tinggi ===
+                  "Jumlah lantai sudah maksimal"
+                ) {
                   setHasilWarnaBangunanKdbKlb("#4CE600");
                 } else {
                   setHasilWarnaBangunanKdbKlb("#B2B2B2");
@@ -2390,7 +2518,8 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "melampaui_tinggi_sebelum",
-                    field_value: features[0].attributes.melampaui_tinggi_sebelum,
+                    field_value:
+                      features[0].attributes.melampaui_tinggi_sebelum,
                   },
                   {
                     field_name: "melampaui_tinggi",
@@ -2669,8 +2798,12 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.kabkot,
                   },
                 ]);
-                setHasilSimulasiBangunanKemacetan(features[0].attributes.izin_macet);
-                if (features[0].attributes.izin_macet === "Ditolak/rekomendasi") {
+                setHasilSimulasiBangunanKemacetan(
+                  features[0].attributes.izin_macet
+                );
+                if (
+                  features[0].attributes.izin_macet === "Ditolak/rekomendasi"
+                ) {
                   setHasilWarnaBangunanKemacetan("#A80000");
                 } else if (features[0].attributes.izin_macet === "Diizinkan") {
                   setHasilWarnaBangunanKemacetan("#00A884");
@@ -2706,7 +2839,8 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "melampaui_tinggi_sebelum",
-                    field_value: features[0].attributes.melampaui_tinggi_sebelum,
+                    field_value:
+                      features[0].attributes.melampaui_tinggi_sebelum,
                   },
                   {
                     field_name: "melampaui_tinggi",
@@ -2985,8 +3119,12 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.kabkot,
                   },
                 ]);
-                setHasilSimulasiBangunanAirBersih(features[0].attributes.izin_air_y5);
-                if (features[0].attributes.izin_air_y5 === "Ditolak/rekomendasi") {
+                setHasilSimulasiBangunanAirBersih(
+                  features[0].attributes.izin_air_y5
+                );
+                if (
+                  features[0].attributes.izin_air_y5 === "Ditolak/rekomendasi"
+                ) {
                   setHasilWarnaBangunanAirBersih("#730000");
                 } else if (features[0].attributes.izin_air_y5 === "Diizinkan") {
                   setHasilWarnaBangunanAirBersih("#00A884");
@@ -3097,7 +3235,8 @@ const SimulasiMap = () => {
                   .then(function (response) {
                     // handle success
                     if (response.data.features.length > 0) {
-                      var features_pola_ruang = response.data.features[0].attributes;
+                      var features_pola_ruang =
+                        response.data.features[0].attributes;
                       setContentHasilPolaRuangKdbKlb({
                         field_name: "status_pemb_optimum",
                         field_value: features_pola_ruang.status_pemb_optimum,
@@ -3297,7 +3436,8 @@ const SimulasiMap = () => {
                         },
                         {
                           field_name: "status_pemb_optimum_sebelum",
-                          field_value: features_pola_ruang.status_pemb_optimum_sebelum,
+                          field_value:
+                            features_pola_ruang.status_pemb_optimum_sebelum,
                         },
                         {
                           field_name: "izin_air_sebelum",
@@ -3314,6 +3454,19 @@ const SimulasiMap = () => {
                     // handle error
                     console.log("error check", error);
                   });
+                
+                // start segmentation drawing function
+                if(features[0].attributes.id_bangunan){
+                  setRemoveSegmentationFunc(()=>() => {
+                    bangunanSesudahLayer.definitionExpression = "";
+                    map.remove(segmentationGroupLayer);
+                  })
+                  getRing(features[0].attributes.id_bangunan);
+                  features[0].layer.definitionExpression =
+                    "NOT id_bangunan = " + features[0].attributes.id_bangunan;
+                }
+                // end segmentation drawing function
+
               } else if (features[0].layer.title === "Pola Ruang Versioning") {
                 setContentGeneral([
                   {
@@ -3334,7 +3487,8 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "status_pemb_optimum_sebelum",
-                    field_value: features[0].attributes.status_pemb_optimum_sebelum,
+                    field_value:
+                      features[0].attributes.status_pemb_optimum_sebelum,
                   },
                   {
                     field_name: "status_pemb_optimum",
@@ -3412,6 +3566,166 @@ const SimulasiMap = () => {
             }
           });
 
+          // start segmentation drawing function
+          /************************************************************
+           * Get polygon id from feature service and draw it when available
+           ************************************************************/
+          var getRing = (id) => {
+            var request = new XMLHttpRequest();
+            request.open(
+              "GET",
+              "https://rdtr.onemap.id/server/rest/services/sesudah/bangunan/FeatureServer/0/query?where=id_bangunan=" +
+                id +
+                "&outFields=*&outSR=4326&f=pjson",
+              true
+            );
+
+            request.onload = function () {
+              if (this.status >= 200 && this.status < 400) {
+                // Success!
+                var { features } = JSON.parse(this.response);
+                if(features[0]) drawGraphic(features[0].geometry.rings, features[0].attributes);
+              } else {
+                // We reached our target server, but it returned an error
+              }
+            };
+
+            request.onerror = function () {
+              // There was a connection error of some sort
+            };
+
+            request.send();
+          };
+
+          /************************************************************
+           * Draw polygon
+           ************************************************************/
+          var drawGraphic = (ring, attributes) => {
+            var polygon = new Polygon({
+              rings: ring,
+              spatialReference: { wkid: 4326 },
+            });
+
+            function getSymbol(size, color) {
+              return new PolygonSymbol3D({
+                symbolLayers: [
+                  new ExtrudeSymbol3DLayer({
+                    size: size,
+                    material: { color: color },
+                  }),
+                ],
+              });
+            }
+
+            lantaiSebelum = new GraphicsLayer({
+              title: "Lantai Sebelum",
+              elevationInfo: {
+                mode: "relative-to-ground",
+                featureExpressionInfo: {
+                  expression: "0", //dasar
+                },
+                unit: "meters",
+              },
+            });
+            lantaiSebelum.add(
+              new Graphic({
+                geometry: polygon,
+                symbol: getSymbol(
+                  attributes.jlh_lantai_sebelum && attributes.lantai_max
+                    ? attributes.jlh_lantai_sebelum
+                    : attributes.jlh_lantai,
+                    (attributes.jlh_lantai === attributes.jlh_lantai_sebelum ||
+                      !attributes.jlh_lantai_sebelum) &&
+                      (attributes.jlh_lantai_sebelum > attributes.lantai_max ||
+                        attributes.jlh_lantai > attributes.lantai_max)
+                    ? [251, 0, 0, 1]
+                    : [0, 248, 4, 1]
+                ), //lantai sebelum
+              })
+            );
+            // map.add(lantaiSebelum);
+
+            lantai = new GraphicsLayer({
+              title: "Lantai Maksimum",
+              elevationInfo: {
+                mode: "relative-to-ground",
+                featureExpressionInfo: {
+                  expression: attributes.jlh_lantai_sebelum, //lantai sebelum
+                },
+                unit: "meters",
+              },
+            });
+            lantai.add(
+              new Graphic({
+                geometry: polygon,
+                symbol: getSymbol(
+                  attributes.jlh_lantai > attributes.jlh_lantai_sebelum &&
+                    attributes.jlh_lantai_sebelum
+                    ? attributes.lantai_max - attributes.jlh_lantai_sebelum
+                    : -1,
+                  [251, 245, 0, 1]
+                ), //lantai max - lantai sebelum
+              })
+            );
+            // map.add(lantai);
+
+            lantaiAtas = new GraphicsLayer({
+              title: "Lantai Sesudah",
+              elevationInfo: {
+                mode: "relative-to-ground",
+                featureExpressionInfo: {
+                  expression:
+                    attributes.jlh_lantai_sebelum +
+                    (attributes.lantai_max - attributes.jlh_lantai_sebelum > 0
+                      ? attributes.lantai_max - attributes.jlh_lantai_sebelum
+                      : 0), //lantai (lantai max - lantai sebelum) + lantai ssebelum
+                },
+                unit: "meters",
+              },
+            });
+            lantaiAtas.add(
+              new Graphic({
+                geometry: polygon,
+                symbol: getSymbol(
+                  attributes.jlh_lantai > attributes.jlh_lantai_sebelum && attributes.jlh_lantai_sebelum
+                    ? attributes.jlh_lantai -
+                        attributes.jlh_lantai_sebelum -
+                        (attributes.lantai_max - attributes.jlh_lantai_sebelum >
+                        0
+                          ? attributes.lantai_max -
+                            attributes.jlh_lantai_sebelum
+                          : 0)
+                    : -1,
+                  [251, 0, 0, 1]
+                ), //lantai total - lantai sebelum - lantai (lantai max - lantai sebelum)
+              })
+            );
+            // map.add(lantaiAtas);
+            segmentationGroupLayer = new GroupLayer({
+              title: "Layer Segmentasi",
+              layers: [
+                lantaiSebelum,
+                lantai,
+                lantaiAtas,
+              ],
+              blendMode: "destination-over",
+              listMode: "hide"
+            })
+
+            map.add(segmentationGroupLayer)
+
+            view.whenLayerView(lantaiAtas).then(function(layerView){
+              layerView.highlight(lantaiAtas.graphics)
+            })
+            view.whenLayerView(lantai).then(function(layerView){
+              layerView.highlight(lantai.graphics)
+            })
+            view.whenLayerView(lantaiSebelum).then(function(layerView){
+              layerView.highlight(lantaiSebelum.graphics)
+            })
+          };
+          // end segementation drawing function
+
           setStateView(view);
 
           return { view };
@@ -3446,7 +3760,13 @@ const SimulasiMap = () => {
             Authorization: "Bearer " + sessionStorage.token,
             "Content-Type": "application/json",
           };
-          Axios.post(config.url.API_URL + "/Pembangunan/ExecuteSpPembangunanOptimum?nib=" + featuresPersilTanah[0].attributes.nib, {}, { headers })
+          Axios.post(
+            config.url.API_URL +
+              "/Pembangunan/ExecuteSpPembangunanOptimum?nib=" +
+              featuresPersilTanah[0].attributes.nib,
+            {},
+            { headers }
+          )
             .then(function (response) {
               console.log(response);
               if (response.status === 200) {
@@ -3489,6 +3809,7 @@ const SimulasiMap = () => {
   // start close showing popup
   const handleCloseShowingPopup = () => {
     console.log(stateView);
+    removeSegmentationFunc()
     stateView.popup.close();
     setShowingPopop({ ...showingPopup, show: false, title: "" });
   };
@@ -3583,7 +3904,11 @@ const SimulasiMap = () => {
         <div className="main-panel">
           <div className="container-scroller">
             <DarkBackground disappear={!loaded}>
-              <LoadingOverlay active={true} spinner text="Menjalankan analisis..."></LoadingOverlay>
+              <LoadingOverlay
+                active={true}
+                spinner
+                text="Menjalankan analisis..."
+              ></LoadingOverlay>
             </DarkBackground>
             <div style={style.viewDiv} ref={mapRef} />
             {showingPopup.show && (
@@ -3639,17 +3964,34 @@ const SimulasiMap = () => {
                     {/* start popup sebelumsesudah */}
                     <div className="switch-sebelum-sesudah">
                       <div className="switch-button">
-                        <input className="switch-button-checkbox" type="checkbox" onClick={handleSebelumSesudah} />
-                        <label className="switch-button-label" style={{ marginBottom: "0px" }}>
-                          <span className="switch-button-label-span">Sebelum</span>
+                        <input
+                          className="switch-button-checkbox"
+                          type="checkbox"
+                          onClick={handleSebelumSesudah}
+                        />
+                        <label
+                          className="switch-button-label"
+                          style={{ marginBottom: "0px" }}
+                        >
+                          <span className="switch-button-label-span">
+                            Sebelum
+                          </span>
                         </label>
                       </div>
                     </div>
 
-                    <div className="accordion accordion-bordered" id="accordionExample">
+                    <div
+                      className="accordion accordion-bordered"
+                      id="accordionExample"
+                    >
                       <div className="fade-in">
                         <div className="card" style={{ margin: "0 0.2rem" }}>
-                          <div className="card-header" role="tab" id="headingOne" style={{ padding: "0px" }}>
+                          <div
+                            className="card-header"
+                            role="tab"
+                            id="headingOne"
+                            style={{ padding: "0px" }}
+                          >
                             <h6 className="mb-0">
                               <button
                                 className="btn btn-block text-left btn-sm"
@@ -3660,60 +4002,102 @@ const SimulasiMap = () => {
                                 aria-controls={"sebelum"}
                                 style={{ fontSize: "14px" }}
                               >
-                                <img src="./images/office-building.svg" alt="KDB/KLB" style={{ marginRight: "10px" }} />
+                                <img
+                                  src="./images/office-building.svg"
+                                  alt="KDB/KLB"
+                                  style={{ marginRight: "10px" }}
+                                />
                                 KDB/KLB
                                 <i className="ti-arrow-circle-down float-right"></i>
                               </button>
                             </h6>
                           </div>
 
-                          <div id="sebelum" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                          <div
+                            id="sebelum"
+                            className="collapse show"
+                            aria-labelledby="headingOne"
+                            data-parent="#accordionExample"
+                          >
                             <div className="card-body">
                               <table className="table">
                                 <tbody>
                                   <tr>
                                     <td>Status KDB/KLB</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[2].field_value : contentBangunanKdbKlb[3].field_value}</td>
+                                    <td>
+                                      {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[2].field_value
+                                        : contentBangunanKdbKlb[3].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Jenis Bangunan</td>
-                                    <td>{contentBangunanKdbKlb[1].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[1].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Nama Sub Zona</td>
-                                    <td>{contentBangunanKdbKlb[60].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[60].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Jumlah Lantai</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[16].field_value : contentBangunanKdbKlb[17].field_value} lantai</td>
+                                    <td>
+                                      {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[16].field_value
+                                        : contentBangunanKdbKlb[17]
+                                            .field_value}{" "}
+                                      lantai
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Luas Total Bangunan</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[20].field_value : contentBangunanKdbKlb[21].field_value} m2</td>
+                                    <td>
+                                      {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[20].field_value
+                                        : contentBangunanKdbKlb[21]
+                                            .field_value}{" "}
+                                      m2
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Jumlah Lantai Maks</td>
-                                    <td>{contentBangunanKdbKlb[61].field_value} lantai</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[61].field_value}{" "}
+                                      lantai
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Luas Total Bangunan Maks</td>
-                                    <td>{contentBangunanKdbKlb[65].field_value} m2</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[65].field_value} m2
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>KDB</td>
-                                    <td>{contentBangunanKdbKlb[62].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[62].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>KLB</td>
-                                    <td>{contentBangunanKdbKlb[63].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[63].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>KDH</td>
-                                    <td>{contentBangunanKdbKlb[64].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[64].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Luas Tapak</td>
-                                    <td>{contentBangunanKdbKlb[19].field_value} m2</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[19].field_value} m2
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -3722,7 +4106,12 @@ const SimulasiMap = () => {
                         </div>
 
                         <div className="card" style={{ margin: "0 0.2rem" }}>
-                          <div className="card-header" role="tab" id="headingTwo" style={{ padding: "0px" }}>
+                          <div
+                            className="card-header"
+                            role="tab"
+                            id="headingTwo"
+                            style={{ padding: "0px" }}
+                          >
                             <h6 className="mb-0">
                               <button
                                 className="btn btn-block text-left collapsed btn-sm"
@@ -3733,46 +4122,75 @@ const SimulasiMap = () => {
                                 aria-controls={"sebelumDua"}
                                 style={{ fontSize: "14px" }}
                               >
-                                <img src="./images/Traffic-lights.svg" alt="Kemacetan" style={{ marginRight: "10px" }} />
+                                <img
+                                  src="./images/Traffic-lights.svg"
+                                  alt="Kemacetan"
+                                  style={{ marginRight: "10px" }}
+                                />
                                 Kemacetan
                                 <i className="ti-arrow-circle-down float-right"></i>
                               </button>
                             </h6>
                           </div>
 
-                          <div id="sebelumDua" className="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                          <div
+                            id="sebelumDua"
+                            className="collapse"
+                            aria-labelledby="headingTwo"
+                            data-parent="#accordionExample"
+                          >
                             <div className="card-body">
                               <table className="table">
                                 <tbody>
                                   <tr>
                                     <td>Status Kemacetan</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[10].field_value : contentBangunanKdbKlb[11].field_value}</td>
+                                    <td>
+                                      {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[10].field_value
+                                        : contentBangunanKdbKlb[11].field_value}
+                                    </td>
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
                                   </tr>
                                   <tr>
                                     <td>Jenis Bangunan</td>
-                                    <td>{contentBangunanKdbKlb[1].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[1].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Nama Sub Zona</td>
-                                    <td>{contentBangunanKdbKlb[60].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[60].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>LOS</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[14].field_value : contentBangunanKdbKlb[15].field_value}</td>
+                                    <td>
+                                      {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[14].field_value
+                                        : contentBangunanKdbKlb[15].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>LOS Num</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[12].field_value : contentBangunanKdbKlb[13].field_value}</td>
+                                    <td>
+                                      {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[12].field_value
+                                        : contentBangunanKdbKlb[13].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Arus</td>
-                                    <td>{contentBangunanKdbKlb[66].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[66].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Kapasitas</td>
-                                    <td>{contentBangunanKdbKlb[52].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[52].field_value}
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -3781,7 +4199,12 @@ const SimulasiMap = () => {
                         </div>
 
                         <div className="card" style={{ margin: "0 0.2rem" }}>
-                          <div className="card-header" role="tab" id="headingThree" style={{ padding: "0px" }}>
+                          <div
+                            className="card-header"
+                            role="tab"
+                            id="headingThree"
+                            style={{ padding: "0px" }}
+                          >
                             <h6 className="mb-0">
                               <button
                                 className="btn btn-block text-left collapsed btn-sm"
@@ -3792,37 +4215,60 @@ const SimulasiMap = () => {
                                 aria-controls={"sebelumTiga"}
                                 style={{ fontSize: "14px" }}
                               >
-                                <img src="./images/water.svg" alt="Air Bersih" style={{ marginRight: "10px" }} />
+                                <img
+                                  src="./images/water.svg"
+                                  alt="Air Bersih"
+                                  style={{ marginRight: "10px" }}
+                                />
                                 Air Bersih
                                 <i className="ti-arrow-circle-down float-right"></i>
                               </button>
                             </h6>
                           </div>
 
-                          <div id="sebelumTiga" className="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                          <div
+                            id="sebelumTiga"
+                            className="collapse"
+                            aria-labelledby="headingThree"
+                            data-parent="#accordionExample"
+                          >
                             <div className="card-body">
                               <table className="table">
                                 <tbody>
                                   <tr>
                                     <td>Status Air Bersih</td>
-                                    <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKdbKlb[8].field_value : contentBangunanKdbKlb[9].field_value}</td>
+                                    <td>
+                                      {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[8].field_value
+                                        : contentBangunanKdbKlb[9].field_value}
+                                    </td>
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
                                   </tr>
                                   <tr>
                                     <td>Jenis Bangunan</td>
-                                    <td>{contentBangunanKdbKlb[1].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[1].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Nama Sub Zona</td>
-                                    <td>{contentBangunanKdbKlb[60].field_value}</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[60].field_value}
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Kebutuhan Air Harian</td>
-                                    <td>{contentBangunanKdbKlb[37].field_value} liter/hari</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[37].field_value}{" "}
+                                      liter/hari
+                                    </td>
                                   </tr>
                                   <tr>
                                     <td>Ketersediaan Air PDAM Harian</td>
-                                    <td>{contentBangunanKdbKlb[36].field_value} liter/hari</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[36].field_value}{" "}
+                                      liter/hari
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -3834,7 +4280,14 @@ const SimulasiMap = () => {
                     {/* end popup sebelumsesudah */}
                   </>
                 ) : (
-                  <div className="table-responsive" style={{ position: "absolute", height: "calc(100% - 50px)", overflow: "auto" }}>
+                  <div
+                    className="table-responsive"
+                    style={{
+                      position: "absolute",
+                      height: "calc(100% - 50px)",
+                      overflow: "auto",
+                    }}
+                  >
                     <table className="table">
                       <tbody>
                         {contentGeneral.map((fieldMap, i) => (
@@ -3852,11 +4305,19 @@ const SimulasiMap = () => {
             <div id="layerListExpDiv" className="esri-widget"></div>
             <div id="legendExpDiv" className="esri-widget"></div>
             <div id="buildingsExpDiv" className="esri-widget">
-              <div className="esri-component esri-widget" style={{ background: "#fff", width: "300px" }}>
-                <form className="esri-feature-form__form" style={{ padding: "5px" }}>
+              <div
+                className="esri-component esri-widget"
+                style={{ background: "#fff", width: "300px" }}
+              >
+                <form
+                  className="esri-feature-form__form"
+                  style={{ padding: "5px" }}
+                >
                   {selectBuildings && (
                     <div>
-                      <label className="esri-feature-form__label">Pilih Bangunan</label>
+                      <label className="esri-feature-form__label">
+                        Pilih Bangunan
+                      </label>
                       <div
                         style={{
                           display: "flex",
@@ -3921,8 +4382,18 @@ const SimulasiMap = () => {
                       </div>
                     </div>
                   )}
-                  <input name="inputX" id="inputX" type="hidden" defaultValue={inputX === 0 ? 0 : inputX} />
-                  <input name="inputY" id="inputY" type="hidden" defaultValue={inputY === 0 ? 0 : inputY} />
+                  <input
+                    name="inputX"
+                    id="inputX"
+                    type="hidden"
+                    defaultValue={inputX === 0 ? 0 : inputX}
+                  />
+                  <input
+                    name="inputY"
+                    id="inputY"
+                    type="hidden"
+                    defaultValue={inputY === 0 ? 0 : inputY}
+                  />
                 </form>
               </div>
             </div>
@@ -3936,7 +4407,16 @@ const SimulasiMap = () => {
               >
                 <h3 className="esri-widget__heading">Hasil Simulasi</h3>
               </div>
-              <div className="" style={{ background: "#f3f3f3", width: "300px", maxHeight: "180px", overflowX: "auto", padding: "0px" }}>
+              <div
+                className=""
+                style={{
+                  background: "#f3f3f3",
+                  width: "300px",
+                  maxHeight: "180px",
+                  overflowX: "auto",
+                  padding: "0px",
+                }}
+              >
                 <div
                   style={{
                     backgroundColor: "#fff",
@@ -3945,7 +4425,12 @@ const SimulasiMap = () => {
                   }}
                 >
                   <p>Bangunan Optimum (sebelum)</p>
-                  <img id="photo_pembangunan_optimum_sebelum" style={{ display: "none" }} alt="bangunan optimum sebelum" src={dataScreenshot.photo.pembangunan_optimum_sebelum} />
+                  <img
+                    id="photo_pembangunan_optimum_sebelum"
+                    style={{ display: "none" }}
+                    alt="bangunan optimum sebelum"
+                    src={dataScreenshot.photo.pembangunan_optimum_sebelum}
+                  />
                   {
                     <button
                       className="btn btn-outline-primary btn-sm screenshot"
@@ -3970,7 +4455,12 @@ const SimulasiMap = () => {
                   }}
                 >
                   <p>Bangunan Optimum (sesudah)</p>
-                  <img id="photo_pembangunan_optimum_sesudah" style={{ display: "none" }} alt="bangunan optimum sesudah" src={dataScreenshot.photo.pembangunan_optimum_sesudah} />
+                  <img
+                    id="photo_pembangunan_optimum_sesudah"
+                    style={{ display: "none" }}
+                    alt="bangunan optimum sesudah"
+                    src={dataScreenshot.photo.pembangunan_optimum_sesudah}
+                  />
                   {
                     <button
                       className="btn btn-outline-primary btn-sm screenshot"
@@ -3995,7 +4485,12 @@ const SimulasiMap = () => {
                   }}
                 >
                   <p>Kemacetan (sebelum)</p>
-                  <img id="photo_kemacetan_sebelum" style={{ display: "none" }} alt="bangunan optimum sebelum" src={dataScreenshot.photo.kemacetan_sebelum} />
+                  <img
+                    id="photo_kemacetan_sebelum"
+                    style={{ display: "none" }}
+                    alt="bangunan optimum sebelum"
+                    src={dataScreenshot.photo.kemacetan_sebelum}
+                  />
                   {
                     <button
                       className="btn btn-outline-primary btn-sm screenshot"
@@ -4020,7 +4515,12 @@ const SimulasiMap = () => {
                   }}
                 >
                   <p>Kemacetan (sesudah)</p>
-                  <img id="photo_kemacetan_sesudah" style={{ display: "none" }} alt="bangunan optimum sebelum" src={dataScreenshot.photo.kemacetan_sesudah} />
+                  <img
+                    id="photo_kemacetan_sesudah"
+                    style={{ display: "none" }}
+                    alt="bangunan optimum sebelum"
+                    src={dataScreenshot.photo.kemacetan_sesudah}
+                  />
                   {
                     <button
                       className="btn btn-outline-primary btn-sm screenshot"
@@ -4045,7 +4545,12 @@ const SimulasiMap = () => {
                   }}
                 >
                   <p>Air Bersih (sebelum)</p>
-                  <img id="photo_air_bersih_sebelum" style={{ display: "none" }} alt="bangunan optimum sebelum" src={dataScreenshot.photo.air_bersih_sebelum} />
+                  <img
+                    id="photo_air_bersih_sebelum"
+                    style={{ display: "none" }}
+                    alt="bangunan optimum sebelum"
+                    src={dataScreenshot.photo.air_bersih_sebelum}
+                  />
                   {
                     <button
                       className="btn btn-outline-primary btn-sm screenshot"
@@ -4070,7 +4575,12 @@ const SimulasiMap = () => {
                   }}
                 >
                   <p>Air Bersih (sesudah)</p>
-                  <img id="photo_air_bersih_sesudah" style={{ display: "none" }} alt="bangunan optimum sebelum" src={dataScreenshot.photo.air_bersih_sesudah} />
+                  <img
+                    id="photo_air_bersih_sesudah"
+                    style={{ display: "none" }}
+                    alt="bangunan optimum sebelum"
+                    src={dataScreenshot.photo.air_bersih_sesudah}
+                  />
                   {
                     <button
                       className="btn btn-outline-primary btn-sm screenshot"
@@ -4095,7 +4605,9 @@ const SimulasiMap = () => {
                   }}
                 >
                   <p>Bangunan yang Akan Dicetak</p>
-                  <p id="id_bangunan_print">ID Bangunan: Belum ada yang dipilih</p>
+                  <p id="id_bangunan_print">
+                    ID Bangunan: Belum ada yang dipilih
+                  </p>
                   <button
                     className="btn btn-outline-primary btn-sm"
                     id="pilih_bangunan_print"
@@ -4111,7 +4623,12 @@ const SimulasiMap = () => {
                   </button>
                 </div>
               </div>
-              <button className="btn btn-primary btn-block btn-icon-text rounded-0" id="print_simulasi" type="button" title="Unduh Hasil Simulasi">
+              <button
+                className="btn btn-primary btn-block btn-icon-text rounded-0"
+                id="print_simulasi"
+                type="button"
+                title="Unduh Hasil Simulasi"
+              >
                 <i className="ti-download btn-icon-prepend"></i>
                 Unduh Hasil Simulasi
               </button>
@@ -4150,7 +4667,11 @@ const style = {
     // height: "100vh",
     // height: "380px",
     width: "100%",
-    fallbacks: [{ width: "-moz-calc(100vh - 110px)" }, { width: "-webkit-calc(100vh - 110px)" }, { width: "-o-calc(100vh - 110px)" }],
+    fallbacks: [
+      { width: "-moz-calc(100vh - 110px)" },
+      { width: "-webkit-calc(100vh - 110px)" },
+      { width: "-o-calc(100vh - 110px)" },
+    ],
   },
 };
 
