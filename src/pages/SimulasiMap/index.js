@@ -253,7 +253,7 @@ const SimulasiMap = () => {
           ExtrudeSymbol3DLayer,
           GraphicsLayer,
         ]) => {
-          var lantaiSebelum, lantai, lantaiAtas, segmentationGroupLayer;
+          var lantaiSebelum, lantai, lantaiAtas, lantaiSebelumKelewatan, segmentationGroupLayer = {};
 
           const map = new Map({
             basemap: "topo-vector",
@@ -1789,8 +1789,9 @@ const SimulasiMap = () => {
             });
             editor.viewModel.watch("state", function(){
               if(editor.viewModel.state === "awaiting-feature-to-update" && segmentationGroupLayer){
-                map.remove(segmentationGroupLayer);
-                bangunanSesudahLayer.definitionExpression = "";
+                // map.remove(segmentationGroupLayer);
+                // bangunanSesudahLayer.definitionExpression = "";
+                hideSegementationGroupLayer()
             }
             })
             const editorExpand = new Expand({
@@ -1830,8 +1831,9 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
-              map.remove(segmentationGroupLayer);
-              bangunanSesudahLayer.definitionExpression = "";
+              // map.remove(segmentationGroupLayer);
+              // bangunanSesudahLayer.definitionExpression = "";
+              hideSegementationGroupLayer()
               view.on("click", function (event) {
                 // Remove the previous highlights
                 if (highlight) {
@@ -1914,8 +1916,9 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
-              map.remove(segmentationGroupLayer);
-              bangunanSesudahLayer.definitionExpression = "";
+              // map.remove(segmentationGroupLayer);
+              // bangunanSesudahLayer.definitionExpression = "";
+              hideSegementationGroupLayer()
               view.on("click", function (event) {
                 if (highlight) {
                   highlight.remove();
@@ -2119,7 +2122,7 @@ const SimulasiMap = () => {
               console.log(features[0]);
 
               // start segmentation drawing function
-              bangunanSesudahLayer.definitionExpression = "";
+              // bangunanSesudahLayer.definitionExpression = "";
               map.remove(segmentationGroupLayer);
               // end segmentation drawing function
             
@@ -3458,12 +3461,12 @@ const SimulasiMap = () => {
                 // start segmentation drawing function
                 if(features[0].attributes.id_bangunan){
                   setRemoveSegmentationFunc(()=>() => {
-                    bangunanSesudahLayer.definitionExpression = "";
-                    map.remove(segmentationGroupLayer);
+                    // bangunanSesudahLayer.definitionExpression = "";
+                    // map.remove(segmentationGroupLayer);
                   })
                   getRing(features[0].attributes.id_bangunan);
-                  features[0].layer.definitionExpression =
-                    "NOT id_bangunan = " + features[0].attributes.id_bangunan;
+                  // features[0].layer.definitionExpression =
+                  //   "NOT id_bangunan = " + features[0].attributes.id_bangunan;
                 }
                 // end segmentation drawing function
 
@@ -3599,6 +3602,21 @@ const SimulasiMap = () => {
 
           /************************************************************
            * Draw polygon
+           * Parameterize init Symbol by size and material
+           ************************************************************/
+          function getSymbol(size, color) {
+            return new PolygonSymbol3D({
+              symbolLayers: [
+                new ExtrudeSymbol3DLayer({
+                  size: size,
+                  material: { color: color },
+                }),
+              ],
+            });
+          }
+
+          /************************************************************
+           * Draw polygon
            ************************************************************/
           var drawGraphic = (ring, attributes) => {
             var polygon = new Polygon({
@@ -3606,16 +3624,6 @@ const SimulasiMap = () => {
               spatialReference: { wkid: 4326 },
             });
 
-            function getSymbol(size, color) {
-              return new PolygonSymbol3D({
-                symbolLayers: [
-                  new ExtrudeSymbol3DLayer({
-                    size: size,
-                    material: { color: color },
-                  }),
-                ],
-              });
-            }
 
             lantaiSebelum = new GraphicsLayer({
               title: "Lantai Sebelum",
@@ -3631,22 +3639,77 @@ const SimulasiMap = () => {
               new Graphic({
                 geometry: polygon,
                 symbol: getSymbol(
-                  attributes.jlh_lantai_sebelum && attributes.lantai_max
-                    ? attributes.jlh_lantai_sebelum
-                    : attributes.jlh_lantai,
-                    (attributes.jlh_lantai === attributes.jlh_lantai_sebelum ||
-                      !attributes.jlh_lantai_sebelum) &&
-                      (attributes.jlh_lantai_sebelum > attributes.lantai_max ||
-                        attributes.jlh_lantai > attributes.lantai_max)
-                    ? [251, 0, 0, 1]
-                    : [0, 248, 4, 1]
+                  attributes.jlh_lantai_sebelum < attributes.lantai_max &&
+                    attributes.jlh_lantai_sebelum
+                    ? attributes.jlh_lantai_sebelum < attributes.jlh_lantai
+                      ? attributes.jlh_lantai_sebelum
+                      : attributes.jlh_lantai < attributes.lantai_max &&
+                        attributes.jlh_lantai
+                      ? attributes.jlh_lantai
+                      : attributes.lantai_max ? attributes.lantai_max : -1
+                    : attributes.lantai_max ? attributes.lantai_max : -1,
+                  [0, 248, 4, 1]
                 ), //lantai sebelum
               })
             );
             // map.add(lantaiSebelum);
 
+            lantaiSebelumKelewatan = new GraphicsLayer({
+              title: "Lantai Sebelum dengan Tinggi Berlebih",
+              elevationInfo: {
+                mode: "relative-to-ground",
+                featureExpressionInfo: {
+                  expression: attributes.lantai_max, //maksimum
+                },
+                unit: "meters",
+              },
+            });
+            lantaiSebelumKelewatan.add(
+              new Graphic({
+                geometry: polygon,
+                symbol: getSymbol(
+                  attributes.jlh_lantai_sebelum > attributes.lantai_max
+                    ? attributes.jlh_lantai_sebelum < attributes.jlh_lantai
+                      ? attributes.jlh_lantai_sebelum - attributes.lantai_max
+                      : attributes.jlh_lantai > attributes.lantai_max
+                      ? attributes.jlh_lantai - attributes.lantai_max
+                      : -1
+                    : -1,
+                  [255, 128, 0, 1]
+                ), //lantai sebelum
+              })
+            );
+
+            // lantaiSebelum = new GraphicsLayer({
+            //   title: "Lantai Sebelum",
+            //   elevationInfo: {
+            //     mode: "relative-to-ground",
+            //     featureExpressionInfo: {
+            //       expression: "0", //dasar
+            //     },
+            //     unit: "meters",
+            //   },
+            // });
+            // lantaiSebelum.add(
+            //   new Graphic({
+            //     geometry: polygon,
+            //     symbol: getSymbol(
+            //       (attributes.jlh_lantai_sebelum && attributes.lantai_max) && attributes.jlh_lantai_sebelum < attributes.jlh_lantai
+            //         ? attributes.jlh_lantai_sebelum
+            //         : attributes.jlh_lantai,
+            //         (attributes.jlh_lantai === attributes.jlh_lantai_sebelum ||
+            //           !attributes.jlh_lantai_sebelum) &&
+            //           (attributes.jlh_lantai_sebelum > attributes.lantai_max ||
+            //             attributes.jlh_lantai > attributes.lantai_max)
+            //         ? [251, 0, 0, 1]
+            //         : [0, 248, 4, 1]
+            //     ), //lantai sebelum
+            //   })
+            // );
+            // map.add(lantaiSebelum);
+
             lantai = new GraphicsLayer({
-              title: "Lantai Maksimum",
+              title: "Lantai dengan Tinggi Potensial",
               elevationInfo: {
                 mode: "relative-to-ground",
                 featureExpressionInfo: {
@@ -3663,14 +3726,14 @@ const SimulasiMap = () => {
                     attributes.jlh_lantai_sebelum
                     ? attributes.lantai_max - attributes.jlh_lantai_sebelum
                     : -1,
-                  [251, 245, 0, 1]
+                  [102, 178, 255, 1]
                 ), //lantai max - lantai sebelum
               })
             );
             // map.add(lantai);
 
             lantaiAtas = new GraphicsLayer({
-              title: "Lantai Sesudah",
+              title: "Lantai Sesudah dengan Tinggi Berlebih",
               elevationInfo: {
                 mode: "relative-to-ground",
                 featureExpressionInfo: {
@@ -3696,7 +3759,7 @@ const SimulasiMap = () => {
                             attributes.jlh_lantai_sebelum
                           : 0)
                     : -1,
-                  [251, 0, 0, 1]
+                  [0, 0, 0, 1]
                 ), //lantai total - lantai sebelum - lantai (lantai max - lantai sebelum)
               })
             );
@@ -3705,11 +3768,13 @@ const SimulasiMap = () => {
               title: "Layer Segmentasi",
               layers: [
                 lantaiSebelum,
+                lantaiSebelumKelewatan,
                 lantai,
                 lantaiAtas,
               ],
               blendMode: "destination-over",
-              listMode: "hide"
+              // listMode: "hide"
+              visible: false
             })
 
             map.add(segmentationGroupLayer)
@@ -3723,7 +3788,16 @@ const SimulasiMap = () => {
             view.whenLayerView(lantaiSebelum).then(function(layerView){
               layerView.highlight(lantaiSebelum.graphics)
             })
+            view.whenLayerView(lantaiSebelumKelewatan).then(function(layerView){
+              layerView.highlight(lantaiSebelumKelewatan.graphics)
+            })
           };
+
+          var hideSegementationGroupLayer = () => {
+            // map.remove(segmentationGroupLayer);
+            // bangunanSesudahLayer.definitionExpression = ""
+            segmentationGroupLayer.visible = false
+          }
           // end segementation drawing function
 
           setStateView(view);

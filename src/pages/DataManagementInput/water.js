@@ -30,31 +30,30 @@ function DataManagementInputWater() {
     }
   }, [history, state?.id]);
 
-  const onSubmit = ({ building, building_year, building_desc, building_tag, persil, persil_year, persil_desc, persil_tag, pola_ruang, pola_ruang_year, pola_ruang_desc, pola_ruang_tag, }, e) => {
+  const onSubmit = (
+    {
+      air_bersih,
+      air_bersih_year,
+      air_bersih_desc,
+      air_bersih_tag,
+    },
+    e
+  ) => {
     setErrMessage(null);
     setIsProcessing(true);
 
-    building_tag = building_tag.map(tag => tag.value)
-    persil_tag = persil_tag.map(tag => tag.value)
-    pola_ruang_tag = pola_ruang_tag.map(tag => tag.value)
+    if (air_bersih_tag)
+      air_bersih_tag = air_bersih_tag.map((tag) => tag.value);
 
     var fd = new FormData();
-    fd.set("bangunan", building[0]);
-    fd.set("tahun_bangunan", building_year)
-    fd.set("deskripsi_bangunan", building_desc)
-    fd.set("tag_bangunan", building_tag)
-    fd.set("persil_tanah", persil[0]);
-    fd.set("tahun_persil_tanah", persil_year)
-    fd.set("deskripsi_persil_tanah", persil_desc)
-    fd.set("tag_persil_tanah", persil_tag)
-    fd.set("pola_ruang", pola_ruang[0]);
-    fd.set("tahun_pola_ruang", pola_ruang_year)
-    fd.set("deskripsi_pola_ruang", pola_ruang_desc)
-    fd.set("tag_pola_ruang", pola_ruang_tag)
+    fd.set("pdam", air_bersih[0]);
+    fd.set("tahun_pdam", air_bersih_year);
+    fd.set("deskripsi_pdam", air_bersih_desc);
+    fd.set("tag_pdam", air_bersih_tag);
     fd.set("project_id", state?.id);
 
     axios
-      .post(config.url.API_URL + "/FileUploader/Kdbklb", fd, {
+      .post(config.url.API_URL + "/FileUploader/AirBersih", fd, {
         headers: { Authorization: "Bearer " + sessionStorage.token },
         onUploadProgress: (progressEvent) => {
           setProgress({
@@ -178,7 +177,7 @@ function DataManagementInputWater() {
                     <ProgressCircle className="text-muted"></ProgressCircle>
                     <ProgressCircle className="text-primary"></ProgressCircle>
                   </div>
-                  <h1>Modul Kebutuhan Air</h1>
+                  <h1>Modul Air Bersih</h1>
                   <p className="text-muted">Unggah kebutuhan data</p>
                 </div>
                 {errMessage && (
@@ -192,255 +191,22 @@ function DataManagementInputWater() {
                 >
                   <div className="accordion" id="accordionExample">
                     <div className="card">
-                      <div className="card-header" id="headingOne">
-                        <h2 className="mb-0">
-                          <button
-                            className="btn btn-link collapsed"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target="#polaruang"
-                            aria-expanded="false"
-                            aria-controls="polaruang"
-                          >
-                            Wilayah Pelayanan PDAM
-                          </button>
-                        </h2>
-                      </div>
-
-                      <div
-                        id="polaruang"
-                        className="collapse show"
-                        aria-labelledby="headingOne"
-                        data-parent="#accordionExample"
-                      >
-                        <div className="card-body">
-                          <div className="form-group">
-                            <label>Lampiran</label>
-                            <div className="custom-file">
-                              <label
-                                id="pola_ruang"
-                                htmlFor="pola_ruang"
-                                className="custom-file-label"
-                              >
-                                Cari berkas...
-                              </label>
-                              <input
-                                className="form-control custom-file-input"
-                                ref={register({
-                                  required: "Berkas pola ruang harus diisi",
-                                })}
-                                type="file"
-                                name="pola_ruang"
-                                accept=".zip"
-                                onChange={(e) => {
-                                  e.target.files[0].name
-                                    ? (document.getElementById(
-                                        "pola_ruang"
-                                      ).innerHTML = e.target.files[0].name)
-                                    : (document.getElementById(
-                                        "pola_ruang"
-                                      ).innerHTML = "Cari berkas...");
-                                }}
-                              />
-                              {errors.pola_ruang && (
-                                <small
-                                  id="nameHelp"
-                                  className="form-text text-danger"
-                                >
-                                  {errors.pola_ruang.message}
-                                </small>
-                              )}
-                            </div>
-                          </div>
-                          <h4>Rincian Data</h4>
-                          <div className="form-row">
-                            <div className="form-group col-md-6">
-                              <label htmlFor="pola_ruang_year">
-                                Tahun (opsional)
-                              </label>
-                              <input
-                                id="pola_ruang_year"
-                                className="form-control"
-                                name="pola_ruang_year"
-                                placeholder="Tahun pola ruang"
-                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
-                              />
-                              {errors.pola_ruang_year && (
-                                <small
-                                  id="nameHelp"
-                                  className="form-text text-danger"
-                                >
-                                  {errors.pola_ruang_year.message}
-                                </small>
-                              )}
-                            </div>
-                            <div className="form-group col-md-6">
-                              <label htmlFor="pola_ruang_desc">
-                                Deskripsi (opsional)
-                              </label>
-                              <input
-                                id="pola_ruang_desc"
-                                className="form-control"
-                                name="pola_ruang_desc"
-                                placeholder="Deskripsi pola ruang"
-                                ref={register}
-                              />
-                            </div>
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="pola_ruang_tag">
-                              Tag (opsional)
-                            </label>
-                            <Controller
-                              id="pola_ruang_tag"
-                              as={CreatableSelect}
-                              name="pola_ruang_tag"
-                              components={{
-                                DropdownIndicator: null,
-                              }}
-                              control={control}
-                              defaultValue={null}
-                              isMulti
-                              isClearable
-                              placeholder="Tag pola ruang"
-                              className=""
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="card">
-                      <div className="card-header" id="headingTwo">
-                        <h2 className="mb-0">
-                          <button
-                            className="btn btn-link collapsed"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target="#buildingfootprint"
-                            aria-expanded="false"
-                            aria-controls="buildingfootprint"
-                          >
-                            Bangunan yang Sudah Ada
-                          </button>
-                        </h2>
-                      </div>
-                      <div
-                        id="buildingfootprint"
-                        className="collapse show"
-                        aria-labelledby="headingTwo"
-                        data-parent="#accordionExample"
-                      >
-                        <div className="card-body">
-                          <div className="form-group">
-                            <label>Lampiran</label>
-                            <div className="custom-file">
-                              <label
-                                id="building"
-                                htmlFor="building"
-                                className="custom-file-label"
-                              >
-                                Cari berkas...
-                              </label>
-                              <input
-                                className="form-control custom-file-input"
-                                ref={register({
-                                  required: "Berkas bangunan harus ada",
-                                })}
-                                type="file"
-                                name="building"
-                                accept=".zip"
-                                onChange={(e) => {
-                                  e.target.files[0].name
-                                    ? (document.getElementById(
-                                        "building"
-                                      ).innerHTML = e.target.files[0].name)
-                                    : (document.getElementById(
-                                        "building"
-                                      ).innerHTML = "Cari berkas...");
-                                }}
-                              />
-                            </div>
-                            {errors.building && (
-                              <small
-                                id="nameHelp"
-                                className="form-text text-danger"
-                              >
-                                {errors.building.message}
-                              </small>
-                            )}
-                          </div>
-                          <h4>Rincian Data</h4>
-                          <div className="form-row">
-                            <div className="form-group col-md-6">
-                              <label htmlFor="building_year">
-                                Tahun (opsional)
-                              </label>
-                              <input
-                                id="building_year"
-                                className="form-control"
-                                name="building_year"
-                                placeholder="Tahun bangunan yang sudah ada"
-                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
-                              />
-                              {errors.building_year && (
-                                <small
-                                  id="nameHelp"
-                                  className="form-text text-danger"
-                                >
-                                  {errors.building_year.message}
-                                </small>
-                              )}
-                            </div>
-                            <div className="form-group col-md-6">
-                              <label htmlFor="building_desc">
-                                Deskripsi (opsional)
-                              </label>
-                              <input
-                                id="building_desc"
-                                className="form-control"
-                                name="building_desc"
-                                placeholder="Deskripsi bangunan yang sudah ada"
-                                ref={register}
-                              />
-                            </div>
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="building_tag">Tag (opsional)</label>
-                            <Controller
-                              id="building_tag"
-                              as={CreatableSelect}
-                              name="building_tag"
-                              components={{
-                                DropdownIndicator: null,
-                              }}
-                              control={control}
-                              defaultValue={null}
-                              isMulti
-                              isClearable
-                              placeholder="Tag bangunan"
-                              className=""
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="card">
                       <div className="card-header" id="headingThree">
                         <h2 className="mb-0">
                           <button
                             className="btn btn-link collapsed"
                             type="button"
                             data-toggle="collapse"
-                            data-target="#persiltanah"
+                            data-target="#airbersih"
                             aria-expanded="false"
-                            aria-controls="persiltanah"
+                            aria-controls="airbersih"
                           >
-                            Jumlah Penduduk
+                            Air Bersih
                           </button>
                         </h2>
                       </div>
                       <div
-                        id="persiltanah"
+                        id="airbersih"
                         className="collapse show"
                         aria-labelledby="headingThree"
                         data-parent="#accordionExample"
@@ -450,8 +216,8 @@ function DataManagementInputWater() {
                             <label>Lampiran</label>
                             <div className="custom-file">
                               <label
-                                id="persil"
-                                htmlFor="persil"
+                                id="air_bersih"
+                                htmlFor="air_bersih"
                                 className="custom-file-label"
                               >
                                 Cari berkas...
@@ -459,71 +225,78 @@ function DataManagementInputWater() {
                               <input
                                 className="form-control custom-file-input"
                                 ref={register({
-                                  required: "Berkas persil tanah harus ada",
+                                  required: "Berkas jaringan jalan harus ada",
                                 })}
                                 type="file"
-                                name="persil"
+                                name="air_bersih"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(
-                                        "persil"
+                                        "air_bersih"
                                       ).innerHTML = e.target.files[0].name)
                                     : (document.getElementById(
-                                        "persil"
+                                        "air_bersih"
                                       ).innerHTML = "Cari berkas...");
                                 }}
                               />
                             </div>
-                            {errors.persil && (
+                            {errors.air_bersih && (
                               <small
                                 id="nameHelp"
                                 className="form-text text-danger"
                               >
-                                {errors.persil.message}
+                                {errors.air_bersih.message}
                               </small>
                             )}
                           </div>
                           <h4>Rincian Data</h4>
                           <div className="form-row">
                             <div className="form-group col-md-6">
-                              <label htmlFor="persil_year">
+                              <label htmlFor="air_bersih_year">
                                 Tahun (opsional)
                               </label>
                               <input
-                                id="persil_year"
+                                id="air_bersih_year"
                                 className="form-control"
-                                name="persil_year"
-                                placeholder="Tahun persil tanah"
-                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
+                                name="air_bersih_year"
+                                placeholder="Tahun jaringan jalan"
+                                ref={register({
+                                  pattern: {
+                                    value: /^\d{4}$/,
+                                    message: "Format tahun salah",
+                                  },
+                                })}
                               />
-                              {errors.persil_year && (
+                              {errors.air_bersih_year && (
                                 <small
                                   id="nameHelp"
                                   className="form-text text-danger"
                                 >
-                                  {errors.persil_year.message}
+                                  {errors.air_bersih_year.message}
                                 </small>
                               )}
                             </div>
                             <div className="form-group col-md-6">
-                              <label htmlFor="persil_desc">
+                              <label htmlFor="air_bersih_desc">
                                 Deskripsi (opsional)
                               </label>
                               <input
-                                id="persil_desc"
+                                id="air_bersih_desc"
                                 className="form-control"
-                                name="persil_desc"
-                                placeholder="Deskripsi persil tanah"
+                                name="air_bersih_desc"
+                                placeholder="Deskripsi jaringan jalan"
                                 ref={register}
                               />
                             </div>
                           </div>
                           <div className="form-group">
-                            <label htmlFor="persil_tag">Tag (opsional)</label>
+                            <label htmlFor="air_bersih_tag">
+                              Tag (opsional)
+                            </label>
                             <Controller
-                              id="persil_tag"
+                              id="air_bersih_tag"
                               as={CreatableSelect}
-                              name="persil_tag"
+                              name="air_bersih_tag"
                               components={{
                                 DropdownIndicator: null,
                               }}
@@ -531,7 +304,7 @@ function DataManagementInputWater() {
                               defaultValue={null}
                               isMulti
                               isClearable
-                              placeholder="Tag persil tanah"
+                              placeholder="Tag jaringan jalan"
                               className=""
                             />
                           </div>
