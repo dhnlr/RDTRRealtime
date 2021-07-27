@@ -73,7 +73,7 @@ const SimulasiMap = () => {
   const [loaded, setLoaded] = useState(true);
   const [dataScreenshot, setDataScreenshot] = useState(dataScreenshotTemplate);
   const [removeSegmentationFunc, setRemoveSegmentationFunc] = useState()
-  const [toggleSegmentationFunc, setToggleSegmentationFunc] = useState()
+  const [showSegmentationFunc, setShowSegmentationFunc] = useState()
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -3470,11 +3470,22 @@ const SimulasiMap = () => {
                     map.remove(segmentationGroupLayer);
                     setIsSegmentationActive(false)
                   })
-                  setToggleSegmentationFunc((id)=>(id)=>{
+                  setShowSegmentationFunc((id)=>(id)=>{
                       bangunanSesudahLayer.definitionExpression =
                       "NOT id_bangunan = " + id;
                       map.add(segmentationGroupLayer)
-                    
+                    view.whenLayerView(lantaiAtas).then(function(layerView){
+                      layerView.highlight(lantaiAtas.graphics)
+                    })
+                    view.whenLayerView(lantai).then(function(layerView){
+                      layerView.highlight(lantai.graphics)
+                    })
+                    view.whenLayerView(lantaiSebelum).then(function(layerView){
+                      layerView.highlight(lantaiSebelum.graphics)
+                    })
+                    view.whenLayerView(lantaiSebelumKelewatan).then(function(layerView){
+                      layerView.highlight(lantaiSebelumKelewatan.graphics)
+                    })
                   })
                   getRing(features[0].attributes.id_bangunan);
                   // features[0].layer.definitionExpression =
@@ -3908,7 +3919,7 @@ const SimulasiMap = () => {
     });
   };
   const handleActivateSegmentation = () => {
-    !isSegmentationActive ?  toggleSegmentationFunc(segmentationBuildingId) : removeSegmentationFunc()
+    !isSegmentationActive ?  showSegmentationFunc(segmentationBuildingId) : removeSegmentationFunc()
     setIsSegmentationActive(!isSegmentationActive);
   };
 
