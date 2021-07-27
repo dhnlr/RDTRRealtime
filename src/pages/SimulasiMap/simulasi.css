@@ -110,10 +110,22 @@
 div.switch-sebelum-sesudah {
   background-color: #4a49ac;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 10vh;
+  /* height: min-content; */
   font-family: sans-serif;
+  padding: 1rem 0 0.6rem;
+}
+
+div.segementation-container {
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  width: 100%;
+  justify-content:space-evenly;
+  align-items: center;
+  margin: 0.4rem 0;
 }
 
 .switch-button {
@@ -179,5 +191,77 @@ div.switch-sebelum-sesudah {
 .switch-button-checkbox + .switch-button-label .switch-button-label-span {
   position: relative;
 }
+
+.switch-button-small {
+  background: rgba(50, 49, 126, 0.56);
+  border-radius: 30px;
+  overflow: hidden;
+  width: 40px;
+  height: 20px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #fff;
+  position: relative;
+  padding-right: 20px;
+  position: relative;
+}
+.switch-button-small:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  pointer-events: none;
+}
+.switch-button-small-checkbox {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 2;
+}
+.switch-button-small-checkbox:checked + .switch-button-small-label:before {
+  background: #57b657;
+  content: "";
+  transform: translateX(20px);
+  transition: transform 300ms linear;
+}
+.switch-button-small-checkbox + .switch-button-small-label {
+  position: relative;
+  padding: 10px 0;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+.switch-button-small-checkbox + .switch-button-small-label:before {
+  content: "";
+  background: #a3a4a5;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 30px;
+  transform: translateX(0);
+  transition: transform 300ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.switch-button-small-checkbox + .switch-button-small-label .switch-button-small-label-span {
+  position: relative;
+}
+
+
 
 /* end popup sebelumsesudah */

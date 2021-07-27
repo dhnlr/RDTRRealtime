@@ -73,6 +73,7 @@ const SimulasiMap = () => {
   const [loaded, setLoaded] = useState(true);
   const [dataScreenshot, setDataScreenshot] = useState(dataScreenshotTemplate);
   const [removeSegmentationFunc, setRemoveSegmentationFunc] = useState()
+  const [toggleSegmentationFunc, setToggleSegmentationFunc] = useState()
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -134,6 +135,8 @@ const SimulasiMap = () => {
   const [activeSebelumSesudah, setActiveSebelumSesudah] = useState({
     activeSebelum: false,
   });
+  const [isSegmentationActive, setIsSegmentationActive] = useState(false);
+  const [segmentationBuildingId, setSegmentationBuildingId] = useState(null)
 
   // Form related functions
   const {
@@ -2123,7 +2126,8 @@ const SimulasiMap = () => {
 
               // start segmentation drawing function
               // bangunanSesudahLayer.definitionExpression = "";
-              map.remove(segmentationGroupLayer);
+              // map.remove(segmentationGroupLayer);
+              hideSegementationGroupLayer()
               // end segmentation drawing function
             
               let fieldsArr = [];
@@ -3460,9 +3464,17 @@ const SimulasiMap = () => {
                 
                 // start segmentation drawing function
                 if(features[0].attributes.id_bangunan){
+                  setSegmentationBuildingId(features[0].attributes.id_bangunan)
                   setRemoveSegmentationFunc(()=>() => {
-                    // bangunanSesudahLayer.definitionExpression = "";
-                    // map.remove(segmentationGroupLayer);
+                    bangunanSesudahLayer.definitionExpression = "";
+                    map.remove(segmentationGroupLayer);
+                    setIsSegmentationActive(false)
+                  })
+                  setToggleSegmentationFunc((id)=>(id)=>{
+                      bangunanSesudahLayer.definitionExpression =
+                      "NOT id_bangunan = " + id;
+                      map.add(segmentationGroupLayer)
+                    
                   })
                   getRing(features[0].attributes.id_bangunan);
                   // features[0].layer.definitionExpression =
@@ -3774,29 +3786,30 @@ const SimulasiMap = () => {
               ],
               blendMode: "destination-over",
               // listMode: "hide"
-              visible: false
+              // visible: false
             })
 
-            map.add(segmentationGroupLayer)
+            // map.add(segmentationGroupLayer)
 
-            view.whenLayerView(lantaiAtas).then(function(layerView){
-              layerView.highlight(lantaiAtas.graphics)
-            })
-            view.whenLayerView(lantai).then(function(layerView){
-              layerView.highlight(lantai.graphics)
-            })
-            view.whenLayerView(lantaiSebelum).then(function(layerView){
-              layerView.highlight(lantaiSebelum.graphics)
-            })
-            view.whenLayerView(lantaiSebelumKelewatan).then(function(layerView){
-              layerView.highlight(lantaiSebelumKelewatan.graphics)
-            })
+            // view.whenLayerView(lantaiAtas).then(function(layerView){
+            //   layerView.highlight(lantaiAtas.graphics)
+            // })
+            // view.whenLayerView(lantai).then(function(layerView){
+            //   layerView.highlight(lantai.graphics)
+            // })
+            // view.whenLayerView(lantaiSebelum).then(function(layerView){
+            //   layerView.highlight(lantaiSebelum.graphics)
+            // })
+            // view.whenLayerView(lantaiSebelumKelewatan).then(function(layerView){
+            //   layerView.highlight(lantaiSebelumKelewatan.graphics)
+            // })
           };
 
           var hideSegementationGroupLayer = () => {
-            // map.remove(segmentationGroupLayer);
-            // bangunanSesudahLayer.definitionExpression = ""
-            segmentationGroupLayer.visible = false
+            map.remove(segmentationGroupLayer);
+            bangunanSesudahLayer.definitionExpression = ""
+            setIsSegmentationActive(false)
+            // segmentationGroupLayer.visible = false
           }
           // end segementation drawing function
 
@@ -3893,6 +3906,10 @@ const SimulasiMap = () => {
       ...activeSebelumSesudah,
       activeSebelum: !activeSebelumSesudah.activeSebelum,
     });
+  };
+  const handleActivateSegmentation = () => {
+    !isSegmentationActive ?  toggleSegmentationFunc(segmentationBuildingId) : removeSegmentationFunc()
+    setIsSegmentationActive(!isSegmentationActive);
   };
 
   return (
@@ -4051,6 +4068,25 @@ const SimulasiMap = () => {
                             Sebelum
                           </span>
                         </label>
+                      </div>
+
+                      <div className="segementation-container">
+                          Tampilkan Layer Segmentasi
+                        <div className="switch-button-small">
+                          <input
+                            className="switch-button-small-checkbox"
+                            type="checkbox"
+                            onClick={handleActivateSegmentation}
+                            checked={isSegmentationActive}
+                          />
+                          <label
+                            className="switch-button-small-label"
+                            style={{ marginBottom: "0px" }}
+                          >
+                            <span className="switch-button-small-label-span">
+                            </span>
+                          </label>
+                        </div>
                       </div>
                     </div>
 
