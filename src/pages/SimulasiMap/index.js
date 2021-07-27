@@ -74,6 +74,8 @@ const SimulasiMap = () => {
   const [dataScreenshot, setDataScreenshot] = useState(dataScreenshotTemplate);
   const [removeSegmentationFunc, setRemoveSegmentationFunc] = useState()
   const [showSegmentationFunc, setShowSegmentationFunc] = useState()
+  const [isSegmentationActive, setIsSegmentationActive] = useState(false);
+  const [segmentationBuildingId, setSegmentationBuildingId] = useState(null);
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -135,8 +137,6 @@ const SimulasiMap = () => {
   const [activeSebelumSesudah, setActiveSebelumSesudah] = useState({
     activeSebelum: false,
   });
-  const [isSegmentationActive, setIsSegmentationActive] = useState(false);
-  const [segmentationBuildingId, setSegmentationBuildingId] = useState(null)
 
   // Form related functions
   const {
@@ -3474,18 +3474,18 @@ const SimulasiMap = () => {
                       bangunanSesudahLayer.definitionExpression =
                       "NOT id_bangunan = " + id;
                       map.add(segmentationGroupLayer)
-                    view.whenLayerView(lantaiAtas).then(function(layerView){
-                      layerView.highlight(lantaiAtas.graphics)
-                    })
-                    view.whenLayerView(lantai).then(function(layerView){
-                      layerView.highlight(lantai.graphics)
-                    })
-                    view.whenLayerView(lantaiSebelum).then(function(layerView){
-                      layerView.highlight(lantaiSebelum.graphics)
-                    })
-                    view.whenLayerView(lantaiSebelumKelewatan).then(function(layerView){
-                      layerView.highlight(lantaiSebelumKelewatan.graphics)
-                    })
+                      view.whenLayerView(lantaiAtas).then(function(layerView){
+                        layerView.highlight(lantaiAtas.graphics)
+                      })
+                      view.whenLayerView(lantai).then(function(layerView){
+                        layerView.highlight(lantai.graphics)
+                      })
+                      view.whenLayerView(lantaiSebelum).then(function(layerView){
+                        layerView.highlight(lantaiSebelum.graphics)
+                      })
+                      view.whenLayerView(lantaiSebelumKelewatan).then(function(layerView){
+                        layerView.highlight(lantaiSebelumKelewatan.graphics)
+                      })
                   })
                   getRing(features[0].attributes.id_bangunan);
                   // features[0].layer.definitionExpression =
