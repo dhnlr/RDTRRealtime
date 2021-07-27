@@ -3796,7 +3796,7 @@ const SimulasiMap = () => {
                 lantaiAtas,
               ],
               blendMode: "destination-over",
-              // listMode: "hide"
+              listMode: "hide"
               // visible: false
             })
 
