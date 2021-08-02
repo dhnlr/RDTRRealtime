@@ -4158,7 +4158,7 @@ const SimulasiMap = () => {
                                       {contentBangunanKdbKlb[60].field_value}
                                     </td>
                                   </tr>
-                                  {(contentBangunanKdbKlb[2].field_value.toLowerCase().indexOf("ditolak") !== -1 || contentBangunanKdbKlb[3].field_value.toLowerCase().indexOf("ditolak") !== -1) && <tr>
+                                  {(String(contentBangunanKdbKlb[2].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[3].field_value).toLowerCase().indexOf("ditolak") !== -1) && <tr>
                                     <td>Status KDB/KLB</td>
                                     <td>
                                       {!activeSebelumSesudah.activeSebelum
@@ -4166,7 +4166,7 @@ const SimulasiMap = () => {
                                         : contentBangunanKdbKlb[3].field_value}
                                     </td>
                                   </tr>}
-                                  {(contentBangunanKdbKlb[10].field_value.toLowerCase().indexOf("ditolak") !== -1 || contentBangunanKdbKlb[11].field_value.toLowerCase().indexOf("ditolak") !== -1) && <tr>
+                                  {(String(contentBangunanKdbKlb[10].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[11].field_value).toLowerCase().indexOf("ditolak") !== -1) && <tr>
                                     <td>Status Kemacetan</td>
                                     <td>
                                       {!activeSebelumSesudah.activeSebelum
@@ -4176,7 +4176,7 @@ const SimulasiMap = () => {
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
                                   </tr>}
-                                  {(contentBangunanKdbKlb[8].field_value.toLowerCase().indexOf("ditolak") !== -1 || contentBangunanKdbKlb[9].field_value.toLowerCase().indexOf("ditolak") !== -1) && <tr>
+                                  {(String(contentBangunanKdbKlb[8].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[9].field_value).toLowerCase().indexOf("ditolak") !== -1) && <tr>
                                     <td>Status Air Bersih</td>
                                     <td>
                                       {!activeSebelumSesudah.activeSebelum
