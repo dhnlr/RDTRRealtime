@@ -325,7 +325,7 @@ const SimulasiMap = () => {
             uniqueValueInfos: [
               {
                 value: "1",
-                symbol: getSymbolBangunanSesudah([255, 85, 0]),
+                symbol: getSymbolBangunanSesudah([255, 153, 122]),
                 label: "1",
               },
               {
@@ -1770,22 +1770,22 @@ const SimulasiMap = () => {
                   updateEnabled: true,
                   deleteEnabled: true,
                   fieldConfig: [
-                    {
-                      name: "namazona",
-                      label: "namazona",
-                    },
-                    {
-                      name: "kdzona",
-                      label: "kdzona",
-                    },
+                    // {
+                    //   name: "namazona",
+                    //   label: "namazona",
+                    // },
+                    // {
+                    //   name: "kdzona",
+                    //   label: "kdzona",
+                    // },
                     {
                       name: "namaszona",
                       label: "namaszona",
                     },
-                    {
-                      name: "kdszona",
-                      label: "kdszona",
-                    },
+                    // {
+                    //   name: "kdszona",
+                    //   label: "kdszona",
+                    // },
                   ],
                 },
               ],
@@ -3907,7 +3907,9 @@ const SimulasiMap = () => {
   // start close showing popup
   const handleCloseShowingPopup = () => {
     console.log(stateView);
-    removeSegmentationFunc()
+    if(segmentationBuildingId){
+      removeSegmentationFunc()
+    }
     stateView.popup.close();
     setShowingPopop({ ...showingPopup, show: false, title: "" });
   };
@@ -4106,6 +4108,89 @@ const SimulasiMap = () => {
                       id="accordionExample"
                     >
                       <div className="fade-in">
+                        <div className="card" style={{ margin: "0 0.2rem" }}>
+                          <div
+                            className="card-header"
+                            role="tab"
+                            id="headingTwo"
+                            style={{ padding: "0px" }}
+                          >
+                            <h6 className="mb-0">
+                              <button
+                                className="btn btn-block text-left collapsed btn-sm"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target={"#sebelumSum"}
+                                aria-expanded="false"
+                                aria-controls={"sebelumSum"}
+                                style={{ fontSize: "14px" }}
+                              >
+                                {/* <img
+                                  src="./images/Traffic-lights.svg"
+                                  alt="Kemacetan"
+                                  style={{ marginRight: "10px" }}
+                                /> */}
+                                <i class="ti-info-alt"> </i>
+                                Ringkasan
+                                <i className="ti-arrow-circle-down float-right"></i>
+                              </button>
+                            </h6>
+                          </div>
+
+                          <div
+                            id="sebelumSum"
+                            className="show collapse"
+                            aria-labelledby="headingTwo"
+                            data-parent="#accordionExample"
+                          >
+                            <div className="card-body">
+                              <table className="table">
+                                <tbody>
+                                  <tr>
+                                    <td>Jenis Bangunan</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[1].field_value}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Nama Sub Zona</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[60].field_value}
+                                    </td>
+                                  </tr>
+                                  {(contentBangunanKdbKlb[2].field_value.toLowerCase().indexOf("ditolak") !== -1 || contentBangunanKdbKlb[3].field_value.toLowerCase().indexOf("ditolak") !== -1) && <tr>
+                                    <td>Status KDB/KLB</td>
+                                    <td>
+                                      {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[2].field_value
+                                        : contentBangunanKdbKlb[3].field_value}
+                                    </td>
+                                  </tr>}
+                                  {(contentBangunanKdbKlb[10].field_value.toLowerCase().indexOf("ditolak") !== -1 || contentBangunanKdbKlb[11].field_value.toLowerCase().indexOf("ditolak") !== -1) && <tr>
+                                    <td>Status Kemacetan</td>
+                                    <td>
+                                      {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[10].field_value
+                                        : contentBangunanKdbKlb[11].field_value}
+                                    </td>
+                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
+                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
+                                  </tr>}
+                                  {(contentBangunanKdbKlb[8].field_value.toLowerCase().indexOf("ditolak") !== -1 || contentBangunanKdbKlb[9].field_value.toLowerCase().indexOf("ditolak") !== -1) && <tr>
+                                    <td>Status Air Bersih</td>
+                                    <td>
+                                      {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[8].field_value
+                                        : contentBangunanKdbKlb[9].field_value}
+                                    </td>
+                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
+                                  </tr>}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+
                         <div className="card" style={{ margin: "0 0.2rem" }}>
                           <div
                             className="card-header"
