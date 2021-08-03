@@ -15,6 +15,7 @@ import DataManagementInputTrash from "./DataManagementInput/trash";
 import DataManagementInputWater from "./DataManagementInput/water";
 import SimulationTable from "./Simulation/SimulationTable";
 import SimulationInput from "./Simulation/SimulationInput";
+import SimulationHistory from "./Simulation/SimulationHistory";
 import SimulasiMap from "./SimulasiMap";
 import ConfirmByCode from "./ConfirmByCode";
 import ResentEmailConfirmation from "./ResentEmailConfirmation";
@@ -54,6 +55,7 @@ export {
   SimulationTable,
   SimulationInput,
   SimulasiMap,
+  SimulationHistory,
   ConfirmByCode,
   ResentEmailConfirmation,
   ForgotPassword,

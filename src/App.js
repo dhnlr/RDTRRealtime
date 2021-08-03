@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, DataManagementInput, DataManagementInputPhase2, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, RoleManagement, RoleManagementEdit, RoleManagementCreate, UserManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit, HelpData, HelpDataFaq, DataManagement, DataManagementInputWater, DataManagementInputTrash, DataManagementInputFlood, DataManagementInputCongestion, DataManagementInputKdb, SimulationTable, SimulationInput } from "./pages";
+import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, DataManagementInput, DataManagementInputPhase2, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, RoleManagement, RoleManagementEdit, RoleManagementCreate, UserManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit, HelpData, HelpDataFaq, DataManagement, DataManagementInputWater, DataManagementInputTrash, DataManagementInputFlood, DataManagementInputCongestion, DataManagementInputKdb, SimulationTable, SimulationInput, SimulationHistory } from "./pages";
 
 function App() {
   return (
@@ -27,6 +27,7 @@ function App() {
           <Route path="/simulation" component={SimulationTable} />
           <Route path="/simulasimap" component={SimulasiMap} />
           <Route path="/simulationinput" component={SimulationInput} />
+          <Route path="/simulationhistory" component={SimulationHistory} />
           <Route path="/resentmailconfirmation" component={ResentEmailConfirmation} />
           <Route path="/usermanagement/create" component={UserManagementCreate} />
           <Route path="/usermanagement/edit" render={props => <UserManagementEdit {...props}/>} />
