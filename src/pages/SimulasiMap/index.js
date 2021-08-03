@@ -4227,7 +4227,7 @@ const SimulasiMap = () => {
 
                           <div
                             id="sebelum"
-                            className="collapse show"
+                            className="collapse"
                             aria-labelledby="headingOne"
                             data-parent="#accordionExample"
                           >
