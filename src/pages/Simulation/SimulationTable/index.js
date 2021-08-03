@@ -319,7 +319,7 @@ function SimulationTable() {
                                 {
                                   Header: "",
                                   accessor: "action",
-                                  width: "15%",
+                                  width: "25%",
                                   disableGlobalFilter: true,
                                   Cell: (row) => (
                                     <div style={{ textAlign: "right" }}>
@@ -329,6 +329,15 @@ function SimulationTable() {
                                           title="Peta Simulasi"
                                         >
                                             Lihat Simulasi
+                                        </button>
+                                      </Link>
+                                      &nbsp;
+                                      <Link to="/simulationhistory">
+                                        <button
+                                          className="btn btn-outline-light btn-xs"
+                                          title="Sejarah Simulasi"
+                                        >
+                                            Lihat Analisis
                                         </button>
                                       </Link>
                                       &nbsp;
