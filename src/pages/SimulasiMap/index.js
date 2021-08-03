@@ -72,6 +72,7 @@ const SimulasiMap = () => {
   const [resPersilTanah, setResPersilTanah] = useState({});
   const [loaded, setLoaded] = useState(true);
   const [dataScreenshot, setDataScreenshot] = useState(dataScreenshotTemplate);
+  const [dataHistory, setDataHistory] = useState({id_bangunan: null});
   const [removeSegmentationFunc, setRemoveSegmentationFunc] = useState()
   const [showSegmentationFunc, setShowSegmentationFunc] = useState()
   const [isSegmentationActive, setIsSegmentationActive] = useState(false);
@@ -1994,6 +1995,92 @@ const SimulasiMap = () => {
             document
               .getElementById("print_simulasi")
               .addEventListener("click", cetak);
+            // end print simulasi
+
+            // start hisoty simulasi
+            const historyExp = new Expand({
+              expandIconClass: "esri-icon-map-pin",
+              expandTooltip: "Analisis Sejarah Simulasi",
+              content: document.getElementById("historyExpDiv"),
+              view: view,
+            });
+            view.ui.add({
+              component: historyExp,
+              position: "top-left",
+            });
+
+            const selectBuildingHistory = () => {
+              view.container.classList.add("screenshotCursor");
+              jalanSesudahLayer.popupEnabled = false;
+              polaRuangVersioningLayer.popupEnabled = false;
+              persilTanahSesudahLayer.popupEnabled = false;
+              kapasitasAirLayer.popupEnabled = false;
+              persilTanahBpn.popupEnabled = false;
+              buildingsEnvelopeLayer.popupEnabled = false;
+              basemapPolaRuangLayer.popupEnabled = false;
+              polaRuangEnvelopeLayer.popupEnabled = false;
+              bangunanSesudahLayer.popupEnabled = false;
+              buildings3dLayer.popupEnabled = false;
+              hideSegementationGroupLayer()
+              view.on("click", function (event) {
+                if (highlight) {
+                  highlight.remove();
+                }
+                let pointBuildings = event.mapPoint;
+
+                var query = bangunanSesudahLayer.createQuery();
+                query.geometry = pointBuildings;
+                view
+                  .whenLayerView(bangunanSesudahLayer)
+                  .then(function (bangunanSesudahLayerView) {
+                    bangunanSesudahLayer
+                      .queryFeatures(query)
+                      .then(function (result) {
+                        if (result.features.length > 0) {
+                          result.features.forEach(function (feature) {
+                            var objectId = feature.attributes.objectid_1;
+                            var id_bangunan = feature.attributes.id_bangunan;
+                            setDataHistory({id_bangunan: feature.attributes.id_bangunan});
+                                view.container.classList.remove("screenshotCursor");
+                                highlight =
+                                  bangunanSesudahLayerView.highlight(objectId);
+                                document.getElementById(
+                                  "id_bangunan_history"
+                                ).innerText = "ID bangunan: " + id_bangunan;
+                            // getScreenshotData(dataScreenshot, id_bangunan).then(
+                            //   (result) => {
+                            //     setDataHistory(result);
+                            //     view.container.classList.remove("screenshotCursor");
+                            //     highlight =
+                            //       bangunanSesudahLayerView.highlight(objectId);
+                            //     document.getElementById(
+                            //       "id_bangunan_history"
+                            //     ).innerText = "ID bangunan: " + id_bangunan;
+                            //   }
+                            // );
+                          });
+                        }
+                        jalanSesudahLayer.popupEnabled = true;
+                        polaRuangVersioningLayer.popupEnabled = true;
+                        persilTanahSesudahLayer.popupEnabled = true;
+                        kapasitasAirLayer.popupEnabled = true;
+                        persilTanahBpn.popupEnabled = true;
+                        buildingsEnvelopeLayer.popupEnabled = true;
+                        basemapPolaRuangLayer.popupEnabled = true;
+                        polaRuangEnvelopeLayer.popupEnabled = true;
+                        bangunanSesudahLayer.popupEnabled = true;
+                        buildings3dLayer.popupEnabled = true;
+                      });
+                })
+              });
+            };
+
+            document
+              .getElementById("pilih_bangunan_history")
+              .addEventListener("click", selectBuildingHistory);
+            // document
+            //   .getElementById("history_simulasi")
+            //   .addEventListener("click", historyAnalysis);
             // end print simulasi
 
             // start legend
@@ -3934,6 +4021,23 @@ const SimulasiMap = () => {
     setIsSegmentationActive(!isSegmentationActive);
   };
 
+  // start history analysis
+  const handleHistoryAnalysis = () => {
+    console.log(dataHistory)
+    if (
+      dataHistory.id_bangunan
+    ) {
+      Swal.fire("Belum diimplementasikan", "Menunggu servis backend", "info")
+    } else {
+      Swal.fire(
+        "Maaf",
+        "Pilih bangunan terlebih dahulu untuk mencetak analisis sejarah simulasi",
+        "error"
+      );
+    }
+  };
+  // end history analysis
+
   return (
     <div className="container-scroller">
       <Header />
@@ -4611,6 +4715,63 @@ const SimulasiMap = () => {
                   />
                 </form>
               </div>
+            </div>
+            <div id="historyExpDiv" className="esri-widget print">
+              <div
+                style={{
+                  backgroundColor: "#fff",
+                  paddingTop: "10px",
+                  textAlign: "center",
+                }}
+              >
+                <h3 className="esri-widget__heading">Sejarah Simulasi</h3>
+              </div>
+              <div
+                className=""
+                style={{
+                  background: "#f3f3f3",
+                  width: "300px",
+                  maxHeight: "180px",
+                  overflowX: "auto",
+                  padding: "0px",
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: "#fff",
+                    margin: "5px",
+                    padding: "10px",
+                  }}
+                >
+                  <p>Bangunan yang Akan Dianalisis</p>
+                  <p id="id_bangunan_history">
+                    ID Bangunan: Belum ada yang dipilih
+                  </p>
+                  <button
+                    className="btn btn-outline-primary btn-sm"
+                    id="pilih_bangunan_history"
+                    type="button"
+                    title="Pilih Bangunan"
+                    style={{
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                      marginRight: "2px",
+                    }}
+                  >
+                    Pilih Bangunan
+                  </button>
+                </div>
+              </div>
+              <button
+                className="btn btn-primary btn-block btn-icon-text rounded-0"
+                id="history_simulasi"
+                type="button"
+                title="Analisis Sejarah Simulasi"
+                onClick={() => handleHistoryAnalysis()}
+              >
+                <i className="ti-search btn-icon-prepend"></i>
+                Analisis Sejarah Simulasi
+              </button>
             </div>
             <div id="printExpDiv" className="esri-widget print">
               <div
