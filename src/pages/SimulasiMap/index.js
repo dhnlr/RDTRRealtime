@@ -3916,6 +3916,9 @@ const SimulasiMap = () => {
     if(segmentationBuildingId){
       removeSegmentationFunc()
     }
+    setActiveSebelumSesudah({
+      activeSebelum: false
+    })
     stateView.popup.close();
     setShowingPopop({ ...showingPopup, show: false, title: "" });
   };
