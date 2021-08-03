@@ -3669,8 +3669,14 @@ const SimulasiMap = () => {
                       : attributes.jlh_lantai < attributes.lantai_max &&
                         attributes.jlh_lantai
                       ? attributes.jlh_lantai
-                      : attributes.lantai_max ? attributes.lantai_max : -1
-                    : attributes.lantai_max ? attributes.lantai_max : -1,
+                      : attributes.lantai_max
+                      ? attributes.lantai_max
+                      : -1
+                    : attributes.lantai_max && attributes.jlh_lantai
+                    ? attributes.jlh_lantai > attributes.lantai_max 
+                      ? attributes.lantai_max
+                      : attributes.jlh_lantai
+                    : -1,
                   [0, 248, 4, 1]
                 ), //lantai sebelum
               })
