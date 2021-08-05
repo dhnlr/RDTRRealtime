@@ -1730,16 +1730,20 @@ const SimulasiMap = () => {
                   deleteEnabled: true,
                   fieldConfig: [
                     {
-                      name: "jenis",
-                      label: "jenis",
+                      name: "jenis_bang",
+                      label: "Jenis Bangunan",
                     },
                     {
                       name: "luas_m2",
-                      label: "luas_m2",
+                      label: "Luas (m2)",
                     },
                     {
                       name: "jlh_lantai",
-                      label: "jlh_lantai",
+                      label: "Jumlah Lantai",
+                    },
+                    {
+                      name: "kegiatan",
+                      label: "Kegiatan",
                     },
                   ],
                 },
@@ -2560,6 +2564,38 @@ const SimulasiMap = () => {
                   {
                     field_name: "q_arus",
                     field_value: features[0].attributes.q_arus,
+                  },
+                  {
+                    field_name: "namaszona_sebelum",
+                    field_value: features[0].attributes.namaszona_sebelum,
+                  },
+                  {
+                    field_name: "kdb_sebelum",
+                    field_value: features[0].attributes.kdb_sebelum,
+                  },
+                  {
+                    field_name: "klb_sebelum",
+                    field_value: features[0].attributes.klb_sebelum,
+                  },
+                  {
+                    field_name: "kdh_sebelum",
+                    field_value: features[0].attributes.kdh_sebelum,
+                  },
+                  {
+                    field_name: "lantai_max_sebelum",
+                    field_value: features[0].attributes.lantai_max_sebelum,
+                  },
+                  {
+                    field_name: "status_itbx",
+                    field_value: features[0].attributes.status_itbx,//72
+                  },
+                  {
+                    field_name: "kegiatan",
+                    field_value: features[0].attributes.kegiatan,
+                  },
+                  {
+                    field_name: "kbli",
+                    field_value: features[0].attributes.kbli,
                   },
                 ]);
                 setHasilSimulasiBangunanKdbKlb(
@@ -4116,7 +4152,7 @@ const SimulasiMap = () => {
               <button className="btn btn-success" type="submit">Terapkan</button>
             </div>
           </form>
-        </div> */}
+              </div> */}
         {/* End Form Simulasi */}
         <div className="main-panel">
           <div className="container-scroller">
@@ -4260,15 +4296,36 @@ const SimulasiMap = () => {
                               <table className="table">
                                 <tbody>
                                   <tr>
+                                    <td>Status ITBX</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[72].field_value}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Status KBLI</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[74].field_value}
+                                    </td>
+                                  </tr>
+                                  <tr>
                                     <td>Jenis Bangunan</td>
                                     <td>
                                       {contentBangunanKdbKlb[1].field_value}
                                     </td>
                                   </tr>
                                   <tr>
+                                    <td>Kegiatan</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[73].field_value}
+                                    </td>
+                                  </tr>
+                                  <tr>
                                     <td>Nama Sub Zona</td>
                                     <td>
-                                      {contentBangunanKdbKlb[60].field_value}
+                                    {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[67].field_value
+                                        : contentBangunanKdbKlb[60]
+                                            .field_value}
                                     </td>
                                   </tr>
                                   {(String(contentBangunanKdbKlb[2].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[3].field_value).toLowerCase().indexOf("ditolak") !== -1) && <tr>
@@ -4358,7 +4415,10 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Nama Sub Zona</td>
                                     <td>
-                                      {contentBangunanKdbKlb[60].field_value}
+                                    {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[67].field_value
+                                        : contentBangunanKdbKlb[60]
+                                            .field_value}
                                     </td>
                                   </tr>
                                   <tr>
@@ -4384,7 +4444,11 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Jumlah Lantai Maks</td>
                                     <td>
-                                      {contentBangunanKdbKlb[61].field_value}{" "}
+                                    {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[71].field_value
+                                        : contentBangunanKdbKlb[61]
+                                            .field_value}
+                                      {" "}
                                       lantai
                                     </td>
                                   </tr>
@@ -4397,25 +4461,38 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>KDB</td>
                                     <td>
-                                      {contentBangunanKdbKlb[62].field_value}
+                                    {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[68].field_value
+                                        : contentBangunanKdbKlb[62]
+                                            .field_value}
                                     </td>
                                   </tr>
                                   <tr>
                                     <td>KLB</td>
                                     <td>
-                                      {contentBangunanKdbKlb[63].field_value}
+                                    {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[69].field_value
+                                        : contentBangunanKdbKlb[63]
+                                            .field_value}
                                     </td>
                                   </tr>
                                   <tr>
                                     <td>KDH</td>
                                     <td>
-                                      {contentBangunanKdbKlb[64].field_value}
+                                    {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[70].field_value
+                                        : contentBangunanKdbKlb[64]
+                                            .field_value}
                                     </td>
                                   </tr>
                                   <tr>
                                     <td>Luas Tapak</td>
                                     <td>
-                                      {contentBangunanKdbKlb[19].field_value} m2
+                                    {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[18].field_value
+                                        : contentBangunanKdbKlb[19]
+                                            .field_value}
+                                      {" "} m2
                                     </td>
                                   </tr>
                                 </tbody>
@@ -4480,7 +4557,10 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Nama Sub Zona</td>
                                     <td>
-                                      {contentBangunanKdbKlb[60].field_value}
+                                    {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[67].field_value
+                                        : contentBangunanKdbKlb[60]
+                                            .field_value}
                                     </td>
                                   </tr>
                                   <tr>
@@ -4572,7 +4652,10 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Nama Sub Zona</td>
                                     <td>
-                                      {contentBangunanKdbKlb[60].field_value}
+                                    {!activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[67].field_value
+                                        : contentBangunanKdbKlb[60]
+                                            .field_value}
                                     </td>
                                   </tr>
                                   <tr>
