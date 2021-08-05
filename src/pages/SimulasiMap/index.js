@@ -4187,8 +4187,6 @@ const SimulasiMap = () => {
                   bottom: "0",
                   zIndex: "9999",
                   width: "350px",
-                  height: "90vh",
-                  overflow: "auto",
                   /* minHeight: "100%", */
                   background: "#F8FAFC",
                 }}
@@ -4264,6 +4262,10 @@ const SimulasiMap = () => {
                       </div>
                     </div>
 
+                    <div style={{
+                      height: "calc(100vh-200px)",
+                      overflow: "auto",
+                    }}>
                     <div
                       className="accordion accordion-bordered"
                       id="accordionExample"
@@ -4402,7 +4404,7 @@ const SimulasiMap = () => {
                                 <img
                                   src="./images/office-building.svg"
                                   alt="KDB/KLB"
-                                  style={{ marginRight: "10px" }}
+                                  style={{ marginRight: "10px", width: "16px" }}
                                 />
                                 KDB/KLB
                                 <i className="ti-arrow-circle-down float-right"></i>
@@ -4542,7 +4544,7 @@ const SimulasiMap = () => {
                                 <img
                                   src="./images/Traffic-lights.svg"
                                   alt="Kemacetan"
-                                  style={{ marginRight: "10px" }}
+                                  style={{ marginRight: "10px", width: "16px", height: "16px" }}
                                 />
                                 Kemacetan
                                 <i className="ti-arrow-circle-down float-right"></i>
@@ -4638,7 +4640,7 @@ const SimulasiMap = () => {
                                 <img
                                   src="./images/water.svg"
                                   alt="Air Bersih"
-                                  style={{ marginRight: "10px" }}
+                                  style={{ marginRight: "10px", width: "16px" }}
                                 />
                                 Air Bersih
                                 <i className="ti-arrow-circle-down float-right"></i>
@@ -4699,6 +4701,7 @@ const SimulasiMap = () => {
                           </div>
                         </div>
                       </div>
+                    </div>
                     </div>
                     {/* end popup sebelumsesudah */}
                   </>
