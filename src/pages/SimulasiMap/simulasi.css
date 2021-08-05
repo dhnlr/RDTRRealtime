@@ -142,7 +142,7 @@ div.segementation-container {
   position: relative;
 }
 .switch-button:before {
-  content: "Sesudah";
+  content: "Sebelum";
   position: absolute;
   top: 0;
   bottom: 0;

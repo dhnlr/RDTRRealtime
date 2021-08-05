@@ -2586,12 +2586,24 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.lantai_max_sebelum,
                   },
                   {
+                    field_name: "status_itbx_sebelum",
+                    field_value: features[0].attributes.status_itbx_sebelum,//72
+                  },
+                  {
                     field_name: "status_itbx",
-                    field_value: features[0].attributes.status_itbx,//72
+                    field_value: features[0].attributes.status_itbx,
+                  },
+                  {
+                    field_name: "kegiatan_sebelum",
+                    field_value: features[0].attributes.kegiatan_sebelum,//74
                   },
                   {
                     field_name: "kegiatan",
                     field_value: features[0].attributes.kegiatan,
+                  },
+                  {
+                    field_name: "kbli_sebelum",
+                    field_value: features[0].attributes.kbli_sebelum,
                   },
                   {
                     field_name: "kbli",
@@ -4227,7 +4239,7 @@ const SimulasiMap = () => {
                           style={{ marginBottom: "0px" }}
                         >
                           <span className="switch-button-label-span">
-                            Sebelum
+                            Sesudah
                           </span>
                         </label>
                       </div>
@@ -4298,13 +4310,19 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Status ITBX</td>
                                     <td>
-                                      {contentBangunanKdbKlb[72].field_value}
+                                      {activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[72].field_value
+                                        : contentBangunanKdbKlb[73]
+                                            .field_value}
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>Status KBLI</td>
+                                    <td>KBLI</td>
                                     <td>
-                                      {contentBangunanKdbKlb[74].field_value}
+                                      {activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[76].field_value
+                                        : contentBangunanKdbKlb[77]
+                                            .field_value}
                                     </td>
                                   </tr>
                                   <tr>
@@ -4316,13 +4334,16 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Kegiatan</td>
                                     <td>
-                                      {contentBangunanKdbKlb[73].field_value}
+                                      {activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[74].field_value
+                                        : contentBangunanKdbKlb[75]
+                                            .field_value}
                                     </td>
                                   </tr>
                                   <tr>
                                     <td>Nama Sub Zona</td>
                                     <td>
-                                    {!activeSebelumSesudah.activeSebelum
+                                    {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[67].field_value
                                         : contentBangunanKdbKlb[60]
                                             .field_value}
@@ -4331,7 +4352,7 @@ const SimulasiMap = () => {
                                   {(String(contentBangunanKdbKlb[2].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[3].field_value).toLowerCase().indexOf("ditolak") !== -1) && <tr>
                                     <td>Status KDB/KLB</td>
                                     <td>
-                                      {!activeSebelumSesudah.activeSebelum
+                                      {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[2].field_value
                                         : contentBangunanKdbKlb[3].field_value}
                                     </td>
@@ -4339,7 +4360,7 @@ const SimulasiMap = () => {
                                   {(String(contentBangunanKdbKlb[10].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[11].field_value).toLowerCase().indexOf("ditolak") !== -1) && <tr>
                                     <td>Status Kemacetan</td>
                                     <td>
-                                      {!activeSebelumSesudah.activeSebelum
+                                      {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[10].field_value
                                         : contentBangunanKdbKlb[11].field_value}
                                     </td>
@@ -4349,7 +4370,7 @@ const SimulasiMap = () => {
                                   {(String(contentBangunanKdbKlb[8].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[9].field_value).toLowerCase().indexOf("ditolak") !== -1) && <tr>
                                     <td>Status Air Bersih</td>
                                     <td>
-                                      {!activeSebelumSesudah.activeSebelum
+                                      {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[8].field_value
                                         : contentBangunanKdbKlb[9].field_value}
                                     </td>
@@ -4401,7 +4422,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Status KDB/KLB</td>
                                     <td>
-                                      {!activeSebelumSesudah.activeSebelum
+                                      {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[2].field_value
                                         : contentBangunanKdbKlb[3].field_value}
                                     </td>
@@ -4415,7 +4436,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Nama Sub Zona</td>
                                     <td>
-                                    {!activeSebelumSesudah.activeSebelum
+                                    {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[67].field_value
                                         : contentBangunanKdbKlb[60]
                                             .field_value}
@@ -4424,7 +4445,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Jumlah Lantai</td>
                                     <td>
-                                      {!activeSebelumSesudah.activeSebelum
+                                      {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[16].field_value
                                         : contentBangunanKdbKlb[17]
                                             .field_value}{" "}
@@ -4434,7 +4455,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Luas Total Bangunan</td>
                                     <td>
-                                      {!activeSebelumSesudah.activeSebelum
+                                      {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[20].field_value
                                         : contentBangunanKdbKlb[21]
                                             .field_value}{" "}
@@ -4444,7 +4465,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Jumlah Lantai Maks</td>
                                     <td>
-                                    {!activeSebelumSesudah.activeSebelum
+                                    {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[71].field_value
                                         : contentBangunanKdbKlb[61]
                                             .field_value}
@@ -4461,7 +4482,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>KDB</td>
                                     <td>
-                                    {!activeSebelumSesudah.activeSebelum
+                                    {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[68].field_value
                                         : contentBangunanKdbKlb[62]
                                             .field_value}
@@ -4470,7 +4491,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>KLB</td>
                                     <td>
-                                    {!activeSebelumSesudah.activeSebelum
+                                    {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[69].field_value
                                         : contentBangunanKdbKlb[63]
                                             .field_value}
@@ -4479,7 +4500,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>KDH</td>
                                     <td>
-                                    {!activeSebelumSesudah.activeSebelum
+                                    {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[70].field_value
                                         : contentBangunanKdbKlb[64]
                                             .field_value}
@@ -4488,7 +4509,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Luas Tapak</td>
                                     <td>
-                                    {!activeSebelumSesudah.activeSebelum
+                                    {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[18].field_value
                                         : contentBangunanKdbKlb[19]
                                             .field_value}
@@ -4541,7 +4562,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Status Kemacetan</td>
                                     <td>
-                                      {!activeSebelumSesudah.activeSebelum
+                                      {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[10].field_value
                                         : contentBangunanKdbKlb[11].field_value}
                                     </td>
@@ -4557,7 +4578,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Nama Sub Zona</td>
                                     <td>
-                                    {!activeSebelumSesudah.activeSebelum
+                                    {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[67].field_value
                                         : contentBangunanKdbKlb[60]
                                             .field_value}
@@ -4566,7 +4587,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>LOS</td>
                                     <td>
-                                      {!activeSebelumSesudah.activeSebelum
+                                      {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[14].field_value
                                         : contentBangunanKdbKlb[15].field_value}
                                     </td>
@@ -4574,7 +4595,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>LOS Num</td>
                                     <td>
-                                      {!activeSebelumSesudah.activeSebelum
+                                      {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[12].field_value
                                         : contentBangunanKdbKlb[13].field_value}
                                     </td>
@@ -4637,7 +4658,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Status Air Bersih</td>
                                     <td>
-                                      {!activeSebelumSesudah.activeSebelum
+                                      {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[8].field_value
                                         : contentBangunanKdbKlb[9].field_value}
                                     </td>
@@ -4652,7 +4673,7 @@ const SimulasiMap = () => {
                                   <tr>
                                     <td>Nama Sub Zona</td>
                                     <td>
-                                    {!activeSebelumSesudah.activeSebelum
+                                    {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[67].field_value
                                         : contentBangunanKdbKlb[60]
                                             .field_value}
