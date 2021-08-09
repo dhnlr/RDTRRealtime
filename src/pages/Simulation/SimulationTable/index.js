@@ -157,6 +157,28 @@ function SimulationTable() {
     }
   };
 
+  const handleSimulasi = (state) => {
+    Swal.fire({
+      title: "Peringatan",
+      html: `<ol><li>Perlu diketahui bahwa kebutuhan air setiap kegiatan berbeda-beda.</li>
+    <li>Perlu diketahui bahwa terdapat beberapa hal yang mempengaruhi tingkat LOS, diataranya wakttu, jenis kegiatan, lebar jalan, dan cakupan kegiatan. Hal ini mnegakibatkan perlunya pengkategorian level LOS yang tepat.</li>
+    </ol>`,
+      icon: "warning",
+      showCloseButton: true,
+      focusConfirm: true,
+      confirmButtonText: "Lihat Simulasi",
+      showCancelButton: true,
+      cancelButtonText: "Batal",
+      customClass: {
+        content: "text-left",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        history.push("/simulasimap", state);
+      }
+    });
+  };
+
   return (
     <div className="container-scroller">
       <Header />
@@ -323,21 +345,43 @@ function SimulationTable() {
                                   disableGlobalFilter: true,
                                   Cell: (row) => (
                                     <div style={{ textAlign: "right" }}>
-                                      <Link to="/simulasimap">
-                                        <button
-                                          className="btn btn-outline-light btn-xs"
-                                          title="Peta Simulasi"
-                                        >
+                                      {row.row.original.simulasiBangunan
+                                        ?.projectId && (
+                                        <>
+                                          {/* <Link 
+                                      to={{
+                                        pathname: "/simulasimap",
+                                        state: data.filter(
+                                          (datum) =>
+                                            datum.id === row.row.values.id
+                                        )[0]
+                                      }}
+                                      > */}
+                                          <button
+                                            className="btn btn-outline-light btn-xs"
+                                            title="Peta Simulasi"
+                                            onClick={() => {
+                                              handleSimulasi(
+                                                data.filter(
+                                                  (datum) =>
+                                                    datum.id ===
+                                                    row.row.values.id
+                                                )[0]
+                                              );
+                                            }}
+                                          >
                                             Lihat Simulasi
-                                        </button>
-                                      </Link>
-                                      &nbsp;
+                                          </button>
+                                          {/* </Link> */}
+                                          &nbsp;
+                                        </>
+                                      )}
                                       <Link to="/simulationhistory">
                                         <button
                                           className="btn btn-outline-light btn-xs"
                                           title="Sejarah Simulasi"
                                         >
-                                            Lihat Analisis
+                                          Lihat Analisis
                                         </button>
                                       </Link>
                                       &nbsp;

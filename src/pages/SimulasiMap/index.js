@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import Axios from "axios";
 import Swal from "sweetalert2";
-import { loadModules } from "esri-loader";
-import { useHistory } from "react-router-dom";
+import { isLoaded, loadModules } from "esri-loader";
+import { useHistory, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import LoadingOverlay from "react-loading-overlay";
 
 import "./simulasi.css";
 import { Header, Menu } from "../../components";
+import segmentationLegend from "./segmentationLegend.png"
 import { config } from "../../Constants";
 
 import styled, { css } from "styled-components";
@@ -21,6 +22,7 @@ import {
 import Pdf from "./pdf";
 import dataScreenshotTemplate from "./data";
 import getScreenshotData from "./QueryLayer";
+import axios from "axios";
 
 const DarkBackground = styled.div`
   display: none; /* Hidden by default */
@@ -43,12 +45,21 @@ const DarkBackground = styled.div`
 
 const SimulasiMap = () => {
   let history = useHistory();
+  let { state } = useLocation();
 
   useEffect(() => {
     if (!sessionStorage.token) {
       history.push("/login");
     }
   }, [history]);
+
+  useEffect(() => {
+    if(!state?.simulasiBangunan?.simulasiId){
+      history.push("/simulation")
+    } else {
+      handleExecuteSpCopy(0)
+    }
+  }, [state])
 
   // Form State
   const [form, setForm] = useState({
@@ -61,6 +72,7 @@ const SimulasiMap = () => {
 
   // Map State
   const mapRef = useRef();
+  const [esriMap, setEsriMap] = useState(null)
   const [mapLoaded, setMapLoaded] = useState(true);
   const [modules, setModules] = useState(null);
   const [selectBuildings, setSelectBuildings] = useState(true);
@@ -318,26 +330,27 @@ const SimulasiMap = () => {
               ],
             };
           }
+          // TODO: Change jlh_izin_diterima -> itbx; Check warna untuk i,t,b,x
           const rendererBangunanSesudah = {
             type: "unique-value", // autocasts as new UniqueValueRenderer()
-            defaultSymbol: getSymbolBangunanSesudah("#e60000"),
-            defaultLabel: "0",
-            field: "jlh_izin_diterima",
+            // defaultSymbol: getSymbolBangunanSesudah( [156, 156, 156]),
+            // defaultLabel: "0",
+            field: "itbx",
             uniqueValueInfos: [
               {
-                value: "1",
-                symbol: getSymbolBangunanSesudah([255, 153, 122]),
-                label: "1",
-              },
-              {
-                value: "2",
-                symbol: getSymbolBangunanSesudah([230, 230, 0]),
-                label: "2",
-              },
-              {
-                value: "3",
+                value: "I",
                 symbol: getSymbolBangunanSesudah([56, 168, 0]),
-                label: "3",
+                label: "I",
+              },
+              {
+                value: "B/T",
+                symbol: getSymbolBangunanSesudah([245, 202, 122]),
+                label: "B/T",
+              },
+              {
+                value: "X",
+                symbol: getSymbolBangunanSesudah([230, 0, 0]),
+                label: "X",
               },
             ],
             visualVariables: [
@@ -1622,6 +1635,7 @@ const SimulasiMap = () => {
             });
 
           view.when(function () {
+            setEsriMap(map)
             // start layerlist
             var uniqueParentItems = [];
             const layerList = new LayerList({
@@ -2001,9 +2015,9 @@ const SimulasiMap = () => {
               .addEventListener("click", cetak);
             // end print simulasi
 
-            // start hisoty simulasi
+            // start history simulasi
             const historyExp = new Expand({
-              expandIconClass: "esri-icon-map-pin",
+              expandIconClass: "esri-icon-duplicate",
               expandTooltip: "Analisis Sejarah Simulasi",
               content: document.getElementById("historyExpDiv"),
               view: view,
@@ -2079,13 +2093,13 @@ const SimulasiMap = () => {
               });
             };
 
-            document
-              .getElementById("pilih_bangunan_history")
-              .addEventListener("click", selectBuildingHistory);
+            // document
+            //   .getElementById("pilih_bangunan_history")
+            //   .addEventListener("click", selectBuildingHistory);
             // document
             //   .getElementById("history_simulasi")
             //   .addEventListener("click", historyAnalysis);
-            // end print simulasi
+            // end history simulasi
 
             // start legend
             const legend = new Legend({
@@ -3604,6 +3618,7 @@ const SimulasiMap = () => {
                     bangunanSesudahLayer.definitionExpression = "";
                     map.remove(segmentationGroupLayer);
                     setIsSegmentationActive(false)
+                    if(document.getElementById("segmentationLegendCard")){document.getElementById("segmentationLegendCard").style.display = "none"}
                   })
                   setShowSegmentationFunc((id)=>(id)=>{
                       bangunanSesudahLayer.definitionExpression =
@@ -3621,6 +3636,7 @@ const SimulasiMap = () => {
                       view.whenLayerView(lantaiSebelumKelewatan).then(function(layerView){
                         layerView.highlight(lantaiSebelumKelewatan.graphics)
                       })
+                      if(document.getElementById("segmentationLegendCard")){document.getElementById("segmentationLegendCard").style.display = "block"}
                   })
                   getRing(features[0].attributes.id_bangunan);
                   // features[0].layer.definitionExpression =
@@ -3962,6 +3978,7 @@ const SimulasiMap = () => {
             bangunanSesudahLayer.definitionExpression = ""
             setIsSegmentationActive(false)
             // segmentationGroupLayer.visible = false
+            if(document.getElementById("segmentationLegendCard")){document.getElementById("segmentationLegendCard").style.display = "none"}
           }
           // end segementation drawing function
 
@@ -4054,37 +4071,165 @@ const SimulasiMap = () => {
     setActiveSebelumSesudah({
       activeSebelum: false
     })
+    let layer = esriMap.allLayers.find(function(layer) {
+      return layer.title === "Bangunan";
+     })
+     layer.renderer = getRenderer("itbx", "jlh_lantai")
+     layer.refresh()
     stateView.popup.close();
     setShowingPopop({ ...showingPopup, show: false, title: "" });
   };
   // end close showing popup
   const handleSebelumSesudah = () => {
+    let layer = esriMap.allLayers.find(function(layer) {
+      return layer.title === "Bangunan";
+     })
+     if(!activeSebelumSesudah.activeSebelum){
+       layer.renderer = getRenderer("itbx_sebelum", "jlh_lantai_sebelum")
+      } else {
+        layer.renderer = getRenderer("itbx", "jlh_lantai")
+      }
+      layer.refresh()
     setActiveSebelumSesudah({
       ...activeSebelumSesudah,
       activeSebelum: !activeSebelumSesudah.activeSebelum,
     });
   };
+  
+  const getRenderer = (itbx, lantai) => {
+    return {
+      type: "unique-value", // autocasts as new UniqueValueRenderer()
+      // defaultSymbol: {
+      //   type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+      //   symbolLayers: [
+      //     {
+      //       type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
+      //       material: {
+      //         color: [156, 156, 156],
+      //       },
+      //       edges: {
+      //         type: "solid",
+      //         color: "#999",
+      //         size: 0.5,
+      //       },
+      //     },
+      //   ],
+      // },
+      // defaultLabel: "0",
+      field: itbx,
+      uniqueValueInfos: [
+        {
+          value: "I",
+          symbol: {
+            type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+            symbolLayers: [
+              {
+                type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
+                material: {
+                  color: [56, 168, 0],
+                },
+                edges: {
+                  type: "solid",
+                  color: "#999",
+                  size: 0.5,
+                },
+              },
+            ],
+          },
+          label: "I",
+        },
+        {
+          value: "B/T",
+          symbol: {
+            type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+            symbolLayers: [
+              {
+                type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
+                material: {
+                  color: [245, 202, 122],
+                },
+                edges: {
+                  type: "solid",
+                  color: "#999",
+                  size: 0.5,
+                },
+              },
+            ],
+          },
+          label: "B/T",
+        },
+        {
+          value: "X",
+          symbol: {
+            type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+            symbolLayers: [
+              {
+                type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
+                material: {
+                  color: [230, 0, 0],
+                },
+                edges: {
+                  type: "solid",
+                  color: "#999",
+                  size: 0.5,
+                },
+              },
+            ],
+          },
+          label: "X",
+        },
+      ],
+      visualVariables: [
+        {
+          type: "size",
+          field: lantai,
+          valueUnit: "meters", // Converts and extrudes all data values in meters
+        },
+      ],
+    }
+  }
+
   const handleActivateSegmentation = () => {
     !isSegmentationActive ?  showSegmentationFunc(segmentationBuildingId) : removeSegmentationFunc()
     setIsSegmentationActive(!isSegmentationActive);
+    !isSegmentationActive && document.getElementById("segmentationLegendCard") ?document.getElementById("segmentationLegendCard").style.display = "block" : document.getElementById("segmentationLegendCard").style.display = "none"
   };
 
   // start history analysis
   const handleHistoryAnalysis = () => {
     console.log(dataHistory)
-    if (
-      dataHistory.id_bangunan
-    ) {
-      Swal.fire("Belum diimplementasikan", "Menunggu servis backend", "info")
-    } else {
-      Swal.fire(
-        "Maaf",
-        "Pilih bangunan terlebih dahulu untuk mencetak analisis sejarah simulasi",
-        "error"
-      );
-    }
+    handleExecuteSpCopy(1)
+    // if (
+    //   dataHistory.id_bangunan
+    // ) {
+    //   Swal.fire("Belum diimplementasikan", "Menunggu servis backend", "info")
+    // } else {
+    //   Swal.fire(
+    //     "Maaf",
+    //     "Pilih bangunan terlebih dahulu untuk mencetak analisis sejarah simulasi",
+    //     "error"
+    //   );
+    // }
   };
   // end history analysis
+
+  const handleExecuteSpCopy = param => {
+    axios.post(config.url.API_URL + "/Simulasi/ExecuteSpCopy", 
+      {
+      }
+      ,{
+        headers: { Authorization: "Bearer " + sessionStorage.token },
+        params: {
+          simulasiId: state?.simulasiBangunan?.simulasiId,
+          simulasiIdBaru: state?.id,
+          projectId: state?.simulasiBangunan?.projectId,
+          dataKe: state?.simulasiBangunan?.dataKe,
+          param: param,
+        }
+      })
+      .then((data) => {
+      })
+  }
 
   return (
     <div className="container-scroller">
@@ -4263,7 +4408,7 @@ const SimulasiMap = () => {
                     </div>
 
                     <div style={{
-                      height: "calc(100vh-200px)",
+                      height: "calc(100vh - 200px)",
                       overflow: "auto",
                     }}>
                     <div
@@ -4293,7 +4438,7 @@ const SimulasiMap = () => {
                                   alt="Kemacetan"
                                   style={{ marginRight: "10px" }}
                                 /> */}
-                                <i class="ti-info-alt"> </i>
+                                <i className="ti-info-alt"> </i>
                                 Ringkasan
                                 <i className="ti-arrow-circle-down float-right"></i>
                               </button>
@@ -4328,18 +4473,18 @@ const SimulasiMap = () => {
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>Jenis Bangunan</td>
-                                    <td>
-                                      {contentBangunanKdbKlb[1].field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Kegiatan</td>
+                                    <td>Jenis Kegiatan (KBLI)</td>
                                     <td>
                                       {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[74].field_value
                                         : contentBangunanKdbKlb[75]
                                             .field_value}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>Jenis Bangunan</td>
+                                    <td>
+                                      {contentBangunanKdbKlb[1].field_value}
                                     </td>
                                   </tr>
                                   <tr>
@@ -4351,7 +4496,7 @@ const SimulasiMap = () => {
                                             .field_value}
                                     </td>
                                   </tr>
-                                  {(String(contentBangunanKdbKlb[2].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[3].field_value).toLowerCase().indexOf("ditolak") !== -1) && <tr>
+                                  {/* (String(contentBangunanKdbKlb[2].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[3].field_value).toLowerCase().indexOf("ditolak") !== -1) &&  */<tr>
                                     <td>Status KDB/KLB</td>
                                     <td>
                                       {activeSebelumSesudah.activeSebelum
@@ -4359,8 +4504,8 @@ const SimulasiMap = () => {
                                         : contentBangunanKdbKlb[3].field_value}
                                     </td>
                                   </tr>}
-                                  {(String(contentBangunanKdbKlb[10].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[11].field_value).toLowerCase().indexOf("ditolak") !== -1) && <tr>
-                                    <td>Status Kemacetan</td>
+                                  {/* (String(contentBangunanKdbKlb[10].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[11].field_value).toLowerCase().indexOf("ditolak") !== -1) && */ <tr>
+                                    <td>Status Tingkat Kemacetan</td>
                                     <td>
                                       {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[10].field_value
@@ -4369,8 +4514,8 @@ const SimulasiMap = () => {
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
                                   </tr>}
-                                  {(String(contentBangunanKdbKlb[8].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[9].field_value).toLowerCase().indexOf("ditolak") !== -1) && <tr>
-                                    <td>Status Air Bersih</td>
+                                  {/* (String(contentBangunanKdbKlb[8].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[9].field_value).toLowerCase().indexOf("ditolak") !== -1) &&  */<tr>
+                                    <td>Status Kualitas Air Bersih</td>
                                     <td>
                                       {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[8].field_value
@@ -4445,7 +4590,7 @@ const SimulasiMap = () => {
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>Jumlah Lantai</td>
+                                    <td>{activeSebelumSesudah.activeSebelum ? "Jumlah Lantai" : "Jumlah Lantai Saat Ini"}</td>
                                     <td>
                                       {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[16].field_value
@@ -4455,17 +4600,7 @@ const SimulasiMap = () => {
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>Luas Total Bangunan</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[20].field_value
-                                        : contentBangunanKdbKlb[21]
-                                            .field_value}{" "}
-                                      m2
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Jumlah Lantai Maks</td>
+                                    <td>Jumlah Lantai Maksimum yang Diperbolehkan</td>
                                     <td>
                                     {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[71].field_value
@@ -4475,8 +4610,18 @@ const SimulasiMap = () => {
                                       lantai
                                     </td>
                                   </tr>
+                                  {/* <tr>
+                                    <td>Luas Total Bangunan</td>
+                                    <td>
+                                      {activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[20].field_value
+                                        : contentBangunanKdbKlb[21]
+                                            .field_value}{" "}
+                                      m2
+                                    </td>
+                                  </tr> */}
                                   <tr>
-                                    <td>Luas Total Bangunan Maks</td>
+                                    <td>Luas Bangunan Maksimum yang Diperbolehkan</td>
                                     <td>
                                       {contentBangunanKdbKlb[65].field_value} m2
                                     </td>
@@ -4562,7 +4707,7 @@ const SimulasiMap = () => {
                               <table className="table">
                                 <tbody>
                                   <tr>
-                                    <td>Status Kemacetan</td>
+                                    <td>Status Tingkat Kemacetan</td>
                                     <td>
                                       {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[10].field_value
@@ -4571,7 +4716,7 @@ const SimulasiMap = () => {
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
                                   </tr>
-                                  <tr>
+                                  {/* <tr>
                                     <td>Jenis Bangunan</td>
                                     <td>
                                       {contentBangunanKdbKlb[1].field_value}
@@ -4585,7 +4730,7 @@ const SimulasiMap = () => {
                                         : contentBangunanKdbKlb[60]
                                             .field_value}
                                     </td>
-                                  </tr>
+                                  </tr> */}
                                   <tr>
                                     <td>LOS</td>
                                     <td>
@@ -4658,7 +4803,7 @@ const SimulasiMap = () => {
                               <table className="table">
                                 <tbody>
                                   <tr>
-                                    <td>Status Air Bersih</td>
+                                    <td>Status Kualitas Air Bersih</td>
                                     <td>
                                       {activeSebelumSesudah.activeSebelum
                                         ? contentBangunanKdbKlb[8].field_value
@@ -4666,7 +4811,7 @@ const SimulasiMap = () => {
                                     </td>
                                     {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
                                   </tr>
-                                  <tr>
+                                  {/* <tr>
                                     <td>Jenis Bangunan</td>
                                     <td>
                                       {contentBangunanKdbKlb[1].field_value}
@@ -4680,7 +4825,7 @@ const SimulasiMap = () => {
                                         : contentBangunanKdbKlb[60]
                                             .field_value}
                                     </td>
-                                  </tr>
+                                  </tr> */}
                                   <tr>
                                     <td>Kebutuhan Air Harian</td>
                                     <td>
@@ -4697,6 +4842,47 @@ const SimulasiMap = () => {
                                   </tr>
                                 </tbody>
                               </table>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="card" id="segmentationLegendCard" style={{display: "none", margin: "0 0.2rem"}}>
+                          <div
+                            className="card-header"
+                            role="tab"
+                            id="headingTwo"
+                            style={{ padding: "0px" }}
+                          >
+                            <h6 className="mb-0">
+                              <button
+                                className="btn btn-block text-left collapsed btn-sm"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target={"#segmentationLegend"}
+                                aria-expanded="true"
+                                aria-controls={"segmentationLegend"}
+                                style={{ fontSize: "14px" }}
+                              >
+                                {/* <img
+                                  src="./images/water.svg"
+                                  alt="Air Bersih"
+                                  style={{ marginRight: "10px", width: "16px" }}
+                                /> */}
+                                <i className="ti-info"> </i>
+                                Legenda Segmentasi
+                                <i className="ti-arrow-circle-down float-right"></i>
+                              </button>
+                            </h6>
+                          </div>
+
+                          <div
+                            id="segmentationLegend"
+                            className="collapse"
+                            aria-labelledby="segmentationLegend"
+                            data-parent="#accordionExample"
+                          >
+                            <div className="card-body">
+                              <img src={segmentationLegend} alt="Legenda Segmentasi"/>
                             </div>
                           </div>
                         </div>
@@ -4833,7 +5019,7 @@ const SimulasiMap = () => {
               >
                 <h3 className="esri-widget__heading">Sejarah Simulasi</h3>
               </div>
-              <div
+              {<div
                 className=""
                 style={{
                   background: "#f3f3f3",
@@ -4850,7 +5036,8 @@ const SimulasiMap = () => {
                     padding: "10px",
                   }}
                 >
-                  <p>Bangunan yang Akan Dianalisis</p>
+                  <p>Sistem akan menggandakan untuk membuat history yang dapat dianalisis</p>
+                  {/* <p>Bangunan yang Akan Dianalisis</p>
                   <p id="id_bangunan_history">
                     ID Bangunan: Belum ada yang dipilih
                   </p>
@@ -4866,9 +5053,9 @@ const SimulasiMap = () => {
                     }}
                   >
                     Pilih Bangunan
-                  </button>
+                  </button> */}
                 </div>
-              </div>
+              </div>}
               <button
                 className="btn btn-primary btn-block btn-icon-text rounded-0"
                 id="history_simulasi"
