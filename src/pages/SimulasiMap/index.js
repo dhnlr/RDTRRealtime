@@ -8,7 +8,7 @@ import LoadingOverlay from "react-loading-overlay";
 
 import "./simulasi.css";
 import { Header, Menu } from "../../components";
-import segmentationLegend from "./segmentationLegend.png"
+import segmentationLegend from "./segmentationLegend.png";
 import { config } from "../../Constants";
 
 import styled, { css } from "styled-components";
@@ -54,12 +54,12 @@ const SimulasiMap = () => {
   }, [history]);
 
   useEffect(() => {
-    if(!state?.simulasiBangunan?.simulasiId){
-      history.push("/simulation")
+    if (!state?.simulasiBangunan?.simulasiId) {
+      history.push("/simulation");
     } else {
-      handleExecuteSpCopy(0)
+      handleExecuteSpCopy(0);
     }
-  }, [state])
+  }, [state]);
 
   // Form State
   const [form, setForm] = useState({
@@ -72,7 +72,7 @@ const SimulasiMap = () => {
 
   // Map State
   const mapRef = useRef();
-  const [esriMap, setEsriMap] = useState(null)
+  const [esriMap, setEsriMap] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(true);
   const [modules, setModules] = useState(null);
   const [selectBuildings, setSelectBuildings] = useState(true);
@@ -84,9 +84,9 @@ const SimulasiMap = () => {
   const [resPersilTanah, setResPersilTanah] = useState({});
   const [loaded, setLoaded] = useState(true);
   const [dataScreenshot, setDataScreenshot] = useState(dataScreenshotTemplate);
-  const [dataHistory, setDataHistory] = useState({id_bangunan: null});
-  const [removeSegmentationFunc, setRemoveSegmentationFunc] = useState()
-  const [showSegmentationFunc, setShowSegmentationFunc] = useState()
+  const [dataHistory, setDataHistory] = useState({ id_bangunan: null });
+  const [removeSegmentationFunc, setRemoveSegmentationFunc] = useState();
+  const [showSegmentationFunc, setShowSegmentationFunc] = useState();
   const [isSegmentationActive, setIsSegmentationActive] = useState(false);
   const [segmentationBuildingId, setSegmentationBuildingId] = useState(null);
 
@@ -269,7 +269,11 @@ const SimulasiMap = () => {
           ExtrudeSymbol3DLayer,
           GraphicsLayer,
         ]) => {
-          var lantaiSebelum, lantai, lantaiAtas, lantaiSebelumKelewatan, segmentationGroupLayer = {};
+          var lantaiSebelum,
+            lantai,
+            lantaiAtas,
+            lantaiSebelumKelewatan,
+            segmentationGroupLayer = {};
 
           const map = new Map({
             basemap: "topo-vector",
@@ -333,8 +337,8 @@ const SimulasiMap = () => {
           // TODO: Change jlh_izin_diterima -> itbx; Check warna untuk i,t,b,x
           const rendererBangunanSesudah = {
             type: "unique-value", // autocasts as new UniqueValueRenderer()
-            // defaultSymbol: getSymbolBangunanSesudah( [156, 156, 156]),
-            // defaultLabel: "0",
+            defaultSymbol: getSymbolBangunanSesudah([156, 156, 156]),
+            defaultLabel: "Bangunan Kosong",
             field: "itbx",
             uniqueValueInfos: [
               {
@@ -343,9 +347,9 @@ const SimulasiMap = () => {
                 label: "I",
               },
               {
-                value: "B/T",
+                value: "T/B",
                 symbol: getSymbolBangunanSesudah([245, 202, 122]),
-                label: "B/T",
+                label: "T/B",
               },
               {
                 value: "X",
@@ -363,7 +367,7 @@ const SimulasiMap = () => {
           };
           const bangunanSesudahLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/sesudah/bangunan/FeatureServer/0",
-            renderer: rendererBangunanSesudah,
+            renderer: getRendererBangunan("itbx", "jlh_lantai"),
             elevationInfo: {
               mode: "on-the-ground",
             },
@@ -1313,6 +1317,7 @@ const SimulasiMap = () => {
               },
             ],
           };
+
           const polaRuangEnvelopeLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/Zonasi_Envelope/FeatureServer/0",
             renderer: rendererPolaRuangEnvelope,
@@ -1635,7 +1640,7 @@ const SimulasiMap = () => {
             });
 
           view.when(function () {
-            setEsriMap(map)
+            setEsriMap(map);
             // start layerlist
             var uniqueParentItems = [];
             const layerList = new LayerList({
@@ -1809,13 +1814,16 @@ const SimulasiMap = () => {
                 },
               ],
             });
-            editor.viewModel.watch("state", function(){
-              if(editor.viewModel.state === "awaiting-feature-to-update" && segmentationGroupLayer){
+            editor.viewModel.watch("state", function () {
+              if (
+                editor.viewModel.state === "awaiting-feature-to-update" &&
+                segmentationGroupLayer
+              ) {
                 // map.remove(segmentationGroupLayer);
                 // bangunanSesudahLayer.definitionExpression = "";
-                hideSegementationGroupLayer()
-            }
-            })
+                hideSegementationGroupLayer();
+              }
+            });
             const editorExpand = new Expand({
               expandIconClass: "esri-icon-edit",
               expandTooltip: "Edit Layer",
@@ -1855,7 +1863,7 @@ const SimulasiMap = () => {
               buildings3dLayer.popupEnabled = false;
               // map.remove(segmentationGroupLayer);
               // bangunanSesudahLayer.definitionExpression = "";
-              hideSegementationGroupLayer()
+              hideSegementationGroupLayer();
               view.on("click", function (event) {
                 // Remove the previous highlights
                 if (highlight) {
@@ -1940,7 +1948,7 @@ const SimulasiMap = () => {
               buildings3dLayer.popupEnabled = false;
               // map.remove(segmentationGroupLayer);
               // bangunanSesudahLayer.definitionExpression = "";
-              hideSegementationGroupLayer()
+              hideSegementationGroupLayer();
               view.on("click", function (event) {
                 if (highlight) {
                   highlight.remove();
@@ -1962,7 +1970,9 @@ const SimulasiMap = () => {
                             getScreenshotData(dataScreenshot, id_bangunan).then(
                               (result) => {
                                 setDataScreenshot(result);
-                                view.container.classList.remove("screenshotCursor");
+                                view.container.classList.remove(
+                                  "screenshotCursor"
+                                );
                                 highlight =
                                   bangunanSesudahLayerView.highlight(objectId);
                                 document.getElementById(
@@ -1983,7 +1993,7 @@ const SimulasiMap = () => {
                         bangunanSesudahLayer.popupEnabled = true;
                         buildings3dLayer.popupEnabled = true;
                       });
-                })
+                  });
               });
             };
 
@@ -2039,7 +2049,7 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
-              hideSegementationGroupLayer()
+              hideSegementationGroupLayer();
               view.on("click", function (event) {
                 if (highlight) {
                   highlight.remove();
@@ -2058,13 +2068,15 @@ const SimulasiMap = () => {
                           result.features.forEach(function (feature) {
                             var objectId = feature.attributes.objectid_1;
                             var id_bangunan = feature.attributes.id_bangunan;
-                            setDataHistory({id_bangunan: feature.attributes.id_bangunan});
-                                view.container.classList.remove("screenshotCursor");
-                                highlight =
-                                  bangunanSesudahLayerView.highlight(objectId);
-                                document.getElementById(
-                                  "id_bangunan_history"
-                                ).innerText = "ID bangunan: " + id_bangunan;
+                            setDataHistory({
+                              id_bangunan: feature.attributes.id_bangunan,
+                            });
+                            view.container.classList.remove("screenshotCursor");
+                            highlight =
+                              bangunanSesudahLayerView.highlight(objectId);
+                            document.getElementById(
+                              "id_bangunan_history"
+                            ).innerText = "ID bangunan: " + id_bangunan;
                             // getScreenshotData(dataScreenshot, id_bangunan).then(
                             //   (result) => {
                             //     setDataHistory(result);
@@ -2089,7 +2101,7 @@ const SimulasiMap = () => {
                         bangunanSesudahLayer.popupEnabled = true;
                         buildings3dLayer.popupEnabled = true;
                       });
-                })
+                  });
               });
             };
 
@@ -2232,9 +2244,9 @@ const SimulasiMap = () => {
               // start segmentation drawing function
               // bangunanSesudahLayer.definitionExpression = "";
               // map.remove(segmentationGroupLayer);
-              hideSegementationGroupLayer()
+              hideSegementationGroupLayer();
               // end segmentation drawing function
-            
+
               let fieldsArr = [];
               features[0].layer.fields.map((fieldVal) => {
                 if (features[0].attributes[fieldVal.name] !== undefined) {
@@ -2289,7 +2301,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "izin_macet_sebelum",
-                    field_value: features[0].attributes.izin_macet_sebelum,
+                    field_value: features[0].attributes.izin_macet_sebelum, //10
                   },
                   {
                     field_name: "izin_macet",
@@ -2329,7 +2341,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "fa_sebelum",
-                    field_value: features[0].attributes.fa_sebelum,
+                    field_value: features[0].attributes.fa_sebelum, //20
                   },
                   {
                     field_name: "fa",
@@ -2369,7 +2381,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "penduduk_y5_pertambahan",
-                    field_value: features[0].attributes.penduduk_y5_pertambahan,
+                    field_value: features[0].attributes.penduduk_y5_pertambahan, //30
                   },
                   {
                     field_name: "penduduk_y6_proyeksi",
@@ -2409,7 +2421,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "keb_air_harian_y8",
-                    field_value: features[0].attributes.keb_air_harian_y8,
+                    field_value: features[0].attributes.keb_air_harian_y8, //40
                   },
                   {
                     field_name: "keb_air_harian_y9",
@@ -2449,7 +2461,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "bangkitan",
-                    field_value: features[0].attributes.bangkitan,
+                    field_value: features[0].attributes.bangkitan, //50
                   },
                   {
                     field_name: "bangkitan_ruasjalan",
@@ -2553,7 +2565,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "namaszona",
-                    field_value: features[0].attributes.namaszona,
+                    field_value: features[0].attributes.namaszona, //60
                   },
                   {
                     field_name: "lantai_max",
@@ -2593,7 +2605,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "kdh_sebelum",
-                    field_value: features[0].attributes.kdh_sebelum,
+                    field_value: features[0].attributes.kdh_sebelum, //70
                   },
                   {
                     field_name: "lantai_max_sebelum",
@@ -2601,7 +2613,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "status_itbx_sebelum",
-                    field_value: features[0].attributes.status_itbx_sebelum,//72
+                    field_value: features[0].attributes.status_itbx_sebelum, //72
                   },
                   {
                     field_name: "status_itbx",
@@ -2609,7 +2621,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "kegiatan_sebelum",
-                    field_value: features[0].attributes.kegiatan_sebelum,//74
+                    field_value: features[0].attributes.kegiatan_sebelum, //74
                   },
                   {
                     field_name: "kegiatan",
@@ -2622,6 +2634,34 @@ const SimulasiMap = () => {
                   {
                     field_name: "kbli",
                     field_value: features[0].attributes.kbli,
+                  },
+                  {
+                    field_name: "jenis_bang_sebelum",
+                    field_value: features[0].attributes.jenis_bang_sebelum, //78
+                  },
+                  {
+                    field_name: "q_arus_sebelum",
+                    field_value: features[0].attributes.q_arus_sebelum,
+                  },
+                  {
+                    field_name: "kdb_rdtr",
+                    field_value: features[0].attributes.kdb_rdtr, //80
+                  },
+                  {
+                    field_name: "klb_rdtr",
+                    field_value: features[0].attributes.klb_rdtr,
+                  },
+                  {
+                    field_name: "kdh_rdtr",
+                    field_value: features[0].attributes.kdh_rdtr, //82
+                  },
+                  {
+                    field_name: "keb_air_harian_y5_sebelum",
+                    field_value: features[0].attributes.keb_air_harian_y5_sebelum,
+                  },
+                  {
+                    field_name: "pdam_kapasitas_harian_sebelum",
+                    field_value: features[0].attributes.pdam_kapasitas_harian_sebelum,
                   },
                 ]);
                 setHasilSimulasiBangunanKdbKlb(
@@ -3610,40 +3650,51 @@ const SimulasiMap = () => {
                     // handle error
                     console.log("error check", error);
                   });
-                
+
                 // start segmentation drawing function
-                if(features[0].attributes.id_bangunan){
-                  setSegmentationBuildingId(features[0].attributes.id_bangunan)
-                  setRemoveSegmentationFunc(()=>() => {
+                if (features[0].attributes.id_bangunan) {
+                  setSegmentationBuildingId(features[0].attributes.id_bangunan);
+                  setRemoveSegmentationFunc(() => () => {
                     bangunanSesudahLayer.definitionExpression = "";
                     map.remove(segmentationGroupLayer);
-                    setIsSegmentationActive(false)
-                    if(document.getElementById("segmentationLegendCard")){document.getElementById("segmentationLegendCard").style.display = "none"}
-                  })
-                  setShowSegmentationFunc((id)=>(id)=>{
-                      bangunanSesudahLayer.definitionExpression =
+                    setIsSegmentationActive(false);
+                    if (document.getElementById("segmentationLegendCard")) {
+                      document.getElementById(
+                        "segmentationLegendCard"
+                      ).style.display = "none";
+                    }
+                  });
+                  setShowSegmentationFunc((id) => (id) => {
+                    bangunanSesudahLayer.definitionExpression =
                       "NOT id_bangunan = " + id;
-                      map.add(segmentationGroupLayer)
-                      view.whenLayerView(lantaiAtas).then(function(layerView){
-                        layerView.highlight(lantaiAtas.graphics)
-                      })
-                      view.whenLayerView(lantai).then(function(layerView){
-                        layerView.highlight(lantai.graphics)
-                      })
-                      view.whenLayerView(lantaiSebelum).then(function(layerView){
-                        layerView.highlight(lantaiSebelum.graphics)
-                      })
-                      view.whenLayerView(lantaiSebelumKelewatan).then(function(layerView){
-                        layerView.highlight(lantaiSebelumKelewatan.graphics)
-                      })
-                      if(document.getElementById("segmentationLegendCard")){document.getElementById("segmentationLegendCard").style.display = "block"}
-                  })
+                    map.add(segmentationGroupLayer);
+                    view.whenLayerView(lantaiAtas).then(function (layerView) {
+                      layerView.highlight(lantaiAtas.graphics);
+                    });
+                    view.whenLayerView(lantai).then(function (layerView) {
+                      layerView.highlight(lantai.graphics);
+                    });
+                    view
+                      .whenLayerView(lantaiSebelum)
+                      .then(function (layerView) {
+                        layerView.highlight(lantaiSebelum.graphics);
+                      });
+                    view
+                      .whenLayerView(lantaiSebelumKelewatan)
+                      .then(function (layerView) {
+                        layerView.highlight(lantaiSebelumKelewatan.graphics);
+                      });
+                    if (document.getElementById("segmentationLegendCard")) {
+                      document.getElementById(
+                        "segmentationLegendCard"
+                      ).style.display = "block";
+                    }
+                  });
                   getRing(features[0].attributes.id_bangunan);
                   // features[0].layer.definitionExpression =
                   //   "NOT id_bangunan = " + features[0].attributes.id_bangunan;
                 }
                 // end segmentation drawing function
-
               } else if (features[0].layer.title === "Pola Ruang Versioning") {
                 setContentGeneral([
                   {
@@ -3761,7 +3812,11 @@ const SimulasiMap = () => {
               if (this.status >= 200 && this.status < 400) {
                 // Success!
                 var { features } = JSON.parse(this.response);
-                if(features[0]) drawGraphic(features[0].geometry.rings, features[0].attributes);
+                if (features[0])
+                  drawGraphic(
+                    features[0].geometry.rings,
+                    features[0].attributes
+                  );
               } else {
                 // We reached our target server, but it returned an error
               }
@@ -3798,7 +3853,6 @@ const SimulasiMap = () => {
               spatialReference: { wkid: 4326 },
             });
 
-
             lantaiSebelum = new GraphicsLayer({
               title: "Lantai Sebelum",
               elevationInfo: {
@@ -3824,7 +3878,7 @@ const SimulasiMap = () => {
                       ? attributes.lantai_max
                       : -1
                     : attributes.lantai_max && attributes.jlh_lantai
-                    ? attributes.jlh_lantai > attributes.lantai_max 
+                    ? attributes.jlh_lantai > attributes.lantai_max
                       ? attributes.lantai_max
                       : attributes.jlh_lantai
                     : -1,
@@ -3930,7 +3984,8 @@ const SimulasiMap = () => {
               new Graphic({
                 geometry: polygon,
                 symbol: getSymbol(
-                  attributes.jlh_lantai > attributes.jlh_lantai_sebelum && attributes.jlh_lantai_sebelum
+                  attributes.jlh_lantai > attributes.jlh_lantai_sebelum &&
+                    attributes.jlh_lantai_sebelum
                     ? attributes.jlh_lantai -
                         attributes.jlh_lantai_sebelum -
                         (attributes.lantai_max - attributes.jlh_lantai_sebelum >
@@ -3953,9 +4008,9 @@ const SimulasiMap = () => {
                 lantaiAtas,
               ],
               blendMode: "destination-over",
-              listMode: "hide"
+              listMode: "hide",
               // visible: false
-            })
+            });
 
             // map.add(segmentationGroupLayer)
 
@@ -3975,11 +4030,14 @@ const SimulasiMap = () => {
 
           var hideSegementationGroupLayer = () => {
             map.remove(segmentationGroupLayer);
-            bangunanSesudahLayer.definitionExpression = ""
-            setIsSegmentationActive(false)
+            bangunanSesudahLayer.definitionExpression = "";
+            setIsSegmentationActive(false);
             // segmentationGroupLayer.visible = false
-            if(document.getElementById("segmentationLegendCard")){document.getElementById("segmentationLegendCard").style.display = "none"}
-          }
+            if (document.getElementById("segmentationLegendCard")) {
+              document.getElementById("segmentationLegendCard").style.display =
+                "none";
+            }
+          };
           // end segementation drawing function
 
           setStateView(view);
@@ -4065,118 +4123,94 @@ const SimulasiMap = () => {
   // start close showing popup
   const handleCloseShowingPopup = () => {
     console.log(stateView);
-    if(segmentationBuildingId){
-      removeSegmentationFunc()
+    if (segmentationBuildingId) {
+      removeSegmentationFunc();
     }
     setActiveSebelumSesudah({
-      activeSebelum: false
-    })
-    let layer = esriMap.allLayers.find(function(layer) {
+      activeSebelum: false,
+    });
+    let layerBangunan = esriMap.allLayers.find(function (layer) {
       return layer.title === "Bangunan";
-     })
-     layer.renderer = getRenderer("itbx", "jlh_lantai")
-     layer.refresh()
+    });
+    let layerPolaRuang = esriMap.allLayers.find(function (layer) {
+      return layer.title === "Pola Ruang Versioning";
+    });
+    let layerKapasitasAir = esriMap.allLayers.find(function (layer) {
+      return layer.title === "Kapasitas Air";
+    });
+    let layerJaringanJalan = esriMap.allLayers.find(function (layer) {
+      return layer.title === "Jaringan Jalan";
+    });
+    layerBangunan.renderer = getRendererBangunan("itbx", "jlh_lantai");
+    layerPolaRuang.renderer = getRendererPolaRuang("namaszona");
+    layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air")
+    layerJaringanJalan.renderer = getRendererJaringanJalan("los")
+    layerBangunan.refresh();
+    layerPolaRuang.refresh();
+    layerKapasitasAir.refresh();
+    layerJaringanJalan.refresh();
     stateView.popup.close();
     setShowingPopop({ ...showingPopup, show: false, title: "" });
   };
   // end close showing popup
   const handleSebelumSesudah = () => {
-    let layer = esriMap.allLayers.find(function(layer) {
+    let layerBangunan = esriMap.allLayers.find(function (layer) {
       return layer.title === "Bangunan";
-     })
-     if(!activeSebelumSesudah.activeSebelum){
-       layer.renderer = getRenderer("itbx_sebelum", "jlh_lantai_sebelum")
-      } else {
-        layer.renderer = getRenderer("itbx", "jlh_lantai")
-      }
-      layer.refresh()
+    });
+    let layerPolaRuang = esriMap.allLayers.find(function (layer) {
+      return layer.title === "Pola Ruang Versioning";
+    });
+    let layerKapasitasAir = esriMap.allLayers.find(function (layer) {
+      return layer.title === "Kapasitas Air";
+    });
+    let layerJaringanJalan = esriMap.allLayers.find(function (layer) {
+      return layer.title === "Jaringan Jalan";
+    });
+    if (!activeSebelumSesudah.activeSebelum) {
+      layerBangunan.renderer = getRendererBangunan(
+        "itbx_sebelum",
+        "jlh_lantai_sebelum"
+      );
+      layerPolaRuang.renderer = getRendererPolaRuang("namaszona_sebelum");
+      layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air_sebelum")
+      layerJaringanJalan.renderer = getRendererJaringanJalan("los_sebelum")
+    } else {
+      layerBangunan.renderer = getRendererBangunan("itbx", "jlh_lantai");
+      layerPolaRuang.renderer = getRendererPolaRuang("namaszona");
+      layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air")
+      layerJaringanJalan.renderer = getRendererJaringanJalan("los")
+    }
+    layerBangunan.refresh();
+    layerPolaRuang.refresh();
+    layerKapasitasAir.refresh();
+    layerJaringanJalan.refresh();
     setActiveSebelumSesudah({
       ...activeSebelumSesudah,
       activeSebelum: !activeSebelumSesudah.activeSebelum,
     });
   };
-  
-  const getRenderer = (itbx, lantai) => {
+
+  const getRendererBangunan = (itbx, lantai) => {
     return {
       type: "unique-value", // autocasts as new UniqueValueRenderer()
-      // defaultSymbol: {
-      //   type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-      //   symbolLayers: [
-      //     {
-      //       type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-      //       material: {
-      //         color: [156, 156, 156],
-      //       },
-      //       edges: {
-      //         type: "solid",
-      //         color: "#999",
-      //         size: 0.5,
-      //       },
-      //     },
-      //   ],
-      // },
-      // defaultLabel: "0",
+      defaultSymbol: getSymbol3D([156, 156, 156]),
+      defaultLabel: "Kosong",
       field: itbx,
       uniqueValueInfos: [
         {
           value: "I",
-          symbol: {
-            type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-            symbolLayers: [
-              {
-                type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-                material: {
-                  color: [56, 168, 0],
-                },
-                edges: {
-                  type: "solid",
-                  color: "#999",
-                  size: 0.5,
-                },
-              },
-            ],
-          },
+          symbol: getSymbol3D([56, 168, 0]),
           label: "I",
         },
         {
-          value: "B/T",
-          symbol: {
-            type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-            symbolLayers: [
-              {
-                type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-                material: {
-                  color: [245, 202, 122],
-                },
-                edges: {
-                  type: "solid",
-                  color: "#999",
-                  size: 0.5,
-                },
-              },
-            ],
-          },
-          label: "B/T",
+          value: "T/B",
+          label: "T/B",
+          symbol: getSymbol3D([245, 202, 122]),
         },
         {
           value: "X",
-          symbol: {
-            type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-            symbolLayers: [
-              {
-                type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-                material: {
-                  color: [230, 0, 0],
-                },
-                edges: {
-                  type: "solid",
-                  color: "#999",
-                  size: 0.5,
-                },
-              },
-            ],
-          },
           label: "X",
+          symbol: getSymbol3D([230, 0, 0]),
         },
       ],
       visualVariables: [
@@ -4186,19 +4220,515 @@ const SimulasiMap = () => {
           valueUnit: "meters", // Converts and extrudes all data values in meters
         },
       ],
-    }
-  }
+    };
+  };
+
+  const getRendererPolaRuang = (namaszona) => {
+    return {
+      type: "unique-value", // autocasts as new UniqueValueRenderer()
+      defaultSymbol: getSymbol3D("#828282"),
+      defaultLabel: "Nama Sub-Zona",
+      field: namaszona,
+      uniqueValueInfos: [
+        {
+          value: "Badan Air",
+          symbol: getSymbol3D("#73dfff"),
+          label: "Badan Air",
+        },
+        {
+          value: "Badan Jalan",
+          symbol: getSymbol3D("#ffffff"),
+          label: "Badan Jalan",
+        },
+        {
+          value: "Cagar Alam",
+          symbol: getSymbol3D("#cfedfc"),
+          label: "Cagar Alam",
+        },
+        {
+          value: "Ekosistem Mangrove",
+          symbol: getSymbol3D("#43756e"),
+          label: "Ekosistem Mangrove",
+        },
+        {
+          value: "Gerakan Tanah",
+          symbol: getSymbol3D("#cfedfc"),
+          label: "Gerakan Tanah",
+        },
+        {
+          value: "Hortikultura",
+          symbol: getSymbol3D("#cfedfc"),
+          label: "Hortikultura",
+        },
+        {
+          value: "Hutan Lindung",
+          symbol: getSymbol3D("#245724"),
+          label: "Hutan Lindung",
+        },
+        {
+          value: "Hutan Produksi Terbatas",
+          symbol: getSymbol3D("#b3e6e6"),
+          label: "Hutan Produksi Terbatas",
+        },
+        {
+          value: "Hutan Produksi Tetap",
+          symbol: getSymbol3D("#99f2cc"),
+          label: "Hutan Produksi Tetap",
+        },
+        {
+          value: "Hutan Produksi yang Dapat Dikonversi",
+          symbol: getSymbol3D("#fcb3f4"),
+          label: "Hutan Produksi yang Dapat Dikonversi",
+        },
+        {
+          value: "Instalasi Pengolahan Air Limbah (IPAL)",
+          symbol: getSymbol3D("#c7cba2"),
+          label: "Instalasi Pengolahan Air Limbah (IPAL)",
+        },
+        {
+          value: "Instalasi Pengolahan Air Minum (IPAM)",
+          symbol: getSymbol3D("#fcb3f4"),
+          label: "Instalasi Pengolahan Air Minum (IPAM)",
+        },
+        {
+          value: "Kawasan Industri",
+          symbol: getSymbol3D("#fcb3f4"),
+          label: "Kawasan Industri",
+        },
+        {
+          value: "Kawasan Peruntukan Industri",
+          symbol: getSymbol3D("#adbac9"),
+          label: "Kawasan Peruntukan Industri",
+        },
+        {
+          value: "Keunikan Batuan dan Fosil",
+          symbol: getSymbol3D("#fcfbb3"),
+          label: "Keunikan Batuan dan Fosil",
+        },
+        {
+          value: "Keunikan Bentang Alam",
+          symbol: getSymbol3D("#fcfbb3"),
+          label: "Keunikan Bentang Alam",
+        },
+        {
+          value: "Keunikan Proses Geologi",
+          symbol: getSymbol3D("#fcfbb3"),
+          label: "Keunikan Proses Geologi",
+        },
+        {
+          value: "Letusan Gunung Api",
+          symbol: getSymbol3D("#fcbeb6"),
+          label: "Letusan Gunung Api",
+        },
+        {
+          value: "Lindung Gambut",
+          symbol: getSymbol3D("#fcbeb6"),
+          label: "Lindung Gambut",
+        },
+        {
+          value: "Lindung Spiritual dan Kearifan Lokal",
+          symbol: getSymbol3D("#b8fcd2"),
+          label: "Lindung Spiritual dan Kearifan Lokal",
+        },
+        {
+          value: "Pemakaman",
+          symbol: getSymbol3D("#e5f4d5"),
+          label: "Pemakaman",
+        },
+        {
+          value: "Pembangkitan Tenaga Listrik",
+          symbol: getSymbol3D("#ffc000"),
+          label: "Pembangkitan Tenaga Listrik",
+        },
+        {
+          value: "Pengembangan Nuklir",
+          symbol: getSymbol3D("#b8fcd2"),
+          label: "Pengembangan Nuklir",
+        },
+        {
+          value: "Perdagangan dan Jasa Skala BWP",
+          symbol: getSymbol3D("#ff8080"),
+          label: "Perdagangan dan Jasa Skala BWP",
+        },
+        {
+          value: "Perdagangan dan Jasa Skala Kota",
+          symbol: getSymbol3D("#ff6666"),
+          label: "Perdagangan dan Jasa Skala Kota",
+        },
+        {
+          value: "Perdagangan dan Jasa Skala Sub BWP",
+          symbol: getSymbol3D("#ff9999"),
+          label: "Perdagangan dan Jasa Skala Sub BWP",
+        },
+        {
+          value: "Pergudangan",
+          symbol: getSymbol3D([199, 203, 163]),
+          label: "Pergudangan",
+        },
+        {
+          value: "Perikanan Budidaya",
+          symbol: getSymbol3D([97, 145, 201]),
+          label: "Perikanan Budidaya",
+        },
+        {
+          value: "Perikanan Tangkap",
+          symbol: getSymbol3D([184, 252, 210]),
+          label: "Perikanan Tangkap",
+        },
+        {
+          value: "Perkantoran",
+          symbol: getSymbol3D([200, 20, 150]),
+          label: "Perkantoran",
+        },
+        {
+          value: "Perkebunan",
+          symbol: getSymbol3D([122, 183, 77]),
+          label: "Perkebunan",
+        },
+        {
+          value: "Perkebunan Rakyat",
+          symbol: getSymbol3D([179, 188, 252]),
+          label: "Perkebunan Rakyat",
+        },
+        {
+          value: "Pertahanan dan Keamanan",
+          symbol: getSymbol3D([115, 138, 69]),
+          label: "Pertahanan dan Keamanan",
+        },
+        {
+          value: "Pertambangan",
+          symbol: getSymbol3D([179, 188, 252]),
+          label: "Pertambangan",
+        },
+        {
+          value: "Perumahan dan Perdagangan/Jasa",
+          symbol: getSymbol3D([230, 152, 0]),
+          label: "Perumahan dan Perdagangan/Jasa",
+        },
+        {
+          value: "Perumahan dan Perkantoran",
+          symbol: getSymbol3D([179, 188, 252]),
+          label: "Perumahan dan Perkantoran",
+        },
+        {
+          value: "Perumahan, Perdagangan/Jasa dan Perkantoran",
+          symbol: getSymbol3D([252, 230, 197]),
+          label: "Perumahan, Perdagangan/Jasa dan Perkantoran",
+        },
+        {
+          value: "Peternakan",
+          symbol: getSymbol3D([252, 230, 197]),
+          label: "Peternakan",
+        },
+        {
+          value: "Pos Lintas Batas Negara",
+          symbol: getSymbol3D([252, 230, 197]),
+          label: "Pos Lintas Batas Negara",
+        },
+        {
+          value: "Resapan Air",
+          symbol: getSymbol3D([232, 255, 224]),
+          label: "Resapan Air",
+        },
+        {
+          value: "Rimba Kota",
+          symbol: getSymbol3D([219, 255, 214]),
+          label: "Rimba Kota",
+        },
+        {
+          value: "Ruang Terbuka Non Hijau",
+          symbol: getSymbol3D([238, 215, 252]),
+          label: "Ruang Terbuka Non Hijau",
+        },
+        {
+          value: "Rumah Kepadatan Rendah",
+          symbol: getSymbol3D([255, 255, 191]),
+          label: "Rumah Kepadatan Rendah",
+        },
+        {
+          value: "Rumah Kepadatan Sangat Rendah",
+          symbol: getSymbol3D([238, 215, 252]),
+          label: "Rumah Kepadatan Sangat Rendah",
+        },
+        {
+          value: "Rumah Kepadatan Sangat Tinggi",
+          symbol: getSymbol3D([255, 255, 77]),
+          label: "Rumah Kepadatan Sangat Tinggi",
+        },
+        {
+          value: "Rumah Kepadatan Sedang",
+          symbol: getSymbol3D([255, 255, 153]),
+          label: "Rumah Kepadatan Sedang",
+        },
+        {
+          value: "Rumah Kepadatan Tinggi",
+          symbol: getSymbol3D([255, 255, 115]),
+          label: "Rumah Kepadatan Tinggi",
+        },
+        {
+          value: "SPU Pendidikan Skala Kecamatan",
+          symbol: getSymbol3D([230, 0, 169]),
+          label: "SPU Pendidikan Skala Kecamatan",
+        },
+        {
+          value: "Sekitar Danau Atau Waduk",
+          symbol: getSymbol3D([252, 215, 227]),
+          label: "Sekitar Danau Atau Waduk",
+        },
+        {
+          value: "Sekitar Mata Air",
+          symbol: getSymbol3D([168, 255, 191]),
+          label: "Sekitar Mata Air",
+        },
+        {
+          value: "Sektor Informal",
+          symbol: getSymbol3D([255, 102, 0]),
+          label: "Sektor Informal",
+        },
+        {
+          value: "Sempadan Pantai",
+          symbol: getSymbol3D([204, 255, 204]),
+          label: "Sempadan Pantai",
+        },
+        {
+          value: "Sempadan Patahan Aktif",
+          symbol: getSymbol3D([252, 215, 227]),
+          label: "Sempadan Patahan Aktif",
+        },
+        {
+          value: "Sentra Industri Kecil dan Menengah",
+          symbol: getSymbol3D([252, 215, 227]),
+          label: "Sentra Industri Kecil dan Menengah",
+        },
+        {
+          value: "Suaka Margasatwa",
+          symbol: getSymbol3D([201, 252, 182]),
+          label: "Suaka Margasatwa",
+        },
+        {
+          value: "Taman Buru",
+          symbol: getSymbol3D([201, 252, 182]),
+          label: "Taman Buru",
+        },
+        {
+          value: "Taman Hutan Raya",
+          symbol: getSymbol3D([194, 212, 252]),
+          label: "Taman Hutan Raya",
+        },
+        {
+          value: "Taman Kecamatan",
+          symbol: getSymbol3D([141, 255, 7]),
+          label: "Taman Kecamatan",
+        },
+        {
+          value: "Taman Kelurahan",
+          symbol: getSymbol3D([166, 255, 61]),
+          label: "Taman Kelurahan",
+        },
+        {
+          value: "Taman Kota",
+          symbol: getSymbol3D([166, 255, 61]),
+          label: "Taman Kota",
+        },
+        {
+          value: "Taman Nasional",
+          symbol: getSymbol3D([194, 212, 252]),
+          label: "Taman Nasional",
+        },
+        {
+          value: "Taman RT",
+          symbol: getSymbol3D([194, 212, 252]),
+          label: "Taman RT",
+        },
+        {
+          value: "Taman RW",
+          symbol: getSymbol3D([153, 255, 50]),
+          label: "Taman RW",
+        },
+        {
+          value: "Taman Wisata Alam",
+          symbol: getSymbol3D([228, 192, 252]),
+          label: "Taman Wisata Alam",
+        },
+        {
+          value: "Tanaman Pangan",
+          symbol: getSymbol3D([228, 192, 252]),
+          label: "Tanaman Pangan",
+        },
+        {
+          value: "Tempat Evakuasi Akhir",
+          symbol: getSymbol3D([228, 192, 252]),
+          label: "Tempat Evakuasi Akhir",
+        },
+        {
+          value: "Tempat Evakuasi Sementara",
+          symbol: getSymbol3D([212, 252, 231]),
+          label: "Tempat Evakuasi Sementara",
+        },
+        {
+          value: "Tempat Pemrosesan Akhir",
+          symbol: getSymbol3D([230, 230, 0]),
+          label: "Tempat Pemrosesan Akhir",
+        },
+        {
+          value: "Transportasi",
+          symbol: getSymbol3D([255, 40, 50]),
+          label: "Transportasi",
+        },
+        {
+          value: "Wisata Alam",
+          symbol: getSymbol3D([255, 230, 255]),
+          label: "Wisata Alam",
+        },
+        {
+          value: "Wisata Buatan",
+          symbol: getSymbol3D([255, 230, 255]),
+          label: "Wisata Buatan",
+        },
+        {
+          value: "Wisata Budaya",
+          symbol: getSymbol3D([212, 252, 231]),
+          label: "Wisata Budaya",
+        },
+        {
+          value: "Zona Penyangga",
+          symbol: getSymbol3D([138, 255, 204]),
+          label: "Zona Penyangga",
+        },
+      ],
+    };
+  };
+
+  const getRendererKapasitasAir = (field) => {
+    return {
+      type: "unique-value", // autocasts as new UniqueValueRenderer()
+      // defaultSymbol: getSymbol3D([130, 130, 130]),
+      // defaultLabel: "",
+      field: field,
+      fieldDelimiter: ",",
+      scaleSymbols: true,
+      transparency: 30,
+      uniqueValueInfos: [
+        {
+          value: "Surplus",
+          label: "Surplus",
+          symbol: getSymbol3D([115, 223, 255]),
+        },
+        {
+          value: "Defisit",
+          label: "Defisit",
+          symbol: getSymbol3D([130, 130, 130]),
+        },
+        // {
+        //   value: "Pembangunan Sudah Maksimal",
+        //   label: "Pembangunan Sudah Maksimal",
+        //   symbol: getSymbol3D([165, 245, 122]),
+        // },
+      ],
+    };
+  };
+
+  const getRendererJaringanJalan = (field) => {
+    return {
+      type: "unique-value", // autocasts as new UniqueValueRenderer()
+      defaultSymbol: getLine3D([130, 130, 130]),
+      defaultLabel: "Lainnya",
+      field: field,
+      fieldDelimiter: ",",
+      scaleSymbols: true,
+      transparency: 0,
+      uniqueValueInfos: [
+        {
+          value: "Masih Bisa Dibangun",
+          label: "Masih Bisa Dibangun",
+          symbol: getLine3D([115, 223, 255]),
+        },
+        {
+          value: "A",
+          label: "A",
+          symbol: getLine3D([56, 168, 0]),
+        },
+        {
+          value: "B",
+          label: "B",
+          symbol: getLine3D([112, 168, 0]),
+        },
+        {
+          value: "C",
+          label: "C",
+          symbol: getLine3D([230, 230, 0  ]),
+        },
+        {
+          value: "D",
+          label: "D",
+          symbol: getLine3D([255, 170, 0]),
+        },
+        {
+          value: "E",
+          label: "E",
+          symbol: getLine3D([255, 85, 0]),
+        },
+        {
+          value: "F",
+          label: "F",
+          symbol: getLine3D([168, 0, 0]),
+        },
+      ],
+    };
+  };
+
+  const getSymbol3D = (color) => {
+    return {
+      type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+      symbolLayers: [
+        {
+          type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
+          material: {
+            color: color,
+          },
+          edges: {
+            type: "solid",
+            color: "#999",
+            size: 0.5,
+          },
+        },
+      ],
+    };
+  };
+
+  const getLine3D = (color) => {
+    return {
+      type: "line-3d", // autocasts as new PolygonSymbol3D()
+      symbolLayers: [
+        {
+          type: "line", // autocasts as new ExtrudeSymbol3DLayer()
+          material: {
+            color: color,
+          },
+          size: 4,
+          cap: "round",
+          join: "round"
+        },
+      ],
+    };
+  };
 
   const handleActivateSegmentation = () => {
-    !isSegmentationActive ?  showSegmentationFunc(segmentationBuildingId) : removeSegmentationFunc()
+    !isSegmentationActive
+      ? showSegmentationFunc(segmentationBuildingId)
+      : removeSegmentationFunc();
     setIsSegmentationActive(!isSegmentationActive);
-    !isSegmentationActive && document.getElementById("segmentationLegendCard") ?document.getElementById("segmentationLegendCard").style.display = "block" : document.getElementById("segmentationLegendCard").style.display = "none"
+    !isSegmentationActive && document.getElementById("segmentationLegendCard")
+      ? (document.getElementById("segmentationLegendCard").style.display =
+          "block")
+      : (document.getElementById("segmentationLegendCard").style.display =
+          "none");
   };
 
   // start history analysis
   const handleHistoryAnalysis = () => {
-    console.log(dataHistory)
-    handleExecuteSpCopy(1)
+    console.log(dataHistory);
+    handleExecuteSpCopy(1);
     // if (
     //   dataHistory.id_bangunan
     // ) {
@@ -4213,23 +4743,24 @@ const SimulasiMap = () => {
   };
   // end history analysis
 
-  const handleExecuteSpCopy = param => {
-    axios.post(config.url.API_URL + "/Simulasi/ExecuteSpCopy", 
-      {
-      }
-      ,{
-        headers: { Authorization: "Bearer " + sessionStorage.token },
-        params: {
-          simulasiId: state?.simulasiBangunan?.simulasiId,
-          simulasiIdBaru: state?.id,
-          projectId: state?.simulasiBangunan?.projectId,
-          dataKe: state?.simulasiBangunan?.dataKe,
-          param: param,
+  const handleExecuteSpCopy = (param) => {
+    axios
+      .post(
+        config.url.API_URL + "/Simulasi/ExecuteSpCopy",
+        {},
+        {
+          headers: { Authorization: "Bearer " + sessionStorage.token },
+          params: {
+            simulasiId: state?.simulasiBangunan?.simulasiId,
+            simulasiIdBaru: state?.id,
+            projectId: state?.simulasiBangunan?.projectId,
+            dataKe: state?.simulasiBangunan?.dataKe,
+            param: param,
+          },
         }
-      })
-      .then((data) => {
-      })
-  }
+      )
+      .then((data) => {});
+  };
 
   return (
     <div className="container-scroller">
@@ -4388,7 +4919,7 @@ const SimulasiMap = () => {
                       </div>
 
                       <div className="segementation-container">
-                          Tampilkan Layer Segmentasi
+                        Tampilkan Layer Segmentasi
                         <div className="switch-button-small">
                           <input
                             className="switch-button-small-checkbox"
@@ -4400,217 +4931,303 @@ const SimulasiMap = () => {
                             className="switch-button-small-label"
                             style={{ marginBottom: "0px" }}
                           >
-                            <span className="switch-button-small-label-span">
-                            </span>
+                            <span className="switch-button-small-label-span"></span>
                           </label>
                         </div>
                       </div>
                     </div>
 
-                    <div style={{
-                      height: "calc(100vh - 200px)",
-                      overflow: "auto",
-                    }}>
                     <div
-                      className="accordion accordion-bordered"
-                      id="accordionExample"
+                      style={{
+                        height: "calc(100vh - 200px)",
+                        overflow: "auto",
+                      }}
                     >
-                      <div className="fade-in">
-                        <div className="card" style={{ margin: "0 0.2rem" }}>
-                          <div
-                            className="card-header"
-                            role="tab"
-                            id="headingTwo"
-                            style={{ padding: "0px" }}
+                      <div
+                        className="accordion accordion-bordered"
+                        id="accordionExample"
+                      >
+                        <div className="fade-in">
+                        <div
+                            className="card"
+                            id="segmentationLegendCard"
+                            style={{ display: "none", margin: "0 0.2rem" }}
                           >
-                            <h6 className="mb-0">
-                              <button
-                                className="btn btn-block text-left collapsed btn-sm"
-                                type="button"
-                                data-toggle="collapse"
-                                data-target={"#sebelumSum"}
-                                aria-expanded="false"
-                                aria-controls={"sebelumSum"}
-                                style={{ fontSize: "14px" }}
-                              >
-                                {/* <img
+                            <div
+                              className="card-header"
+                              role="tab"
+                              id="headingTwo"
+                              style={{ padding: "0px" }}
+                            >
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left collapsed btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#segmentationLegend"}
+                                  aria-expanded="true"
+                                  aria-controls={"segmentationLegend"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {/* <img
+                                  src="./images/water.svg"
+                                  alt="Air Bersih"
+                                  style={{ marginRight: "10px", width: "16px" }}
+                                /> */}
+                                  <i className="ti-info"> </i>
+                                  Legenda Segmentasi
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
+                            </div>
+
+                            <div
+                              id="segmentationLegend"
+                              className="collapse"
+                              aria-labelledby="segmentationLegend"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                <img
+                                  src={segmentationLegend}
+                                  alt="Legenda Segmentasi"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="card" style={{ margin: "0 0.2rem" }}>
+                            <div
+                              className="card-header"
+                              role="tab"
+                              id="headingTwo"
+                              style={{ padding: "0px" }}
+                            >
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left collapsed btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#sebelumSum"}
+                                  aria-expanded="false"
+                                  aria-controls={"sebelumSum"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {/* <img
                                   src="./images/Traffic-lights.svg"
                                   alt="Kemacetan"
                                   style={{ marginRight: "10px" }}
                                 /> */}
-                                <i className="ti-info-alt"> </i>
-                                Ringkasan
-                                <i className="ti-arrow-circle-down float-right"></i>
-                              </button>
-                            </h6>
-                          </div>
+                                  <i className="ti-info-alt"> </i>
+                                  Ringkasan
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
+                            </div>
 
-                          <div
-                            id="sebelumSum"
-                            className="show collapse"
-                            aria-labelledby="headingTwo"
-                            data-parent="#accordionExample"
-                          >
-                            <div className="card-body">
-                              <table className="table">
-                                <tbody>
-                                  <tr>
-                                    <td>Status ITBX</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[72].field_value
-                                        : contentBangunanKdbKlb[73]
-                                            .field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>KBLI</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[76].field_value
-                                        : contentBangunanKdbKlb[77]
-                                            .field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Jenis Kegiatan (KBLI)</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[74].field_value
-                                        : contentBangunanKdbKlb[75]
-                                            .field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Jenis Bangunan</td>
-                                    <td>
-                                      {contentBangunanKdbKlb[1].field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Nama Sub Zona</td>
-                                    <td>
-                                    {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[67].field_value
-                                        : contentBangunanKdbKlb[60]
-                                            .field_value}
-                                    </td>
-                                  </tr>
-                                  {/* (String(contentBangunanKdbKlb[2].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[3].field_value).toLowerCase().indexOf("ditolak") !== -1) &&  */<tr>
-                                    <td>Status KDB/KLB</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[2].field_value
-                                        : contentBangunanKdbKlb[3].field_value}
-                                    </td>
-                                  </tr>}
-                                  {/* (String(contentBangunanKdbKlb[10].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[11].field_value).toLowerCase().indexOf("ditolak") !== -1) && */ <tr>
-                                    <td>Status Tingkat Kemacetan</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[10].field_value
-                                        : contentBangunanKdbKlb[11].field_value}
-                                    </td>
-                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
-                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
-                                  </tr>}
-                                  {/* (String(contentBangunanKdbKlb[8].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[9].field_value).toLowerCase().indexOf("ditolak") !== -1) &&  */<tr>
-                                    <td>Status Kualitas Air Bersih</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[8].field_value
-                                        : contentBangunanKdbKlb[9].field_value}
-                                    </td>
-                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
-                                  </tr>}
-                                </tbody>
-                              </table>
+                            <div
+                              id="sebelumSum"
+                              className="show collapse"
+                              aria-labelledby="headingTwo"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>Status ITBX</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[72]
+                                              .field_value
+                                          : contentBangunanKdbKlb[73]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>KBLI</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[76]
+                                              .field_value
+                                          : contentBangunanKdbKlb[77]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Jenis Kegiatan (KBLI)</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[74]
+                                              .field_value
+                                          : contentBangunanKdbKlb[75]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Jenis Bangunan</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[78]
+                                              .field_value
+                                          : contentBangunanKdbKlb[1]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Nama Sub Zona</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[67]
+                                              .field_value
+                                          : contentBangunanKdbKlb[60]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    {
+                                      /* (String(contentBangunanKdbKlb[2].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[3].field_value).toLowerCase().indexOf("ditolak") !== -1) &&  */ <tr>
+                                        <td>Status KDB/KLB</td>
+                                        <td>
+                                          {activeSebelumSesudah.activeSebelum
+                                            ? contentBangunanKdbKlb[2]
+                                                .field_value
+                                            : contentBangunanKdbKlb[3]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                    }
+                                    {
+                                      /* (String(contentBangunanKdbKlb[10].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[11].field_value).toLowerCase().indexOf("ditolak") !== -1) && */ <tr>
+                                        <td>Status Tingkat Kemacetan</td>
+                                        <td>
+                                          {activeSebelumSesudah.activeSebelum
+                                            ? contentBangunanKdbKlb[10]
+                                                .field_value
+                                            : contentBangunanKdbKlb[11]
+                                                .field_value}
+                                        </td>
+                                        {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
+                                        {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
+                                      </tr>
+                                    }
+                                    {
+                                      /* (String(contentBangunanKdbKlb[8].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[9].field_value).toLowerCase().indexOf("ditolak") !== -1) &&  */ <tr>
+                                        <td>Status Kuantitas Air Bersih</td>
+                                        <td>
+                                          {activeSebelumSesudah.activeSebelum
+                                            ? contentBangunanKdbKlb[8]
+                                                .field_value
+                                            : contentBangunanKdbKlb[9]
+                                                .field_value}
+                                        </td>
+                                        {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
+                                      </tr>
+                                    }
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="card" style={{ margin: "0 0.2rem" }}>
-                          <div
-                            className="card-header"
-                            role="tab"
-                            id="headingOne"
-                            style={{ padding: "0px" }}
-                          >
-                            <h6 className="mb-0">
-                              <button
-                                className="btn btn-block text-left btn-sm"
-                                type="button"
-                                data-toggle="collapse"
-                                data-target={"#sebelum"}
-                                aria-expanded="true"
-                                aria-controls={"sebelum"}
-                                style={{ fontSize: "14px" }}
-                              >
-                                <img
-                                  src="./images/office-building.svg"
-                                  alt="KDB/KLB"
-                                  style={{ marginRight: "10px", width: "16px" }}
-                                />
-                                KDB/KLB
-                                <i className="ti-arrow-circle-down float-right"></i>
-                              </button>
-                            </h6>
-                          </div>
+                          <div className="card" style={{ margin: "0 0.2rem" }}>
+                            <div
+                              className="card-header"
+                              role="tab"
+                              id="headingOne"
+                              style={{ padding: "0px" }}
+                            >
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#sebelum"}
+                                  aria-expanded="true"
+                                  aria-controls={"sebelum"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  <img
+                                    src="./images/office-building.svg"
+                                    alt="KDB/KLB"
+                                    style={{
+                                      marginRight: "10px",
+                                      width: "16px",
+                                    }}
+                                  />
+                                  KDB/KLB
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
+                            </div>
 
-                          <div
-                            id="sebelum"
-                            className="collapse"
-                            aria-labelledby="headingOne"
-                            data-parent="#accordionExample"
-                          >
-                            <div className="card-body">
-                              <table className="table">
-                                <tbody>
-                                  <tr>
-                                    <td>Status KDB/KLB</td>
-                                    <td>
+                            <div
+                              id="sebelum"
+                              className="collapse"
+                              aria-labelledby="headingOne"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>Status KDB/KLB</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[2].field_value
+                                          : contentBangunanKdbKlb[3]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Jenis Bangunan</td>
+                                      <td>
                                       {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[2].field_value
-                                        : contentBangunanKdbKlb[3].field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Jenis Bangunan</td>
-                                    <td>
-                                      {contentBangunanKdbKlb[1].field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Nama Sub Zona</td>
-                                    <td>
-                                    {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[67].field_value
-                                        : contentBangunanKdbKlb[60]
-                                            .field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>{activeSebelumSesudah.activeSebelum ? "Jumlah Lantai" : "Jumlah Lantai Saat Ini"}</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[16].field_value
-                                        : contentBangunanKdbKlb[17]
-                                            .field_value}{" "}
-                                      lantai
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Jumlah Lantai Maksimum yang Diperbolehkan</td>
-                                    <td>
-                                    {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[71].field_value
-                                        : contentBangunanKdbKlb[61]
-                                            .field_value}
-                                      {" "}
-                                      lantai
-                                    </td>
-                                  </tr>
-                                  {/* <tr>
+                                          ? contentBangunanKdbKlb[78]
+                                              .field_value
+                                          : contentBangunanKdbKlb[1]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Nama Sub Zona</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[67]
+                                              .field_value
+                                          : contentBangunanKdbKlb[60]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? "Jumlah Lantai"
+                                          : "Jumlah Lantai Saat Ini"}
+                                      </td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[16]
+                                              .field_value
+                                          : contentBangunanKdbKlb[17]
+                                              .field_value}{" "}
+                                        lantai
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        Jumlah Lantai Maksimum yang
+                                        Diperbolehkan
+                                      </td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[71]
+                                              .field_value
+                                          : contentBangunanKdbKlb[61]
+                                              .field_value}{" "}
+                                        lantai
+                                      </td>
+                                    </tr>
+                                    {/* <tr>
                                     <td>Luas Total Bangunan</td>
                                     <td>
                                       {activeSebelumSesudah.activeSebelum
@@ -4620,103 +5237,138 @@ const SimulasiMap = () => {
                                       m2
                                     </td>
                                   </tr> */}
-                                  <tr>
-                                    <td>Luas Bangunan Maksimum yang Diperbolehkan</td>
-                                    <td>
-                                      {contentBangunanKdbKlb[65].field_value} m2
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>KDB</td>
-                                    <td>
-                                    {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[68].field_value
-                                        : contentBangunanKdbKlb[62]
-                                            .field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>KLB</td>
-                                    <td>
-                                    {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[69].field_value
-                                        : contentBangunanKdbKlb[63]
-                                            .field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>KDH</td>
-                                    <td>
-                                    {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[70].field_value
-                                        : contentBangunanKdbKlb[64]
-                                            .field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Luas Tapak</td>
-                                    <td>
-                                    {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[18].field_value
-                                        : contentBangunanKdbKlb[19]
-                                            .field_value}
-                                      {" "} m2
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                                    <tr>
+                                      <td>
+                                        Luas Bangunan Maksimum yang
+                                        Diperbolehkan
+                                      </td>
+                                      <td>
+                                        {contentBangunanKdbKlb[65].field_value}{" "}
+                                        m2
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>KDB Maksimal (Hasil Analisis)</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[68]
+                                              .field_value
+                                          : contentBangunanKdbKlb[62]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>KDB Maksimal Sesuai RDTR</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[80]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>KLB Maksimal (Hasil Analisis)</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[69]
+                                              .field_value
+                                          : contentBangunanKdbKlb[63]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>KLB Maksimal Sesuai RDTR</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[81]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>KDH Minimal (Hasil Analisis)</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[70]
+                                              .field_value
+                                          : contentBangunanKdbKlb[64]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>KDH Minimal Sesuai RDTR</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[82]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Luas Tapak</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[18]
+                                              .field_value
+                                          : contentBangunanKdbKlb[19]
+                                              .field_value}{" "}
+                                        m2
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="card" style={{ margin: "0 0.2rem" }}>
-                          <div
-                            className="card-header"
-                            role="tab"
-                            id="headingTwo"
-                            style={{ padding: "0px" }}
-                          >
-                            <h6 className="mb-0">
-                              <button
-                                className="btn btn-block text-left collapsed btn-sm"
-                                type="button"
-                                data-toggle="collapse"
-                                data-target={"#sebelumDua"}
-                                aria-expanded="true"
-                                aria-controls={"sebelumDua"}
-                                style={{ fontSize: "14px" }}
-                              >
-                                <img
-                                  src="./images/Traffic-lights.svg"
-                                  alt="Kemacetan"
-                                  style={{ marginRight: "10px", width: "16px", height: "16px" }}
-                                />
-                                Kemacetan
-                                <i className="ti-arrow-circle-down float-right"></i>
-                              </button>
-                            </h6>
-                          </div>
+                          <div className="card" style={{ margin: "0 0.2rem" }}>
+                            <div
+                              className="card-header"
+                              role="tab"
+                              id="headingTwo"
+                              style={{ padding: "0px" }}
+                            >
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left collapsed btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#sebelumDua"}
+                                  aria-expanded="true"
+                                  aria-controls={"sebelumDua"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  <img
+                                    src="./images/Traffic-lights.svg"
+                                    alt="Kemacetan"
+                                    style={{
+                                      marginRight: "10px",
+                                      width: "16px",
+                                      height: "16px",
+                                    }}
+                                  />
+                                  Kemacetan
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
+                            </div>
 
-                          <div
-                            id="sebelumDua"
-                            className="collapse"
-                            aria-labelledby="headingTwo"
-                            data-parent="#accordionExample"
-                          >
-                            <div className="card-body">
-                              <table className="table">
-                                <tbody>
-                                  <tr>
-                                    <td>Status Tingkat Kemacetan</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[10].field_value
-                                        : contentBangunanKdbKlb[11].field_value}
-                                    </td>
-                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
-                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
-                                  </tr>
-                                  {/* <tr>
+                            <div
+                              id="sebelumDua"
+                              className="collapse"
+                              aria-labelledby="headingTwo"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>Status Tingkat Kemacetan</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[10]
+                                              .field_value
+                                          : contentBangunanKdbKlb[11]
+                                              .field_value}
+                                      </td>
+                                      {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
+                                      {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
+                                    </tr>
+                                    {/* <tr>
                                     <td>Jenis Bangunan</td>
                                     <td>
                                       {contentBangunanKdbKlb[1].field_value}
@@ -4731,87 +5383,100 @@ const SimulasiMap = () => {
                                             .field_value}
                                     </td>
                                   </tr> */}
-                                  <tr>
-                                    <td>LOS</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[14].field_value
-                                        : contentBangunanKdbKlb[15].field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>LOS Num</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[12].field_value
-                                        : contentBangunanKdbKlb[13].field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Arus</td>
-                                    <td>
-                                      {contentBangunanKdbKlb[66].field_value}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Kapasitas</td>
-                                    <td>
-                                      {contentBangunanKdbKlb[52].field_value}
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                                    <tr>
+                                      <td>LOS</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[14]
+                                              .field_value
+                                          : contentBangunanKdbKlb[15]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>LOS Num</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[12]
+                                              .field_value
+                                          : contentBangunanKdbKlb[13]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Arus</td>
+                                      <td>
+                                        {/* {contentBangunanKdbKlb[66].field_value} */}
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[79]
+                                              .field_value
+                                          : contentBangunanKdbKlb[66]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Kapasitas</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[52].field_value}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="card" style={{ margin: "0 0.2rem" }}>
-                          <div
-                            className="card-header"
-                            role="tab"
-                            id="headingThree"
-                            style={{ padding: "0px" }}
-                          >
-                            <h6 className="mb-0">
-                              <button
-                                className="btn btn-block text-left collapsed btn-sm"
-                                type="button"
-                                data-toggle="collapse"
-                                data-target={"#sebelumTiga"}
-                                aria-expanded="true"
-                                aria-controls={"sebelumTiga"}
-                                style={{ fontSize: "14px" }}
-                              >
-                                <img
-                                  src="./images/water.svg"
-                                  alt="Air Bersih"
-                                  style={{ marginRight: "10px", width: "16px" }}
-                                />
-                                Air Bersih
-                                <i className="ti-arrow-circle-down float-right"></i>
-                              </button>
-                            </h6>
-                          </div>
+                          <div className="card" style={{ margin: "0 0.2rem" }}>
+                            <div
+                              className="card-header"
+                              role="tab"
+                              id="headingThree"
+                              style={{ padding: "0px" }}
+                            >
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left collapsed btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#sebelumTiga"}
+                                  aria-expanded="true"
+                                  aria-controls={"sebelumTiga"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  <img
+                                    src="./images/water.svg"
+                                    alt="Air Bersih"
+                                    style={{
+                                      marginRight: "10px",
+                                      width: "16px",
+                                    }}
+                                  />
+                                  Air Bersih
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
+                            </div>
 
-                          <div
-                            id="sebelumTiga"
-                            className="collapse"
-                            aria-labelledby="headingThree"
-                            data-parent="#accordionExample"
-                          >
-                            <div className="card-body">
-                              <table className="table">
-                                <tbody>
-                                  <tr>
-                                    <td>Status Kualitas Air Bersih</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[8].field_value
-                                        : contentBangunanKdbKlb[9].field_value}
-                                    </td>
-                                    {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
-                                  </tr>
-                                  {/* <tr>
+                            <div
+                              id="sebelumTiga"
+                              className="collapse"
+                              aria-labelledby="headingThree"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>Status Kuantitas Air Bersih</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[8].field_value
+                                          : contentBangunanKdbKlb[9]
+                                              .field_value}
+                                      </td>
+                                      {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
+                                    </tr>
+                                    {/* <tr>
                                     <td>Jenis Bangunan</td>
                                     <td>
                                       {contentBangunanKdbKlb[1].field_value}
@@ -4826,68 +5491,34 @@ const SimulasiMap = () => {
                                             .field_value}
                                     </td>
                                   </tr> */}
-                                  <tr>
-                                    <td>Kebutuhan Air Harian</td>
-                                    <td>
-                                      {contentBangunanKdbKlb[37].field_value}{" "}
-                                      liter/hari
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>Ketersediaan Air PDAM Harian</td>
-                                    <td>
-                                      {contentBangunanKdbKlb[36].field_value}{" "}
-                                      liter/hari
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="card" id="segmentationLegendCard" style={{display: "none", margin: "0 0.2rem"}}>
-                          <div
-                            className="card-header"
-                            role="tab"
-                            id="headingTwo"
-                            style={{ padding: "0px" }}
-                          >
-                            <h6 className="mb-0">
-                              <button
-                                className="btn btn-block text-left collapsed btn-sm"
-                                type="button"
-                                data-toggle="collapse"
-                                data-target={"#segmentationLegend"}
-                                aria-expanded="true"
-                                aria-controls={"segmentationLegend"}
-                                style={{ fontSize: "14px" }}
-                              >
-                                {/* <img
-                                  src="./images/water.svg"
-                                  alt="Air Bersih"
-                                  style={{ marginRight: "10px", width: "16px" }}
-                                /> */}
-                                <i className="ti-info"> </i>
-                                Legenda Segmentasi
-                                <i className="ti-arrow-circle-down float-right"></i>
-                              </button>
-                            </h6>
-                          </div>
-
-                          <div
-                            id="segmentationLegend"
-                            className="collapse"
-                            aria-labelledby="segmentationLegend"
-                            data-parent="#accordionExample"
-                          >
-                            <div className="card-body">
-                              <img src={segmentationLegend} alt="Legenda Segmentasi"/>
+                                    <tr>
+                                      <td>Kebutuhan Air Harian</td>
+                                      <td>
+                                        {/* {contentBangunanKdbKlb[37].field_value} */}
+                                        {activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[83].field_value
+                                        : contentBangunanKdbKlb[37]
+                                            .field_value}{" "}
+                                        liter/hari
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Ketersediaan Air PDAM Harian</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                        ? contentBangunanKdbKlb[84].field_value
+                                        : contentBangunanKdbKlb[36]
+                                            .field_value}{" "}
+                                        liter/hari
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
                     </div>
                     {/* end popup sebelumsesudah */}
                   </>
@@ -5019,25 +5650,29 @@ const SimulasiMap = () => {
               >
                 <h3 className="esri-widget__heading">Sejarah Simulasi</h3>
               </div>
-              {<div
-                className=""
-                style={{
-                  background: "#f3f3f3",
-                  width: "300px",
-                  maxHeight: "180px",
-                  overflowX: "auto",
-                  padding: "0px",
-                }}
-              >
+              {
                 <div
+                  className=""
                   style={{
-                    backgroundColor: "#fff",
-                    margin: "5px",
-                    padding: "10px",
+                    background: "#f3f3f3",
+                    width: "300px",
+                    maxHeight: "180px",
+                    overflowX: "auto",
+                    padding: "0px",
                   }}
                 >
-                  <p>Sistem akan menggandakan untuk membuat history yang dapat dianalisis</p>
-                  {/* <p>Bangunan yang Akan Dianalisis</p>
+                  <div
+                    style={{
+                      backgroundColor: "#fff",
+                      margin: "5px",
+                      padding: "10px",
+                    }}
+                  >
+                    <p>
+                      Sistem akan menggandakan untuk membuat history yang dapat
+                      dianalisis
+                    </p>
+                    {/* <p>Bangunan yang Akan Dianalisis</p>
                   <p id="id_bangunan_history">
                     ID Bangunan: Belum ada yang dipilih
                   </p>
@@ -5054,8 +5689,9 @@ const SimulasiMap = () => {
                   >
                     Pilih Bangunan
                   </button> */}
+                  </div>
                 </div>
-              </div>}
+              }
               <button
                 className="btn btn-primary btn-block btn-icon-text rounded-0"
                 id="history_simulasi"

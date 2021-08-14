@@ -161,7 +161,7 @@ function SimulationTable() {
     Swal.fire({
       title: "Peringatan",
       html: `<ol><li>Perlu diketahui bahwa kebutuhan air setiap kegiatan berbeda-beda.</li>
-    <li>Perlu diketahui bahwa terdapat beberapa hal yang mempengaruhi tingkat LOS, diataranya wakttu, jenis kegiatan, lebar jalan, dan cakupan kegiatan. Hal ini mnegakibatkan perlunya pengkategorian level LOS yang tepat.</li>
+    <li>Perlu diketahui bahwa terdapat beberapa hal yang mempengaruhi tingkat LOS, diantaranya waktu, jenis kegiatan, lebar jalan, dan cakupan kegiatan. Hal ini mengakibatkan perlunya pengkategorian level LOS yang tepat.</li>
     </ol>`,
       icon: "warning",
       showCloseButton: true,
