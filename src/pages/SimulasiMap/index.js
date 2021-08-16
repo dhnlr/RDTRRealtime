@@ -4925,7 +4925,7 @@ const SimulasiMap = () => {
                             className="switch-button-small-checkbox"
                             type="checkbox"
                             onClick={handleActivateSegmentation}
-                            checked={isSegmentationActive}
+                            defaultChecked={isSegmentationActive}
                           />
                           <label
                             className="switch-button-small-label"
@@ -4948,7 +4948,7 @@ const SimulasiMap = () => {
                         id="accordionExample"
                       >
                         <div className="fade-in">
-                        <div
+                          <div
                             className="card"
                             id="segmentationLegendCard"
                             style={{ display: "none", margin: "0 0.2rem" }}
@@ -5129,6 +5129,87 @@ const SimulasiMap = () => {
                             </div>
                           </div>
 
+                          <div className="card" style={{ margin: "0 0.2rem" }}>
+                            <div
+                              className="card-header"
+                              role="tab"
+                              id="headingThree"
+                              style={{ padding: "0px" }}
+                            >
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left collapsed btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#itbxSum"}
+                                  aria-expanded="true"
+                                  aria-controls={"itbxSum"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  <i className="ti-info"> </i>
+                                  Penjelasan ITBX
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
+                            </div>
+
+                            <div
+                              id="itbxSum"
+                              className="collapse"
+                              aria-labelledby="headingThree"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                <table className="table">
+                                <tbody>
+                                    <tr>
+                                      <td>T1</td>
+                                      <td>
+                                      Pembatasan pengoperasian, baik dalam pembatasan waktu beroperasinya kegiatan ataupun pembatasan jangka waktu pemanfaatan lahan
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>T2</td>
+                                      <td>
+                                      Pembatasan luas, baik dalam bentuk pembatasan luas maksimum suatu kegiatan
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>T3</td>
+                                      <td>
+                                      Pembatasan jumlah pemanfaatan
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>B1</td>
+                                      <td>
+                                      Memenuhi ketentuan perijinan yang berlaku
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>B2</td>
+                                      <td>
+                                      Pengenaan Disinsentif dampak pembangunan diwajibkan menyediakan tempat parkir, menambah luas RTH, dan memperlebar pedestrian.
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>B3</td>
+                                      <td>
+                                      Diwajibkan menyediakan Ruang untuk Pemenuhan SPU (sarana prasarana umum)
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>B4</td>
+                                      <td>
+                                      Sudah terdapat bangunan eksisting
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                          
                           <div className="card" style={{ margin: "0 0.2rem" }}>
                             <div
                               className="card-header"
