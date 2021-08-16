@@ -89,6 +89,7 @@ const SimulasiMap = () => {
   const [showSegmentationFunc, setShowSegmentationFunc] = useState();
   const [isSegmentationActive, setIsSegmentationActive] = useState(false);
   const [segmentationBuildingId, setSegmentationBuildingId] = useState(null);
+  const [itbxSum, setItbxSum] = useState(null);
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -334,7 +335,6 @@ const SimulasiMap = () => {
               ],
             };
           }
-          // TODO: Change jlh_izin_diterima -> itbx; Check warna untuk i,t,b,x
           const rendererBangunanSesudah = {
             type: "unique-value", // autocasts as new UniqueValueRenderer()
             defaultSymbol: getSymbolBangunanSesudah([156, 156, 156]),
@@ -2657,11 +2657,13 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "keb_air_harian_y5_sebelum",
-                    field_value: features[0].attributes.keb_air_harian_y5_sebelum,
+                    field_value:
+                      features[0].attributes.keb_air_harian_y5_sebelum,
                   },
                   {
                     field_name: "pdam_kapasitas_harian_sebelum",
-                    field_value: features[0].attributes.pdam_kapasitas_harian_sebelum,
+                    field_value:
+                      features[0].attributes.pdam_kapasitas_harian_sebelum,
                   },
                 ]);
                 setHasilSimulasiBangunanKdbKlb(
@@ -3651,6 +3653,22 @@ const SimulasiMap = () => {
                     console.log("error check", error);
                   });
 
+                Axios.get(config.url.API_URL + "/MasterData/Itbx/GetList", {
+                  headers: { Authorization: "Bearer " + sessionStorage.token },
+                  params: {
+                    rdtr: "KOTA BOGOR",
+                  },
+                })
+                  .then(({ data }) => {
+                    if (data.status.succeeded) {
+                      setItbxSum(data.obj);
+                    }
+                  })
+                  .catch(function (error) {
+                    // handle error
+                    console.log("error check", error);
+                  });
+
                 // start segmentation drawing function
                 if (features[0].attributes.id_bangunan) {
                   setSegmentationBuildingId(features[0].attributes.id_bangunan);
@@ -4143,12 +4161,13 @@ const SimulasiMap = () => {
     });
     layerBangunan.renderer = getRendererBangunan("itbx", "jlh_lantai");
     layerPolaRuang.renderer = getRendererPolaRuang("namaszona");
-    layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air")
-    layerJaringanJalan.renderer = getRendererJaringanJalan("los")
+    layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air");
+    layerJaringanJalan.renderer = getRendererJaringanJalan("los");
     layerBangunan.refresh();
     layerPolaRuang.refresh();
     layerKapasitasAir.refresh();
     layerJaringanJalan.refresh();
+    setItbxSum(null);
     stateView.popup.close();
     setShowingPopop({ ...showingPopup, show: false, title: "" });
   };
@@ -4172,13 +4191,13 @@ const SimulasiMap = () => {
         "jlh_lantai_sebelum"
       );
       layerPolaRuang.renderer = getRendererPolaRuang("namaszona_sebelum");
-      layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air_sebelum")
-      layerJaringanJalan.renderer = getRendererJaringanJalan("los_sebelum")
+      layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air_sebelum");
+      layerJaringanJalan.renderer = getRendererJaringanJalan("los_sebelum");
     } else {
       layerBangunan.renderer = getRendererBangunan("itbx", "jlh_lantai");
       layerPolaRuang.renderer = getRendererPolaRuang("namaszona");
-      layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air")
-      layerJaringanJalan.renderer = getRendererJaringanJalan("los")
+      layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air");
+      layerJaringanJalan.renderer = getRendererJaringanJalan("los");
     }
     layerBangunan.refresh();
     layerPolaRuang.refresh();
@@ -4656,7 +4675,7 @@ const SimulasiMap = () => {
         {
           value: "C",
           label: "C",
-          symbol: getLine3D([230, 230, 0  ]),
+          symbol: getLine3D([230, 230, 0]),
         },
         {
           value: "D",
@@ -4707,7 +4726,7 @@ const SimulasiMap = () => {
           },
           size: 4,
           cap: "round",
-          join: "round"
+          join: "round",
         },
       ],
     };
@@ -4995,7 +5014,7 @@ const SimulasiMap = () => {
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="card" style={{ margin: "0 0.2rem" }}>
                             <div
                               className="card-header"
@@ -5147,7 +5166,16 @@ const SimulasiMap = () => {
                                   style={{ fontSize: "14px" }}
                                 >
                                   <i className="ti-info"> </i>
-                                  Penjelasan ITBX
+                                  Penjelasan ITBX {!itbxSum && (
+                                    <div
+                                      className="spinner-border spinner-border-sm text-primary"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                  )}
                                   <i className="ti-arrow-circle-down float-right"></i>
                                 </button>
                               </h6>
@@ -5160,56 +5188,74 @@ const SimulasiMap = () => {
                               data-parent="#accordionExample"
                             >
                               <div className="card-body">
-                                <table className="table">
-                                <tbody>
-                                    <tr>
-                                      <td>T1</td>
-                                      <td>
-                                      Pembatasan pengoperasian, baik dalam pembatasan waktu beroperasinya kegiatan ataupun pembatasan jangka waktu pemanfaatan lahan
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>T2</td>
-                                      <td>
-                                      Pembatasan luas, baik dalam bentuk pembatasan luas maksimum suatu kegiatan
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>T3</td>
-                                      <td>
-                                      Pembatasan jumlah pemanfaatan
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>B1</td>
-                                      <td>
-                                      Memenuhi ketentuan perijinan yang berlaku
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>B2</td>
-                                      <td>
-                                      Pengenaan Disinsentif dampak pembangunan diwajibkan menyediakan tempat parkir, menambah luas RTH, dan memperlebar pedestrian.
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>B3</td>
-                                      <td>
-                                      Diwajibkan menyediakan Ruang untuk Pemenuhan SPU (sarana prasarana umum)
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>B4</td>
-                                      <td>
-                                      Sudah terdapat bangunan eksisting
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
+                                {itbxSum && (
+                                  <table className="table">
+                                    <tbody>
+                                      {itbxSum.map((itbx) => (
+                                        <tr>
+                                          <td>{itbx.kode}</td>
+                                          <td>{itbx.deskripsi}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                )}
+                                {!itbxSum && (
+                                  <div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-primary"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-secondary"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-success"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-danger"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-warning"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-info"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="card" style={{ margin: "0 0.2rem" }}>
                             <div
                               className="card-header"
@@ -5262,7 +5308,7 @@ const SimulasiMap = () => {
                                     <tr>
                                       <td>Jenis Bangunan</td>
                                       <td>
-                                      {activeSebelumSesudah.activeSebelum
+                                        {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[78]
                                               .field_value
                                           : contentBangunanKdbKlb[1]
@@ -5341,8 +5387,7 @@ const SimulasiMap = () => {
                                     <tr>
                                       <td>KDB Maksimal Sesuai RDTR</td>
                                       <td>
-                                        {contentBangunanKdbKlb[80]
-                                              .field_value}
+                                        {contentBangunanKdbKlb[80].field_value}
                                       </td>
                                     </tr>
                                     <tr>
@@ -5358,8 +5403,7 @@ const SimulasiMap = () => {
                                     <tr>
                                       <td>KLB Maksimal Sesuai RDTR</td>
                                       <td>
-                                        {contentBangunanKdbKlb[81]
-                                              .field_value}
+                                        {contentBangunanKdbKlb[81].field_value}
                                       </td>
                                     </tr>
                                     <tr>
@@ -5375,8 +5419,7 @@ const SimulasiMap = () => {
                                     <tr>
                                       <td>KDH Minimal Sesuai RDTR</td>
                                       <td>
-                                        {contentBangunanKdbKlb[82]
-                                              .field_value}
+                                        {contentBangunanKdbKlb[82].field_value}
                                       </td>
                                     </tr>
                                     <tr>
@@ -5577,9 +5620,10 @@ const SimulasiMap = () => {
                                       <td>
                                         {/* {contentBangunanKdbKlb[37].field_value} */}
                                         {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[83].field_value
-                                        : contentBangunanKdbKlb[37]
-                                            .field_value}{" "}
+                                          ? contentBangunanKdbKlb[83]
+                                              .field_value
+                                          : contentBangunanKdbKlb[37]
+                                              .field_value}{" "}
                                         liter/hari
                                       </td>
                                     </tr>
@@ -5587,9 +5631,10 @@ const SimulasiMap = () => {
                                       <td>Ketersediaan Air PDAM Harian</td>
                                       <td>
                                         {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[84].field_value
-                                        : contentBangunanKdbKlb[36]
-                                            .field_value}{" "}
+                                          ? contentBangunanKdbKlb[84]
+                                              .field_value
+                                          : contentBangunanKdbKlb[36]
+                                              .field_value}{" "}
                                         liter/hari
                                       </td>
                                     </tr>
