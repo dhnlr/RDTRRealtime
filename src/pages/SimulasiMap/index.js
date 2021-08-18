@@ -3656,7 +3656,7 @@ const SimulasiMap = () => {
                 Axios.get(config.url.API_URL + "/MasterData/Itbx/GetList", {
                   headers: { Authorization: "Bearer " + sessionStorage.token },
                   params: {
-                    rdtr: "KOTA BOGOR",
+                    rdtr: features[0].attributes.kabkot,
                   },
                 })
                   .then(({ data }) => {
