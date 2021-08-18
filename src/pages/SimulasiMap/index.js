@@ -3670,8 +3670,8 @@ const SimulasiMap = () => {
                   });
 
                 // start segmentation drawing function
-                if (features[0].attributes.id_bangunan) {
-                  setSegmentationBuildingId(features[0].attributes.id_bangunan);
+                if (features[0].attributes.objectid_1) {
+                  setSegmentationBuildingId(features[0].attributes.objectid_1);
                   setRemoveSegmentationFunc(() => () => {
                     bangunanSesudahLayer.definitionExpression = "";
                     map.remove(segmentationGroupLayer);
@@ -3684,7 +3684,7 @@ const SimulasiMap = () => {
                   });
                   setShowSegmentationFunc((id) => (id) => {
                     bangunanSesudahLayer.definitionExpression =
-                      "NOT id_bangunan = " + id;
+                      "NOT objectid_1 = " + id;
                     map.add(segmentationGroupLayer);
                     view.whenLayerView(lantaiAtas).then(function (layerView) {
                       layerView.highlight(lantaiAtas.graphics);
@@ -3708,7 +3708,7 @@ const SimulasiMap = () => {
                       ).style.display = "block";
                     }
                   });
-                  getRing(features[0].attributes.id_bangunan);
+                  getRing(features[0].attributes.objectid_1);
                   // features[0].layer.definitionExpression =
                   //   "NOT id_bangunan = " + features[0].attributes.id_bangunan;
                 }
@@ -3820,7 +3820,7 @@ const SimulasiMap = () => {
             var request = new XMLHttpRequest();
             request.open(
               "GET",
-              "https://rdtr.onemap.id/server/rest/services/sesudah/bangunan/FeatureServer/0/query?where=id_bangunan=" +
+              "https://rdtr.onemap.id/server/rest/services/sesudah/bangunan/FeatureServer/0/query?where=objectid_1=" +
                 id +
                 "&outFields=*&outSR=4326&f=pjson",
               true
@@ -4943,8 +4943,8 @@ const SimulasiMap = () => {
                           <input
                             className="switch-button-small-checkbox"
                             type="checkbox"
-                            onClick={handleActivateSegmentation}
-                            defaultChecked={isSegmentationActive}
+                            onChange={handleActivateSegmentation}
+                            checked={isSegmentationActive}
                           />
                           <label
                             className="switch-button-small-label"
@@ -5059,7 +5059,7 @@ const SimulasiMap = () => {
                                   <table className="table">
                                     <tbody>
                                       {itbxSum.map((itbx) => (
-                                        <tr>
+                                        <tr key={itbx.id}>
                                           <td>{itbx.kode}</td>
                                           <td>{itbx.deskripsi}</td>
                                         </tr>
