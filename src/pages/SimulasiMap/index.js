@@ -5019,6 +5019,114 @@ const SimulasiMap = () => {
                             <div
                               className="card-header"
                               role="tab"
+                              id="headingThree"
+                              style={{ padding: "0px" }}
+                            >
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left collapsed btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#itbxSum"}
+                                  aria-expanded="true"
+                                  aria-controls={"itbxSum"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  <i className="ti-info"> </i>
+                                  Penjelasan ITBX {!itbxSum && (
+                                    <div
+                                      className="spinner-border spinner-border-sm text-primary"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                  )}
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
+                            </div>
+
+                            <div
+                              id="itbxSum"
+                              className="collapse"
+                              aria-labelledby="headingThree"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                {itbxSum && (
+                                  <table className="table">
+                                    <tbody>
+                                      {itbxSum.map((itbx) => (
+                                        <tr>
+                                          <td>{itbx.kode}</td>
+                                          <td>{itbx.deskripsi}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                )}
+                                {!itbxSum && (
+                                  <div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-primary"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-secondary"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-success"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-danger"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-warning"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                    <div
+                                      className="spinner-grow spinner-grow-sm text-info"
+                                      role="status"
+                                    >
+                                      <span className="sr-only">
+                                        Loading...
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="card" style={{ margin: "0 0.2rem" }}>
+                            <div
+                              className="card-header"
+                              role="tab"
                               id="headingTwo"
                               style={{ padding: "0px" }}
                             >
@@ -5144,114 +5252,6 @@ const SimulasiMap = () => {
                                     }
                                   </tbody>
                                 </table>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="card" style={{ margin: "0 0.2rem" }}>
-                            <div
-                              className="card-header"
-                              role="tab"
-                              id="headingThree"
-                              style={{ padding: "0px" }}
-                            >
-                              <h6 className="mb-0">
-                                <button
-                                  className="btn btn-block text-left collapsed btn-sm"
-                                  type="button"
-                                  data-toggle="collapse"
-                                  data-target={"#itbxSum"}
-                                  aria-expanded="true"
-                                  aria-controls={"itbxSum"}
-                                  style={{ fontSize: "14px" }}
-                                >
-                                  <i className="ti-info"> </i>
-                                  Penjelasan ITBX {!itbxSum && (
-                                    <div
-                                      className="spinner-border spinner-border-sm text-primary"
-                                      role="status"
-                                    >
-                                      <span className="sr-only">
-                                        Loading...
-                                      </span>
-                                    </div>
-                                  )}
-                                  <i className="ti-arrow-circle-down float-right"></i>
-                                </button>
-                              </h6>
-                            </div>
-
-                            <div
-                              id="itbxSum"
-                              className="collapse"
-                              aria-labelledby="headingThree"
-                              data-parent="#accordionExample"
-                            >
-                              <div className="card-body">
-                                {itbxSum && (
-                                  <table className="table">
-                                    <tbody>
-                                      {itbxSum.map((itbx) => (
-                                        <tr>
-                                          <td>{itbx.kode}</td>
-                                          <td>{itbx.deskripsi}</td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                )}
-                                {!itbxSum && (
-                                  <div>
-                                    <div
-                                      className="spinner-grow spinner-grow-sm text-primary"
-                                      role="status"
-                                    >
-                                      <span className="sr-only">
-                                        Loading...
-                                      </span>
-                                    </div>
-                                    <div
-                                      className="spinner-grow spinner-grow-sm text-secondary"
-                                      role="status"
-                                    >
-                                      <span className="sr-only">
-                                        Loading...
-                                      </span>
-                                    </div>
-                                    <div
-                                      className="spinner-grow spinner-grow-sm text-success"
-                                      role="status"
-                                    >
-                                      <span className="sr-only">
-                                        Loading...
-                                      </span>
-                                    </div>
-                                    <div
-                                      className="spinner-grow spinner-grow-sm text-danger"
-                                      role="status"
-                                    >
-                                      <span className="sr-only">
-                                        Loading...
-                                      </span>
-                                    </div>
-                                    <div
-                                      className="spinner-grow spinner-grow-sm text-warning"
-                                      role="status"
-                                    >
-                                      <span className="sr-only">
-                                        Loading...
-                                      </span>
-                                    </div>
-                                    <div
-                                      className="spinner-grow spinner-grow-sm text-info"
-                                      role="status"
-                                    >
-                                      <span className="sr-only">
-                                        Loading...
-                                      </span>
-                                    </div>
-                                  </div>
-                                )}
                               </div>
                             </div>
                           </div>
