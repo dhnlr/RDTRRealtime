@@ -415,16 +415,16 @@ const SimulasiMap = () => {
                       label: "id_bangunan",
                     },
                     {
-                      fieldName: "luas_m2",
-                      label: "luas_m2",
+                      fieldName: "Shape__Area",
+                      label: "Shape__Area",
                     },
                     {
                       fieldName: "jlh_lantai_sebelum",
                       label: "jlh_lantai_sebelum",
                     },
                     {
-                      fieldName: "luas_m2_sebelum",
-                      label: "luas_m2_sebelum",
+                      fieldName: "Shape__Area",
+                      label: "Shape__Area",
                     },
                     {
                       fieldName: "fa_sebelum",
@@ -909,8 +909,8 @@ const SimulasiMap = () => {
                       label: "id_bangunan",
                     },
                     {
-                      fieldName: "luas_m2",
-                      label: "luas_m2",
+                      fieldName: "Shape__Area",
+                      label: "Shape__Area",
                     },
                   ],
                 },
@@ -1753,8 +1753,14 @@ const SimulasiMap = () => {
                       label: "Jenis Bangunan",
                     },
                     {
-                      name: "luas_m2",
-                      label: "Luas (m2)",
+                      name: "Shape__Area",
+                      label: "Luas Tapak (m2)",
+                      editable: false,
+                    },
+                    {
+                      name: "fa",
+                      label: "Luas Bangunan (m2)",
+                      editable: false,
                     },
                     {
                       name: "jlh_lantai",
@@ -2332,12 +2338,12 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.jlh_lantai,
                   },
                   {
-                    field_name: "luas_m2_sebelum",
-                    field_value: features[0].attributes.luas_m2_sebelum,
+                    field_name: "Shape__Area",
+                    field_value: features[0].attributes.Shape__Area,
                   },
                   {
-                    field_name: "luas_m2",
-                    field_value: features[0].attributes.luas_m2,
+                    field_name: "Shape__Area",
+                    field_value: features[0].attributes.Shape__Area,
                   },
                   {
                     field_name: "fa_sebelum",
@@ -2764,12 +2770,12 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.jlh_lantai,
                   },
                   {
-                    field_name: "luas_m2_sebelum",
-                    field_value: features[0].attributes.luas_m2_sebelum,
+                    field_name: "Shape__Area",
+                    field_value: features[0].attributes.Shape__Area,
                   },
                   {
-                    field_name: "luas_m2",
-                    field_value: features[0].attributes.luas_m2,
+                    field_name: "Shape__Area",
+                    field_value: features[0].attributes.Shape__Area,
                   },
                   {
                     field_name: "fa_sebelum",
@@ -3085,12 +3091,12 @@ const SimulasiMap = () => {
                     field_value: features[0].attributes.jlh_lantai,
                   },
                   {
-                    field_name: "luas_m2_sebelum",
-                    field_value: features[0].attributes.luas_m2_sebelum,
+                    field_name: "Shape__Area",
+                    field_value: features[0].attributes.Shape__Area,
                   },
                   {
-                    field_name: "luas_m2",
-                    field_value: features[0].attributes.luas_m2,
+                    field_name: "Shape__Area",
+                    field_value: features[0].attributes.Shape__Area,
                   },
                   {
                     field_name: "fa_sebelum",
@@ -3372,8 +3378,8 @@ const SimulasiMap = () => {
                           field_value: features.wadmkd,
                         },
                         {
-                          field_name: "luas_m2",
-                          field_value: features.luas_m2,
+                          field_name: "Shape__Area",
+                          field_value: features.Shape__Area,
                         },
                         {
                           field_name: "luaspeta",
@@ -3866,6 +3872,11 @@ const SimulasiMap = () => {
            * Draw polygon
            ************************************************************/
           var drawGraphic = (ring, attributes) => {
+            console.log(
+              attributes.jlh_lantai_sebelum,
+              attributes.jlh_lantai,
+              attributes.lantai_max
+            );
             var polygon = new Polygon({
               rings: ring,
               spatialReference: { wkid: 4326 },
@@ -3899,6 +3910,14 @@ const SimulasiMap = () => {
                     ? attributes.jlh_lantai > attributes.lantai_max
                       ? attributes.lantai_max
                       : attributes.jlh_lantai
+                    : attributes.jlh_lantai &&
+                      !attributes.jlh_lantai_sebelum &&
+                      !attributes.lantai_max
+                    ? attributes.jlh_lantai
+                    : !attributes.jlh_lantai &&
+                      attributes.jlh_lantai_sebelum &&
+                      !attributes.lantai_max
+                    ? attributes.jlh_lantai_sebelum
                     : -1,
                   [0, 248, 4, 1]
                 ), //lantai sebelum
@@ -5033,7 +5052,8 @@ const SimulasiMap = () => {
                                   style={{ fontSize: "14px" }}
                                 >
                                   <i className="ti-info"> </i>
-                                  Penjelasan ITBX {!itbxSum && (
+                                  Penjelasan ITBX{" "}
+                                  {!itbxSum && (
                                     <div
                                       className="spinner-border spinner-border-sm text-primary"
                                       role="status"
@@ -5122,7 +5142,7 @@ const SimulasiMap = () => {
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="card" style={{ margin: "0 0.2rem" }}>
                             <div
                               className="card-header"
@@ -5354,24 +5374,67 @@ const SimulasiMap = () => {
                                         lantai
                                       </td>
                                     </tr>
-                                    {/* <tr>
-                                    <td>Luas Total Bangunan</td>
-                                    <td>
-                                      {activeSebelumSesudah.activeSebelum
-                                        ? contentBangunanKdbKlb[20].field_value
-                                        : contentBangunanKdbKlb[21]
-                                            .field_value}{" "}
-                                      m2
-                                    </td>
-                                  </tr> */}
+                                    <tr>
+                                      <td>Luas Tapak{" "}
+                                        (m<sup>2</sup>)</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[18]
+                                              .field_value
+                                            ? contentBangunanKdbKlb[18].field_value.toFixed(
+                                                2
+                                              )
+                                            : contentBangunanKdbKlb[18]
+                                                .field_value
+                                          : contentBangunanKdbKlb[19]
+                                              .field_value
+                                          ? contentBangunanKdbKlb[19].field_value.toFixed(
+                                              2
+                                            )
+                                          : contentBangunanKdbKlb[19]
+                                              .field_value}{" "}
+                                        m<sup>2</sup>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? "Jumlah Bangunan"
+                                          : "Jumlah Bangunan Saat Ini"}{" "}
+                                        (m<sup>2</sup>)
+                                      </td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[20]
+                                              .field_value
+                                            ? contentBangunanKdbKlb[20].field_value.toFixed(
+                                                2
+                                              )
+                                            : contentBangunanKdbKlb[20]
+                                                .field_value
+                                          : contentBangunanKdbKlb[21]
+                                              .field_value
+                                          ? contentBangunanKdbKlb[21].field_value.toFixed(
+                                              2
+                                            )
+                                          : contentBangunanKdbKlb[21]
+                                              .field_value}{" "}
+                                        m<sup>2</sup>
+                                      </td>
+                                    </tr>
                                     <tr>
                                       <td>
                                         Luas Bangunan Maksimum yang
-                                        Diperbolehkan
+                                        Diperbolehkan (m<sup>2</sup>)
                                       </td>
                                       <td>
-                                        {contentBangunanKdbKlb[65].field_value}{" "}
-                                        m2
+                                        {contentBangunanKdbKlb[65].field_value
+                                          ? contentBangunanKdbKlb[65].field_value.toFixed(
+                                              2
+                                            )
+                                          : contentBangunanKdbKlb[65]
+                                              .field_value}{" "}
+                                        m<sup>2</sup>
                                       </td>
                                     </tr>
                                     <tr>
@@ -5380,6 +5443,16 @@ const SimulasiMap = () => {
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[68]
                                               .field_value
+                                            ? contentBangunanKdbKlb[68].field_value.toFixed(
+                                                4
+                                              )
+                                            : contentBangunanKdbKlb[68]
+                                                .field_value
+                                          : contentBangunanKdbKlb[62]
+                                              .field_value
+                                          ? contentBangunanKdbKlb[62].field_value.toFixed(
+                                              4
+                                            )
                                           : contentBangunanKdbKlb[62]
                                               .field_value}
                                       </td>
@@ -5412,6 +5485,16 @@ const SimulasiMap = () => {
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[70]
                                               .field_value
+                                            ? contentBangunanKdbKlb[70].field_value.toFixed(
+                                                4
+                                              )
+                                            : contentBangunanKdbKlb[70]
+                                                .field_value
+                                          : contentBangunanKdbKlb[64]
+                                              .field_value
+                                          ? contentBangunanKdbKlb[64].field_value.toFixed(
+                                              4
+                                            )
                                           : contentBangunanKdbKlb[64]
                                               .field_value}
                                       </td>
@@ -5420,17 +5503,6 @@ const SimulasiMap = () => {
                                       <td>KDH Minimal Sesuai RDTR</td>
                                       <td>
                                         {contentBangunanKdbKlb[82].field_value}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Luas Tapak</td>
-                                      <td>
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[18]
-                                              .field_value
-                                          : contentBangunanKdbKlb[19]
-                                              .field_value}{" "}
-                                        m2
                                       </td>
                                     </tr>
                                   </tbody>
