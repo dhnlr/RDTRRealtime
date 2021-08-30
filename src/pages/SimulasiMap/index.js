@@ -4782,6 +4782,7 @@ const SimulasiMap = () => {
   // end history analysis
 
   const handleExecuteSpCopy = (param) => {
+    setLoaded(false)
     axios
       .post(
         config.url.API_URL + "/Simulasi/ExecuteSpCopy",
@@ -4797,7 +4798,9 @@ const SimulasiMap = () => {
           },
         }
       )
-      .then((data) => {});
+      .then((data) => {
+        setLoaded(true)
+      });
   };
 
   return (
@@ -5399,8 +5402,8 @@ const SimulasiMap = () => {
                                     <tr>
                                       <td>
                                         {activeSebelumSesudah.activeSebelum
-                                          ? "Jumlah Bangunan"
-                                          : "Jumlah Bangunan Saat Ini"}{" "}
+                                          ? "Luas Bangunan"
+                                          : "Luas Bangunan Saat Ini"}{" "}
                                         (m<sup>2</sup>)
                                       </td>
                                       <td>
@@ -5846,7 +5849,7 @@ const SimulasiMap = () => {
                   textAlign: "center",
                 }}
               >
-                <h3 className="esri-widget__heading">Sejarah Simulasi</h3>
+                <h3 className="esri-widget__heading">Riwayat Simulasi</h3>
               </div>
               {
                 <div
@@ -5867,7 +5870,7 @@ const SimulasiMap = () => {
                     }}
                   >
                     <p>
-                      Sistem akan menggandakan untuk membuat history yang dapat
+                      Sistem akan menggandakan untuk membuat riwayat yang dapat
                       dianalisis
                     </p>
                     {/* <p>Bangunan yang Akan Dianalisis</p>
@@ -5898,7 +5901,7 @@ const SimulasiMap = () => {
                 onClick={() => handleHistoryAnalysis()}
               >
                 <i className="ti-search btn-icon-prepend"></i>
-                Analisis Sejarah Simulasi
+                Analisis Riwayat Simulasi
               </button>
             </div>
             <div id="printExpDiv" className="esri-widget print">
