@@ -30,7 +30,7 @@ function Header() {
           <span className="icon-menu" />
         </button>
         <ul className="navbar-nav navbar-nav-right">
-          <li className="nav-item dropdown">
+          {/* <li className="nav-item dropdown">
             <A className="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
               <i className="icon-bell mx-0" />
               <span className="count" />
@@ -49,7 +49,7 @@ function Header() {
                 </div>
               </A>
             </div>
-          </li>
+          </li> */}
           <li className="nav-item nav-profile dropdown">
             <A className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
               <img src={profile} alt="profile" />

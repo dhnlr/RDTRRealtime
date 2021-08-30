@@ -2671,6 +2671,11 @@ const SimulasiMap = () => {
                     field_value:
                       features[0].attributes.pdam_kapasitas_harian_sebelum,
                   },
+                  {
+                    field_name: "izin_sampah_y5",
+                    field_value:
+                      features[0].attributes.izin_sampah_y5,
+                  },
                 ]);
                 setHasilSimulasiBangunanKdbKlb(
                   features[0].attributes.melampaui_tinggi
@@ -5273,6 +5278,19 @@ const SimulasiMap = () => {
                                         {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
                                       </tr>
                                     }
+                                    {
+                                      /* (String(contentBangunanKdbKlb[8].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[9].field_value).toLowerCase().indexOf("ditolak") !== -1) &&  */ <tr>
+                                        <td>Status Tingkat Persampahan</td>
+                                        <td>
+                                          {activeSebelumSesudah.activeSebelum
+                                            ? contentBangunanKdbKlb[85]
+                                                .field_value
+                                            : contentBangunanKdbKlb[85]
+                                                .field_value}
+                                        </td>
+                                        {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
+                                      </tr>
+                                    }
                                   </tbody>
                                 </table>
                               </div>
@@ -5718,6 +5736,63 @@ const SimulasiMap = () => {
                               </div>
                             </div>
                           </div>
+
+                          <div className="card" style={{ margin: "0 0.2rem" }}>
+                            <div
+                              className="card-header"
+                              role="tab"
+                              id="headingFour"
+                              style={{ padding: "0px" }}
+                            >
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left collapsed btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#sebelumEmpat"}
+                                  aria-expanded="true"
+                                  aria-controls={"sebelumEmpat"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  <img
+                                    src="./images/recycling.png"
+                                    alt="Sampah"
+                                    style={{
+                                      marginRight: "10px",
+                                      width: "16px",
+                                    }}
+                                  />
+                                  Persampahan
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
+                            </div>
+
+                            <div
+                              id="sebelumEmpat"
+                              className="collapse"
+                              aria-labelledby="headingFour"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>Status Tingkat Persampahan</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[85].field_value
+                                          : contentBangunanKdbKlb[85]
+                                              .field_value}
+                                      </td>
+                                      {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+
                         </div>
                       </div>
                     </div>
