@@ -21,10 +21,12 @@ function SimulationInput() {
   const [listProvince, setListProvince] = useState([]);
   const [listCity, setListCity] = useState([]);
   const [listProject, setListProject] = useState([]);
-  const [{ province, city, project }, setData] = useState({
+  const [listDataKe, setListDataKe] = useState([]);
+  const [{ province, city, project, dataKe }, setData] = useState({
     province: state ? String(state?.project?.kotaKabupaten?.provinsi?.id) : "",
     city: state ? String(state?.project?.kotaKabupaten?.id) : "",
     project: state ? state?.projectId : "",
+    dataKe: state? state?.dataKe : "",
   });
   const [errMessage, setErrMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -116,6 +118,30 @@ function SimulationInput() {
     }
   }, [listCity]);
 
+  useEffect(() => {
+    if (listCity.length !== 0 && city!== "" && listProvince.length !== 0 && province !== "" && listProject.length !== 0 && project !== "") {
+      axios
+        .get(config.url.API_URL + "/Simulasi/GetAllDataKe", {
+          headers: { Authorization: "Bearer " + sessionStorage.token },
+          params: {
+            ProjectId: project,
+          },
+        })
+        .then(({ data }) => {
+          if (data.status.code === 200) {
+            setListDataKe(data.obj);
+          }
+        })
+        .catch((error) => {
+          error.response?.data?.status?.message
+            ? setErrMessage(error.response?.data?.status?.message)
+            : setErrMessage(
+                "Gagal mendapatkan data ke-. Silahkan coba beberapa saat lagi."
+              );
+        });
+    }
+  }, [listProject]);
+
   const handleProvinceChange = (event) => {
     axios
       .get(config.url.API_URL + "/MasterData/KotaKabupaten/GetAll", {
@@ -165,7 +191,30 @@ function SimulationInput() {
   }
 
   function handleProjectChange(event) {
+    axios
+      .get(config.url.API_URL + "/Simulasi/GetAllDataKe", {
+        headers: { Authorization: "Bearer " + sessionStorage.token },
+        params: {
+          ProjectId: event.target.value,
+        },
+      })
+      .then(({ data }) => {
+        if (data.status.code === 200) {
+          setListDataKe(data.obj);
+        }
+      })
+      .catch((error) => {
+        error.response?.data?.status?.message
+          ? setErrMessage(error.response?.data?.status?.message)
+          : setErrMessage(
+              "Gagal mendapatkan data ke-. Silahkan coba beberapa saat lagi."
+            );
+      });
     setData((data) => ({ ...data, project: event.target.value }));
+  }
+
+  function handleDataKeChange(event) {
+    setData((data) => ({ ...data, dataKe: event.target.value }));
   }
 
   const createProject = (name, province, city, project, headers) => {
@@ -248,6 +297,16 @@ function SimulationInput() {
       selected={project.id === state?.projectId}
     >
       {project.projectName}
+    </option>
+  ));
+
+  const dataKes = listDataKe.map((dataKe) => (
+    <option
+      key={dataKe.dataKe}
+      value={dataKe.dataKe}
+      selected={dataKe.dataKe === state?.dataKe}
+    >
+      {dataKe.dataKe} - {dataKe.simulationName}
     </option>
   ));
   /* const provinceData = [
@@ -431,7 +490,7 @@ function SimulationInput() {
                         )}
                       </div>
                       <div className="form-group">
-                        <label htmlFor="city">Proyek</label>
+                        <label htmlFor="project">Proyek</label>
                         {/* <Controller
                           name="project"
                           control={control}
@@ -464,6 +523,43 @@ function SimulationInput() {
                             className="form-text text-danger"
                           >
                             {errors.project.message}
+                          </small>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="dataKe">Data Ke-</label>
+                        {/* <Controller
+                          name="project"
+                          control={control}
+                          defaultValue={null}
+                          render={(props) => (
+                            
+                          )}
+                          rules={{ required: "Proyek harus diisi" }}
+                        /> */}
+                        <select
+                          className={`form-control ${
+                            errors.dataKe ? "is-invalid" : ""
+                          }`}
+                          id="dataKe"
+                          name="dataKe"
+                          // value={project}
+                          onChange={handleDataKeChange}
+                          ref={register({
+                            required: "Data Ke- harus diisi",
+                          })}
+                        >
+                          <option value="" disabled selected>
+                            {dataKe === "" || listDataKe.length !== 0 ? "Pilih data ke-" : "Tidak ada data ke-"}
+                          </option>
+                          {dataKes}
+                        </select>
+                        {errors.dataKe && (
+                          <small
+                            id="nameHelp"
+                            className="form-text text-danger"
+                          >
+                            {errors.dataKe.message}
                           </small>
                         )}
                       </div>
