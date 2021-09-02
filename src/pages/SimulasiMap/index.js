@@ -535,6 +535,16 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
+          const sampahTpsLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Persampahan/Sampah_TPS/FeatureServer/0",
+            title: "Sampah TPS",
+            popupTemplate: {
+              title: "Sampah TPS",
+            },
+            outFields: ["*"],
+            editingEnabled: false,
+          })
+
           const persilTanahSesudahLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/persiltanah/FeatureServer/0",
             title: "Persil Tanah",
@@ -1597,6 +1607,7 @@ const SimulasiMap = () => {
               polaRuangVersioningLayer,
               persilTanahSesudahLayer,
               kapasitasAirLayer,
+              sampahTpsLayer,
               jalanSesudahLayer,
               bangunanSesudahLayer,
             ],
@@ -1617,6 +1628,7 @@ const SimulasiMap = () => {
           polaRuangVersioningLayer.visible = false;
           persilTanahSesudahLayer.visible = false;
           kapasitasAirLayer.visible = false;
+          sampahTpsLayer.visible = false;
           persilTanahBpn.visible = false;
           buildingsEnvelopeLayer.visible = false;
           basemapPolaRuangLayer.visible = false;
