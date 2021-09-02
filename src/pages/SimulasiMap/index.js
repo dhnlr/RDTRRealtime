@@ -55,7 +55,7 @@ const SimulasiMap = () => {
 
   useEffect(() => {
     if (!state?.simulasiBangunan?.simulasiId) {
-      history.push("/simulation");
+      history.push("/schenario");
     } else {
       handleExecuteSpCopy(0);
     }
@@ -1916,7 +1916,7 @@ const SimulasiMap = () => {
             // start print simulasi
             const printExp = new Expand({
               expandIconClass: "esri-icon-printer",
-              expandTooltip: "Cetak Hasil Simulasi",
+              expandTooltip: "Cetak Hasil Analisis",
               content: document.getElementById("printExpDiv"),
               view: view,
             });
@@ -2017,7 +2017,7 @@ const SimulasiMap = () => {
               } else {
                 Swal.fire(
                   "Maaf",
-                  "Lengkapi foto dan pilih bangunan untuk mencetak hasil simulasi",
+                  "Lengkapi foto dan pilih bangunan untuk mencetak hasil analisis",
                   "error"
                 );
               }
@@ -2034,7 +2034,7 @@ const SimulasiMap = () => {
             // start history simulasi
             const historyExp = new Expand({
               expandIconClass: "esri-icon-duplicate",
-              expandTooltip: "Analisis Sejarah Simulasi",
+              expandTooltip: "Analisis Riwayat Skenario",
               content: document.getElementById("historyExpDiv"),
               view: view,
             });
@@ -3877,11 +3877,6 @@ const SimulasiMap = () => {
            * Draw polygon
            ************************************************************/
           var drawGraphic = (ring, attributes) => {
-            console.log(
-              attributes.jlh_lantai_sebelum,
-              attributes.jlh_lantai,
-              attributes.lantai_max
-            );
             var polygon = new Polygon({
               rings: ring,
               spatialReference: { wkid: 4326 },
@@ -4124,7 +4119,6 @@ const SimulasiMap = () => {
             { headers }
           )
             .then(function (response) {
-              console.log(response);
               if (response.status === 200) {
                 //Swal.fire("Success", "Your analysis has been running successfully.", "success");
                 Swal.fire({
@@ -4770,7 +4764,6 @@ const SimulasiMap = () => {
 
   // start history analysis
   const handleHistoryAnalysis = () => {
-    console.log(dataHistory);
     handleExecuteSpCopy(1);
     // if (
     //   dataHistory.id_bangunan
@@ -4779,7 +4772,7 @@ const SimulasiMap = () => {
     // } else {
     //   Swal.fire(
     //     "Maaf",
-    //     "Pilih bangunan terlebih dahulu untuk mencetak analisis sejarah simulasi",
+    //     "Pilih bangunan terlebih dahulu untuk mencetak analisis riwayat skenario",
     //     "error"
     //   );
     // }
@@ -4812,7 +4805,7 @@ const SimulasiMap = () => {
     <div className="container-scroller">
       <Header />
       <div className="container-fluid page-body-wrapper">
-        <Menu active="simulasi" />
+        <Menu active="schenario" />
         {/* Form Simulasi */}
         {/* <div className="sidebar sidebar-offcanvas p-4 simulasi-map-form" id="sidebar" style={form.namaproyek ? { display: "none" } : { overflowX: "auto", height: "calc(100vh - 60px)", backgroundColor: "#fafafb" }}>
           <p className="font-weight-bold">Simulasi Project</p>
@@ -5924,7 +5917,7 @@ const SimulasiMap = () => {
                   textAlign: "center",
                 }}
               >
-                <h3 className="esri-widget__heading">Riwayat Simulasi</h3>
+                <h3 className="esri-widget__heading">Riwayat Skenario</h3>
               </div>
               {
                 <div
@@ -5972,11 +5965,11 @@ const SimulasiMap = () => {
                 className="btn btn-primary btn-block btn-icon-text rounded-0"
                 id="history_simulasi"
                 type="button"
-                title="Analisis Sejarah Simulasi"
+                title="Analisis Riwayat Skenario"
                 onClick={() => handleHistoryAnalysis()}
               >
                 <i className="ti-search btn-icon-prepend"></i>
-                Analisis Riwayat Simulasi
+                Analisis Riwayat Skenario
               </button>
             </div>
             <div id="printExpDiv" className="esri-widget print">
@@ -5987,7 +5980,7 @@ const SimulasiMap = () => {
                   textAlign: "center",
                 }}
               >
-                <h3 className="esri-widget__heading">Hasil Simulasi</h3>
+                <h3 className="esri-widget__heading">Hasil Analisis</h3>
               </div>
               <div
                 className=""
@@ -6209,10 +6202,10 @@ const SimulasiMap = () => {
                 className="btn btn-primary btn-block btn-icon-text rounded-0"
                 id="print_simulasi"
                 type="button"
-                title="Unduh Hasil Simulasi"
+                title="Unduh Hasil Analisis"
               >
                 <i className="ti-download btn-icon-prepend"></i>
-                Unduh Hasil Simulasi
+                Unduh Hasil Analisis
               </button>
             </div>
             {resultAnalysis && (

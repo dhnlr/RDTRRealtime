@@ -24,10 +24,10 @@ function App() {
           <Route path="/datamanagementinput/flood" component={DataManagementInputFlood} />
           <Route path="/datamanagementinput/congestion" component={DataManagementInputCongestion} />
           <Route path="/datamanagementinput" component={DataManagementInput} />
-          <Route path="/simulation" component={SimulationTable} />
-          <Route path="/simulasimap" component={SimulasiMap} />
-          <Route path="/simulationinput" component={SimulationInput} />
-          <Route path="/simulationhistory" component={SimulationHistory} />
+          <Route path="/schenario" component={SimulationTable} />
+          <Route path="/schenariomap" component={SimulasiMap} />
+          <Route path="/schenarioinput" component={SimulationInput} />
+          <Route path="/schenariohistory" component={SimulationHistory} />
           <Route path="/resentmailconfirmation" component={ResentEmailConfirmation} />
           <Route path="/usermanagement/create" component={UserManagementCreate} />
           <Route path="/usermanagement/edit" render={props => <UserManagementEdit {...props}/>} />

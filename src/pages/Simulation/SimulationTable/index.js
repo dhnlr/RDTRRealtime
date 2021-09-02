@@ -24,7 +24,7 @@ function SimulationTable() {
 
   let history = useHistory();
   function goInputSimulasi() {
-    history.push("/simulationinput");
+    history.push("/schenarioinput");
   }
 
   useEffect(() => {
@@ -75,7 +75,7 @@ function SimulationTable() {
                 }); */
           setIsProcessing(true);
           const datas = await axios.get(
-            config.url.API_URL + "/Simulasi/GetList",
+            config.url.API_URL + "/Project/GetList",
             {
               headers: { Authorization: "Bearer " + sessionStorage.token },
               params: {
@@ -87,6 +87,11 @@ function SimulationTable() {
               },
             }
           );
+          for (let index = 0; index < datas.data.obj.length; index++) {
+            const element = datas.data.obj[index];
+            let subRows = await fetchSubRows(element.id);
+            element.subRows = subRows.data.obj;
+          }
 
           const fetchId = ++fetchIdRef.current;
           if (fetchId === fetchIdRef.current) {
@@ -113,11 +118,20 @@ function SimulationTable() {
     []
   );
 
+  const fetchSubRows = (id) => {
+    return axios.get(config.url.API_URL + "/Simulasi/GetAll", {
+      headers: { Authorization: "Bearer " + sessionStorage.token },
+      params: {
+        ProjectId: id,
+      },
+    });
+  };
+
   const handleDelete = ({ id }) => {
     try {
       Swal.fire({
-        title: "Hapus Simulasi",
-        text: "Simulasi yang dihapus tidak dapat dikembalikan. Apakah Anda yakin untuk menghapus simulasi?",
+        title: "Hapus Skenario",
+        text: "Skenario yang dihapus tidak dapat dikembalikan. Apakah Anda yakin untuk menghapus skenario?",
         icon: "warning",
         showCancelButton: true,
         showLoaderOnConfirm: true,
@@ -166,7 +180,7 @@ function SimulationTable() {
       icon: "warning",
       showCloseButton: true,
       focusConfirm: true,
-      confirmButtonText: "Lihat Simulasi",
+      confirmButtonText: "Lihat Skenario",
       showCancelButton: true,
       cancelButtonText: "Batal",
       customClass: {
@@ -174,7 +188,7 @@ function SimulationTable() {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        history.push("/simulasimap", state);
+        history.push("/schenariomap", state);
       }
     });
   };
@@ -183,7 +197,7 @@ function SimulationTable() {
     <div className="container-scroller">
       <Header />
       <div className="container-fluid page-body-wrapper">
-        <Menu active="simulasi" />
+        <Menu active="schenario" />
         <div className="main-panel">
           <div className="content-wrapper">
             <div className="row">
@@ -199,7 +213,7 @@ function SimulationTable() {
                                 {/* <td className="align-baseline">baseline</td>
                                 <td className="align-top">top</td> */}
                                 <td className="align-middle text-white">
-                                  <h2 className="">Simulasi</h2>
+                                  <h2 className="">Skenario</h2>
                                   <p className=" font-weight-500 mb-2">
                                     Siapapun dapat melihat perencanaan secara
                                     publik
@@ -228,8 +242,8 @@ function SimulationTable() {
                                         <img src={headerImage} alt="header" style={{ width: "100%" }}></img>
                                     </div>
                                     <div style={{ flex: "2", display: "flex", flexWrap: "wrap", flexDirection: "column", padding: "0 2.3rem", justifyContent: "center" }}>
-                                        <p className="font-weight-bold mb-4 fs-30">Simulasi</p>
-                                        <p className="font-weight-500 mb-0" style={{ fontSize: "16px", lineHeight: "1.64" }}>Kini masyarakat dapat melakukan simulasi terencana<br /> tata ruang secara online menjadi lebih mudah. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia tempor dolor, blandit mollis erat scelerisque vel. </p>
+                                        <p className="font-weight-bold mb-4 fs-30">Skenario</p>
+                                        <p className="font-weight-500 mb-0" style={{ fontSize: "16px", lineHeight: "1.64" }}>Kini masyarakat dapat melakukan skenario terencana<br /> tata ruang secara online menjadi lebih mudah. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia tempor dolor, blandit mollis erat scelerisque vel. </p>
                                     </div>
                                 </div> */}
               </div>
@@ -264,7 +278,7 @@ function SimulationTable() {
                     type="text"
                     className="form-control"
                     id="navbar-search-input"
-                    placeholder="Cari simulasi"
+                    placeholder="Cari skenario"
                     aria-label="search"
                     aria-describedby="search"
                     style={{ borderLeft: "none" }}
@@ -287,7 +301,7 @@ function SimulationTable() {
                     className="font-weight-bold ml-1 mr-1 align-middle"
                     style={{ fontSize: 20 }}
                   >
-                    Buat Simulasi Anda
+                    Buat Skenario Anda
                   </span>
                   <button
                     className="btn btn-success ml-2"
@@ -305,7 +319,7 @@ function SimulationTable() {
               <div className="col-md-12 grid-margin stretch-card my-4">
                 <div className="card">
                   <div className="card-body">
-                    <p className="card-title">Data yang Telah Dibuat</p>
+                    <p className="card-title">Skenario yang Telah Dibuat</p>
                     <div className="row">
                       <div className="col-12">
                         <div className="table-responsive">
@@ -318,8 +332,53 @@ function SimulationTable() {
                               // filterTenant={site}
                               columns={[
                                 {
+                                  // Build our expander column
+                                  id: "expander", // Make sure it has an ID
+                                  // Header: ({
+                                  //   getToggleAllRowsExpandedProps,
+                                  //   isAllRowsExpanded,
+                                  // }) => (
+                                  //   <span {...getToggleAllRowsExpandedProps()}>
+                                  //     {isAllRowsExpanded ? "👇" : "👉"}
+                                  //   </span>
+                                  // ),
+                                  Cell: ({ row }) =>
+                                    // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
+                                    // to build the toggle for expanding a row
+                                    row.canExpand ? (
+                                      <span
+                                        {...row.getToggleRowExpandedProps({
+                                          style: {
+                                            // We can even use the row.depth property
+                                            // and paddingLeft to indicate the depth
+                                            // of the row
+                                            paddingLeft: `${row.depth * 2}rem`,
+                                          },
+                                        })}
+                                      >
+                                        {row.isExpanded ? <i class='ti-arrow-circle-down'></i> : <i class='ti-arrow-circle-right'></i>}
+                                      </span>
+                                    ) : null,
+                                },
+                                {
                                   Header: "Nama Proyek",
+                                  accessor: "projectName",
+                                  // width: "20%",
+                                },
+                                {
+                                  Header: "Nama Skenario",
                                   accessor: "name",
+                                  // width: "20%",
+                                },
+                                {
+                                  Header: "Provinsi",
+                                  accessor:
+                                    "project.kotaKabupaten.provinsi.name",
+                                  // width: "20%",
+                                },
+                                {
+                                  Header: "Kabupaten / Kota",
+                                  accessor: "project.kotaKabupaten.name",
                                   // width: "20%",
                                 },
                                 {
@@ -328,27 +387,33 @@ function SimulationTable() {
                                   width: "10%",
                                   Cell: (row) => (
                                     <span>
-                                      {new Date(
-                                        row.cell.value
-                                      ).toLocaleDateString("id-ID", {
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
-                                      })}
+                                      {row.cell.value
+                                        ? new Date(
+                                            row.cell.value
+                                          ).toLocaleDateString("id-ID", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                          })
+                                        : ""}
                                     </span>
                                   ),
                                 },
                                 {
                                   Header: "",
                                   accessor: "action",
-                                  width: "25%",
+                                  width: "20%",
                                   disableGlobalFilter: true,
-                                  Cell: (row) => (
-                                    <div style={{ textAlign: "right" }}>
-                                      {row.row.original.simulasiBangunan
-                                        ?.projectId && (
-                                        <>
-                                          {/* <Link 
+                                  Cell: (row) => {
+                                    if (row.row.original.projectName) {
+                                      return <></>;
+                                    } else {
+                                      return (
+                                        <div style={{ textAlign: "right" }}>
+                                          {row.row.original.simulasiBangunan
+                                            ?.projectId && (
+                                            <>
+                                              {/* <Link 
                                       to={{
                                         pathname: "/simulasimap",
                                         state: data.filter(
@@ -357,81 +422,83 @@ function SimulationTable() {
                                         )[0]
                                       }}
                                       > */}
-                                          <button
-                                            className="btn btn-outline-light btn-xs"
-                                            title="Peta Simulasi"
-                                            onClick={() => {
-                                              handleSimulasi(
-                                                data.filter(
-                                                  (datum) =>
-                                                    datum.id ===
-                                                    row.row.values.id
-                                                )[0]
-                                              );
-                                            }}
-                                          >
-                                            Lihat Simulasi
-                                          </button>
-                                          {/* </Link> */}
-                                          &nbsp;
-                                        </>
-                                      )}
-                                      <Link to="/simulationhistory">
-                                        <button
-                                          className="btn btn-outline-light btn-xs"
-                                          title="Sejarah Simulasi"
-                                        >
-                                          Lihat Analisis
-                                        </button>
-                                      </Link>
-                                      &nbsp;
-                                    </div>
-                                  ),
+                                              <button
+                                                className="btn btn-outline-light btn-xs"
+                                                title="Peta Skenario"
+                                                onClick={() => {
+                                                  handleSimulasi(
+                                                    row.row.original
+                                                  );
+                                                }}
+                                              >
+                                                Lanjutkan Analisis
+                                              </button>
+                                              {/* </Link> */}
+                                              &nbsp;
+                                            </>
+                                          )}
+                                          {/* <Link to="/schenariohistory">
+                                            <button
+                                              className="btn btn-outline-light btn-xs"
+                                              title="Sejarah Simulasi"
+                                            >
+                                              Lihat Analisis
+                                            </button>
+                                          </Link>
+                                          &nbsp; */}
+                                        </div>
+                                      );
+                                    }
+                                  },
                                 },
                                 {
                                   Header: "",
                                   accessor: "id",
-                                  width: "15%",
+                                  width: "20%",
                                   disableGlobalFilter: true,
-                                  Cell: (row) => (
-                                    <div style={{ textAlign: "right" }}>
-                                      <Link
-                                        to={{
-                                          pathname: "/simulationinput",
-                                          state: data.filter(
-                                            (datum) =>
-                                              datum.id === row.row.values.id
-                                          )[0],
-                                          // row.row.values,
-                                        }}
-                                      >
-                                        <button
-                                          className="btn btn-outline-dark btn-xs"
-                                          title="Ubah"
-                                        >
-                                          <span>
-                                            <i className="ti-pencil"></i>
-                                          </span>
-                                        </button>
-                                      </Link>
-                                      &nbsp;
-                                      <button
-                                        className="btn btn-outline-danger btn-xs"
-                                        title="Hapus"
-                                        onClick={() =>
-                                          handleDelete(row.row.values)
-                                        }
-                                      >
-                                        <span>
-                                          <i className="ti-trash"></i>
-                                        </span>
-                                      </button>
-                                    </div>
-                                  ),
+                                  Cell: (row) => {
+                                    if (row.row.original.projectName) {
+                                      return <></>;
+                                    } else {
+                                      return (
+                                        <div style={{ textAlign: "right" }}>
+                                          <Link
+                                            to={{
+                                              pathname: "/schenarioinput",
+                                              state: row.row.original,
+                                              // row.row.values,
+                                            }}
+                                          >
+                                            <button
+                                              className="btn btn-outline-dark btn-xs"
+                                              title="Ubah"
+                                            >
+                                              <span>
+                                                <i className="ti-pencil"></i>
+                                              </span>
+                                            </button>
+                                          </Link>
+                                          &nbsp;
+                                          <button
+                                            className="btn btn-outline-danger btn-xs"
+                                            title="Hapus"
+                                            onClick={() =>
+                                              handleDelete(row.row.original.id)
+                                            }
+                                          >
+                                            <span>
+                                              <i className="ti-trash"></i>
+                                            </span>
+                                          </button>
+                                        </div>
+                                      );
+                                    }
+                                  },
                                 },
                               ]}
                               data={data}
                               fetchData={fetchData}
+                              fetchSubRows={fetchSubRows}
                               pageCount={pageCount}
                               pI={pI}
                               recordsFiltered={recordsFiltered}

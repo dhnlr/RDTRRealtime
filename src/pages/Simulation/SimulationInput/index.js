@@ -26,12 +26,12 @@ function SimulationInput() {
     province: state ? String(state?.project?.kotaKabupaten?.provinsi?.id) : "",
     city: state ? String(state?.project?.kotaKabupaten?.id) : "",
     project: state ? state?.projectId : "",
-    dataKe: state? state?.dataKe : "",
+    dataKe: state ? String(state?.simulasiBangunan?.dataKe) : "",
   });
   const [errMessage, setErrMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const onSubmit = ({ name, province, city, project }) => {
+  const onSubmit = ({ name, province, city, project, dataKe }) => {
     setErrMessage(null);
     setIsProcessing(true);
 
@@ -40,8 +40,8 @@ function SimulationInput() {
       "Content-Type": "application/json",
     };
     !state?.id
-      ? createProject(name, province, city, project, headers)
-      : updateProject(name, province, city, project, headers);
+      ? createProject(name, province, city, project, dataKe, headers)
+      : updateProject(name, province, city, project, dataKe, headers);
   };
 
   useEffect(() => {
@@ -80,8 +80,8 @@ function SimulationInput() {
         .then(({ data }) => {
           if (data.status.code === 200 && data.obj.length > 0) {
             setListCity(data.obj);
-            // if (city === "")
-            //   setData((state) => ({ ...state, city: String(data.obj[0].id) }));
+            if (city === "")
+              setData((state) => ({ ...state, city: String(data.obj[0].id) }));
           }
         })
         .catch((error) => {
@@ -95,7 +95,7 @@ function SimulationInput() {
   }, [listProvince, province]);
 
   useEffect(() => {
-    if (listCity.length !== 0 && city!== "" && listProvince.length !== 0 && province !== "") {
+    if (listCity.length !== 0 && city!== "") {
       axios
         .get(config.url.API_URL + "/Project/GetAll", {
           headers: { Authorization: "Bearer " + sessionStorage.token },
@@ -106,6 +106,8 @@ function SimulationInput() {
         .then(({ data }) => {
           if (data.status.code === 200) {
             setListProject(data.obj);
+            if (project === "")
+              setData((state) => ({ ...state, project: String(data.obj[0].id) }));
           }
         })
         .catch((error) => {
@@ -153,8 +155,8 @@ function SimulationInput() {
       .then(({ data }) => {
         if (data.status.code === 200 && data.obj.length > 0) {
           setListCity(data.obj);
-          // if (city === "")
-          //   setData((state) => ({ ...state, city: String(data.obj[0].id) }));
+          if (city === "")
+            setData((state) => ({ ...state, city: String(data.obj[0].id) }));
         }
       })
       .catch((error) => {
@@ -178,6 +180,8 @@ function SimulationInput() {
       .then(({ data }) => {
         if (data.status.code === 200) {
           setListProject(data.obj);
+          if (project === "")
+              setData((state) => ({ ...state, project: String(data.obj[0].id) }));
         }
       })
       .catch((error) => {
@@ -217,7 +221,7 @@ function SimulationInput() {
     setData((data) => ({ ...data, dataKe: event.target.value }));
   }
 
-  const createProject = (name, province, city, project, headers) => {
+  const createProject = (name, province, city, project, dataKe, headers) => {
     axios
       .post(
         config.url.API_URL + "/Simulasi/Create",
@@ -225,6 +229,7 @@ function SimulationInput() {
           name,
           ownerId: sessionStorage.userId,
           projectId: project,
+          dataKe
         },
         { headers }
       )
@@ -237,12 +242,12 @@ function SimulationInput() {
         error.response?.data?.status?.message
           ? setErrMessage(error.response?.data?.status?.message)
           : setErrMessage(
-              "Gagal mendaftarkan simulasi. Silahkan coba beberapa saat lagi."
+              "Gagal mendaftarkan skenario. Silahkan coba beberapa saat lagi."
             );
       });
   };
 
-  const updateProject = (name, province, city, project, headers) => {
+  const updateProject = (name, province, city, project, dataKe, headers) => {
     axios
       .put(
         config.url.API_URL + "/Simulasi/Update",
@@ -251,6 +256,7 @@ function SimulationInput() {
           name,
           projectId: project,
           ownerId: state?.ownerId,
+          dataKe
         },
         { headers }
       )
@@ -304,7 +310,7 @@ function SimulationInput() {
     <option
       key={dataKe.dataKe}
       value={dataKe.dataKe}
-      selected={dataKe.dataKe === state?.dataKe}
+      selected={dataKe.dataKe === state?.simulasiBangunan?.dataKe}
     >
       {dataKe.dataKe} - {dataKe.simulationName}
     </option>
@@ -340,11 +346,11 @@ function SimulationInput() {
     )); */
 
   function goSimulasi() {
-    history.push("/Simulation");
+    history.push("/schenario");
   }
 
   function goManajemenDataPhase2(id) {
-    history.push("/simulation");
+    history.push("/schenario");
   }
 
   /* function handleProvinceChange(event) {
@@ -359,7 +365,7 @@ function SimulationInput() {
     <div className="container-scroller">
       <Header />
       <div className="container-fluid page-body-wrapper">
-        <Menu active="simulasi" />
+        <Menu active="skenario" />
         <div className="main-panel">
           <div className="content-wrapper">
             <div className="row">
@@ -370,7 +376,7 @@ function SimulationInput() {
                     <ProgressCircle className="text-muted"></ProgressCircle>
                     <ProgressCircle className="text-muted"></ProgressCircle>
                   </div> */}
-                  <h1>Simulasi Baru</h1>
+                  <h1>Skenario Baru</h1>
                   <p className="text-muted">
                     Silahkan lengkapi borang di bawah ini
                   </p>
@@ -391,7 +397,7 @@ function SimulationInput() {
                     >
                       {/* register your input into the hook by invoking the "register" function */}
                       <div className="form-group">
-                        <label htmlFor="name">Nama Simulasi</label>
+                        <label htmlFor="name">Nama Skenario</label>
                         <input
                           className={`form-control p-input ${
                             errors.name ? "is-invalid" : ""
@@ -399,9 +405,9 @@ function SimulationInput() {
                           id="name"
                           name="name"
                           defaultValue=""
-                          placeholder="Nama Simulasi"
+                          placeholder="Nama Skenario"
                           ref={register({
-                            required: "Nama simulasi harus diisi",
+                            required: "Nama skenario harus diisi",
                           })}
                         />
                         {errors.name && (
@@ -415,7 +421,7 @@ function SimulationInput() {
                       </div>
 
                       {/* include validation with required or other standard HTML validation rules */}
-                      <div className="form-group">
+                      {!state?.id && <div className="form-group">
                         <label htmlFor="province">Provinsi</label>
                         {/* <Controller
                           name="province"
@@ -451,8 +457,9 @@ function SimulationInput() {
                             {errors.province.message}
                           </small>
                         )}
-                      </div>
-                      <div className="form-group">
+                      </div>}
+                      
+                      {!state?.id && <div className="form-group">
                         <label htmlFor="city">Kota / kabupaten</label>
                         {/* <Controller
                           name="city"
@@ -488,8 +495,9 @@ function SimulationInput() {
                             {errors.city.message}
                           </small>
                         )}
-                      </div>
-                      <div className="form-group">
+                      </div>}
+                      
+                      {!state?.id && <div className="form-group">
                         <label htmlFor="project">Proyek</label>
                         {/* <Controller
                           name="project"
@@ -525,9 +533,10 @@ function SimulationInput() {
                             {errors.project.message}
                           </small>
                         )}
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="dataKe">Data Ke-</label>
+                      </div>}
+
+                      {!state?.id && <div className="form-group">
+                        <label htmlFor="dataKe">Basis Skenario (mulai dari)</label>
                         {/* <Controller
                           name="project"
                           control={control}
@@ -546,11 +555,11 @@ function SimulationInput() {
                           // value={project}
                           onChange={handleDataKeChange}
                           ref={register({
-                            required: "Data Ke- harus diisi",
+                            required: "Basis skenario harus diisi",
                           })}
                         >
                           <option value="" disabled selected>
-                            {dataKe === "" || listDataKe.length !== 0 ? "Pilih data ke-" : "Tidak ada data ke-"}
+                            {dataKe === "" || listDataKe.length !== 0 ? "Pilih basis skenario" : "Tidak ada basis skenario"}
                           </option>
                           {dataKes}
                         </select>
@@ -562,7 +571,7 @@ function SimulationInput() {
                             {errors.dataKe.message}
                           </small>
                         )}
-                      </div>
+                      </div>}
                       <div className="template-demo float-sm-left float-md-right">
                         <button
                           className="btn btn-light"
@@ -584,7 +593,8 @@ function SimulationInput() {
                               aria-hidden="true"
                             ></span>
                           )}
-                          Selanjutnya
+                          {!state?.id && "Buat Skenario"}
+                          {state?.id && "Perbarui Skenario"}
                         </button>
                       </div>
                     </form>

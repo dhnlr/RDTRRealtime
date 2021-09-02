@@ -19,10 +19,10 @@ function Menu(props) {
             <span className="menu-title">Manajemen Data</span>
           </Link>
         </li>
-        <li className={`nav-item ${props.active.indexOf("simulasi") !== -1 ? "active" : ""}`}>
-          <Link className="nav-link" to="/simulation">
+        <li className={`nav-item ${props.active.indexOf("schenario") !== -1 ? "active" : ""}`}>
+          <Link className="nav-link" to="/schenario">
             <i className="ti-map-alt menu-icon"></i>
-            <span className="menu-title">Simulasi</span>
+            <span className="menu-title">Skenario</span>
           </Link>
         </li>
         <li className={`nav-item ${props.active.indexOf("report") !== -1 ? "active" : ""}`}>

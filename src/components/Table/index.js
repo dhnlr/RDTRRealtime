@@ -1,5 +1,5 @@
 import React from "react";
-import { useTable, useSortBy, usePagination } from "react-table";
+import { useTable, useSortBy, usePagination, useExpanded } from "react-table";
 import { useHistory } from "react-router-dom";
 // import Cookie from "js-cookie";
 // import { generalUserLogoutAction } from "../../redux/actions/generalActions";
@@ -22,6 +22,7 @@ function Table({
   searchVal,
   processCounter,
   isProcessing,
+  fetchSubRows,
 }) {
   const [valueFilter, setvalueFilter] = React.useState("");
   const [valueStatus, setValueStatus] = React.useState("");
@@ -50,7 +51,7 @@ function Table({
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize, sortBy },
+    state: { pageIndex, pageSize, sortBy, expanded },
   } = useTable(
     {
       columns,
@@ -59,8 +60,10 @@ function Table({
       manualPagination: true,
       manualSortBy: true,
       pageCount: controlledPageCount,
+      // paginateExpandedRows: false,
     },
     useSortBy,
+    useExpanded,
     usePagination
   );
 
@@ -95,6 +98,7 @@ function Table({
       sortBy,
       searchVal,
       processCounter,
+      expanded
     });
   }, [
     fetchData,
@@ -110,6 +114,7 @@ function Table({
     history,
     searchVal,
     processCounter,
+    // expanded
   ]);
 
   // Render the UI for your table
@@ -323,10 +328,17 @@ function Table({
               {page.map((row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()}
+                  style={{
+                    background: row.isExpanded
+                      ? '#edeff7'
+                      : 'white',
+                  }}
+                  >
                     {row.cells.map((cell) => {
                       return (
-                        <td {...cell.getCellProps()}>
+                        <td 
+                        {...cell.getCellProps()}>
                           {cell.column.Header === "No"
                             ? num[i]
                             : cell.render("Cell")}
