@@ -535,15 +535,25 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
-          const sampahTpsLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Persampahan/Sampah_TPS/FeatureServer/0",
+          /* const sampahTpsLayer = new FeatureLayer({
+            url:
+              config.url.ARCGIS_URL + "/Persampahan/Sampah_TPS/FeatureServer/0",
             title: "Sampah TPS",
             popupTemplate: {
               title: "Sampah TPS",
             },
             outFields: ["*"],
             editingEnabled: false,
-          })
+            // renderer: {
+            //   type: "simple", // autocasts as new SimpleRenderer()
+            //   symbol: {
+            //     type: "web-style", // autocasts as new WebStyleSymbol()
+            //     name: "Dumpster",
+            //     styleName: "EsriRealisticStreetSceneStyle",
+            //     size: 5,
+            //   }
+            // },
+          }); */
 
           const persilTanahSesudahLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/persiltanah/FeatureServer/0",
@@ -1607,7 +1617,7 @@ const SimulasiMap = () => {
               polaRuangVersioningLayer,
               persilTanahSesudahLayer,
               kapasitasAirLayer,
-              sampahTpsLayer,
+              // sampahTpsLayer,
               jalanSesudahLayer,
               bangunanSesudahLayer,
             ],
@@ -1628,7 +1638,7 @@ const SimulasiMap = () => {
           polaRuangVersioningLayer.visible = false;
           persilTanahSesudahLayer.visible = false;
           kapasitasAirLayer.visible = false;
-          sampahTpsLayer.visible = false;
+          // sampahTpsLayer.visible = false;
           persilTanahBpn.visible = false;
           buildingsEnvelopeLayer.visible = false;
           basemapPolaRuangLayer.visible = false;
@@ -2685,8 +2695,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "izin_sampah_y5",
-                    field_value:
-                      features[0].attributes.izin_sampah_y5,
+                    field_value: features[0].attributes.izin_sampah_y5,
                   },
                 ]);
                 setHasilSimulasiBangunanKdbKlb(
@@ -5287,19 +5296,16 @@ const SimulasiMap = () => {
                                         {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
                                       </tr>
                                     }
-                                    {
-                                      /* (String(contentBangunanKdbKlb[8].field_value).toLowerCase().indexOf("ditolak") !== -1 || String(contentBangunanKdbKlb[9].field_value).toLowerCase().indexOf("ditolak") !== -1) &&  */ <tr>
-                                        <td>Status Tingkat Persampahan</td>
-                                        <td>
-                                          {activeSebelumSesudah.activeSebelum
-                                            ? contentBangunanKdbKlb[85]
-                                                .field_value
-                                            : contentBangunanKdbKlb[85]
-                                                .field_value}
-                                        </td>
-                                        {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
-                                      </tr>
-                                    }
+                                    {/* <tr>
+                                      <td>Status Tingkat Persampahan</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[85]
+                                              .field_value
+                                          : contentBangunanKdbKlb[85]
+                                              .field_value}
+                                      </td>
+                                    </tr> */}
                                   </tbody>
                                 </table>
                               </div>
@@ -5405,8 +5411,9 @@ const SimulasiMap = () => {
                                       </td>
                                     </tr>
                                     <tr>
-                                      <td>Luas Tapak{" "}
-                                        (m<sup>2</sup>)</td>
+                                      <td>
+                                        Luas Tapak (m<sup>2</sup>)
+                                      </td>
                                       <td>
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[18]
@@ -5746,7 +5753,7 @@ const SimulasiMap = () => {
                             </div>
                           </div>
 
-                          <div className="card" style={{ margin: "0 0.2rem" }}>
+                          {/* <div className="card" style={{ margin: "0 0.2rem" }}>
                             <div
                               className="card-header"
                               role="tab"
@@ -5790,18 +5797,17 @@ const SimulasiMap = () => {
                                       <td>Status Tingkat Persampahan</td>
                                       <td>
                                         {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[85].field_value
+                                          ? contentBangunanKdbKlb[85]
+                                              .field_value
                                           : contentBangunanKdbKlb[85]
                                               .field_value}
                                       </td>
-                                      {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
                                     </tr>
                                   </tbody>
                                 </table>
                               </div>
                             </div>
-                          </div>
-
+                          </div> */}
                         </div>
                       </div>
                     </div>
