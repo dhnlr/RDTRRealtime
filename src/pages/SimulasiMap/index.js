@@ -5436,8 +5436,8 @@ const SimulasiMap = () => {
                                     <tr>
                                       <td>
                                         {activeSebelumSesudah.activeSebelum
-                                          ? "Jumlah Bangunan"
-                                          : "Jumlah Bangunan Saat Ini"}{" "}
+                                          ? "Luas Bangunan"
+                                          : "Luas Bangunan Saat Ini"}{" "}
                                         (m<sup>2</sup>)
                                       </td>
                                       <td>
