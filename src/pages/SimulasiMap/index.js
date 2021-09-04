@@ -90,6 +90,8 @@ const SimulasiMap = () => {
   const [isSegmentationActive, setIsSegmentationActive] = useState(false);
   const [segmentationBuildingId, setSegmentationBuildingId] = useState(null);
   const [itbxSum, setItbxSum] = useState(null);
+  const [isCreateNewSchenario, setIsCreateNewSchenario] = useState(false);
+  const [createSchenarioname, setCreateSchenarioname] = useState(null)
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -4798,8 +4800,43 @@ const SimulasiMap = () => {
       )
       .then((data) => {
         setLoaded(true)
-      });
+        if(param !== 0)Swal.fire("Berhasil", "Berhasil menganalisis riwayat skenario", "success")
+      })
+      .catch(()=>{
+        setLoaded(true)
+        Swal.fire("Gagal", "Gagal menganalisis riwayat skenario", "error")
+      })
+      ;
   };
+
+  const handleCreateNewSchenario = () => {
+    setLoaded(false)
+    axios.post(config.url.API_URL + "/Simulasi/Create",
+    {
+      name: createSchenarioname,
+      projectId: state?.simulasiBangunan?.projectId,
+      ownerId: state?.ownerId,
+      dataKe: state?.simulasiBangunan?.dataKe,
+    },
+    {
+      headers: { Authorization: "Bearer " + sessionStorage.token },
+    }
+    )
+    .then(({data})=> {
+      setLoaded(true)
+      if(data.status.code === 200){
+        setIsCreateNewSchenario(false)
+        Swal.fire("Berhasil", "Berhasil membuat skenario baru", "success")
+      } else {
+      Swal.fire("Gagal", data.status.message, "error")
+
+      }
+    })
+    .catch(()=> {
+      setLoaded(true)
+      Swal.fire("Gagal", "Gagal membuat skenario baru", "error")
+    })
+  }
 
   return (
     <div className="container-scroller">
@@ -5919,7 +5956,7 @@ const SimulasiMap = () => {
               >
                 <h3 className="esri-widget__heading">Riwayat Skenario</h3>
               </div>
-              {
+              {!isCreateNewSchenario && 
                 <div
                   className=""
                   style={{
@@ -5941,27 +5978,7 @@ const SimulasiMap = () => {
                       Sistem akan menggandakan untuk membuat riwayat yang dapat
                       dianalisis
                     </p>
-                    {/* <p>Bangunan yang Akan Dianalisis</p>
-                  <p id="id_bangunan_history">
-                    ID Bangunan: Belum ada yang dipilih
-                  </p>
-                  <button
-                    className="btn btn-outline-primary btn-sm"
-                    id="pilih_bangunan_history"
-                    type="button"
-                    title="Pilih Bangunan"
-                    style={{
-                      marginTop: "5px",
-                      marginBottom: "5px",
-                      marginRight: "2px",
-                    }}
-                  >
-                    Pilih Bangunan
-                  </button> */}
-                  </div>
-                </div>
-              }
-              <button
+                    <button
                 className="btn btn-primary btn-block btn-icon-text rounded-0"
                 id="history_simulasi"
                 type="button"
@@ -5971,6 +5988,69 @@ const SimulasiMap = () => {
                 <i className="ti-search btn-icon-prepend"></i>
                 Analisis Riwayat Skenario
               </button>
+                  </div>
+                </div>
+              }
+              <div
+                  className=""
+                  style={{
+                    background: "#f3f3f3",
+                    width: "300px",
+                    maxHeight: "180px",
+                    overflowX: "auto",
+                    padding: "0px",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#fff",
+                      margin: "5px",
+                      padding: "10px",
+                    }}
+                  >
+                    <p>
+                      Sistem akan membuat skenario baru berdasarkan data yang digunakan saat ini
+                    </p>
+                    {!isCreateNewSchenario && <button
+                className="btn btn-primary btn-block btn-icon-text rounded-0"
+                id="create_simulasi"
+                type="button"
+                title="Buat Skenario Baru"
+                onClick={() => setIsCreateNewSchenario(true)}
+              >
+                <i className="ti-pencil-alt btn-icon-prepend"></i>
+                Buat Skenario Baru
+              </button>}
+              {isCreateNewSchenario && <>
+                <div class="form-group">
+              <label htmlFor="new-schenario">Nama Skenario Baru</label>
+              <input id="new-schenario" type="text" className="form-control" placeholder="Nama Skenario Baru" onChange={e => setCreateSchenarioname(e.target.value)}/>
+              </div>
+              <div class="form-group">
+              <button
+                className="btn btn-primary btn-block btn-icon-text rounded-0"
+                id="save_simulasi"
+                type="button"
+                title="Simpan Skenario Baru"
+                onClick={() => handleCreateNewSchenario(true)}
+              >
+                <i className="ti-save btn-icon-prepend"></i>
+                Simpan Skenario Baru
+              </button>
+              <button
+                className="btn btn-dar btn-block btn-icon-text rounded-0"
+                id="save_simulasi"
+                type="button"
+                title="Batalkan"
+                onClick={() => setIsCreateNewSchenario(false)}
+              >
+                <i className="ti-save btn-icon-prepend"></i>
+                Batal
+              </button>
+              </div>
+              </>}
+                  </div>
+                </div>
             </div>
             <div id="printExpDiv" className="esri-widget print">
               <div

@@ -87,26 +87,29 @@ function SimulationTable() {
               },
             }
           );
-          for (let index = 0; index < datas.data.obj.length; index++) {
-            const element = datas.data.obj[index];
-            let subRows = await fetchSubRows(element.id);
-            element.subRows = subRows.data.obj;
+          for (let index = 0; index <= datas.data.obj.length; index++) {
+            if(index < datas.data.obj.length){
+              const element = datas.data.obj[index];
+              let subRows = await fetchSubRows(element.id);
+              element.subRows = subRows.data.obj;
+            } else if(index === datas.data.obj.length) {
+              const fetchId = ++fetchIdRef.current;
+              if (fetchId === fetchIdRef.current) {
+                // const startRow = pageSize * pageIndex;
+                // const endRow = startRow + pageSize;
+                // setData(data.data.slice(startRow, endRow));
+                // setPI(pageIndex);
+                setPI(pageIndexTbl);
+                setData(datas.data.obj);
+                setRecordsFiltered(datas.data.obj.length);
+                setRecordsTotal(datas.data.count);
+                setPageCount(Math.ceil(datas.data.count / pageSize));
+                setSortByState(sortBy);
+                setIsProcessing(false);
+              }
+            }
           }
 
-          const fetchId = ++fetchIdRef.current;
-          if (fetchId === fetchIdRef.current) {
-            // const startRow = pageSize * pageIndex;
-            // const endRow = startRow + pageSize;
-            // setData(data.data.slice(startRow, endRow));
-            // setPI(pageIndex);
-            setPI(pageIndexTbl);
-            setData(datas.data.obj);
-            setRecordsFiltered(datas.data.obj.length);
-            setRecordsTotal(datas.data.count);
-            setPageCount(Math.ceil(datas.data.count / pageSize));
-            setSortByState(sortBy);
-            setIsProcessing(false);
-          }
         } catch (errorForm) {
           setIsProcessing(false);
           console.warn(errorForm);
@@ -162,6 +165,9 @@ function SimulationTable() {
                 if (result.value) {
                   setProcessCounter(processCounter + 1);
                 }
+              })
+              .catch (errorForm => {
+                Swal.fire("Maaf", errorForm.response.data.error.message, "error");
               });
             });
         }
@@ -483,7 +489,7 @@ function SimulationTable() {
                                             className="btn btn-outline-danger btn-xs"
                                             title="Hapus"
                                             onClick={() =>
-                                              handleDelete(row.row.original.id)
+                                              handleDelete(row.row.original)
                                             }
                                           >
                                             <span>
