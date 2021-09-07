@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
-import axios from "axios";
+import axios from "../../axiosConfig";
 
 import { config } from "../../Constants";
 
@@ -28,12 +28,8 @@ function UserManagementCreate() {
     password.current = watch("password", "");
 
     useEffect(() => {
-        if (!sessionStorage.token) {
-            history.push("/login");
-        }
         if (listRole.length === 0) {
             axios.get(config.url.API_URL + '/Role/List', {
-                headers: { Authorization: "Bearer " + sessionStorage.token },
                 params: {
                     "input.pageSize": 100,
                     "input.orderProperty": "name"
@@ -54,11 +50,6 @@ function UserManagementCreate() {
         setErrMessage(null);
         setIsProcessing(true)
 
-        const headers = {
-            "Authorization": "Bearer " + sessionStorage.token,
-            "Content-Type": "application/json",
-        };
-
         axios.post(
             config.url.API_URL + "/User/Create",
             {
@@ -69,7 +60,6 @@ function UserManagementCreate() {
                 "userName": username,
                 "password": password
             },
-            { headers }
         )
             .then(() => {
                 setIsProcessing(false)

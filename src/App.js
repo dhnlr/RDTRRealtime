@@ -1,6 +1,45 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Auth, Home, Login, Dashboard, NotAuthorized, NotFound, Register, DataManagementInput, DataManagementInputPhase2, SimulasiMap, ConfirmByCode, ResentEmailConfirmation, ForgotPassword, ResetPassword, UserManagement, UserManagementEdit, RoleManagement, RoleManagementEdit, RoleManagementCreate, UserManagementCreate, Profile, ProfileEdit, Report, HelpManagement, HelpManagementCreate, HelpManagementEdit, HelpData, HelpDataFaq, DataManagement, DataManagementInputWater, DataManagementInputTrash, DataManagementInputFlood, DataManagementInputCongestion, DataManagementInputKdb, SimulationTable, SimulationInput, SimulationHistory } from "./pages";
+import {
+  Auth,
+  Home,
+  Login,
+  Dashboard,
+  NotAuthorized,
+  NotFound,
+  Register,
+  DataManagementInput,
+  DataManagementInputPhase2,
+  SimulasiMap,
+  ConfirmByCode,
+  ResentEmailConfirmation,
+  ForgotPassword,
+  ResetPassword,
+  UserManagement,
+  UserManagementEdit,
+  RoleManagement,
+  RoleManagementEdit,
+  RoleManagementCreate,
+  UserManagementCreate,
+  Profile,
+  ProfileEdit,
+  Report,
+  HelpManagement,
+  HelpManagementCreate,
+  HelpManagementEdit,
+  HelpData,
+  HelpDataFaq,
+  DataManagement,
+  DataManagementInputWater,
+  DataManagementInputTrash,
+  DataManagementInputFlood,
+  DataManagementInputCongestion,
+  DataManagementInputKdb,
+  SimulationTable,
+  SimulationInput,
+  SimulationHistory,
+} from "./pages";
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
   return (
@@ -13,36 +52,92 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/confirm" component={ConfirmByCode} />
-          <Route path="/dashboard" component={Dashboard} />
           <Route path="/forgotpassword" component={ForgotPassword} />
           <Route path="/reset/password" component={ResetPassword} />
-          <Route path="/datamanagement" component={DataManagement} />
-          <Route path="/datamanagementinput/kebutuhandata" component={DataManagementInputPhase2} />
-          <Route path="/datamanagementinput/kdbklb" component={DataManagementInputKdb} />
-          <Route path="/datamanagementinput/water" component={DataManagementInputWater} />
-          <Route path="/datamanagementinput/trash" component={DataManagementInputTrash} />
-          <Route path="/datamanagementinput/flood" component={DataManagementInputFlood} />
-          <Route path="/datamanagementinput/congestion" component={DataManagementInputCongestion} />
-          <Route path="/datamanagementinput" component={DataManagementInput} />
-          <Route path="/schenario" component={SimulationTable} />
-          <Route path="/schenariomap" component={SimulasiMap} />
-          <Route path="/schenarioinput" component={SimulationInput} />
-          <Route path="/schenariohistory" component={SimulationHistory} />
-          <Route path="/resentmailconfirmation" component={ResentEmailConfirmation} />
-          <Route path="/usermanagement/create" component={UserManagementCreate} />
-          <Route path="/usermanagement/edit" render={props => <UserManagementEdit {...props}/>} />
-          <Route path="/usermanagement" component={UserManagement} />
-          <Route path="/rolemanagement/create" component={RoleManagementCreate} />
-          <Route path="/rolemanagement/edit" component={RoleManagementEdit} />
-          <Route path="/rolemanagement" component={RoleManagement} />
-          <Route path="/helpmanagement/create" component={HelpManagementCreate} />
-          <Route path="/helpmanagement/edit" component={HelpManagementEdit} />
-          <Route path="/helpmanagement" component={HelpManagement} />
-          <Route path="/help/faq" component={HelpDataFaq} />
-          <Route path="/help" component={HelpData} />
-          <Route path="/profile/edit" component={ProfileEdit} />
-          <Route path="/profile" component={Profile} />
-          <Route path="/report" component={Report} />
+          <PrivateRoute path="/dashboard">
+            <Dashboard />
+          </PrivateRoute>
+          <PrivateRoute path="/datamanagement">
+            <DataManagement />
+          </PrivateRoute>
+          <PrivateRoute path="/datamanagementinput/kebutuhandata">
+            <DataManagementInputPhase2 />
+          </PrivateRoute>
+          <PrivateRoute path="/datamanagementinput/kdbklb">
+            <DataManagementInputKdb />
+          </PrivateRoute>
+          <PrivateRoute path="/datamanagementinput/water">
+            <DataManagementInputWater />
+          </PrivateRoute>
+          <PrivateRoute path="/datamanagementinput/trash">
+            <DataManagementInputTrash />
+          </PrivateRoute>
+          <PrivateRoute path="/datamanagementinput/flood">
+            <DataManagementInputFlood />
+          </PrivateRoute>
+          <PrivateRoute path="/datamanagementinput/congestion">
+            <DataManagementInputCongestion />
+          </PrivateRoute>
+          <PrivateRoute path="/datamanagementinput">
+            <DataManagementInput />
+          </PrivateRoute>
+          <PrivateRoute path="/schenario">
+            <SimulationTable />
+          </PrivateRoute>
+          <PrivateRoute path="/schenariomap">
+            <SimulasiMap />
+          </PrivateRoute>
+          <PrivateRoute path="/schenarioinput">
+            <SimulationInput />
+          </PrivateRoute>
+          <PrivateRoute path="/schenariohistory">
+            <SimulationHistory />
+          </PrivateRoute>
+          <Route path="/resentmailconfirmation">
+            <ResentEmailConfirmation />
+          </Route>
+          <PrivateRoute path="/usermanagement/create">
+            <UserManagementCreate />
+          </PrivateRoute>
+          <PrivateRoute path="/usermanagement/edit">
+            <UserManagementEdit />
+          </PrivateRoute>
+          <PrivateRoute path="/usermanagement">
+            <UserManagement />
+          </PrivateRoute>
+          <PrivateRoute path="/rolemanagement/create">
+            <RoleManagementCreate />
+          </PrivateRoute>
+          <PrivateRoute path="/rolemanagement/edit">
+            <RoleManagementEdit />
+          </PrivateRoute>
+          <PrivateRoute path="/rolemanagement">
+            <RoleManagement />
+          </PrivateRoute>
+          <PrivateRoute path="/helpmanagement/create">
+            <HelpManagementCreate />
+          </PrivateRoute>
+          <PrivateRoute path="/helpmanagement/edit">
+            <HelpManagementEdit />
+          </PrivateRoute>
+          <PrivateRoute path="/helpmanagement">
+            <HelpManagement />
+          </PrivateRoute>
+          <PrivateRoute path="/help/faq">
+            <HelpDataFaq />
+          </PrivateRoute>
+          <PrivateRoute path="/help">
+            <HelpData />
+          </PrivateRoute>
+          <PrivateRoute path="/profile/edit">
+            <ProfileEdit />
+          </PrivateRoute>
+          <PrivateRoute path="/profile">
+            <Profile />
+          </PrivateRoute>
+          <PrivateRoute path="/report">
+            <Report />
+          </PrivateRoute>
           <Route path="/not-authorized" component={NotAuthorized} />
           <Route path="*" component={NotFound} />
         </Switch>

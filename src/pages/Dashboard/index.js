@@ -1,18 +1,8 @@
-import React, {useEffect} from "react";
-import { useHistory } from "react-router-dom";
+import React from "react";
 
 import { Header, Menu, Footer } from "../../components";
 
-
 function Dashboard() {
-  let history = useHistory();
-
-  useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
-  }, [history])
-
   return (
     <div className="container-scroller">
       <Header />

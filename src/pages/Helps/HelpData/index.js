@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useHistory, Link } from "react-router-dom";
 
@@ -8,12 +8,6 @@ import "./style.css"
 
 function HelpData() {
     let history = useHistory();
-
-    useEffect(() => {
-        if (!sessionStorage.token) {
-            history.push("/login");
-        }
-    }, [history])
 
     return (
         <div className="container-scroller">

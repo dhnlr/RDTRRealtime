@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
-import axios from "axios"
+import axios from "../../../axiosConfig"
 
 import { Header, Menu, Footer } from "../../../components";
 import headerImage from "./header.svg"
@@ -10,26 +9,16 @@ import "./style.css"
 import { config } from "../../../Constants";
 
 function HelpDataFaq() {
-    let history = useHistory();
-
     const [listHelp, setListHelp] = useState([])
     const [errMessage, setErrMessage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false)
-
-    useEffect(() => {
-        if (!sessionStorage.token) {
-            history.push("/login");
-        }
-    }, [history])
 
     useEffect(() => {
         if (listHelp.length === 0) {
             setIsProcessing(true)
             setErrMessage(null)
 
-            axios.get(config.url.API_URL + '/Bantuan/GetAll', {
-                headers: { Authorization: "Bearer " + sessionStorage.token },
-            })
+            axios.get(config.url.API_URL + '/Bantuan/GetAll')
                 .then(({ data }) => {
                     setIsProcessing(false)
                     if (data.status.code === 200 && data.obj.length > 0) {

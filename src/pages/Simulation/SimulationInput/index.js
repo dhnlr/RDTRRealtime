@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
+import axios from "../../../axiosConfig";
 
 import { config } from "../../../Constants";
 
@@ -35,27 +35,15 @@ function SimulationInput() {
     setErrMessage(null);
     setIsProcessing(true);
 
-    const headers = {
-      Authorization: "Bearer " + sessionStorage.token,
-      "Content-Type": "application/json",
-    };
     !state?.id
-      ? createProject(name, province, city, project, dataKe, headers)
-      : updateProject(name, province, city, project, dataKe, headers);
+      ? createProject(name, province, city, project, dataKe)
+      : updateProject(name, province, city, project, dataKe);
   };
-
-  useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
-  }, [history]);
 
   useEffect(() => {
     if (listProvince.length === 0) {
       axios
-        .get(config.url.API_URL + "/MasterData/Provinsi/GetAll", {
-          headers: { Authorization: "Bearer " + sessionStorage.token },
-        })
+        .get(config.url.API_URL + "/MasterData/Provinsi/GetAll")
         .then(({ data }) => {
           if (data.status.code === 200 && data.obj.length > 0) {
             setListProvince(data.obj);
@@ -72,7 +60,6 @@ function SimulationInput() {
     if (listProvince.length !== 0 && province !== "") {
       axios
         .get(config.url.API_URL + "/MasterData/KotaKabupaten/GetAll", {
-          headers: { Authorization: "Bearer " + sessionStorage.token },
           params: {
             provinsiId: province,
           },
@@ -98,7 +85,6 @@ function SimulationInput() {
     if (listCity.length !== 0 && city!== "") {
       axios
         .get(config.url.API_URL + "/Project/GetAll", {
-          headers: { Authorization: "Bearer " + sessionStorage.token },
           params: {
             KotaKabupatenId: city,
           },
@@ -124,7 +110,6 @@ function SimulationInput() {
     if (listCity.length !== 0 && city!== "" && listProvince.length !== 0 && province !== "" && listProject.length !== 0 && project !== "") {
       axios
         .get(config.url.API_URL + "/Simulasi/GetAllDataKe", {
-          headers: { Authorization: "Bearer " + sessionStorage.token },
           params: {
             ProjectId: project,
           },
@@ -147,7 +132,6 @@ function SimulationInput() {
   const handleProvinceChange = (event) => {
     axios
       .get(config.url.API_URL + "/MasterData/KotaKabupaten/GetAll", {
-        headers: { Authorization: "Bearer " + sessionStorage.token },
         params: {
           provinsiId: event.target.value,
         },
@@ -172,7 +156,6 @@ function SimulationInput() {
   function handleCityChange(event) {
     axios
       .get(config.url.API_URL + "/Project/GetAll", {
-        headers: { Authorization: "Bearer " + sessionStorage.token },
         params: {
           KotaKabupatenId: event.target.value,
         },
@@ -197,7 +180,6 @@ function SimulationInput() {
   function handleProjectChange(event) {
     axios
       .get(config.url.API_URL + "/Simulasi/GetAllDataKe", {
-        headers: { Authorization: "Bearer " + sessionStorage.token },
         params: {
           ProjectId: event.target.value,
         },
@@ -221,7 +203,7 @@ function SimulationInput() {
     setData((data) => ({ ...data, dataKe: event.target.value }));
   }
 
-  const createProject = (name, province, city, project, dataKe, headers) => {
+  const createProject = (name, province, city, project, dataKe) => {
     axios
       .post(
         config.url.API_URL + "/Simulasi/Create",
@@ -231,7 +213,6 @@ function SimulationInput() {
           projectId: project,
           dataKe
         },
-        { headers }
       )
       .then((data) => {
         setIsProcessing(false);
@@ -247,7 +228,7 @@ function SimulationInput() {
       });
   };
 
-  const updateProject = (name, province, city, project, dataKe, headers) => {
+  const updateProject = (name, province, city, project, dataKe) => {
     axios
       .put(
         config.url.API_URL + "/Simulasi/Update",
@@ -258,7 +239,6 @@ function SimulationInput() {
           ownerId: state?.ownerId,
           dataKe
         },
-        { headers }
       )
       .then((data) => {
         setIsProcessing(false);

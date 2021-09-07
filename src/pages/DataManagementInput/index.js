@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
+import axios from "../../axiosConfig";
 
 import { config } from "../../Constants";
 
@@ -43,20 +43,10 @@ function DataManagementInput() {
     setErrMessage(null);
     setIsProcessing(true);
 
-    const headers = {
-      Authorization: "Bearer " + sessionStorage.token,
-      "Content-Type": "application/json",
-    };
     !state?.id && !localStorage.state
-      ? createProject(projectName, province, city, headers)
-      : updateProject(projectName, province, city, headers);
+      ? createProject(projectName, province, city)
+      : updateProject(projectName, province, city);
   };
-
-  useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
-  }, [history]);
 
   useEffect(() => {
     if (!state?.id && !localStorage.state) {
@@ -74,9 +64,7 @@ function DataManagementInput() {
   useEffect(() => {
     if (listProvince.length === 0) {
       axios
-        .get(config.url.API_URL + "/MasterData/Provinsi/GetAll", {
-          headers: { Authorization: "Bearer " + sessionStorage.token },
-        })
+        .get(config.url.API_URL + "/MasterData/Provinsi/GetAll")
         .then(({ data }) => {
           if (data.status.code === 200 && data.obj.length > 0) {
             setListProvince(data.obj);
@@ -93,7 +81,6 @@ function DataManagementInput() {
     if (listProvince.length !== 0 && province !== "") {
       axios
         .get(config.url.API_URL + "/MasterData/KotaKabupaten/GetAll", {
-          headers: { Authorization: "Bearer " + sessionStorage.token },
           params: {
             provinsiId: province,
           },
@@ -116,7 +103,6 @@ function DataManagementInput() {
   const handleProvinceChange = (event) => {
     axios
       .get(config.url.API_URL + "/MasterData/KotaKabupaten/GetAll", {
-        headers: { Authorization: "Bearer " + sessionStorage.token },
         params: {
           provinsiId: event.target.value,
         },
@@ -140,19 +126,15 @@ function DataManagementInput() {
     setData((data) => ({ ...data, city: event.target.value }));
   }
 
-  const createProject = (projectName, province, city, headers) => {
+  const createProject = (projectName, province, city) => {
     axios
-      .post(
-        config.url.API_URL + "/Project/Create",
-        {
-          projectName,
-          status: 0,
-          isPrivate: 1,
-          kotaKabupatenId: city,
-          ownerId: sessionStorage.userId,
-        },
-        { headers }
-      )
+      .post(config.url.API_URL + "/Project/Create", {
+        projectName,
+        status: 0,
+        isPrivate: 1,
+        kotaKabupatenId: city,
+        ownerId: sessionStorage.userId,
+      })
       .then((data) => {
         setIsProcessing(false);
         localStorage.setItem(
@@ -179,24 +161,18 @@ function DataManagementInput() {
       });
   };
 
-  const updateProject = (projectName, province, city, headers) => {
+  const updateProject = (projectName, province, city) => {
     axios
-      .put(
-        config.url.API_URL + "/Project/Update",
-        {
-          id: state ? state?.id : JSON.parse(localStorage.state)?.id,
-          projectName,
-          status: state
-            ? state?.status
-            : JSON.parse(localStorage.state)?.status,
-          isPrivate: state
-            ? state?.isPrivate
-            : JSON.parse(localStorage.state)?.isPrivate,
-          kotaKabupatenId: city,
-          ownerId: state ? state?.owner : localStorage.state?.userId,
-        },
-        { headers }
-      )
+      .put(config.url.API_URL + "/Project/Update", {
+        id: state ? state?.id : JSON.parse(localStorage.state)?.id,
+        projectName,
+        status: state ? state?.status : JSON.parse(localStorage.state)?.status,
+        isPrivate: state
+          ? state?.isPrivate
+          : JSON.parse(localStorage.state)?.isPrivate,
+        kotaKabupatenId: city,
+        ownerId: state ? state?.owner : localStorage.state?.userId,
+      })
       .then((data) => {
         setIsProcessing(false);
         localStorage.setItem(
@@ -214,7 +190,7 @@ function DataManagementInput() {
             ownerId: state
               ? state?.owner
               : JSON.parse(localStorage.state)?.ownerId,
-            ...JSON.parse(localStorage.state)
+            ...JSON.parse(localStorage.state),
           })
         );
         goManajemenDataPhase2(

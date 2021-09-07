@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
-import axios from "axios";
+import axios from "../../../axiosConfig";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import Editor  from "ckeditor5-custom-build";
 
@@ -34,11 +34,8 @@ function HelpManagementEdit() {
     })
 
     useEffect(() => {
-        if (!sessionStorage.token) {
-            history.push("/login");
-        }
         if (listHelp.length === 0) {
-            axios.get(config.url.API_URL + '/Bantuan/GetAllKategori', { headers: { Authorization: "Bearer " + sessionStorage.token }, })
+            axios.get(config.url.API_URL + '/Bantuan/GetAllKategori')
                 .then(({ data }) => {
                     if (data.status.code === 200 && data.obj.length > 0) {
                         setListHelp(data.obj)
@@ -60,10 +57,6 @@ function HelpManagementEdit() {
         setErrMessage(null);
         setIsProcessing(true)
 
-        const headers = {
-            "Authorization": "Bearer " + sessionStorage.token,
-            "Content-Type": "application/json",
-        };
         axios.put(
             config.url.API_URL + "/Bantuan/Update",
             {
@@ -72,7 +65,6 @@ function HelpManagementEdit() {
                 "jawaban": answer,
                 "kategoriId": getKategoriId(kategori)
             },
-            { headers }
         )
             .then(() => {
                 setIsProcessing(false)
@@ -175,7 +167,7 @@ function HelpManagementEdit() {
                                     <div className="form-group">
                                         <button type="submit" className="btn btn-primary btn-block" disabled={isProcessing}>
                                             {isProcessing && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>}
-                                            Tambah Bantuan
+                                            Ubah Bantuan
                                         </button>
                                     </div>
                                 </form>

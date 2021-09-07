@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
-import axios from "axios";
+import axios from "../../../axiosConfig";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import Editor  from "ckeditor5-custom-build";
 
@@ -28,11 +28,8 @@ function HelpManagementCreate() {
     })
 
     useEffect(() => {
-        if (!sessionStorage.token) {
-            history.push("/login");
-        }
         if (listHelp.length === 0) {
-            axios.get(config.url.API_URL + '/Bantuan/GetAllKategori', { headers: { Authorization: "Bearer " + sessionStorage.token }, })
+            axios.get(config.url.API_URL + '/Bantuan/GetAllKategori')
                 .then(({ data }) => {
                     if (data.status.code === 200 && data.obj.length > 0) {
                         setListHelp(data.obj)
@@ -48,10 +45,6 @@ function HelpManagementCreate() {
         setErrMessage(null);
         setIsProcessing(true)
 
-        const headers = {
-            "Authorization": "Bearer " + sessionStorage.token,
-            "Content-Type": "application/json",
-        };
         axios.post(
             config.url.API_URL + "/Bantuan/Create",
             {
@@ -59,7 +52,6 @@ function HelpManagementCreate() {
                 "jawaban": getValues().answer,
                 "kategoriId": kategoriId
             },
-            { headers }
         )
             .then(({ data }) => {
                 setIsProcessing(false)

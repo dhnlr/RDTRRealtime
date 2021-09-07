@@ -8,12 +8,6 @@ function DataManagementInputPhase2() {
   let history = useHistory();
 
   useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
-  }, [history]);
-
-  useEffect(() => {
     if (!state?.id) {
       localStorage.removeItem("state");
       history.push("/datamanagement");

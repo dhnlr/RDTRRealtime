@@ -11,11 +11,6 @@ import * as watchUtils from "@arcgis/core/core/watchUtils";
 function SimulationHistory() {
   let history = useHistory();
 
-  useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
-  }, [history]);
 
   const mapBeforeDiv = useRef(null);
   const mapAfterDiv = useRef(null);

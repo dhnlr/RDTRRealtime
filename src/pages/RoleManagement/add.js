@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
-import axios from "axios";
+import axios from "../../axiosConfig";
 
 import { config } from "../../Constants";
 
@@ -21,14 +21,9 @@ function RoleManagementCreate() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
     if (listRole.length === 0) {
       axios
-        .get(config.url.API_URL + "/Role/GetAllPermissions", {
-          headers: { Authorization: "Bearer " + sessionStorage.token },
-        })
+        .get(config.url.API_URL + "/Role/GetAllPermissions")
         .then(({ data }) => {
           if (data.status.code === 200 && data.obj.length > 0) {
             setListRole(data.obj);
@@ -48,10 +43,6 @@ function RoleManagementCreate() {
     setErrMessage(null);
     setIsProcessing(true);
 
-    const headers = {
-      Authorization: "Bearer " + sessionStorage.token,
-      "Content-Type": "application/json",
-    };
     axios
       .post(
         config.url.API_URL + "/Role/Create",
@@ -60,7 +51,6 @@ function RoleManagementCreate() {
           name: name,
           isPublisher: isPublisher,
         },
-        { headers }
       )
       .then(() => {
         setIsProcessing(false);

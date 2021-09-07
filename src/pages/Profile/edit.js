@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axios from "../../axiosConfig";
 
 import { config } from "../../Constants";
 
@@ -23,20 +23,9 @@ function ProfileEdit() {
     const [errMessage, setErrMessage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false)
 
-    useEffect(() => {
-        if (!sessionStorage.token) {
-            history.push("/login");
-        }
-    }, [history])
-
     const onSubmit = ({ username, rolename, email }) => {
         setErrMessage(null);
         setIsProcessing(true)
-
-        const headers = {
-            "Authorization": "Bearer " + sessionStorage.token,
-            "Content-Type": "application/json",
-        };
 
         axios.put(
             config.url.API_URL + "/Profile/Update",
@@ -44,7 +33,6 @@ function ProfileEdit() {
                 "email": email,
                 "userName": username,
             },
-            { headers }
         )
             .then(() => {
                 setIsProcessing(false)

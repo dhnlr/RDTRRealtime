@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
+import axios from "../../axiosConfig";
 import CreatableSelect from "react-select/creatable";
 
 import { Header, Menu, Footer, ProgressCircle } from "../../components";
@@ -16,12 +16,6 @@ function DataManagementInputTrash() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errMessage, setErrMessage] = useState(null);
   const [progress, setProgress] = useState({ loaded: null, total: null });
-
-  useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
-  }, [history]);
 
   useEffect(() => {
     if (!state?.id) {
@@ -55,7 +49,6 @@ function DataManagementInputTrash() {
 
     axios
       .post(config.url.API_URL + "/FileUploader/Kdbklb", fd, {
-        headers: { Authorization: "Bearer " + sessionStorage.token },
         onUploadProgress: (progressEvent) => {
           setProgress({
             loaded: progressEvent.loaded,

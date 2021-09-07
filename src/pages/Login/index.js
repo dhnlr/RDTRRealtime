@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useHistory, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import querystring from "querystring";
+import axiosConfig from "../../axiosConfig"
+import Cookie from "js-cookie";
 
 import { config } from "../../Constants";
 import bgImage from "./Image 8.png";
+import Cookies from "js-cookie";
 
 function Login() {
   const {
@@ -20,7 +21,7 @@ function Login() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.token && sessionStorage.userId) {
+    if (Cookies.get("token") && sessionStorage.userId) {
       handleDashboard();
     }
   });
@@ -33,25 +34,20 @@ function Login() {
     setErrMessage(null);
     setIsProcessing(true);
 
-    const headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Access-Control-Max-Age": 3600,
-    };
+    const params = new URLSearchParams()
+    params.append("grant_type", "password")
+    params.append("username", username)
+    params.append("password", password)
 
-    axios
+    axiosConfig
       .post(
         config.url.API_URL + "/Token",
-        querystring.stringify({
-          grant_type: "password",
-          username,
-          password,
-        }),
-        headers
+        params,
       )
       .then((resp) => {
+        Cookie.set("token", resp.data.obj.accessToken, { secure: true, sameSite: "none", expires: resp.data.obj.expiresIn })
         sessionStorage.setItem("token", resp.data.obj.accessToken);
-        return axios.get(config.url.API_URL + "/Profile/Get", {
-          headers: { Authorization: "Bearer " + sessionStorage.token },
+        return axiosConfig.get(config.url.API_URL + "/Profile/Get", {
         });
       })
       .then((response) => {

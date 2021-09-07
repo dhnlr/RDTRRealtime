@@ -5,6 +5,7 @@ import axios from "axios";
 
 import { config } from "../../Constants";
 import bgImage from "./Image 9.png"
+import Cookies from "js-cookie";
 
 function ConfirmByCode() {
   let history = useHistory();
@@ -22,7 +23,7 @@ function ConfirmByCode() {
   };
 
   useEffect(() => {
-    if (sessionStorage.token) {
+    if (Cookies.get("token")) {
       history.push("/dashboard");
     } else {
       const headers = {

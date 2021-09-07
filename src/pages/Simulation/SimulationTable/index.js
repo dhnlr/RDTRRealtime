@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory, Link } from "react-router-dom";
-import axios from "axios";
+import axios from "../../../axiosConfig";
 import Swal from "sweetalert2";
 
 import { Header, Menu, Footer, Table, TableLoading } from "../../../components";
@@ -26,12 +26,6 @@ function SimulationTable() {
   function goInputSimulasi() {
     history.push("/schenarioinput");
   }
-
-  useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
-  }, [history]);
 
   const fetchData = React.useCallback(
     ({
@@ -70,14 +64,10 @@ function SimulationTable() {
                 } */
           var sort = sortBy[0] ? sortBy[0].id : "id";
           var orderType = sortBy[0]?.desc ? "desc" : "asc";
-          /* const datas = await axios.get(config.url.API_URL + "/User/List?input.pageSize=" + pageSize + "&input.page=" + (pageIndexTbl+1) + "&input.orderProperty="+sort+"&input.orderType="+ orderType + keyword, {
-                    headers: { Authorization: "Bearer " + sessionStorage.token }
-                }); */
           setIsProcessing(true);
           const datas = await axios.get(
             config.url.API_URL + "/Project/GetList",
             {
-              headers: { Authorization: "Bearer " + sessionStorage.token },
               params: {
                 "input.pageSize": pageSize,
                 "input.page": pageIndexTbl + 1,
@@ -123,7 +113,6 @@ function SimulationTable() {
 
   const fetchSubRows = (id) => {
     return axios.get(config.url.API_URL + "/Simulasi/GetAll", {
-      headers: { Authorization: "Bearer " + sessionStorage.token },
       params: {
         ProjectId: id,
       },
@@ -149,7 +138,6 @@ function SimulationTable() {
         if (action.isConfirmed) {
           axios
             .delete(config.url.API_URL + "/Simulasi/Delete", {
-              headers: { Authorization: "Bearer " + sessionStorage.token },
               params: {
                 id,
               },

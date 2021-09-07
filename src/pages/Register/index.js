@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useHistory, Link } from "react-router-dom";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import querystring from "querystring";
+import axios from "../../axiosConfig";
 
 import { config } from "../../Constants";
 import bgImage from "./Image 9.png";
+import Cookies from "js-cookie";
 
 function Register() {
   const {
@@ -26,7 +26,7 @@ function Register() {
   password.current = watch("password", "");
 
   useEffect(() => {
-    if (sessionStorage.token) {
+    if (Cookies.get("token")) {
       history.push("/dashboard");
     }
     if (listRole.length === 0) {
@@ -52,20 +52,16 @@ function Register() {
     setSuccessMessage(null);
     setIsProcessing(true);
 
-    const headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
-    };
+    const params = new URLSearchParams()
+    params.append("roleNames", [rolename])
+    params.append("email", email)
+    params.append("userName", username)
+    params.append("password", password)
 
     axios
       .post(
         config.url.API_URL + "/User/Create",
-        querystring.stringify({
-          roleNames: [rolename],
-          email: email,
-          userName: username,
-          password: password,
-        }),
-        headers
+        params,
       )
       .then(() => {
         setSuccessMessage(

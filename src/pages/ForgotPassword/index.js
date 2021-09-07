@@ -6,6 +6,7 @@ import axios from "axios";
 
 import { config } from "../../Constants";
 import bgImage from "./Mask Group 141.svg"
+import Cookies from "js-cookie";
 
 function ResetPassword() {
   const {
@@ -20,7 +21,7 @@ function ResetPassword() {
   const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
-    if (sessionStorage.token) {
+    if (Cookies.get("token")) {
       history.push("/dashboard");
     }
   }, [history])

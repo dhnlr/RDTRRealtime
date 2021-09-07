@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axios from "../../axiosConfig";
 import Swal from "sweetalert2";
 
 import { Header, Menu, Footer } from "../../components";
@@ -16,18 +15,10 @@ function Report() {
     formState: { errors },
     watch,
   } = useForm();
-  let history = useHistory();
-
   const [isProcessing, setIsProcessing] = useState(false);
 
   const password = useRef({});
   password.current = watch("password", "");
-
-  useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
-  }, [history]);
 
   const onSubmit = (
     { subject, name, email, agency, body, attachment, category },
@@ -53,9 +44,7 @@ function Report() {
     fd.append("jenis", category);
 
     axios
-      .post(config.url.API_URL + "/Laporan/Create", fd, {
-        headers: { Authorization: "Bearer " + sessionStorage.token },
-      })
+      .post(config.url.API_URL + "/Laporan/Create", fd)
       .then((response) => {
         if (response.data.code === 200) {
           Swal.fire({

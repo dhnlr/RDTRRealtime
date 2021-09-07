@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
-import axios from "axios";
+import axios from "../../axiosConfig";
 import Swal from "sweetalert2";
 
 import {
@@ -32,9 +32,6 @@ function DataManagement() {
   }
 
   useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
     if(localStorage.state){
       localStorage.removeItem("state")
     }
@@ -71,20 +68,12 @@ function DataManagement() {
               // pageIndexAPI = pageSize * pageIndex;
             }
           }
-          /* var keyword = ''
-                if (valueFilter !== '') {
-                    keyword = '&input.keyword=' + valueFilter
-                } */
           var sort = sortBy[0] ? sortBy[0].id : "id";
           var orderType = sortBy[0]?.desc ? "desc" : "asc";
-          /* const datas = await axios.get(config.url.API_URL + "/User/List?input.pageSize=" + pageSize + "&input.page=" + (pageIndexTbl+1) + "&input.orderProperty="+sort+"&input.orderType="+ orderType + keyword, {
-                    headers: { Authorization: "Bearer " + sessionStorage.token }
-                }); */
           setIsProcessing(true);
           const datas = await axios.get(
             config.url.API_URL + "/Project/GetList",
             {
-              headers: { Authorization: "Bearer " + sessionStorage.token },
               params: {
                 "input.pageSize": pageSize,
                 "input.page": pageIndexTbl + 1,
@@ -97,10 +86,6 @@ function DataManagement() {
 
           const fetchId = ++fetchIdRef.current;
           if (fetchId === fetchIdRef.current) {
-            // const startRow = pageSize * pageIndex;
-            // const endRow = startRow + pageSize;
-            // setData(data.data.slice(startRow, endRow));
-            // setPI(pageIndex);
             setPI(pageIndexTbl);
             setData(datas.data.obj);
             setRecordsFiltered(datas.data.obj.length);
@@ -139,7 +124,6 @@ function DataManagement() {
         if (action.isConfirmed) {
           axios
             .delete(config.url.API_URL + "/Project/Delete", {
-              headers: { Authorization: "Bearer " + sessionStorage.token },
               params: {
                 id,
               },
@@ -175,11 +159,6 @@ function DataManagement() {
     status,
     isPrivate,
   }) => {
-    const headers = {
-      Authorization: "Bearer " + sessionStorage.token,
-      "Content-Type": "application/json",
-    };
-
     axios
       .put(
         config.url.API_URL + "/Project/Update",
@@ -191,7 +170,6 @@ function DataManagement() {
           isPrivate: !isPrivate,
           ownerId: sessionStorage.userId,
         },
-        { headers }
       )
       .then(() => {
         setIsProcessing(false);

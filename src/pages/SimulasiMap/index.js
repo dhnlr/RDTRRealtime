@@ -48,12 +48,6 @@ const SimulasiMap = () => {
   let { state } = useLocation();
 
   useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
-  }, [history]);
-
-  useEffect(() => {
     if (!state?.simulasiBangunan?.simulasiId) {
       history.push("/schenario");
     } else {
@@ -3666,8 +3660,7 @@ const SimulasiMap = () => {
                     console.log("error check", error);
                   });
 
-                Axios.get(config.url.API_URL + "/MasterData/Itbx/GetList", {
-                  headers: { Authorization: "Bearer " + sessionStorage.token },
+                axios.get(config.url.API_URL + "/MasterData/Itbx/GetList", {
                   params: {
                     rdtr: features[0].attributes.kabkot,
                   },
@@ -4109,16 +4102,11 @@ const SimulasiMap = () => {
           console.log(featuresPersilTanah[0].attributes.nib);
           //setResultAnalysis(true);
           //setResPersilTanah(featuresPersilTanah[0].attributes);
-          const headers = {
-            Authorization: "Bearer " + sessionStorage.token,
-            "Content-Type": "application/json",
-          };
-          Axios.post(
+          axios.post(
             config.url.API_URL +
               "/Pembangunan/ExecuteSpPembangunanOptimum?nib=" +
               featuresPersilTanah[0].attributes.nib,
             {},
-            { headers }
           )
             .then(function (response) {
               if (response.status === 200) {
@@ -4788,7 +4776,6 @@ const SimulasiMap = () => {
         config.url.API_URL + "/Simulasi/ExecuteSpCopy",
         {},
         {
-          headers: { Authorization: "Bearer " + sessionStorage.token },
           params: {
             simulasiId: state?.simulasiBangunan?.simulasiId,
             simulasiIdBaru: state?.id,
@@ -4818,9 +4805,6 @@ const SimulasiMap = () => {
       ownerId: state?.ownerId,
       dataKe: state?.simulasiBangunan?.dataKe,
     },
-    {
-      headers: { Authorization: "Bearer " + sessionStorage.token },
-    }
     )
     .then(({data})=> {
       setLoaded(true)

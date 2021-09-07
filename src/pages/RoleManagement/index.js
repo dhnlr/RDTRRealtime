@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { useHistory, Link } from "react-router-dom";
-import axios from "axios";
+import axios from "../../axiosConfig";
 import Swal from "sweetalert2";
 
 import { Header, Menu, Footer, Table, TableLoading } from "../../components";
@@ -23,12 +23,6 @@ function RoleManagement() {
   function goInputSimulasi() {
     history.push("/rolemanagement/create");
   }
-
-  useEffect(() => {
-    if (!sessionStorage.token) {
-      history.push("/login");
-    }
-  }, [history]);
 
   const fetchData = React.useCallback(
     ({
@@ -67,12 +61,8 @@ function RoleManagement() {
                 } */
           var sort = sortBy[0] ? sortBy[0].id : "id";
           var orderType = sortBy[0]?.desc ? "desc" : "asc";
-          /* const datas = await axios.get(config.url.API_URL + "/User/List?input.pageSize=" + pageSize + "&input.page=" + (pageIndexTbl+1) + "&input.orderProperty="+sort+"&input.orderType="+ orderType + keyword, {
-                    headers: { Authorization: "Bearer " + sessionStorage.token }
-                }); */
           setIsProcessing(true);
           const datas = await axios.get(config.url.API_URL + "/Role/List", {
-            headers: { Authorization: "Bearer " + sessionStorage.token },
             params: {
               "input.pageSize": pageSize,
               "input.page": pageIndexTbl + 1,
@@ -126,7 +116,6 @@ function RoleManagement() {
         if (action.isConfirmed) {
           axios
             .delete(config.url.API_URL + "/Role/Delete", {
-              headers: { Authorization: "Bearer " + sessionStorage.token },
               params: {
                 id,
               },

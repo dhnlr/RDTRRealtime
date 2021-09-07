@@ -6,6 +6,7 @@ import axios from "axios";
 
 import { config } from "../../Constants";
 import bgImage from "./Image 9.png"
+import Cookies from "js-cookie";
 
 function ResentEmailConfirmation() {
   const {
@@ -20,7 +21,7 @@ function ResentEmailConfirmation() {
   const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
-    if (sessionStorage.token) {
+    if (Cookies.get("token")) {
       history.push("/dashboard");
     }
   }, [history])

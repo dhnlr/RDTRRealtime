@@ -6,6 +6,7 @@ import axios from "axios";
 
 import { config } from "../../Constants";
 import bgImage from "./Mask Group 142.svg"
+import Cookies from "js-cookie";
 
 function ForgotPassword() {
   const {
@@ -25,7 +26,7 @@ function ForgotPassword() {
   password.current = watch("password", "");
 
   useEffect(() => {
-    if (sessionStorage.token) {
+    if (Cookies.get("token")) {
       history.push("/dashboard");
     }
   }, [history])
@@ -35,11 +36,6 @@ function ForgotPassword() {
     setSuccessMessage(null)
     setIsProcessing(true);
 
-    const headers = {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    };
-
     axios.put(
       config.url.API_URL + "/User/ResetPassword",
       {
@@ -47,7 +43,6 @@ function ForgotPassword() {
         "newPassword": password,
         "confirmationPassword": konfirmasiPassword
       },
-      headers
     )
       .then(response => {
         if (response.data.code !== 200) {
