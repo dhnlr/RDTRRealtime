@@ -5,6 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 
 import logo2 from "./logo2.jpeg"
 import profile from "./face28.jpg"
+import Cookies from "js-cookie";
 
 function Header() {
   let history = useHistory();
@@ -60,7 +61,9 @@ function Header() {
                 Profil
               </A>
               <A className="dropdown-item" onClick={() => {
-                sessionStorage.clear();
+                Cookies.remove("token");
+                localStorage.clear() 
+                sessionStorage.clear() 
                 history.push("/login")
                 }}>
                 <i className="ti-power-off text-primary" />
