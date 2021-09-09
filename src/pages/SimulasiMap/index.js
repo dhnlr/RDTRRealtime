@@ -535,7 +535,7 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
-          /* const sampahTpsLayer = new FeatureLayer({
+          const sampahTpsLayer = new FeatureLayer({
             url:
               config.url.ARCGIS_URL + "/Persampahan/Sampah_TPS/FeatureServer/0",
             title: "Sampah TPS",
@@ -553,7 +553,7 @@ const SimulasiMap = () => {
             //     size: 5,
             //   }
             // },
-          }); */
+          });
 
           const persilTanahSesudahLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/persiltanah/FeatureServer/0",
@@ -1617,7 +1617,7 @@ const SimulasiMap = () => {
               polaRuangVersioningLayer,
               persilTanahSesudahLayer,
               kapasitasAirLayer,
-              // sampahTpsLayer,
+              sampahTpsLayer,
               jalanSesudahLayer,
               bangunanSesudahLayer,
             ],
@@ -1638,7 +1638,7 @@ const SimulasiMap = () => {
           polaRuangVersioningLayer.visible = false;
           persilTanahSesudahLayer.visible = false;
           kapasitasAirLayer.visible = false;
-          // sampahTpsLayer.visible = false;
+          sampahTpsLayer.visible = false;
           persilTanahBpn.visible = false;
           buildingsEnvelopeLayer.visible = false;
           basemapPolaRuangLayer.visible = false;
@@ -2695,7 +2695,15 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "izin_sampah_y5",
-                    field_value: features[0].attributes.izin_sampah_y5,
+                    field_value: features[0].attributes.izin_sampah_y5, //85
+                  },
+                  {
+                    field_name: "timbulan_sampah_harian_m3",
+                    field_value: features[0].attributes.timbulan_sampah_harian_m3,
+                  },
+                  {
+                    field_name: "sum_timbulan_sampah_harian_m3",
+                    field_value: features[0].attributes.sum_timbulan_sampah_harian_m3,
                   },
                 ]);
                 setHasilSimulasiBangunanKdbKlb(
@@ -5296,8 +5304,8 @@ const SimulasiMap = () => {
                                         {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
                                       </tr>
                                     }
-                                    {/* <tr>
-                                      <td>Status Tingkat Persampahan</td>
+                                    {<tr>
+                                      <td>Status Kapasitas TPS</td>
                                       <td>
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[85]
@@ -5305,7 +5313,7 @@ const SimulasiMap = () => {
                                           : contentBangunanKdbKlb[85]
                                               .field_value}
                                       </td>
-                                    </tr> */}
+                                    </tr>}
                                   </tbody>
                                 </table>
                               </div>
@@ -5753,7 +5761,7 @@ const SimulasiMap = () => {
                             </div>
                           </div>
 
-                          {/* <div className="card" style={{ margin: "0 0.2rem" }}>
+                          {<div className="card" style={{ margin: "0 0.2rem" }}>
                             <div
                               className="card-header"
                               role="tab"
@@ -5794,7 +5802,7 @@ const SimulasiMap = () => {
                                 <table className="table">
                                   <tbody>
                                     <tr>
-                                      <td>Status Tingkat Persampahan</td>
+                                      <td>Status Kapasitas TPS</td>
                                       <td>
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[85]
@@ -5803,11 +5811,41 @@ const SimulasiMap = () => {
                                               .field_value}
                                       </td>
                                     </tr>
+                                    <tr>
+                                      <td>Timbulan Sampah Harian (Bangunan)</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[86]
+                                              .field_value ? contentBangunanKdbKlb[86]
+                                              .field_value.toFixed(4) : contentBangunanKdbKlb[86]
+                                              .field_value
+                                          : contentBangunanKdbKlb[86]
+                                          .field_value ? contentBangunanKdbKlb[86]
+                                          .field_value.toFixed(4) : contentBangunanKdbKlb[86]
+                                          .field_value}{/* {" "}
+                                              m<sup>3</sup> */}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Timbulan Sampah Harian (TPS Kumulatif)</td>
+                                      <td>
+                                        {activeSebelumSesudah.activeSebelum
+                                          ? contentBangunanKdbKlb[87]
+                                          .field_value ? contentBangunanKdbKlb[87]
+                                          .field_value.toFixed(4) : contentBangunanKdbKlb[87]
+                                          .field_value
+                                          : contentBangunanKdbKlb[87]
+                                          .field_value ? contentBangunanKdbKlb[87]
+                                          .field_value.toFixed(4) : contentBangunanKdbKlb[87]
+                                          .field_value}{/* {" "}
+                                              m<sup>3</sup> */}
+                                      </td>
+                                    </tr>
                                   </tbody>
                                 </table>
                               </div>
                             </div>
-                          </div> */}
+                          </div>}
                         </div>
                       </div>
                     </div>
