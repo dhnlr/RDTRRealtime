@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Axios from "axios";
+import axios from "../../axiosConfig";
 import Swal from "sweetalert2";
 import { isLoaded, loadModules } from "esri-loader";
 import { useHistory, useLocation } from "react-router-dom";
@@ -22,7 +23,7 @@ import {
 import Pdf from "./pdf";
 import dataScreenshotTemplate from "./data";
 import getScreenshotData from "./QueryLayer";
-import axios from "axios";
+import { findAllByDisplayValue } from "@testing-library/dom";
 
 const DarkBackground = styled.div`
   display: none; /* Hidden by default */
@@ -271,6 +272,7 @@ const SimulasiMap = () => {
             lantaiAtas,
             lantaiSebelumKelewatan,
             segmentationGroupLayer = {};
+          var bangunanDefinitionExpression = `id_simulasi = ${state?.simulasiBangunan?.simulasiId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe}`
 
           const map = new Map({
             basemap: "topo-vector",
@@ -362,12 +364,176 @@ const SimulasiMap = () => {
             ],
           };
           const bangunanSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/sesudah/bangunan/FeatureServer/0",
+            url: config.url.ARCGIS_URL + "/Versioning/bangunan_analisis_process/FeatureServer/0",
+            id: "bagunan_analisis_proses",
             renderer: getRendererBangunan("itbx", "jlh_lantai"),
+            definitionExpression: bangunanDefinitionExpression,
             elevationInfo: {
               mode: "on-the-ground",
             },
             title: "Bangunan",
+            popupTemplate: {
+              title: "Bangunan",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "jenis",
+                      label: "jenis",
+                    },
+                    {
+                      fieldName: "jenis_bang",
+                      label: "jenis_bang",
+                    },
+                    {
+                      fieldName: "toponim",
+                      label: "toponim",
+                    },
+                    {
+                      fieldName: "sumber",
+                      label: "sumber",
+                    },
+                    {
+                      fieldName: "jlh_lantai",
+                      label: "jlh_lantai",
+                    },
+                    {
+                      fieldName: "melampaui_fa",
+                      label: "melampaui_fa",
+                    },
+                    {
+                      fieldName: "melampaui_tinggi",
+                      label: "melampaui_tinggi",
+                    },
+                    {
+                      fieldName: "status_kdbklb",
+                      label: "Status",
+                    },
+                    {
+                      fieldName: "id_bangunan",
+                      label: "id_bangunan",
+                    },
+                    {
+                      fieldName: "Shape__Area",
+                      label: "Shape__Area",
+                    },
+                    {
+                      fieldName: "jlh_lantai_sebelum",
+                      label: "jlh_lantai_sebelum",
+                    },
+                    {
+                      fieldName: "Shape__Area",
+                      label: "Shape__Area",
+                    },
+                    {
+                      fieldName: "fa_sebelum",
+                      label: "fa_sebelum",
+                    },
+                    {
+                      fieldName: "melampaui_fa_sebelum",
+                      label: "melampaui_fa_sebelum",
+                    },
+                    {
+                      fieldName: "melampaui_tinggi_sebelum",
+                      label: "melampaui_tinggi_sebelum",
+                    },
+                    {
+                      fieldName: "status_kdbklb_sebelum",
+                      label: "status_kdbklb_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y5_sebelum",
+                      label: "izin_air_y5_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y6_sebelum",
+                      label: "izin_air_y6_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y7_sebelum",
+                      label: "izin_air_y7_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y8_sebelum",
+                      label: "izin_air_y8_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y9_sebelum",
+                      label: "izin_air_y9_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_y10_sebelum",
+                      label: "izin_air_y10_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_sebelum",
+                      label: "izin_macet_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_y6_sebelum",
+                      label: "izin_macet_y6_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_y7_sebelum",
+                      label: "izin_macet_y7_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_y8_sebelum",
+                      label: "izin_macet_y8_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_y9_sebelum",
+                      label: "izin_macet_y9_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_y10_sebelum",
+                      label: "izin_macet_y10_sebelum",
+                    },
+                    {
+                      fieldName: "namaszona",
+                      label: "namaszona",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "fa_max",
+                      label: "fa_max",
+                    },
+                    {
+                      fieldName: "q_arus",
+                      label: "q_arus",
+                    },
+                  ],
+                },
+              ],
+            },
+            outFields: ["*"],
+          });
+          const bangunanSebelumLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL + "/Versioning/bangunan_analisis/FeatureServer/0",
+            id: "bagunan_analisis",
+            renderer: getRendererBangunan("itbx", "jlh_lantai"),
+            definitionExpression: bangunanDefinitionExpression,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            title: "Bangunan Proses",
+            listMode: "hide",
             popupTemplate: {
               title: "Bangunan",
               content: [
@@ -1595,6 +1761,7 @@ const SimulasiMap = () => {
               kapasitasAirLayer,
               jalanSesudahLayer,
               bangunanSesudahLayer,
+              bangunanSebelumLayer
             ],
           });
           let tambahanGroupLayer = new GroupLayer({
@@ -1618,6 +1785,7 @@ const SimulasiMap = () => {
           basemapPolaRuangLayer.visible = false;
           polaRuangEnvelopeLayer.visible = false;
           buildings3dLayer.visible = false;
+          bangunanSebelumLayer.visible = false;
 
           async function finishLayer() {
             if (isMounted) {
@@ -1821,9 +1989,11 @@ const SimulasiMap = () => {
                 editor.viewModel.state === "awaiting-feature-to-update" &&
                 segmentationGroupLayer
               ) {
-                // map.remove(segmentationGroupLayer);
-                // bangunanSesudahLayer.definitionExpression = "";
                 hideSegementationGroupLayer();
+                changeBangunanLayer()
+                setActiveSebelumSesudah({
+                  activeSebelum: false,
+                });
               }
             });
             const editorExpand = new Expand({
@@ -1863,9 +2033,12 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
-              // map.remove(segmentationGroupLayer);
-              // bangunanSesudahLayer.definitionExpression = "";
+              bangunanSebelumLayer.popupEnabled = false;
               hideSegementationGroupLayer();
+              changeBangunanLayer()
+              setActiveSebelumSesudah({
+                activeSebelum: false,
+              });
               view.on("click", function (event) {
                 // Remove the previous highlights
                 if (highlight) {
@@ -1883,7 +2056,7 @@ const SimulasiMap = () => {
                       .then(function (result) {
                         if (result.features.length > 0) {
                           result.features.forEach(function (feature) {
-                            var objectId = feature.attributes.objectid_1;
+                            var objectId = feature.attributes.objectid;
                             // Highlight the feature passing the objectId to the method
                             highlight =
                               bangunanSesudahLayerView.highlight(objectId);
@@ -1948,9 +2121,12 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
-              // map.remove(segmentationGroupLayer);
-              // bangunanSesudahLayer.definitionExpression = "";
+              bangunanSebelumLayer.popupEnabled = false;
               hideSegementationGroupLayer();
+              changeBangunanLayer()
+              setActiveSebelumSesudah({
+                activeSebelum: false,
+              });
               view.on("click", function (event) {
                 if (highlight) {
                   highlight.remove();
@@ -1967,7 +2143,7 @@ const SimulasiMap = () => {
                       .then(function (result) {
                         if (result.features.length > 0) {
                           result.features.forEach(function (feature) {
-                            var objectId = feature.attributes.objectid_1;
+                            var objectId = feature.attributes.objectid;
                             var id_bangunan = feature.attributes.id_bangunan;
                             getScreenshotData(dataScreenshot, id_bangunan).then(
                               (result) => {
@@ -2051,7 +2227,12 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
+              bangunanSebelumLayer.popupEnabled = false
               hideSegementationGroupLayer();
+              changeBangunanLayer()
+              setActiveSebelumSesudah({
+                activeSebelum: false,
+              });
               view.on("click", function (event) {
                 if (highlight) {
                   highlight.remove();
@@ -2068,7 +2249,7 @@ const SimulasiMap = () => {
                       .then(function (result) {
                         if (result.features.length > 0) {
                           result.features.forEach(function (feature) {
-                            var objectId = feature.attributes.objectid_1;
+                            var objectId = feature.attributes.objectid;
                             var id_bangunan = feature.attributes.id_bangunan;
                             setDataHistory({
                               id_bangunan: feature.attributes.id_bangunan,
@@ -2102,6 +2283,7 @@ const SimulasiMap = () => {
                         polaRuangEnvelopeLayer.popupEnabled = true;
                         bangunanSesudahLayer.popupEnabled = true;
                         buildings3dLayer.popupEnabled = true;
+                        bangunanSebelumLayer.popupEnabled = true
                       });
                   });
               });
@@ -2129,6 +2311,7 @@ const SimulasiMap = () => {
                 { layer: basemapPolaRuangLayer },
                 { layer: polaRuangEnvelopeLayer },
                 { layer: bangunanSesudahLayer },
+                { layer: bangunanSebelumLayer },
                 { layer: buildings3dLayer },
               ],
             });
@@ -2243,10 +2426,16 @@ const SimulasiMap = () => {
             if (features[0]) {
               console.log(features[0]);
 
+              //TODO Add fn to call Bangunan sebelum layer (analisis) for popup
+
               // start segmentation drawing function
               // bangunanSesudahLayer.definitionExpression = "";
               // map.remove(segmentationGroupLayer);
               hideSegementationGroupLayer();
+              changeBangunanLayer()
+              setActiveSebelumSesudah({
+                activeSebelum: false,
+              });
               // end segmentation drawing function
 
               let fieldsArr = [];
@@ -3342,7 +3531,7 @@ const SimulasiMap = () => {
                 Axios.get(
                   config.url.ARCGIS_URL +
                     "/KDBKLB/KDBKLB_PersilTanah_Pabaton/FeatureServer/0/query?where=objectid+%3D+" +
-                    features[0].attributes.oid_persil_tanah +
+                    features[0].attributes.oid_persiltanah +
                     "&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&f=pjson"
                 )
                   .then(function (response) {
@@ -3676,10 +3865,10 @@ const SimulasiMap = () => {
                   });
 
                 // start segmentation drawing function
-                if (features[0].attributes.objectid_1) {
-                  setSegmentationBuildingId(features[0].attributes.objectid_1);
+                if (features[0].attributes.objectid) {
+                  setSegmentationBuildingId(features[0].attributes.objectid);
                   setRemoveSegmentationFunc(() => () => {
-                    bangunanSesudahLayer.definitionExpression = "";
+                    bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
                     map.remove(segmentationGroupLayer);
                     setIsSegmentationActive(false);
                     if (document.getElementById("segmentationLegendCard")) {
@@ -3690,7 +3879,7 @@ const SimulasiMap = () => {
                   });
                   setShowSegmentationFunc((id) => (id) => {
                     bangunanSesudahLayer.definitionExpression =
-                      "NOT objectid_1 = " + id;
+                      bangunanDefinitionExpression + "AND NOT objectid = " + id;
                     map.add(segmentationGroupLayer);
                     view.whenLayerView(lantaiAtas).then(function (layerView) {
                       layerView.highlight(lantaiAtas.graphics);
@@ -3714,7 +3903,7 @@ const SimulasiMap = () => {
                       ).style.display = "block";
                     }
                   });
-                  getRing(features[0].attributes.objectid_1);
+                  getRing(features[0].attributes.objectid);
                   // features[0].layer.definitionExpression =
                   //   "NOT id_bangunan = " + features[0].attributes.id_bangunan;
                 }
@@ -3823,34 +4012,53 @@ const SimulasiMap = () => {
            * Get polygon id from feature service and draw it when available
            ************************************************************/
           var getRing = (id) => {
-            var request = new XMLHttpRequest();
-            request.open(
-              "GET",
-              "https://rdtr.onemap.id/server/rest/services/sesudah/bangunan/FeatureServer/0/query?where=objectid_1=" +
-                id +
-                "&outFields=*&outSR=4326&f=pjson",
-              true
-            );
+            var sesudah = Axios.get("https://rdtr.onemap.id/server/rest/services/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=objectid=" +
+            id + " AND " + bangunanDefinitionExpression +
+            "&outFields=*&outSR=4326&f=pjson")
+            var sebelum = Axios.get("https://rdtr.onemap.id/server/rest/services/Versioning/bangunan_analisis/FeatureServer/0/query?where=objectid=" +
+            id + " AND " + bangunanDefinitionExpression +
+            "&outFields=*&outSR=4326&f=pjson")
+            Promise.all([sesudah, sebelum])
+            .then(result => {
+              console.log(result)
+              if (result[0].data.features[0].length > 0 && result[1].data.features[0].length > 0){
+              drawGraphic(
+                result[0].data.features[0].geometry.rings,
+                result[0].data.features[0].attributes,
+                result[1].data.features[0].attributes,
+              )};
+            })
+            .catch(error => {
+              console.error("Gagal mendapatkan data segementasi", error)
+            })
+            // var request = new XMLHttpRequest();
+            // request.open(
+            //   "GET",
+            //   "https://rdtr.onemap.id/server/rest/services/sesudah/bangunan/FeatureServer/0/query?where=objectid=" +
+            //     id +
+            //     "&outFields=*&outSR=4326&f=pjson",
+            //   true
+            // );
 
-            request.onload = function () {
-              if (this.status >= 200 && this.status < 400) {
-                // Success!
-                var { features } = JSON.parse(this.response);
-                if (features[0])
-                  drawGraphic(
-                    features[0].geometry.rings,
-                    features[0].attributes
-                  );
-              } else {
-                // We reached our target server, but it returned an error
-              }
-            };
+            // request.onload = function () {
+            //   if (this.status >= 200 && this.status < 400) {
+            //     // Success!
+            //     var { features } = JSON.parse(this.response);
+            //     if (features[0])
+            //       drawGraphic(
+            //         features[0].geometry.rings,
+            //         features[0].attributes
+            //       );
+            //   } else {
+            //     // We reached our target server, but it returned an error
+            //   }
+            // };
 
-            request.onerror = function () {
-              // There was a connection error of some sort
-            };
+            // request.onerror = function () {
+            //   // There was a connection error of some sort
+            // };
 
-            request.send();
+            // request.send();
           };
 
           /************************************************************
@@ -3871,7 +4079,7 @@ const SimulasiMap = () => {
           /************************************************************
            * Draw polygon
            ************************************************************/
-          var drawGraphic = (ring, attributes) => {
+          var drawGraphic = (ring, attributes, attributes_sebelum) => {
             var polygon = new Polygon({
               rings: ring,
               spatialReference: { wkid: 4326 },
@@ -3891,10 +4099,10 @@ const SimulasiMap = () => {
               new Graphic({
                 geometry: polygon,
                 symbol: getSymbol(
-                  attributes.jlh_lantai_sebelum < attributes.lantai_max &&
-                    attributes.jlh_lantai_sebelum
-                    ? attributes.jlh_lantai_sebelum < attributes.jlh_lantai
-                      ? attributes.jlh_lantai_sebelum
+                  attributes_sebelum.jlh_lantai < attributes.lantai_max &&
+                  attributes_sebelum.jlh_lantai
+                    ? attributes_sebelum.jlh_lantai < attributes.jlh_lantai
+                      ? attributes_sebelum.jlh_lantai
                       : attributes.jlh_lantai < attributes.lantai_max &&
                         attributes.jlh_lantai
                       ? attributes.jlh_lantai
@@ -3906,13 +4114,13 @@ const SimulasiMap = () => {
                       ? attributes.lantai_max
                       : attributes.jlh_lantai
                     : attributes.jlh_lantai &&
-                      !attributes.jlh_lantai_sebelum &&
+                      !attributes_sebelum.jlh_lantai &&
                       !attributes.lantai_max
                     ? attributes.jlh_lantai
                     : !attributes.jlh_lantai &&
-                      attributes.jlh_lantai_sebelum &&
+                    attributes_sebelum.jlh_lantai &&
                       !attributes.lantai_max
-                    ? attributes.jlh_lantai_sebelum
+                    ? attributes_sebelum.jlh_lantai
                     : -1,
                   [0, 248, 4, 1]
                 ), //lantai sebelum
@@ -3934,9 +4142,9 @@ const SimulasiMap = () => {
               new Graphic({
                 geometry: polygon,
                 symbol: getSymbol(
-                  attributes.jlh_lantai_sebelum > attributes.lantai_max
-                    ? attributes.jlh_lantai_sebelum < attributes.jlh_lantai
-                      ? attributes.jlh_lantai_sebelum - attributes.lantai_max
+                  attributes_sebelum.jlh_lantai > attributes.lantai_max
+                    ? attributes_sebelum.jlh_lantai < attributes.jlh_lantai
+                      ? attributes_sebelum.jlh_lantai - attributes.lantai_max
                       : attributes.jlh_lantai > attributes.lantai_max
                       ? attributes.jlh_lantai - attributes.lantai_max
                       : -1
@@ -3979,7 +4187,7 @@ const SimulasiMap = () => {
               elevationInfo: {
                 mode: "relative-to-ground",
                 featureExpressionInfo: {
-                  expression: attributes.jlh_lantai_sebelum, //lantai sebelum
+                  expression: attributes_sebelum.jlh_lantai, //lantai sebelum
                 },
                 unit: "meters",
               },
@@ -3988,9 +4196,9 @@ const SimulasiMap = () => {
               new Graphic({
                 geometry: polygon,
                 symbol: getSymbol(
-                  attributes.jlh_lantai > attributes.jlh_lantai_sebelum &&
-                    attributes.jlh_lantai_sebelum
-                    ? attributes.lantai_max - attributes.jlh_lantai_sebelum
+                  attributes.jlh_lantai > attributes_sebelum.jlh_lantai &&
+                  attributes_sebelum.jlh_lantai
+                    ? attributes.lantai_max - attributes_sebelum.jlh_lantai
                     : -1,
                   [102, 178, 255, 1]
                 ), //lantai max - lantai sebelum
@@ -4004,9 +4212,9 @@ const SimulasiMap = () => {
                 mode: "relative-to-ground",
                 featureExpressionInfo: {
                   expression:
-                    attributes.jlh_lantai_sebelum +
-                    (attributes.lantai_max - attributes.jlh_lantai_sebelum > 0
-                      ? attributes.lantai_max - attributes.jlh_lantai_sebelum
+                  attributes_sebelum.jlh_lantai +
+                    (attributes.lantai_max - attributes_sebelum.jlh_lantai > 0
+                      ? attributes.lantai_max - attributes_sebelum.jlh_lantai
                       : 0), //lantai (lantai max - lantai sebelum) + lantai ssebelum
                 },
                 unit: "meters",
@@ -4016,14 +4224,14 @@ const SimulasiMap = () => {
               new Graphic({
                 geometry: polygon,
                 symbol: getSymbol(
-                  attributes.jlh_lantai > attributes.jlh_lantai_sebelum &&
-                    attributes.jlh_lantai_sebelum
+                  attributes.jlh_lantai > attributes_sebelum.jlh_lantai &&
+                  attributes_sebelum.jlh_lantai
                     ? attributes.jlh_lantai -
-                        attributes.jlh_lantai_sebelum -
-                        (attributes.lantai_max - attributes.jlh_lantai_sebelum >
+                    attributes_sebelum.jlh_lantai -
+                        (attributes.lantai_max - attributes_sebelum.jlh_lantai >
                         0
                           ? attributes.lantai_max -
-                            attributes.jlh_lantai_sebelum
+                          attributes_sebelum.jlh_lantai
                           : 0)
                     : -1,
                   [0, 0, 0, 1]
@@ -4062,7 +4270,7 @@ const SimulasiMap = () => {
 
           var hideSegementationGroupLayer = () => {
             map.remove(segmentationGroupLayer);
-            bangunanSesudahLayer.definitionExpression = "";
+            bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
             setIsSegmentationActive(false);
             // segmentationGroupLayer.visible = false
             if (document.getElementById("segmentationLegendCard")) {
@@ -4071,6 +4279,13 @@ const SimulasiMap = () => {
             }
           };
           // end segementation drawing function
+
+          var changeBangunanLayer = () => {
+            bangunanSebelumLayer.visible = false
+            bangunanSebelumLayer.listMode = "hide"
+            bangunanSesudahLayer.visible = true
+            bangunanSesudahLayer.listMode = "show"
+          }
 
           setStateView(view);
 
@@ -4148,7 +4363,6 @@ const SimulasiMap = () => {
 
   // start close showing popup
   const handleCloseShowingPopup = () => {
-    console.log(stateView);
     if (segmentationBuildingId) {
       removeSegmentationFunc();
     }
@@ -4156,7 +4370,10 @@ const SimulasiMap = () => {
       activeSebelum: false,
     });
     let layerBangunan = esriMap.allLayers.find(function (layer) {
-      return layer.title === "Bangunan";
+      return layer.id === "bagunan_analisis_proses";
+    });
+    let layerBangunanSebelum = esriMap.allLayers.find(function (layer) {
+      return layer.id === "bagunan_analisis";
     });
     let layerPolaRuang = esriMap.allLayers.find(function (layer) {
       return layer.title === "Pola Ruang Versioning";
@@ -4167,11 +4384,15 @@ const SimulasiMap = () => {
     let layerJaringanJalan = esriMap.allLayers.find(function (layer) {
       return layer.title === "Jaringan Jalan";
     });
-    layerBangunan.renderer = getRendererBangunan("itbx", "jlh_lantai");
+    layerBangunan.visible = true;
+    layerBangunan.listMode = "show";
+    layerBangunanSebelum.visible = false;
+    layerBangunanSebelum.listMode = "hide";
     layerPolaRuang.renderer = getRendererPolaRuang("namaszona");
     layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air");
     layerJaringanJalan.renderer = getRendererJaringanJalan("los");
     layerBangunan.refresh();
+    layerBangunanSebelum.refresh()
     layerPolaRuang.refresh();
     layerKapasitasAir.refresh();
     layerJaringanJalan.refresh();
@@ -4182,7 +4403,10 @@ const SimulasiMap = () => {
   // end close showing popup
   const handleSebelumSesudah = () => {
     let layerBangunan = esriMap.allLayers.find(function (layer) {
-      return layer.title === "Bangunan";
+      return layer.id === "bagunan_analisis_proses";
+    });
+    let layerBangunanSebelum = esriMap.allLayers.find(function (layer) {
+      return layer.id === "bagunan_analisis";
     });
     let layerPolaRuang = esriMap.allLayers.find(function (layer) {
       return layer.title === "Pola Ruang Versioning";
@@ -4193,21 +4417,33 @@ const SimulasiMap = () => {
     let layerJaringanJalan = esriMap.allLayers.find(function (layer) {
       return layer.title === "Jaringan Jalan";
     });
+    console.log(layerBangunan.url)
+    console.log(layerBangunanSebelum.url)
+    //TODO cchange when sebelum
     if (!activeSebelumSesudah.activeSebelum) {
-      layerBangunan.renderer = getRendererBangunan(
-        "itbx_sebelum",
-        "jlh_lantai_sebelum"
-      );
+      // layerBangunan.renderer = getRendererBangunan(
+      //   "itbx_sebelum",
+      //   "jlh_lantai_sebelum"
+      // );
+      layerBangunan.visible = false;
+      layerBangunan.listMode = "hide";
+      layerBangunanSebelum.visible = true;
+      layerBangunanSebelum.listMode = "show";
       layerPolaRuang.renderer = getRendererPolaRuang("namaszona_sebelum");
       layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air_sebelum");
       layerJaringanJalan.renderer = getRendererJaringanJalan("los_sebelum");
     } else {
+      layerBangunan.visible = true;
+      layerBangunan.listMode = "show";
+      layerBangunanSebelum.visible = false;
+      layerBangunanSebelum.listMode = "hide";
       layerBangunan.renderer = getRendererBangunan("itbx", "jlh_lantai");
       layerPolaRuang.renderer = getRendererPolaRuang("namaszona");
       layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air");
       layerJaringanJalan.renderer = getRendererJaringanJalan("los");
     }
     layerBangunan.refresh();
+    layerBangunanSebelum.refresh();
     layerPolaRuang.refresh();
     layerKapasitasAir.refresh();
     layerJaringanJalan.refresh();
@@ -4966,7 +5202,8 @@ const SimulasiMap = () => {
                         <input
                           className="switch-button-checkbox"
                           type="checkbox"
-                          onClick={handleSebelumSesudah}
+                          onChange={handleSebelumSesudah}
+                          checked={activeSebelumSesudah.activeSebelum}
                         />
                         <label
                           className="switch-button-label"

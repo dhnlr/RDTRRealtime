@@ -13,6 +13,7 @@ import {
 } from "../../components";
 
 import { config } from "../../Constants";
+import Cookies from "js-cookie";
 
 function DataManagement() {
   const [search, setSearch] = useState(null);
@@ -168,7 +169,7 @@ function DataManagement() {
           status,
           kotaKabupatenId: kotaKabupaten.id,
           isPrivate: !isPrivate,
-          ownerId: sessionStorage.userId,
+          ownerId: Cookies.get("userId"),
         },
       )
       .then(() => {

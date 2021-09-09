@@ -21,7 +21,7 @@ function Login() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    if (Cookies.get("token") && sessionStorage.userId) {
+    if (Cookies.get("token") && Cookies.get("userId")) {
       handleDashboard();
     }
   });
@@ -46,14 +46,13 @@ function Login() {
       )
       .then((resp) => {
         Cookie.set("token", resp.data.obj.accessToken, { secure: true, sameSite: "none", expires: resp.data.obj.expiresIn })
-        sessionStorage.setItem("token", resp.data.obj.accessToken);
         return axiosConfig.get(config.url.API_URL + "/Profile/Get", {
         });
       })
       .then((response) => {
         setIsProcessing(false);
         if (response.data.status.code === 200) {
-          sessionStorage.setItem("userId", response.data.obj.id);
+          Cookies.set("userId", response.data.obj.id)
           handleDashboard();
         } else {
           setErrMessage(response.data.status.message);

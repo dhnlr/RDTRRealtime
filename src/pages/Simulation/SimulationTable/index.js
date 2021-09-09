@@ -350,7 +350,7 @@ function SimulationTable() {
                                           },
                                         })}
                                       >
-                                        {row.isExpanded ? <i class='ti-arrow-circle-down'></i> : <i class='ti-arrow-circle-right'></i>}
+                                        {row.isExpanded ? <i className='ti-arrow-circle-down'></i> : <i className='ti-arrow-circle-right'></i>}
                                       </span>
                                     ) : null,
                                 },

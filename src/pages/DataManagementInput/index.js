@@ -7,6 +7,7 @@ import { config } from "../../Constants";
 
 import { Header, Menu, Footer, ProgressCircle } from "../../components";
 import Image from "./Group 3735.svg";
+import Cookies from "js-cookie";
 
 function DataManagementInput() {
   let history = useHistory();
@@ -133,7 +134,7 @@ function DataManagementInput() {
         status: 0,
         isPrivate: 1,
         kotaKabupatenId: city,
-        ownerId: sessionStorage.userId,
+        ownerId: Cookies.get("userId"),
       })
       .then((data) => {
         setIsProcessing(false);
@@ -145,7 +146,7 @@ function DataManagementInput() {
             status: 0,
             isPrivate: 1,
             kotaKabupatenId: city,
-            ownerId: sessionStorage.userId,
+            ownerId: Cookies.get("userId"),
           })
         );
         goManajemenDataPhase2(data.data?.obj.id);

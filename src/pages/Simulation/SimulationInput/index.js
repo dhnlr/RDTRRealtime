@@ -7,6 +7,7 @@ import { config } from "../../../Constants";
 
 import { Header, Menu, Footer, ProgressCircle } from "../../../components";
 import Image from "../../DataManagementInput/Group 3735.svg";
+import Cookies from "js-cookie";
 
 function SimulationInput() {
   let history = useHistory();
@@ -209,7 +210,7 @@ function SimulationInput() {
         config.url.API_URL + "/Simulasi/Create",
         {
           name,
-          ownerId: sessionStorage.userId,
+          ownerId: Cookies.get("userId"),
           projectId: project,
           dataKe
         },
