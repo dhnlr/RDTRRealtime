@@ -87,6 +87,8 @@ const SimulasiMap = () => {
   const [itbxSum, setItbxSum] = useState(null);
   const [isCreateNewSchenario, setIsCreateNewSchenario] = useState(false);
   const [createSchenarioname, setCreateSchenarioname] = useState(null)
+  const [isShowHistoryList, setIsShowHistoryList] = useState(false)
+  const [historyList, setHistoryList] = useState(null)
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -4299,6 +4301,19 @@ const SimulasiMap = () => {
     };
   }, [mapLoaded]);
 
+  useEffect(() => {
+    if(!historyList){
+      axios.get(config.url.API_URL + "/Simulasi/GetAll", {
+        params: {
+          ProjectId: state?.simulasiBangunan?.projectId,
+        },
+      })
+      .then(({data}) => {
+        setHistoryList(data.obj)
+        console.log(data.obj)
+      })
+    }
+  }, [historyList])
   // start run analysis
   const handleRunAnalysis = () => {
     setLoaded(!loaded);
@@ -6243,11 +6258,11 @@ const SimulasiMap = () => {
                 Buat Skenario Baru
               </button>}
               {isCreateNewSchenario && <>
-                <div class="form-group">
+                <div className="form-group">
               <label htmlFor="new-schenario">Nama Skenario Baru</label>
               <input id="new-schenario" type="text" className="form-control" placeholder="Nama Skenario Baru" onChange={e => setCreateSchenarioname(e.target.value)}/>
               </div>
-              <div class="form-group">
+              <div className="form-group">
               <button
                 className="btn btn-primary btn-block btn-icon-text rounded-0"
                 id="save_simulasi"
@@ -6509,6 +6524,124 @@ const SimulasiMap = () => {
                 Unduh Hasil Analisis
               </button>
             </div>
+            {isShowHistoryList && <div id="historyList" className="historyList">
+              <i
+                    className="ti-close"
+                    style={{
+                      position: "absolute",
+                      top: "16px",
+                      right: "16px",
+                      color: "#fff",
+                      background: "transparent",
+                      borderRadius: "4px",
+                      padding: "0 3px",
+                      cursor: "pointer",
+                      zIndex: "1",
+                    }}
+                    onClick={() => setIsShowHistoryList(false)}
+                  />
+                  <p
+                  style={{
+                    padding: "16px 0 13px 15px",
+                    fontSize: "1rem",
+                    fontFamily: "'Nunito', sans-serif",
+                    fontWeight: "500",
+                    lineHeight: "1",
+                    color: "rgb(255 255 255 / 90%)",
+                    opacity: "0.9",
+                    marginBottom: "0",
+                    borderTop: "1px solid #CED4DA",
+                    background: "#e47163",
+                  }}
+                >
+                  Daftar Riwayat Analisis
+                </p>
+                  <>
+                    {/* start popup sebelumsesudah */}
+                    <div className="historyListDesc">
+                      <p>Anda dapat melihat dan menampilkan analisis skenario yang pernah dibuat sebelumnya</p>
+                    </div>
+
+                    <div
+                      style={{
+                        height: "calc(100vh - 200px)",
+                        overflow: "auto",
+                      }}
+                    >
+                      <div
+                        className="accordion accordion-bordered"
+                        id="accordionExample"
+                      >
+                        <div className="fade-in">
+                        <ul class="list-unstyled ulHistoryList">
+                          {historyList.map(list => (
+                            <li className="media liHistoryList">
+                            <div className="media-body">
+                              <h5 className="mt-0">{list.name}</h5>
+                              <p className="card-text">
+                                {list.project.projectName}, {list.project.kotaKabupaten.name}, {list.project.kotaKabupaten.provinsi.name}
+                              </p>
+                            </div>
+                            <div className="align-self-center mr-3">
+                              <button className="btn btn-block btn-inverse-danger">Pilih</button>
+
+                            </div>
+                          </li>
+                          ))}
+                          </ul>
+                          
+                          {/*<div
+                            className="card"
+                            id="segmentationLegendCard"
+                            style={{ display: "none", margin: "0 0.2rem" }}
+                          >
+                            <div
+                              className="card-header"
+                              role="tab"
+                              id="headingTwo"
+                              style={{ padding: "0px" }}
+                            >
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left collapsed btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#segmentationLegend"}
+                                  aria-expanded="true"
+                                  aria-controls={"segmentationLegend"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  <i className="ti-info"> </i>
+                                  Legenda Segmentasi
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
+                            </div>
+
+                            <div
+                              id="segmentationLegend"
+                              className="collapse"
+                              aria-labelledby="segmentationLegend"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                <img
+                                  src={segmentationLegend}
+                                  alt="Legenda Segmentasi"
+                                />
+                              </div>
+                            </div>
+                          </div> */}
+
+
+
+                        </div>
+                      </div>
+                    </div>
+                    {/* end popup sebelumsesudah */}
+                  </>
+            </div>}
+            <button id="historyButton" className="historyButton btn btn-light btn-rounded btn-fw" onClick={()=> setIsShowHistoryList(!isShowHistoryList)}>Daftar Riwayat</button>
             {resultAnalysis && (
               <div
                 id="resultAnalysis"
