@@ -86,9 +86,10 @@ const SimulasiMap = () => {
   const [segmentationBuildingId, setSegmentationBuildingId] = useState(null);
   const [itbxSum, setItbxSum] = useState(null);
   const [isCreateNewSchenario, setIsCreateNewSchenario] = useState(false);
-  const [createSchenarioname, setCreateSchenarioname] = useState(null)
-  const [isShowHistoryList, setIsShowHistoryList] = useState(false)
-  const [historyList, setHistoryList] = useState(null)
+  const [createSchenarioname, setCreateSchenarioname] = useState(null);
+  const [isShowHistoryList, setIsShowHistoryList] = useState(false);
+  const [historyList, setHistoryList] = useState(null);
+  const [selectedHistoryId, setSelectedHistoryId] = useState(null);
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -274,7 +275,7 @@ const SimulasiMap = () => {
             lantaiAtas,
             lantaiSebelumKelewatan,
             segmentationGroupLayer = {};
-          var bangunanDefinitionExpression = `id_simulasi = ${state?.simulasiBangunan?.simulasiId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe}`
+          var bangunanDefinitionExpression = `id_simulasi = ${state?.simulasiBangunan?.simulasiId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe}`;
 
           const map = new Map({
             basemap: "topo-vector",
@@ -366,7 +367,9 @@ const SimulasiMap = () => {
             ],
           };
           const bangunanSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Versioning/bangunan_analisis_process/FeatureServer/0",
+            url:
+              config.url.ARCGIS_URL +
+              "/Versioning/bangunan_analisis_process/FeatureServer/0",
             id: "bagunan_analisis_proses",
             renderer: getRendererBangunan("itbx", "jlh_lantai"),
             definitionExpression: bangunanDefinitionExpression,
@@ -527,7 +530,9 @@ const SimulasiMap = () => {
             outFields: ["*"],
           });
           const bangunanSebelumLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Versioning/bangunan_analisis/FeatureServer/0",
+            url:
+              config.url.ARCGIS_URL +
+              "/Versioning/bangunan_analisis/FeatureServer/0",
             id: "bagunan_analisis",
             renderer: getRendererBangunan("itbx", "jlh_lantai"),
             definitionExpression: bangunanDefinitionExpression,
@@ -1763,7 +1768,7 @@ const SimulasiMap = () => {
               kapasitasAirLayer,
               jalanSesudahLayer,
               bangunanSesudahLayer,
-              bangunanSebelumLayer
+              bangunanSebelumLayer,
             ],
           });
           let tambahanGroupLayer = new GroupLayer({
@@ -1992,10 +1997,12 @@ const SimulasiMap = () => {
                 segmentationGroupLayer
               ) {
                 hideSegementationGroupLayer();
-                changeBangunanLayer()
+                changeBangunanLayer();
                 setActiveSebelumSesudah({
                   activeSebelum: false,
                 });
+                setSelectedHistoryId(state.id);
+                bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
               }
             });
             const editorExpand = new Expand({
@@ -2037,10 +2044,12 @@ const SimulasiMap = () => {
               buildings3dLayer.popupEnabled = false;
               bangunanSebelumLayer.popupEnabled = false;
               hideSegementationGroupLayer();
-              changeBangunanLayer()
+              changeBangunanLayer();
               setActiveSebelumSesudah({
                 activeSebelum: false,
               });
+              setSelectedHistoryId(state.id);
+                bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
               view.on("click", function (event) {
                 // Remove the previous highlights
                 if (highlight) {
@@ -2125,10 +2134,12 @@ const SimulasiMap = () => {
               buildings3dLayer.popupEnabled = false;
               bangunanSebelumLayer.popupEnabled = false;
               hideSegementationGroupLayer();
-              changeBangunanLayer()
+              changeBangunanLayer();
               setActiveSebelumSesudah({
                 activeSebelum: false,
               });
+              setSelectedHistoryId(state.id);
+                bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
               view.on("click", function (event) {
                 if (highlight) {
                   highlight.remove();
@@ -2229,12 +2240,14 @@ const SimulasiMap = () => {
               polaRuangEnvelopeLayer.popupEnabled = false;
               bangunanSesudahLayer.popupEnabled = false;
               buildings3dLayer.popupEnabled = false;
-              bangunanSebelumLayer.popupEnabled = false
+              bangunanSebelumLayer.popupEnabled = false;
               hideSegementationGroupLayer();
-              changeBangunanLayer()
+              changeBangunanLayer();
               setActiveSebelumSesudah({
                 activeSebelum: false,
               });
+              setSelectedHistoryId(state.id);
+                bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
               view.on("click", function (event) {
                 if (highlight) {
                   highlight.remove();
@@ -2285,7 +2298,7 @@ const SimulasiMap = () => {
                         polaRuangEnvelopeLayer.popupEnabled = true;
                         bangunanSesudahLayer.popupEnabled = true;
                         buildings3dLayer.popupEnabled = true;
-                        bangunanSebelumLayer.popupEnabled = true
+                        bangunanSebelumLayer.popupEnabled = true;
                       });
                   });
               });
@@ -2434,10 +2447,12 @@ const SimulasiMap = () => {
               // bangunanSesudahLayer.definitionExpression = "";
               // map.remove(segmentationGroupLayer);
               hideSegementationGroupLayer();
-              changeBangunanLayer()
+              changeBangunanLayer();
               setActiveSebelumSesudah({
                 activeSebelum: false,
               });
+              setSelectedHistoryId(state.id);
+                bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
               // end segmentation drawing function
 
               let fieldsArr = [];
@@ -2860,8 +2875,7 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "izin_sampah_y5",
-                    field_value:
-                      features[0].attributes.izin_sampah_y5,
+                    field_value: features[0].attributes.izin_sampah_y5,
                   },
                 ]);
                 setHasilSimulasiBangunanKdbKlb(
@@ -3851,11 +3865,12 @@ const SimulasiMap = () => {
                     console.log("error check", error);
                   });
 
-                axios.get(config.url.API_URL + "/MasterData/Itbx/GetList", {
-                  params: {
-                    rdtr: features[0].attributes.kabkot,
-                  },
-                })
+                axios
+                  .get(config.url.API_URL + "/MasterData/Itbx/GetList", {
+                    params: {
+                      rdtr: features[0].attributes.kabkot,
+                    },
+                  })
                   .then(({ data }) => {
                     if (data.status.succeeded) {
                       setItbxSum(data.obj);
@@ -3870,7 +3885,8 @@ const SimulasiMap = () => {
                 if (features[0].attributes.objectid) {
                   setSegmentationBuildingId(features[0].attributes.objectid);
                   setRemoveSegmentationFunc(() => () => {
-                    bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
+                    bangunanSesudahLayer.definitionExpression =
+                      bangunanDefinitionExpression;
                     map.remove(segmentationGroupLayer);
                     setIsSegmentationActive(false);
                     if (document.getElementById("segmentationLegendCard")) {
@@ -4014,25 +4030,37 @@ const SimulasiMap = () => {
            * Get polygon id from feature service and draw it when available
            ************************************************************/
           var getRing = (id) => {
-            var sesudah = Axios.get("https://rdtr.onemap.id/server/rest/services/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=objectid=" +
-            id + " AND " + bangunanDefinitionExpression +
-            "&outFields=*&outSR=4326&f=pjson")
-            var sebelum = Axios.get("https://rdtr.onemap.id/server/rest/services/Versioning/bangunan_analisis/FeatureServer/0/query?where=objectid=" +
-            id + " AND " + bangunanDefinitionExpression +
-            "&outFields=*&outSR=4326&f=pjson")
+            var sesudah = Axios.get(
+              "https://rdtr.onemap.id/server/rest/services/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=objectid=" +
+                id +
+                " AND " +
+                bangunanDefinitionExpression +
+                "&outFields=*&outSR=4326&f=pjson"
+            );
+            var sebelum = Axios.get(
+              "https://rdtr.onemap.id/server/rest/services/Versioning/bangunan_analisis/FeatureServer/0/query?where=objectid=" +
+                id +
+                " AND " +
+                bangunanDefinitionExpression +
+                "&outFields=*&outSR=4326&f=pjson"
+            );
             Promise.all([sesudah, sebelum])
-            .then(result => {
-              console.log(result)
-              if (result[0].data.features[0].length > 0 && result[1].data.features[0].length > 0){
-              drawGraphic(
-                result[0].data.features[0].geometry.rings,
-                result[0].data.features[0].attributes,
-                result[1].data.features[0].attributes,
-              )};
-            })
-            .catch(error => {
-              console.error("Gagal mendapatkan data segementasi", error)
-            })
+              .then((result) => {
+                console.log(result);
+                if (
+                  result[0].data.features[0].length > 0 &&
+                  result[1].data.features[0].length > 0
+                ) {
+                  drawGraphic(
+                    result[0].data.features[0].geometry.rings,
+                    result[0].data.features[0].attributes,
+                    result[1].data.features[0].attributes
+                  );
+                }
+              })
+              .catch((error) => {
+                console.error("Gagal mendapatkan data segementasi", error);
+              });
             // var request = new XMLHttpRequest();
             // request.open(
             //   "GET",
@@ -4102,7 +4130,7 @@ const SimulasiMap = () => {
                 geometry: polygon,
                 symbol: getSymbol(
                   attributes_sebelum.jlh_lantai < attributes.lantai_max &&
-                  attributes_sebelum.jlh_lantai
+                    attributes_sebelum.jlh_lantai
                     ? attributes_sebelum.jlh_lantai < attributes.jlh_lantai
                       ? attributes_sebelum.jlh_lantai
                       : attributes.jlh_lantai < attributes.lantai_max &&
@@ -4120,7 +4148,7 @@ const SimulasiMap = () => {
                       !attributes.lantai_max
                     ? attributes.jlh_lantai
                     : !attributes.jlh_lantai &&
-                    attributes_sebelum.jlh_lantai &&
+                      attributes_sebelum.jlh_lantai &&
                       !attributes.lantai_max
                     ? attributes_sebelum.jlh_lantai
                     : -1,
@@ -4199,7 +4227,7 @@ const SimulasiMap = () => {
                 geometry: polygon,
                 symbol: getSymbol(
                   attributes.jlh_lantai > attributes_sebelum.jlh_lantai &&
-                  attributes_sebelum.jlh_lantai
+                    attributes_sebelum.jlh_lantai
                     ? attributes.lantai_max - attributes_sebelum.jlh_lantai
                     : -1,
                   [102, 178, 255, 1]
@@ -4214,7 +4242,7 @@ const SimulasiMap = () => {
                 mode: "relative-to-ground",
                 featureExpressionInfo: {
                   expression:
-                  attributes_sebelum.jlh_lantai +
+                    attributes_sebelum.jlh_lantai +
                     (attributes.lantai_max - attributes_sebelum.jlh_lantai > 0
                       ? attributes.lantai_max - attributes_sebelum.jlh_lantai
                       : 0), //lantai (lantai max - lantai sebelum) + lantai ssebelum
@@ -4227,13 +4255,13 @@ const SimulasiMap = () => {
                 geometry: polygon,
                 symbol: getSymbol(
                   attributes.jlh_lantai > attributes_sebelum.jlh_lantai &&
-                  attributes_sebelum.jlh_lantai
+                    attributes_sebelum.jlh_lantai
                     ? attributes.jlh_lantai -
-                    attributes_sebelum.jlh_lantai -
+                        attributes_sebelum.jlh_lantai -
                         (attributes.lantai_max - attributes_sebelum.jlh_lantai >
                         0
                           ? attributes.lantai_max -
-                          attributes_sebelum.jlh_lantai
+                            attributes_sebelum.jlh_lantai
                           : 0)
                     : -1,
                   [0, 0, 0, 1]
@@ -4272,7 +4300,8 @@ const SimulasiMap = () => {
 
           var hideSegementationGroupLayer = () => {
             map.remove(segmentationGroupLayer);
-            bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
+            bangunanSesudahLayer.definitionExpression =
+              bangunanDefinitionExpression;
             setIsSegmentationActive(false);
             // segmentationGroupLayer.visible = false
             if (document.getElementById("segmentationLegendCard")) {
@@ -4283,11 +4312,11 @@ const SimulasiMap = () => {
           // end segementation drawing function
 
           var changeBangunanLayer = () => {
-            bangunanSebelumLayer.visible = false
-            bangunanSebelumLayer.listMode = "hide"
-            bangunanSesudahLayer.visible = true
-            bangunanSesudahLayer.listMode = "show"
-          }
+            bangunanSebelumLayer.visible = false;
+            bangunanSebelumLayer.listMode = "hide";
+            bangunanSesudahLayer.visible = true;
+            bangunanSesudahLayer.listMode = "show";
+          };
 
           setStateView(view);
 
@@ -4302,18 +4331,19 @@ const SimulasiMap = () => {
   }, [mapLoaded]);
 
   useEffect(() => {
-    if(!historyList){
-      axios.get(config.url.API_URL + "/Simulasi/GetAll", {
-        params: {
-          ProjectId: state?.simulasiBangunan?.projectId,
-        },
-      })
-      .then(({data}) => {
-        setHistoryList(data.obj)
-        console.log(data.obj)
-      })
+    if (!historyList) {
+      axios
+        .get(config.url.API_URL + "/Simulasi/GetAll", {
+          params: {
+            ProjectId: state?.simulasiBangunan?.projectId,
+          },
+        })
+        .then(({ data }) => {
+          setHistoryList(data.obj);
+          setSelectedHistoryId(state.id);
+        });
     }
-  }, [historyList])
+  }, [historyList]);
   // start run analysis
   const handleRunAnalysis = () => {
     setLoaded(!loaded);
@@ -4332,12 +4362,13 @@ const SimulasiMap = () => {
           console.log(featuresPersilTanah[0].attributes.nib);
           //setResultAnalysis(true);
           //setResPersilTanah(featuresPersilTanah[0].attributes);
-          axios.post(
-            config.url.API_URL +
-              "/Pembangunan/ExecuteSpPembangunanOptimum?nib=" +
-              featuresPersilTanah[0].attributes.nib,
-            {},
-          )
+          axios
+            .post(
+              config.url.API_URL +
+                "/Pembangunan/ExecuteSpPembangunanOptimum?nib=" +
+                featuresPersilTanah[0].attributes.nib,
+              {}
+            )
             .then(function (response) {
               if (response.status === 200) {
                 //Swal.fire("Success", "Your analysis has been running successfully.", "success");
@@ -4381,36 +4412,7 @@ const SimulasiMap = () => {
     if (segmentationBuildingId) {
       removeSegmentationFunc();
     }
-    setActiveSebelumSesudah({
-      activeSebelum: false,
-    });
-    let layerBangunan = esriMap.allLayers.find(function (layer) {
-      return layer.id === "bagunan_analisis_proses";
-    });
-    let layerBangunanSebelum = esriMap.allLayers.find(function (layer) {
-      return layer.id === "bagunan_analisis";
-    });
-    let layerPolaRuang = esriMap.allLayers.find(function (layer) {
-      return layer.title === "Pola Ruang Versioning";
-    });
-    let layerKapasitasAir = esriMap.allLayers.find(function (layer) {
-      return layer.title === "Kapasitas Air";
-    });
-    let layerJaringanJalan = esriMap.allLayers.find(function (layer) {
-      return layer.title === "Jaringan Jalan";
-    });
-    layerBangunan.visible = true;
-    layerBangunan.listMode = "show";
-    layerBangunanSebelum.visible = false;
-    layerBangunanSebelum.listMode = "hide";
-    layerPolaRuang.renderer = getRendererPolaRuang("namaszona");
-    layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air");
-    layerJaringanJalan.renderer = getRendererJaringanJalan("los");
-    layerBangunan.refresh();
-    layerBangunanSebelum.refresh()
-    layerPolaRuang.refresh();
-    layerKapasitasAir.refresh();
-    layerJaringanJalan.refresh();
+    resetMapToSesudah();
     setItbxSum(null);
     stateView.popup.close();
     setShowingPopop({ ...showingPopup, show: false, title: "" });
@@ -4432,9 +4434,6 @@ const SimulasiMap = () => {
     let layerJaringanJalan = esriMap.allLayers.find(function (layer) {
       return layer.title === "Jaringan Jalan";
     });
-    console.log(layerBangunan.url)
-    console.log(layerBangunanSebelum.url)
-    //TODO cchange when sebelum
     if (!activeSebelumSesudah.activeSebelum) {
       // layerBangunan.renderer = getRendererBangunan(
       //   "itbx_sebelum",
@@ -5021,7 +5020,7 @@ const SimulasiMap = () => {
   // end history analysis
 
   const handleExecuteSpCopy = (param) => {
-    setLoaded(false)
+    setLoaded(false);
     axios
       .post(
         config.url.API_URL + "/Simulasi/ExecuteSpCopy",
@@ -5037,41 +5036,98 @@ const SimulasiMap = () => {
         }
       )
       .then((data) => {
-        setLoaded(true)
-        if(param !== 0)Swal.fire("Berhasil", "Berhasil menganalisis riwayat skenario", "success")
+        setLoaded(true);
+        if (param !== 0)
+          Swal.fire(
+            "Berhasil",
+            "Berhasil menganalisis riwayat skenario",
+            "success"
+          );
       })
-      .catch(()=>{
-        setLoaded(true)
-        Swal.fire("Gagal", "Gagal menganalisis riwayat skenario", "error")
-      })
-      ;
+      .catch(() => {
+        setLoaded(true);
+        Swal.fire("Gagal", "Gagal menganalisis riwayat skenario", "error");
+      });
   };
 
   const handleCreateNewSchenario = () => {
-    setLoaded(false)
-    axios.post(config.url.API_URL + "/Simulasi/Create",
-    {
-      name: createSchenarioname,
-      projectId: state?.simulasiBangunan?.projectId,
-      ownerId: state?.ownerId,
-      dataKe: state?.simulasiBangunan?.dataKe,
-    },
-    )
-    .then(({data})=> {
-      setLoaded(true)
-      if(data.status.code === 200){
-        setIsCreateNewSchenario(false)
-        Swal.fire("Berhasil", "Berhasil membuat skenario baru", "success")
-      } else {
-      Swal.fire("Gagal", data.status.message, "error")
+    setLoaded(false);
+    axios
+      .post(config.url.API_URL + "/Simulasi/Create", {
+        name: createSchenarioname,
+        projectId: state?.simulasiBangunan?.projectId,
+        ownerId: state?.ownerId,
+        dataKe: state?.simulasiBangunan?.dataKe,
+      })
+      .then(({ data }) => {
+        setLoaded(true);
+        if (data.status.code === 200) {
+          setIsCreateNewSchenario(false);
+          Swal.fire("Berhasil", "Berhasil membuat skenario baru", "success");
+        } else {
+          Swal.fire("Gagal", data.status.message, "error");
+        }
+      })
+      .catch(() => {
+        setLoaded(true);
+        Swal.fire("Gagal", "Gagal membuat skenario baru", "error");
+      });
+  };
 
-      }
-    })
-    .catch(()=> {
-      setLoaded(true)
-      Swal.fire("Gagal", "Gagal membuat skenario baru", "error")
-    })
-  }
+  const handleSelectHistory = (id, expression) => {
+    if (segmentationBuildingId) {
+      removeSegmentationFunc();
+    }
+    resetMapToSesudah();
+    setSelectedHistoryId(id);
+    let layerBangunan = esriMap.allLayers.find(function (layer) {
+      return layer.id === "bagunan_analisis_proses";
+    });
+    layerBangunan.definitionExpression = expression;
+  };
+
+  const handleCloseHistoryList = () => {
+    resetMapToSesudah();
+    setIsShowHistoryList(false);
+    setSelectedHistoryId(state.id);
+    let layerBangunan = esriMap.allLayers.find(function (layer) {
+      return layer.id === "bagunan_analisis_proses";
+    });
+    layerBangunan.definitionExpression = `id_simulasi = ${state?.simulasiBangunan?.simulasiId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe}`;
+  };
+
+  const resetMapToSesudah = () => {
+    setActiveSebelumSesudah({
+      activeSebelum: false,
+    });
+    let layerBangunan = esriMap.allLayers.find(function (layer) {
+      return layer.id === "bagunan_analisis_proses";
+    });
+    let layerBangunanSebelum = esriMap.allLayers.find(function (layer) {
+      return layer.id === "bagunan_analisis";
+    });
+    let layerPolaRuang = esriMap.allLayers.find(function (layer) {
+      return layer.title === "Pola Ruang Versioning";
+    });
+    let layerKapasitasAir = esriMap.allLayers.find(function (layer) {
+      return layer.title === "Kapasitas Air";
+    });
+    let layerJaringanJalan = esriMap.allLayers.find(function (layer) {
+      return layer.title === "Jaringan Jalan";
+    });
+    layerBangunan.visible = true;
+    layerBangunan.listMode = "show";
+    layerBangunanSebelum.visible = false;
+    layerBangunanSebelum.listMode = "hide";
+    layerPolaRuang.renderer = getRendererPolaRuang("namaszona");
+    layerKapasitasAir.renderer = getRendererKapasitasAir("izin_air");
+    layerJaringanJalan.renderer = getRendererJaringanJalan("los");
+    layerBangunan.refresh();
+    layerBangunanSebelum.refresh();
+    layerPolaRuang.refresh();
+    layerKapasitasAir.refresh();
+    layerJaringanJalan.refresh();
+  };
 
   return (
     <div className="container-scroller">
@@ -5662,8 +5718,9 @@ const SimulasiMap = () => {
                                       </td>
                                     </tr>
                                     <tr>
-                                      <td>Luas Tapak{" "}
-                                        (m<sup>2</sup>)</td>
+                                      <td>
+                                        Luas Tapak (m<sup>2</sup>)
+                                      </td>
                                       <td>
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[18]
@@ -6047,7 +6104,8 @@ const SimulasiMap = () => {
                                       <td>Status Tingkat Persampahan</td>
                                       <td>
                                         {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[85].field_value
+                                          ? contentBangunanKdbKlb[85]
+                                              .field_value
                                           : contentBangunanKdbKlb[85]
                                               .field_value}
                                       </td>
@@ -6058,7 +6116,6 @@ const SimulasiMap = () => {
                               </div>
                             </div>
                           </div>
-
                         </div>
                       </div>
                     </div>
@@ -6192,7 +6249,7 @@ const SimulasiMap = () => {
               >
                 <h3 className="esri-widget__heading">Riwayat Skenario</h3>
               </div>
-              {!isCreateNewSchenario && 
+              {!isCreateNewSchenario && (
                 <div
                   className=""
                   style={{
@@ -6215,78 +6272,93 @@ const SimulasiMap = () => {
                       dianalisis
                     </p>
                     <button
-                className="btn btn-primary btn-block btn-icon-text rounded-0"
-                id="history_simulasi"
-                type="button"
-                title="Analisis Riwayat Skenario"
-                onClick={() => handleHistoryAnalysis()}
-              >
-                <i className="ti-search btn-icon-prepend"></i>
-                Analisis Riwayat Skenario
-              </button>
+                      className="btn btn-primary btn-block btn-icon-text rounded-0"
+                      id="history_simulasi"
+                      type="button"
+                      title="Analisis Riwayat Skenario"
+                      onClick={() => handleHistoryAnalysis()}
+                    >
+                      <i className="ti-search btn-icon-prepend"></i>
+                      Analisis Riwayat Skenario
+                    </button>
                   </div>
                 </div>
-              }
+              )}
               <div
-                  className=""
+                className=""
+                style={{
+                  background: "#f3f3f3",
+                  width: "300px",
+                  maxHeight: "180px",
+                  overflowX: "auto",
+                  padding: "0px",
+                }}
+              >
+                <div
                   style={{
-                    background: "#f3f3f3",
-                    width: "300px",
-                    maxHeight: "180px",
-                    overflowX: "auto",
-                    padding: "0px",
+                    backgroundColor: "#fff",
+                    margin: "5px",
+                    padding: "10px",
                   }}
                 >
-                  <div
-                    style={{
-                      backgroundColor: "#fff",
-                      margin: "5px",
-                      padding: "10px",
-                    }}
-                  >
-                    <p>
-                      Sistem akan membuat skenario baru berdasarkan data yang digunakan saat ini
-                    </p>
-                    {!isCreateNewSchenario && <button
-                className="btn btn-primary btn-block btn-icon-text rounded-0"
-                id="create_simulasi"
-                type="button"
-                title="Buat Skenario Baru"
-                onClick={() => setIsCreateNewSchenario(true)}
-              >
-                <i className="ti-pencil-alt btn-icon-prepend"></i>
-                Buat Skenario Baru
-              </button>}
-              {isCreateNewSchenario && <>
-                <div className="form-group">
-              <label htmlFor="new-schenario">Nama Skenario Baru</label>
-              <input id="new-schenario" type="text" className="form-control" placeholder="Nama Skenario Baru" onChange={e => setCreateSchenarioname(e.target.value)}/>
-              </div>
-              <div className="form-group">
-              <button
-                className="btn btn-primary btn-block btn-icon-text rounded-0"
-                id="save_simulasi"
-                type="button"
-                title="Simpan Skenario Baru"
-                onClick={() => handleCreateNewSchenario(true)}
-              >
-                <i className="ti-save btn-icon-prepend"></i>
-                Simpan Skenario Baru
-              </button>
-              <button
-                className="btn btn-dar btn-block btn-icon-text rounded-0"
-                id="save_simulasi"
-                type="button"
-                title="Batalkan"
-                onClick={() => setIsCreateNewSchenario(false)}
-              >
-                <i className="ti-save btn-icon-prepend"></i>
-                Batal
-              </button>
-              </div>
-              </>}
-                  </div>
+                  <p>
+                    Sistem akan membuat skenario baru berdasarkan data yang
+                    digunakan saat ini
+                  </p>
+                  {!isCreateNewSchenario && (
+                    <button
+                      className="btn btn-primary btn-block btn-icon-text rounded-0"
+                      id="create_simulasi"
+                      type="button"
+                      title="Buat Skenario Baru"
+                      onClick={() => setIsCreateNewSchenario(true)}
+                    >
+                      <i className="ti-pencil-alt btn-icon-prepend"></i>
+                      Buat Skenario Baru
+                    </button>
+                  )}
+                  {isCreateNewSchenario && (
+                    <>
+                      <div className="form-group">
+                        <label htmlFor="new-schenario">
+                          Nama Skenario Baru
+                        </label>
+                        <input
+                          id="new-schenario"
+                          type="text"
+                          className="form-control"
+                          placeholder="Nama Skenario Baru"
+                          onChange={(e) =>
+                            setCreateSchenarioname(e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="form-group">
+                        <button
+                          className="btn btn-primary btn-block btn-icon-text rounded-0"
+                          id="save_simulasi"
+                          type="button"
+                          title="Simpan Skenario Baru"
+                          onClick={() => handleCreateNewSchenario(true)}
+                        >
+                          <i className="ti-save btn-icon-prepend"></i>
+                          Simpan Skenario Baru
+                        </button>
+                        <button
+                          className="btn btn-dar btn-block btn-icon-text rounded-0"
+                          id="save_simulasi"
+                          type="button"
+                          title="Batalkan"
+                          onClick={() => setIsCreateNewSchenario(false)}
+                        >
+                          <i className="ti-save btn-icon-prepend"></i>
+                          Batal
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
+              </div>
             </div>
             <div id="printExpDiv" className="esri-widget print">
               <div
@@ -6524,23 +6596,26 @@ const SimulasiMap = () => {
                 Unduh Hasil Analisis
               </button>
             </div>
-            {isShowHistoryList && <div id="historyList" className="historyList">
-              <i
-                    className="ti-close"
-                    style={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      color: "#fff",
-                      background: "transparent",
-                      borderRadius: "4px",
-                      padding: "0 3px",
-                      cursor: "pointer",
-                      zIndex: "1",
-                    }}
-                    onClick={() => setIsShowHistoryList(false)}
-                  />
-                  <p
+            {isShowHistoryList && (
+              <div id="historyList" className="historyList">
+                <i
+                  className="ti-close"
+                  style={{
+                    position: "absolute",
+                    top: "16px",
+                    right: "16px",
+                    color: "#fff",
+                    background: "transparent",
+                    borderRadius: "4px",
+                    padding: "0 3px",
+                    cursor: "pointer",
+                    zIndex: "1",
+                  }}
+                  onClick={() => {
+                    handleCloseHistoryList();
+                  }}
+                />
+                <p
                   style={{
                     padding: "16px 0 13px 15px",
                     fontSize: "1rem",
@@ -6551,46 +6626,99 @@ const SimulasiMap = () => {
                     opacity: "0.9",
                     marginBottom: "0",
                     borderTop: "1px solid #CED4DA",
-                    background: "#e47163",
+                    background: "#3e4550",
                   }}
                 >
                   Daftar Riwayat Analisis
                 </p>
-                  <>
-                    {/* start popup sebelumsesudah */}
-                    <div className="historyListDesc">
-                      <p>Anda dapat melihat dan menampilkan analisis skenario yang pernah dibuat sebelumnya</p>
-                    </div>
+                <>
+                  {/* start popup sebelumsesudah */}
+                  <div className="historyListDesc">
+                    <p>
+                      Anda dapat melihat dan menampilkan analisis skenario yang
+                      pernah dibuat sebelumnya
+                    </p>
+                  </div>
 
+                  <div
+                    style={{
+                      height: "calc(100vh - 200px)",
+                      overflow: "auto",
+                    }}
+                  >
                     <div
-                      style={{
-                        height: "calc(100vh - 200px)",
-                        overflow: "auto",
-                      }}
+                      className="accordion accordion-bordered"
+                      id="accordionExample"
                     >
-                      <div
-                        className="accordion accordion-bordered"
-                        id="accordionExample"
-                      >
-                        <div className="fade-in">
+                      <div className="fade-in">
                         <ul class="list-unstyled ulHistoryList">
-                          {historyList.map(list => (
-                            <li className="media liHistoryList">
+                          <li className="media liHistoryList">
                             <div className="media-body">
-                              <h5 className="mt-0">{list.name}</h5>
+                              <h5 className="mt-0">
+                                <i className="ti-star text-warning" title="Default"></i>{" "}
+                                {state.name}
+                              </h5>
                               <p className="card-text">
-                                {list.project.projectName}, {list.project.kotaKabupaten.name}, {list.project.kotaKabupaten.provinsi.name}
+                                {state.project.projectName},{" "}
+                                {state.project.kotaKabupaten.name},{" "}
+                                {state.project.kotaKabupaten.provinsi.name}
                               </p>
                             </div>
                             <div className="align-self-center mr-3">
-                              <button className="btn btn-block btn-inverse-danger">Pilih</button>
-
+                              <button
+                                className={
+                                  "btn btn-block " +
+                                  (selectedHistoryId === state.id
+                                    ? "btn-dark"
+                                    : "btn-inverse-dark")
+                                }
+                                onClick={() =>
+                                  handleSelectHistory(
+                                    state.id,
+                                    `id_simulasi = ${state?.simulasiBangunan?.simulasiId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe}`
+                                  )
+                                }
+                              >
+                                Pilih
+                              </button>
                             </div>
                           </li>
-                          ))}
-                          </ul>
-                          
-                          {/*<div
+                          {historyList.map((list) => {
+                            if (list.id !== state.id)
+                              return (
+                                <li className="media liHistoryList">
+                                  <div className="media-body">
+                                    <h5 className="mt-0">{list.name}</h5>
+                                    <p className="card-text">
+                                      {list.project.projectName},{" "}
+                                      {list.project.kotaKabupaten.name},{" "}
+                                      {list.project.kotaKabupaten.provinsi.name}
+                                    </p>
+                                  </div>
+                                  <div className="align-self-center mr-3">
+                                    <button
+                                      className={
+                                        "btn btn-block " +
+                                        (selectedHistoryId === list.id
+                                          ? "btn-dark"
+                                          : "btn-inverse-dark")
+                                      }
+                                      onClick={() =>
+                                        handleSelectHistory(
+                                          list.id,
+                                          `id_simulasi = ${list?.simulasiBangunan?.simulasiId} AND id_project = ${list?.simulasiBangunan?.projectId} AND userid = '${list?.simulasiBangunan?.userId}'AND data_ke = ${list?.simulasiBangunan?.dataKe}`
+                                        )
+                                      }
+                                    >
+                                      Pilih
+                                    </button>
+                                  </div>
+                                </li>
+                              );
+                          })}
+                        </ul>
+
+                        {/*<div
                             className="card"
                             id="segmentationLegendCard"
                             style={{ display: "none", margin: "0 0.2rem" }}
@@ -6632,16 +6760,20 @@ const SimulasiMap = () => {
                               </div>
                             </div>
                           </div> */}
-
-
-
-                        </div>
                       </div>
                     </div>
-                    {/* end popup sebelumsesudah */}
-                  </>
-            </div>}
-            <button id="historyButton" className="historyButton btn btn-light btn-rounded btn-fw" onClick={()=> setIsShowHistoryList(!isShowHistoryList)}>Daftar Riwayat</button>
+                  </div>
+                  {/* end popup sebelumsesudah */}
+                </>
+              </div>
+            )}
+            <button
+              id="historyButton"
+              className="historyButton btn btn-light btn-rounded btn-fw"
+              onClick={() => setIsShowHistoryList(!isShowHistoryList)}
+            >
+              Daftar Riwayat
+            </button>
             {resultAnalysis && (
               <div
                 id="resultAnalysis"
