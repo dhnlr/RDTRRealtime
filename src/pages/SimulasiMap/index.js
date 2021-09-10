@@ -2705,6 +2705,10 @@ const SimulasiMap = () => {
                     field_name: "sum_timbulan_sampah_harian_m3",
                     field_value: features[0].attributes.sum_timbulan_sampah_harian_m3,
                   },
+                  {
+                    field_name: "total_kapasitas",
+                    field_value: features[0].attributes.total_kapasitas,
+                  },
                 ]);
                 setHasilSimulasiBangunanKdbKlb(
                   features[0].attributes.melampaui_tinggi
@@ -5814,31 +5818,23 @@ const SimulasiMap = () => {
                                     <tr>
                                       <td>Timbulan Sampah Harian (Bangunan)</td>
                                       <td>
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[86]
-                                              .field_value ? contentBangunanKdbKlb[86]
-                                              .field_value.toFixed(4) : contentBangunanKdbKlb[86]
-                                              .field_value
-                                          : contentBangunanKdbKlb[86]
-                                          .field_value ? contentBangunanKdbKlb[86]
-                                          .field_value.toFixed(4) : contentBangunanKdbKlb[86]
-                                          .field_value}{/* {" "}
-                                              m<sup>3</sup> */}
+                                        {contentBangunanKdbKlb[86].field_value}{" "}
+                                              m<sup>3</sup>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>Timbulan Sampah Harian (TPS Kumulatif)</td>
                                       <td>
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[87]
-                                          .field_value ? contentBangunanKdbKlb[87]
-                                          .field_value.toFixed(4) : contentBangunanKdbKlb[87]
-                                          .field_value
-                                          : contentBangunanKdbKlb[87]
-                                          .field_value ? contentBangunanKdbKlb[87]
-                                          .field_value.toFixed(4) : contentBangunanKdbKlb[87]
-                                          .field_value}{/* {" "}
-                                              m<sup>3</sup> */}
+                                        {contentBangunanKdbKlb[87].field_value}{" "}
+                                              m<sup>3</sup>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Total Kapasitas TPS</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[88]
+                                          .field_value}{" "}
+                                              m<sup>3</sup>
                                       </td>
                                     </tr>
                                   </tbody>
