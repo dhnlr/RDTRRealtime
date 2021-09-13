@@ -31,19 +31,13 @@ function DataManagementInputWater() {
   }, [history, state?.id]);
 
   const onSubmit = (
-    {
-      air_bersih,
-      air_bersih_year,
-      air_bersih_desc,
-      air_bersih_tag,
-    },
+    { air_bersih, air_bersih_year, air_bersih_desc, air_bersih_tag },
     e
   ) => {
     setErrMessage(null);
     setIsProcessing(true);
 
-    if (air_bersih_tag)
-      air_bersih_tag = air_bersih_tag.map((tag) => tag.value);
+    if (air_bersih_tag) air_bersih_tag = air_bersih_tag.map((tag) => tag.value);
 
     var fd = new FormData();
     fd.set("pdam", air_bersih[0]);
@@ -194,15 +188,22 @@ function DataManagementInputWater() {
                       <div className="card-header" id="headingThree">
                         <h2 className="mb-0">
                           <button
-                            className="btn btn-link collapsed"
+                            className="btn text-left btn-sm collapsed"
                             type="button"
                             data-toggle="collapse"
                             data-target="#airbersih"
                             aria-expanded="false"
                             aria-controls="airbersih"
                           >
+                            <i className="ti-arrow-circle-down"> </i>
                             Air Bersih
                           </button>
+                          <a
+                            className="btn btn-rounded btn-outline-primary float-right"
+                            href="https://rdtr.onemap.id/backend/Template/air_bersih.zip"
+                          >
+                            Unduh Contoh
+                          </a>
                         </h2>
                       </div>
                       <div

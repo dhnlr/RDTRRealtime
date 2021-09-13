@@ -30,27 +30,43 @@ function DataManagementInputFlood() {
     }
   }, [history, state?.id]);
 
-  const onSubmit = ({ building, building_year, building_desc, building_tag, persil, persil_year, persil_desc, persil_tag, pola_ruang, pola_ruang_year, pola_ruang_desc, pola_ruang_tag, }, e) => {
+  const onSubmit = (
+    {
+      building,
+      building_year,
+      building_desc,
+      building_tag,
+      persil,
+      persil_year,
+      persil_desc,
+      persil_tag,
+      pola_ruang,
+      pola_ruang_year,
+      pola_ruang_desc,
+      pola_ruang_tag,
+    },
+    e
+  ) => {
     setErrMessage(null);
     setIsProcessing(true);
 
-    building_tag = building_tag.map(tag => tag.value)
-    persil_tag = persil_tag.map(tag => tag.value)
-    pola_ruang_tag = pola_ruang_tag.map(tag => tag.value)
+    building_tag = building_tag.map((tag) => tag.value);
+    persil_tag = persil_tag.map((tag) => tag.value);
+    pola_ruang_tag = pola_ruang_tag.map((tag) => tag.value);
 
     var fd = new FormData();
     fd.set("bangunan", building[0]);
-    fd.set("tahun_bangunan", building_year)
-    fd.set("deskripsi_bangunan", building_desc)
-    fd.set("tag_bangunan", building_tag)
+    fd.set("tahun_bangunan", building_year);
+    fd.set("deskripsi_bangunan", building_desc);
+    fd.set("tag_bangunan", building_tag);
     fd.set("persil_tanah", persil[0]);
-    fd.set("tahun_persil_tanah", persil_year)
-    fd.set("deskripsi_persil_tanah", persil_desc)
-    fd.set("tag_persil_tanah", persil_tag)
+    fd.set("tahun_persil_tanah", persil_year);
+    fd.set("deskripsi_persil_tanah", persil_desc);
+    fd.set("tag_persil_tanah", persil_tag);
     fd.set("pola_ruang", pola_ruang[0]);
-    fd.set("tahun_pola_ruang", pola_ruang_year)
-    fd.set("deskripsi_pola_ruang", pola_ruang_desc)
-    fd.set("tag_pola_ruang", pola_ruang_tag)
+    fd.set("tahun_pola_ruang", pola_ruang_year);
+    fd.set("deskripsi_pola_ruang", pola_ruang_desc);
+    fd.set("tag_pola_ruang", pola_ruang_tag);
     fd.set("project_id", state?.id);
 
     axios
@@ -195,15 +211,22 @@ function DataManagementInputFlood() {
                       <div className="card-header" id="headingOne">
                         <h2 className="mb-0">
                           <button
-                            className="btn btn-link collapsed"
+                            className="btn text-left btn-sm collapsed"
                             type="button"
                             data-toggle="collapse"
                             data-target="#polaruang"
                             aria-expanded="false"
                             aria-controls="polaruang"
                           >
+                            <i className="ti-arrow-circle-down"> </i>
                             Pola Ruang RDTR Kabupaten/Kota
                           </button>
+                          <a
+                            className="btn btn-rounded btn-outline-primary float-right"
+                            href="https://rdtr.onemap.id/backend/Template/pola_ruang.zip"
+                          >
+                            Unduh Contoh
+                          </a>
                         </h2>
                       </div>
 
@@ -263,7 +286,12 @@ function DataManagementInputFlood() {
                                 className="form-control"
                                 name="pola_ruang_year"
                                 placeholder="Tahun pola ruang"
-                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
+                                ref={register({
+                                  pattern: {
+                                    value: /^\d{4}$/,
+                                    message: "Format tahun salah",
+                                  },
+                                })}
                               />
                               {errors.pola_ruang_year && (
                                 <small
@@ -380,7 +408,12 @@ function DataManagementInputFlood() {
                                 className="form-control"
                                 name="building_year"
                                 placeholder="Tahun bangunan yang sudah ada"
-                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
+                                ref={register({
+                                  pattern: {
+                                    value: /^\d{4}$/,
+                                    message: "Format tahun salah",
+                                  },
+                                })}
                               />
                               {errors.building_year && (
                                 <small
@@ -494,7 +527,12 @@ function DataManagementInputFlood() {
                                 className="form-control"
                                 name="persil_year"
                                 placeholder="Tahun persil tanah"
-                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
+                                ref={register({
+                                  pattern: {
+                                    value: /^\d{4}$/,
+                                    message: "Format tahun salah",
+                                  },
+                                })}
                               />
                               {errors.persil_year && (
                                 <small
