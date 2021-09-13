@@ -193,7 +193,7 @@ function DataManagementInput() {
             ? state?.isPrivate
             : JSON.parse(localStorage.state)?.isPrivate,
           kotaKabupatenId: city,
-          ownerId: state ? state?.owner : localStorage.state?.userId,
+          ownerId: localStorage.state?.userId,
         },
         { headers }
       )
