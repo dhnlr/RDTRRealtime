@@ -172,7 +172,7 @@ function DataManagementInput() {
           ? state?.isPrivate
           : JSON.parse(localStorage.state)?.isPrivate,
         kotaKabupatenId: city,
-        ownerId: state ? state?.owner : localStorage.state?.userId,
+        ownerId: Cookies.get("userId"),
       })
       .then((data) => {
         setIsProcessing(false);
