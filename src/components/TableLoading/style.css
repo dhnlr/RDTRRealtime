@@ -1,10 +1,20 @@
-.table-loading td,.table-loading th {
+td .table-loading {
     background-color: rgb(194, 194, 194);
-    width: 200px;
-    height: 70px;
+    width: 130px;
+    height: 35px;
     animation: fading 1.5s infinite;
-    margin: 25px;
-    border: solid 5px white !important;
+    /* margin: 25px; */
+    /* border: solid 5px rgb(233, 233, 233) !important; */
+    border-radius: 10px;
+  }
+
+  th .table-loading {
+    background-color: rgb(194, 194, 194);
+    width: 130px;
+    height: 20px;
+    animation: fading 1.5s infinite;
+    /* margin: 25px;   */
+    /* border: solid 5px rgb(233, 233, 233) !important; */
     border-radius: 10px;
   }
   

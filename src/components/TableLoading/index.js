@@ -4,39 +4,45 @@ import "./style.css"
 
 function TableLoading() {
     return (
-        <table className="table table-light table-bordered table-loading">
+        <table className="table table-striped">
             <thead>
                 <tr>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
+                    <th><div className="table-loading"></div></th>
+                    <th><div className="table-loading"></div></th>
+                    <th><div className="table-loading"></div></th>
+                    <th><div className="table-loading"></div></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                </tr>
+                <tr>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
+                    <td><div className="table-loading"></div></td>
                 </tr>
             </tbody>
         </table>
