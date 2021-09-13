@@ -24,31 +24,30 @@ function DataManagementInputTrash() {
     }
   }, [history, state?.id]);
 
-  const onSubmit = ({ building, building_year, building_desc, building_tag, persil, persil_year, persil_desc, persil_tag, pola_ruang, pola_ruang_year, pola_ruang_desc, pola_ruang_tag, }, e) => {
+  const onSubmit = (
+    {
+      trash,
+      trash_year,
+      trash_desc,
+      trash_tag,
+    },
+    e
+  ) => {
     setErrMessage(null);
     setIsProcessing(true);
 
-    building_tag = building_tag.map(tag => tag.value)
-    persil_tag = persil_tag.map(tag => tag.value)
-    pola_ruang_tag = pola_ruang_tag.map(tag => tag.value)
+    if (trash_tag)
+      trash_tag = trash_tag.map((tag) => tag.value);
 
     var fd = new FormData();
-    fd.set("bangunan", building[0]);
-    fd.set("tahun_bangunan", building_year)
-    fd.set("deskripsi_bangunan", building_desc)
-    fd.set("tag_bangunan", building_tag)
-    fd.set("persil_tanah", persil[0]);
-    fd.set("tahun_persil_tanah", persil_year)
-    fd.set("deskripsi_persil_tanah", persil_desc)
-    fd.set("tag_persil_tanah", persil_tag)
-    fd.set("pola_ruang", pola_ruang[0]);
-    fd.set("tahun_pola_ruang", pola_ruang_year)
-    fd.set("deskripsi_pola_ruang", pola_ruang_desc)
-    fd.set("tag_pola_ruang", pola_ruang_tag)
+    fd.set("sampah", trash[0]);
+    fd.set("tahun_sampah", trash_year);
+    fd.set("deskripsi_sampah", trash_desc);
+    fd.set("tag_sampah", trash_tag);
     fd.set("project_id", state?.id);
 
     axios
-      .post(config.url.API_URL + "/FileUploader/Kdbklb", fd, {
+      .post(config.url.API_URL + "/FileUploader/Persampahan", fd, {
         onUploadProgress: (progressEvent) => {
           setProgress({
             loaded: progressEvent.loaded,
@@ -191,17 +190,17 @@ function DataManagementInputTrash() {
                             className="btn btn-link collapsed"
                             type="button"
                             data-toggle="collapse"
-                            data-target="#polaruang"
+                            data-target="#trash_div"
                             aria-expanded="false"
-                            aria-controls="polaruang"
+                            aria-controls="trash_div"
                           >
-                            Pola Ruang RDTR Kabupaten/Kota
+                            Persampahan
                           </button>
                         </h2>
                       </div>
 
                       <div
-                        id="polaruang"
+                        id="trash_div"
                         className="collapse show"
                         aria-labelledby="headingOne"
                         data-parent="#accordionExample"
@@ -211,8 +210,8 @@ function DataManagementInputTrash() {
                             <label>Lampiran</label>
                             <div className="custom-file">
                               <label
-                                id="pola_ruang"
-                                htmlFor="pola_ruang"
+                                id="trash"
+                                htmlFor="trash"
                                 className="custom-file-label"
                               >
                                 Cari berkas...
@@ -220,27 +219,27 @@ function DataManagementInputTrash() {
                               <input
                                 className="form-control custom-file-input"
                                 ref={register({
-                                  required: "Berkas pola ruang harus diisi",
+                                  required: "Berkas TPS harus diisi",
                                 })}
                                 type="file"
-                                name="pola_ruang"
+                                name="trash"
                                 accept=".zip"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(
-                                        "pola_ruang"
+                                        "trash"
                                       ).innerHTML = e.target.files[0].name)
                                     : (document.getElementById(
-                                        "pola_ruang"
+                                        "trash"
                                       ).innerHTML = "Cari berkas...");
                                 }}
                               />
-                              {errors.pola_ruang && (
+                              {errors.trash && (
                                 <small
                                   id="nameHelp"
                                   className="form-text text-danger"
                                 >
-                                  {errors.pola_ruang.message}
+                                  {errors.trash.message}
                                 </small>
                               )}
                             </div>
@@ -248,46 +247,51 @@ function DataManagementInputTrash() {
                           <h4>Rincian Data</h4>
                           <div className="form-row">
                             <div className="form-group col-md-6">
-                              <label htmlFor="pola_ruang_year">
+                              <label htmlFor="trash_year">
                                 Tahun (opsional)
                               </label>
                               <input
-                                id="pola_ruang_year"
+                                id="trash_year"
                                 className="form-control"
-                                name="pola_ruang_year"
-                                placeholder="Tahun pola ruang"
-                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
+                                name="trash_year"
+                                placeholder="Tahun TPS"
+                                ref={register({
+                                  pattern: {
+                                    value: /^\d{4}$/,
+                                    message: "Format tahun salah",
+                                  },
+                                })}
                               />
-                              {errors.pola_ruang_year && (
+                              {errors.trash_year && (
                                 <small
                                   id="nameHelp"
                                   className="form-text text-danger"
                                 >
-                                  {errors.pola_ruang_year.message}
+                                  {errors.trash_year.message}
                                 </small>
                               )}
                             </div>
                             <div className="form-group col-md-6">
-                              <label htmlFor="pola_ruang_desc">
+                              <label htmlFor="trash_desc">
                                 Deskripsi (opsional)
                               </label>
                               <input
-                                id="pola_ruang_desc"
+                                id="trash_desc"
                                 className="form-control"
-                                name="pola_ruang_desc"
-                                placeholder="Deskripsi pola ruang"
+                                name="trash_desc"
+                                placeholder="Deskripsi TPS"
                                 ref={register}
                               />
                             </div>
                           </div>
                           <div className="form-group">
-                            <label htmlFor="pola_ruang_tag">
+                            <label htmlFor="trash_tag">
                               Tag (opsional)
                             </label>
                             <Controller
-                              id="pola_ruang_tag"
+                              id="trash_tag"
                               as={CreatableSelect}
-                              name="pola_ruang_tag"
+                              name="trash_tag"
                               components={{
                                 DropdownIndicator: null,
                               }}
@@ -295,243 +299,14 @@ function DataManagementInputTrash() {
                               defaultValue={null}
                               isMulti
                               isClearable
-                              placeholder="Tag pola ruang"
+                              placeholder="Tag TPS"
                               className=""
                             />
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="card">
-                      <div className="card-header" id="headingTwo">
-                        <h2 className="mb-0">
-                          <button
-                            className="btn btn-link collapsed"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target="#buildingfootprint"
-                            aria-expanded="false"
-                            aria-controls="buildingfootprint"
-                          >
-                            Bangunan yang Sudah Ada
-                          </button>
-                        </h2>
-                      </div>
-                      <div
-                        id="buildingfootprint"
-                        className="collapse show"
-                        aria-labelledby="headingTwo"
-                        data-parent="#accordionExample"
-                      >
-                        <div className="card-body">
-                          <div className="form-group">
-                            <label>Lampiran</label>
-                            <div className="custom-file">
-                              <label
-                                id="building"
-                                htmlFor="building"
-                                className="custom-file-label"
-                              >
-                                Cari berkas...
-                              </label>
-                              <input
-                                className="form-control custom-file-input"
-                                ref={register({
-                                  required: "Berkas bangunan harus ada",
-                                })}
-                                type="file"
-                                name="building"
-                                accept=".zip"
-                                onChange={(e) => {
-                                  e.target.files[0].name
-                                    ? (document.getElementById(
-                                        "building"
-                                      ).innerHTML = e.target.files[0].name)
-                                    : (document.getElementById(
-                                        "building"
-                                      ).innerHTML = "Cari berkas...");
-                                }}
-                              />
-                            </div>
-                            {errors.building && (
-                              <small
-                                id="nameHelp"
-                                className="form-text text-danger"
-                              >
-                                {errors.building.message}
-                              </small>
-                            )}
-                          </div>
-                          <h4>Rincian Data</h4>
-                          <div className="form-row">
-                            <div className="form-group col-md-6">
-                              <label htmlFor="building_year">
-                                Tahun (opsional)
-                              </label>
-                              <input
-                                id="building_year"
-                                className="form-control"
-                                name="building_year"
-                                placeholder="Tahun bangunan yang sudah ada"
-                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
-                              />
-                              {errors.building_year && (
-                                <small
-                                  id="nameHelp"
-                                  className="form-text text-danger"
-                                >
-                                  {errors.building_year.message}
-                                </small>
-                              )}
-                            </div>
-                            <div className="form-group col-md-6">
-                              <label htmlFor="building_desc">
-                                Deskripsi (opsional)
-                              </label>
-                              <input
-                                id="building_desc"
-                                className="form-control"
-                                name="building_desc"
-                                placeholder="Deskripsi bangunan yang sudah ada"
-                                ref={register}
-                              />
-                            </div>
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="building_tag">Tag (opsional)</label>
-                            <Controller
-                              id="building_tag"
-                              as={CreatableSelect}
-                              name="building_tag"
-                              components={{
-                                DropdownIndicator: null,
-                              }}
-                              control={control}
-                              defaultValue={null}
-                              isMulti
-                              isClearable
-                              placeholder="Tag bangunan"
-                              className=""
-                            />
-                          </div>
-                        </div>
-                      </div>
                     </div>
-                    <div className="card">
-                      <div className="card-header" id="headingThree">
-                        <h2 className="mb-0">
-                          <button
-                            className="btn btn-link collapsed"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target="#persiltanah"
-                            aria-expanded="false"
-                            aria-controls="persiltanah"
-                          >
-                            Persil Tanah
-                          </button>
-                        </h2>
-                      </div>
-                      <div
-                        id="persiltanah"
-                        className="collapse show"
-                        aria-labelledby="headingThree"
-                        data-parent="#accordionExample"
-                      >
-                        <div className="card-body">
-                          <div className="form-group">
-                            <label>Lampiran</label>
-                            <div className="custom-file">
-                              <label
-                                id="persil"
-                                htmlFor="persil"
-                                className="custom-file-label"
-                              >
-                                Cari berkas...
-                              </label>
-                              <input
-                                className="form-control custom-file-input"
-                                ref={register({
-                                  required: "Berkas persil tanah harus ada",
-                                })}
-                                type="file"
-                                name="persil"
-                                onChange={(e) => {
-                                  e.target.files[0].name
-                                    ? (document.getElementById(
-                                        "persil"
-                                      ).innerHTML = e.target.files[0].name)
-                                    : (document.getElementById(
-                                        "persil"
-                                      ).innerHTML = "Cari berkas...");
-                                }}
-                              />
-                            </div>
-                            {errors.persil && (
-                              <small
-                                id="nameHelp"
-                                className="form-text text-danger"
-                              >
-                                {errors.persil.message}
-                              </small>
-                            )}
-                          </div>
-                          <h4>Rincian Data</h4>
-                          <div className="form-row">
-                            <div className="form-group col-md-6">
-                              <label htmlFor="persil_year">
-                                Tahun (opsional)
-                              </label>
-                              <input
-                                id="persil_year"
-                                className="form-control"
-                                name="persil_year"
-                                placeholder="Tahun persil tanah"
-                                ref={register({pattern: { value: /^\d{4}$/, message: "Format tahun salah" }})}
-                              />
-                              {errors.persil_year && (
-                                <small
-                                  id="nameHelp"
-                                  className="form-text text-danger"
-                                >
-                                  {errors.persil_year.message}
-                                </small>
-                              )}
-                            </div>
-                            <div className="form-group col-md-6">
-                              <label htmlFor="persil_desc">
-                                Deskripsi (opsional)
-                              </label>
-                              <input
-                                id="persil_desc"
-                                className="form-control"
-                                name="persil_desc"
-                                placeholder="Deskripsi persil tanah"
-                                ref={register}
-                              />
-                            </div>
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="persil_tag">Tag (opsional)</label>
-                            <Controller
-                              id="persil_tag"
-                              as={CreatableSelect}
-                              name="persil_tag"
-                              components={{
-                                DropdownIndicator: null,
-                              }}
-                              control={control}
-                              defaultValue={null}
-                              isMulti
-                              isClearable
-                              placeholder="Tag persil tanah"
-                              className=""
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   <div className="template-demo float-sm-left float-md-right">
                     <button
                       className="btn btn-light"

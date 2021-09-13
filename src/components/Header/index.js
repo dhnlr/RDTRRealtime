@@ -1,7 +1,7 @@
 import React from "react";
 import A from "../A";
 import { Link, useHistory } from "react-router-dom";
-// import logo from "./logo-txt.png"
+import logomini from "./logo-txt-mini.png"
 
 import logo2 from "./logo2.jpeg"
 import profile from "./face28.jpg"
@@ -17,7 +17,7 @@ function Header() {
           <img src={logo2} className="mr-2" alt="logo" />
         </Link>
         <Link className="navbar-brand brand-logo-mini" to="/dashboard">
-          <img src="./images/logo-txt-mini.png" alt="logo" />
+          <img src={logomini} alt="logo" />
         </Link>
       </div>
       <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">
