@@ -24,20 +24,11 @@ function DataManagementInputTrash() {
     }
   }, [history, state?.id]);
 
-  const onSubmit = (
-    {
-      trash,
-      trash_year,
-      trash_desc,
-      trash_tag,
-    },
-    e
-  ) => {
+  const onSubmit = ({ trash, trash_year, trash_desc, trash_tag }, e) => {
     setErrMessage(null);
     setIsProcessing(true);
 
-    if (trash_tag)
-      trash_tag = trash_tag.map((tag) => tag.value);
+    if (trash_tag) trash_tag = trash_tag.map((tag) => tag.value);
 
     var fd = new FormData();
     fd.set("sampah", trash[0]);
@@ -187,15 +178,22 @@ function DataManagementInputTrash() {
                       <div className="card-header" id="headingOne">
                         <h2 className="mb-0">
                           <button
-                            className="btn btn-link collapsed"
+                            className="btn text-left btn-sm collapsed"
                             type="button"
                             data-toggle="collapse"
                             data-target="#trash_div"
                             aria-expanded="false"
                             aria-controls="trash_div"
                           >
+                            <i className="ti-arrow-circle-down"> </i>
                             Persampahan
                           </button>
+                          <a
+                            className="btn btn-rounded btn-outline-primary float-right"
+                            href="https://rdtr.onemap.id/backend/Template/persampahan.zip"
+                          >
+                            Unduh Contoh
+                          </a>
                         </h2>
                       </div>
 
@@ -285,9 +283,7 @@ function DataManagementInputTrash() {
                             </div>
                           </div>
                           <div className="form-group">
-                            <label htmlFor="trash_tag">
-                              Tag (opsional)
-                            </label>
+                            <label htmlFor="trash_tag">Tag (opsional)</label>
                             <Controller
                               id="trash_tag"
                               as={CreatableSelect}
@@ -306,7 +302,7 @@ function DataManagementInputTrash() {
                         </div>
                       </div>
                     </div>
-                    </div>
+                  </div>
                   <div className="template-demo float-sm-left float-md-right">
                     <button
                       className="btn btn-light"

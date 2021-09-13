@@ -204,15 +204,22 @@ function DataManagementInputKdb() {
                       <div className="card-header" id="headingOne">
                         <h2 className="mb-0">
                           <button
-                            className="btn btn-link collapsed"
+                            className="btn text-left btn-sm collapsed"
                             type="button"
                             data-toggle="collapse"
                             data-target="#polaruang"
                             aria-expanded="false"
                             aria-controls="polaruang"
                           >
+                            <i className="ti-arrow-circle-down"> </i>
                             Pola Ruang RDTR Kabupaten/Kota
                           </button>
+                          <a
+                            className="btn btn-rounded btn-outline-primary float-right"
+                            href="https://rdtr.onemap.id/backend/Template/pola_ruang.zip"
+                          >
+                            Unduh Contoh
+                          </a>
                         </h2>
                       </div>
 
@@ -327,15 +334,22 @@ function DataManagementInputKdb() {
                       <div className="card-header" id="headingTwo">
                         <h2 className="mb-0">
                           <button
-                            className="btn btn-link collapsed"
+                            className="btn text-left btn-sm collapsed"
                             type="button"
                             data-toggle="collapse"
                             data-target="#buildingfootprint"
                             aria-expanded="false"
                             aria-controls="buildingfootprint"
                           >
+                            <i className="ti-arrow-circle-down"> </i>
                             Bangunan yang Sudah Ada
                           </button>
+                          <a
+                            className="btn btn-rounded btn-outline-primary float-right"
+                            href="https://rdtr.onemap.id/backend/Template/bangunan.zip"
+                          >
+                            Unduh Contoh
+                          </a>
                         </h2>
                       </div>
                       <div
@@ -447,15 +461,22 @@ function DataManagementInputKdb() {
                       <div className="card-header" id="headingThree">
                         <h2 className="mb-0">
                           <button
-                            className="btn btn-link collapsed"
+                            className="btn text-left btn-sm collapsed"
                             type="button"
                             data-toggle="collapse"
                             data-target="#persiltanah"
                             aria-expanded="false"
                             aria-controls="persiltanah"
                           >
+                            <i className="ti-arrow-circle-down"> </i>
                             Persil Tanah
                           </button>
+                          <a
+                            className="btn btn-rounded btn-outline-primary float-right"
+                            href="https://rdtr.onemap.id/backend/Template/persil_tanah.zip"
+                          >
+                            Unduh Contoh
+                          </a>
                         </h2>
                       </div>
                       <div

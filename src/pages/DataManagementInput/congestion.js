@@ -187,15 +187,22 @@ function DataManagementInputCongestion() {
                       <div className="card-header" id="headingThree">
                         <h2 className="mb-0">
                           <button
-                            className="btn btn-link collapsed"
+                            className="btn text-left btn-sm collapsed"
                             type="button"
                             data-toggle="collapse"
                             data-target="#jaringanjalan"
                             aria-expanded="false"
                             aria-controls="jaringanjalan"
                           >
+                            <i className="ti-arrow-circle-down"> </i>
                             Jaringan Jalan
                           </button>
+                          <a
+                            className="btn btn-rounded btn-outline-primary float-right"
+                            href="https://rdtr.onemap.id/backend/Template/jalan.zip"
+                          >
+                            Unduh Contoh
+                          </a>
                         </h2>
                       </div>
                       <div
