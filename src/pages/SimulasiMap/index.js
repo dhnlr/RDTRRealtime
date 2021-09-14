@@ -1611,6 +1611,32 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
+          const frekuensiBanjir2019 = new FeatureLayer({
+            url: "https://rdtr.onemap.id/server/rest/services/Hosted/Frekuensi_banjir_2019/FeatureServer/0",
+            title: "Frekuensi Banjir 2019",
+            outFields: ["*"],
+            editingEnabled: false,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            popupTemplate: {
+              title: "Frekuensi Banjir 2019",
+            },
+          })
+
+          const frekuensiBanjir2020 = new FeatureLayer({
+            url: "https://rdtr.onemap.id/server/rest/services/Hosted/Frekuensi_banjir_2020/FeatureServer/0",
+            title: "Frekuensi Banjir 2020",
+            outFields: ["*"],
+            editingEnabled: false,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            popupTemplate: {
+              title: "Frekuensi Banjir 2020",
+            },
+          })
+
           let utamaGroupLayer = new GroupLayer({
             title: "Layer Utama",
             layers: [
@@ -1625,6 +1651,8 @@ const SimulasiMap = () => {
           let tambahanGroupLayer = new GroupLayer({
             title: "Layer Tambahan",
             layers: [
+              frekuensiBanjir2020,
+              frekuensiBanjir2019,
               basemapPolaRuangLayer,
               polaRuangEnvelopeLayer,
               persilTanahBpn,
@@ -1644,6 +1672,8 @@ const SimulasiMap = () => {
           basemapPolaRuangLayer.visible = false;
           polaRuangEnvelopeLayer.visible = false;
           buildings3dLayer.visible = false;
+          frekuensiBanjir2020.visible = false;
+          frekuensiBanjir2019.visible = false;
 
           async function finishLayer() {
             if (isMounted) {
