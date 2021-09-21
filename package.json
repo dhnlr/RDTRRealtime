@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
     "ckeditor5-custom-build": "file:ckeditor5",
+    "dompurify": "^2.3.2",
     "esri-loader": "^3.0.0",
     "js-cookie": "^3.0.1",
     "jspdf": "^2.3.1",

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "../../../axiosConfig"
+import DOMPurify from 'dompurify';
 
 import { Header, Menu, Footer } from "../../../components";
 import headerImage from "./header.svg"
@@ -117,7 +118,7 @@ function HelpDataFaq() {
                                                                 </div>
 
                                                                 <div id={help.namaKategori.replace(/\s\W+/g, '') + bantuan?.id} className="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                                                    <div className="card-body" dangerouslySetInnerHTML={{ __html: bantuan?.jawaban }} />
+                                                                    <div className="card-body" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(bantuan?.jawaban) }} />
                                                                 </div>
                                                             </div>
                                                         ))}

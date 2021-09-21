@@ -713,15 +713,39 @@ const SimulasiMap = () => {
             },
             outFields: ["*"],
             editingEnabled: false,
-            // renderer: {
-            //   type: "simple", // autocasts as new SimpleRenderer()
-            //   symbol: {
-            //     type: "web-style", // autocasts as new WebStyleSymbol()
-            //     name: "Dumpster",
-            //     styleName: "EsriRealisticStreetSceneStyle",
-            //     size: 5,
-            //   }
-            // },
+            /* renderer: {
+              type: "simple",
+              symbol: {
+                type: "point-3d",
+                symbolLayers: [
+                  {
+                    type: "object", // autocasts as new ObjectSymbol3DLayer()
+                    height: 4, // height of the object in meters
+                    // width: 3,
+                    // depth: 15,
+                    resource: {
+                      href: "https://rdtr.onemap.id/backend/Template/dumpster/scene.gltf",
+                    },
+                    // heading: 270,
+                  },
+                ],
+              },
+            }, */
+            renderer: {
+              type: "simple", // autocasts as new SimpleRenderer()
+              symbol: {
+                type: "web-style", // autocasts as new WebStyleSymbol()
+                name: "Trash_Can_2",
+                styleName: "EsriRealisticStreetSceneStyle",
+              },
+              visualVariables: [
+                {
+                  type: "size",
+                  field: "kapasitas",
+                  axis: "height",
+                },
+              ],
+            },
           });
 
           const persilTanahSesudahLayer = new FeatureLayer({
@@ -1780,6 +1804,32 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
 
+          const frekuensiBanjir2019 = new FeatureLayer({
+            url: "https://rdtr.onemap.id/server/rest/services/Hosted/Frekuensi_banjir_2019/FeatureServer/0",
+            title: "Frekuensi Banjir 2019",
+            outFields: ["*"],
+            editingEnabled: false,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            popupTemplate: {
+              title: "Frekuensi Banjir 2019",
+            },
+          });
+
+          const frekuensiBanjir2020 = new FeatureLayer({
+            url: "https://rdtr.onemap.id/server/rest/services/Hosted/Frekuensi_banjir_2020/FeatureServer/0",
+            title: "Frekuensi Banjir 2020",
+            outFields: ["*"],
+            editingEnabled: false,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            popupTemplate: {
+              title: "Frekuensi Banjir 2020",
+            },
+          });
+
           let utamaGroupLayer = new GroupLayer({
             title: "Layer Utama",
             layers: [
@@ -1795,6 +1845,8 @@ const SimulasiMap = () => {
           let tambahanGroupLayer = new GroupLayer({
             title: "Layer Tambahan",
             layers: [
+              frekuensiBanjir2020,
+              frekuensiBanjir2019,
               basemapPolaRuangLayer,
               polaRuangEnvelopeLayer,
               persilTanahBpn,
@@ -1815,6 +1867,8 @@ const SimulasiMap = () => {
           polaRuangEnvelopeLayer.visible = false;
           buildings3dLayer.visible = false;
           bangunanSebelumLayer.visible = false;
+          frekuensiBanjir2020.visible = false;
+          frekuensiBanjir2019.visible = false;
 
           async function finishLayer() {
             if (isMounted) {
@@ -2339,6 +2393,8 @@ const SimulasiMap = () => {
               container: document.createElement("div"),
               view: view,
               layerInfos: [
+                { layer: frekuensiBanjir2019 },
+                { layer: frekuensiBanjir2020 },
                 { layer: jalanSesudahLayer },
                 { layer: polaRuangVersioningLayer },
                 { layer: persilTanahSesudahLayer },
@@ -2901,15 +2957,37 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "timbulan_sampah_harian_m3",
-                    field_value: features[0].attributes.timbulan_sampah_harian_m3,
+                    field_value:
+                      features[0].attributes.timbulan_sampah_harian_m3,
                   },
                   {
                     field_name: "sum_timbulan_sampah_harian_m3",
-                    field_value: features[0].attributes.sum_timbulan_sampah_harian_m3,
+                    field_value:
+                      features[0].attributes.sum_timbulan_sampah_harian_m3,
                   },
                   {
                     field_name: "total_kapasitas",
-                    field_value: features[0].attributes.total_kapasitas,
+                    field_value: features[0].attributes.total_kapasitas,//88
+                  },
+                  {
+                    field_name: "jlh_biopori",
+                    field_value:
+                      features[0].attributes.jlh_biopori,
+                  },
+                  {
+                    field_name: "kapasitas_biopori",
+                    field_value:
+                      features[0].attributes.kapasitas_biopori,//90
+                  },
+                  {
+                    field_name: "surplus_debitalir",
+                    field_value:
+                      features[0].attributes.surplus_debitalir,
+                  },
+                  {
+                    field_name: "kecenderungan_banjir",
+                    field_value:
+                      features[0].attributes.kecenderungan_banjir,
                   },
                 ]);
                 setHasilSimulasiBangunanKdbKlb(
@@ -5163,6 +5241,30 @@ const SimulasiMap = () => {
     layerJaringanJalan.refresh();
   };
 
+  function toFix(x, fixed = 3) {
+    if (Math.abs(x) < 1.0) {
+      var e = parseInt(x.toString().split("e-")[1]);
+      if (e) {
+        x = parseFloat(
+          x.toString().split("e-")[0].split(".")[0] + "e-" + e
+        ).toFixed(e);
+      } else {
+        var str = "";
+        var split = x.toString().split("");
+        for (var i = 0; i < split.length; i++) {
+          str += split[i];
+          if (split[i] > 0 && i > 2) {
+            break;
+          }
+        }
+        x = parseFloat(str);
+      }
+    } else {
+      x = parseFloat(x.toFixed(fixed));
+    }
+    return x;
+  }
+
   return (
     <div className="container-scroller">
       <Header />
@@ -5634,16 +5736,18 @@ const SimulasiMap = () => {
                                         {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
                                       </tr>
                                     }
-                                    {<tr>
-                                      <td>Status Kapasitas TPS</td>
-                                      <td>
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[85]
-                                              .field_value
-                                          : contentBangunanKdbKlb[85]
-                                              .field_value}
-                                      </td>
-                                    </tr>}
+                                    {
+                                      <tr>
+                                        <td>Status Kapasitas TPS</td>
+                                        <td>
+                                          {activeSebelumSesudah.activeSebelum
+                                            ? contentBangunanKdbKlb[85]
+                                                .field_value
+                                            : contentBangunanKdbKlb[85]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                    }
                                   </tbody>
                                 </table>
                               </div>
@@ -5756,14 +5860,18 @@ const SimulasiMap = () => {
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[18]
                                               .field_value
-                                            ? contentBangunanKdbKlb[18].field_value.toFixed(
+                                            ? toFix(
+                                                contentBangunanKdbKlb[18]
+                                                  .field_value,
                                                 2
                                               )
                                             : contentBangunanKdbKlb[18]
                                                 .field_value
                                           : contentBangunanKdbKlb[19]
                                               .field_value
-                                          ? contentBangunanKdbKlb[19].field_value.toFixed(
+                                          ? toFix(
+                                              contentBangunanKdbKlb[19]
+                                                .field_value,
                                               2
                                             )
                                           : contentBangunanKdbKlb[19]
@@ -5782,14 +5890,18 @@ const SimulasiMap = () => {
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[20]
                                               .field_value
-                                            ? contentBangunanKdbKlb[20].field_value.toFixed(
+                                            ? toFix(
+                                                contentBangunanKdbKlb[20]
+                                                  .field_value,
                                                 2
                                               )
                                             : contentBangunanKdbKlb[20]
                                                 .field_value
                                           : contentBangunanKdbKlb[21]
                                               .field_value
-                                          ? contentBangunanKdbKlb[21].field_value.toFixed(
+                                          ? toFix(
+                                              contentBangunanKdbKlb[21]
+                                                .field_value,
                                               2
                                             )
                                           : contentBangunanKdbKlb[21]
@@ -5804,7 +5916,9 @@ const SimulasiMap = () => {
                                       </td>
                                       <td>
                                         {contentBangunanKdbKlb[65].field_value
-                                          ? contentBangunanKdbKlb[65].field_value.toFixed(
+                                          ? toFix(
+                                              contentBangunanKdbKlb[65]
+                                                .field_value,
                                               2
                                             )
                                           : contentBangunanKdbKlb[65]
@@ -5818,15 +5932,19 @@ const SimulasiMap = () => {
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[68]
                                               .field_value
-                                            ? contentBangunanKdbKlb[68].field_value.toFixed(
-                                                4
+                                            ? toFix(
+                                                contentBangunanKdbKlb[68]
+                                                  .field_value,
+                                                3
                                               )
                                             : contentBangunanKdbKlb[68]
                                                 .field_value
                                           : contentBangunanKdbKlb[62]
                                               .field_value
-                                          ? contentBangunanKdbKlb[62].field_value.toFixed(
-                                              4
+                                          ? toFix(
+                                              contentBangunanKdbKlb[62]
+                                                .field_value,
+                                              3
                                             )
                                           : contentBangunanKdbKlb[62]
                                               .field_value}
@@ -5844,6 +5962,18 @@ const SimulasiMap = () => {
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[69]
                                               .field_value
+                                            ? toFix(
+                                                contentBangunanKdbKlb[69]
+                                                  .field_value
+                                              )
+                                            : contentBangunanKdbKlb[69]
+                                                .field_value
+                                          : contentBangunanKdbKlb[63]
+                                              .field_value
+                                          ? toFix(
+                                              contentBangunanKdbKlb[63]
+                                                .field_value
+                                            )
                                           : contentBangunanKdbKlb[63]
                                               .field_value}
                                       </td>
@@ -5860,15 +5990,19 @@ const SimulasiMap = () => {
                                         {activeSebelumSesudah.activeSebelum
                                           ? contentBangunanKdbKlb[70]
                                               .field_value
-                                            ? contentBangunanKdbKlb[70].field_value.toFixed(
-                                                4
+                                            ? toFix(
+                                                contentBangunanKdbKlb[70]
+                                                  .field_value,
+                                                3
                                               )
                                             : contentBangunanKdbKlb[70]
                                                 .field_value
                                           : contentBangunanKdbKlb[64]
                                               .field_value
-                                          ? contentBangunanKdbKlb[64].field_value.toFixed(
-                                              4
+                                          ? toFix(
+                                              contentBangunanKdbKlb[64]
+                                                .field_value,
+                                              3
                                             )
                                           : contentBangunanKdbKlb[64]
                                               .field_value}
@@ -6091,83 +6225,196 @@ const SimulasiMap = () => {
                             </div>
                           </div>
 
-                          {<div className="card" style={{ margin: "0 0.2rem" }}>
+                          {
                             <div
-                              className="card-header"
-                              role="tab"
-                              id="headingFour"
-                              style={{ padding: "0px" }}
+                              className="card"
+                              style={{ margin: "0 0.2rem" }}
                             >
-                              <h6 className="mb-0">
-                                <button
-                                  className="btn btn-block text-left collapsed btn-sm"
-                                  type="button"
-                                  data-toggle="collapse"
-                                  data-target={"#sebelumEmpat"}
-                                  aria-expanded="true"
-                                  aria-controls={"sebelumEmpat"}
-                                  style={{ fontSize: "14px" }}
-                                >
-                                  <img
-                                    src="./images/recycling.png"
-                                    alt="Sampah"
-                                    style={{
-                                      marginRight: "10px",
-                                      width: "16px",
-                                    }}
-                                  />
-                                  Persampahan
-                                  <i className="ti-arrow-circle-down float-right"></i>
-                                </button>
-                              </h6>
-                            </div>
+                              <div
+                                className="card-header"
+                                role="tab"
+                                id="headingFour"
+                                style={{ padding: "0px" }}
+                              >
+                                <h6 className="mb-0">
+                                  <button
+                                    className="btn btn-block text-left collapsed btn-sm"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target={"#sebelumEmpat"}
+                                    aria-expanded="true"
+                                    aria-controls={"sebelumEmpat"}
+                                    style={{ fontSize: "14px" }}
+                                  >
+                                    <img
+                                      src="./images/recycling.png"
+                                      alt="Sampah"
+                                      style={{
+                                        marginRight: "10px",
+                                        width: "16px",
+                                      }}
+                                    />
+                                    Persampahan
+                                    <i className="ti-arrow-circle-down float-right"></i>
+                                  </button>
+                                </h6>
+                              </div>
 
-                            <div
-                              id="sebelumEmpat"
-                              className="collapse"
-                              aria-labelledby="headingFour"
-                              data-parent="#accordionExample"
-                            >
-                              <div className="card-body">
-                                <table className="table">
-                                  <tbody>
-                                    <tr>
-                                      <td>Status Kapasitas TPS</td>
-                                      <td>
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[85]
-                                              .field_value
-                                          : contentBangunanKdbKlb[85]
-                                              .field_value}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Timbulan Sampah Harian (Bangunan)</td>
-                                      <td>
-                                        {contentBangunanKdbKlb[86].field_value}{" "}
-                                              m<sup>3</sup>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Timbulan Sampah Harian (TPS Kumulatif)</td>
-                                      <td>
-                                        {contentBangunanKdbKlb[87].field_value}{" "}
-                                              m<sup>3</sup>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Total Kapasitas TPS</td>
-                                      <td>
-                                        {contentBangunanKdbKlb[88]
-                                          .field_value}{" "}
-                                              m<sup>3</sup>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
+                              <div
+                                id="sebelumEmpat"
+                                className="collapse"
+                                aria-labelledby="headingFour"
+                                data-parent="#accordionExample"
+                              >
+                                <div className="card-body">
+                                  <table className="table">
+                                    <tbody>
+                                      <tr>
+                                        <td>Status Kapasitas TPS</td>
+                                        <td>
+                                          {activeSebelumSesudah.activeSebelum
+                                            ? contentBangunanKdbKlb[85]
+                                                .field_value
+                                            : contentBangunanKdbKlb[85]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Timbulan Sampah Harian (Bangunan)
+                                        </td>
+                                        <td>
+                                          {contentBangunanKdbKlb[86].field_value
+                                            ? toFix(
+                                                contentBangunanKdbKlb[86]
+                                                  .field_value,
+                                                3
+                                              )
+                                            : contentBangunanKdbKlb[86]
+                                                .field_value}{" "}
+                                          m<sup>3</sup>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Timbulan Sampah Harian (TPS Kumulatif)
+                                        </td>
+                                        <td>
+                                          {contentBangunanKdbKlb[87].field_value
+                                            ? toFix(
+                                                contentBangunanKdbKlb[87]
+                                                  .field_value,
+                                                3
+                                              )
+                                            : contentBangunanKdbKlb[87]
+                                                .field_value}{" "}
+                                          m<sup>3</sup>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>Total Kapasitas TPS</td>
+                                        <td>
+                                          {contentBangunanKdbKlb[88].field_value
+                                            ? toFix(
+                                                contentBangunanKdbKlb[88]
+                                                  .field_value,
+                                                3
+                                              )
+                                            : contentBangunanKdbKlb[88]
+                                                .field_value}{" "}
+                                          m<sup>3</sup>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
                               </div>
                             </div>
-                          </div>}
+                          }
+
+<div
+                              className="card"
+                              style={{ margin: "0 0.2rem" }}
+                            >
+                              <div
+                                className="card-header"
+                                role="tab"
+                                id="headingFive"
+                                style={{ padding: "0px" }}
+                              >
+                                <h6 className="mb-0">
+                                  <button
+                                    className="btn btn-block text-left collapsed btn-sm"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target={"#sebelumLima"}
+                                    aria-expanded="true"
+                                    aria-controls={"sebelumLima"}
+                                    style={{ fontSize: "14px" }}
+                                  >
+                                    <img
+                                      src="./images/flood.png"
+                                      alt="Banjir"
+                                      style={{
+                                        marginRight: "10px",
+                                        width: "16px",
+                                      }}
+                                    />
+                                    Banjir
+                                    <i className="ti-arrow-circle-down float-right"></i>
+                                  </button>
+                                </h6>
+                              </div>
+
+                              <div
+                                id="sebelumLima"
+                                className="collapse"
+                                aria-labelledby="headingFive"
+                                data-parent="#accordionExample"
+                              >
+                                <div className="card-body">
+                                  <table className="table">
+                                    <tbody>
+                                      <tr>
+                                        <td>Jumlah Biopori</td>
+                                        <td>
+                                          {contentBangunanKdbKlb[89]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Kapasitas Biopori
+                                        </td>
+                                        <td>
+                                          {contentBangunanKdbKlb[90]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Surplus Debit Alir
+                                        </td>
+                                        <td>
+                                          {contentBangunanKdbKlb[91]
+                                                .field_value ? toFix(contentBangunanKdbKlb[91]
+                                                  .field_value) : contentBangunanKdbKlb[91]
+                                                  .field_value}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>Kecendrungan Banjir</td>
+                                        <td>
+                                          {contentBangunanKdbKlb[92]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+
                         </div>
                       </div>
                     </div>
