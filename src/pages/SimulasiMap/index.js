@@ -575,6 +575,14 @@ const SimulasiMap = () => {
                   field: "kapasitas",
                   axis: "height",
                 },
+                {
+                  type: "color",
+                  field: "status_tps_int", 
+                  stops: [
+                    { value: 1, color: "green" }, 
+                    { value: 2, color: "red" }, 
+                  ]
+                }
               ],
             },
           });
