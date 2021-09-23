@@ -732,9 +732,9 @@ const SimulasiMap = () => {
               },
             }, */
             renderer: {
-              type: "simple", // autocasts as new SimpleRenderer()
+              type: "simple", 
               symbol: {
-                type: "web-style", // autocasts as new WebStyleSymbol()
+                type: "web-style",
                 name: "Trash_Can_2",
                 styleName: "EsriRealisticStreetSceneStyle",
               },
@@ -744,8 +744,51 @@ const SimulasiMap = () => {
                   field: "kapasitas",
                   axis: "height",
                 },
-              ],
-            },
+                    ],
+                  }
+                },
+                {
+                  value: "Waspada",
+                  symbol: {
+                    type: "point-3d",
+                    symbolLayers: [
+                      {
+                        type: "object", // autocasts as new ObjectSymbol3DLayer()
+                        height: 4, // height of the object in meters
+                        // width: 3,
+                        // depth: 15,
+                        resource: {
+                          href: "https://rdtr.onemap.id/backend/Template/dumpster/scene.gltf",
+                        },
+                        material: {
+                          color: "yellow"
+                        }
+                      },
+                    ],
+                  }
+                },
+                {
+                  value: "Melebihi",
+                  symbol: {
+                    type: "point-3d",
+                    symbolLayers: [
+                      {
+                        type: "object", // autocasts as new ObjectSymbol3DLayer()
+                        height: 4, // height of the object in meters
+                        // width: 3,
+                        // depth: 15,
+                        resource: {
+                          href: "https://rdtr.onemap.id/backend/Template/dumpster/scene.gltf",
+                        },
+                        material: {
+                          color: "purple"
+                        }
+                      },
+                    ],
+                  }
+                }
+              ]
+            }, */
           });
 
           const persilTanahSesudahLayer = new FeatureLayer({
@@ -4033,7 +4076,7 @@ const SimulasiMap = () => {
                       ).style.display = "block";
                     }
                   });
-                  getRing(features[0].attributes.objectid);
+                  getRing(features[0].attributes.oid_historical);
                   // features[0].layer.definitionExpression =
                   //   "NOT id_bangunan = " + features[0].attributes.id_bangunan;
                 }
@@ -4143,14 +4186,14 @@ const SimulasiMap = () => {
            ************************************************************/
           var getRing = (id) => {
             var sesudah = Axios.get(
-              "https://rdtr.onemap.id/server/rest/services/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=objectid=" +
+              "https://localhost:8443/server/rest/services/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=oid_historical=" +
                 id +
                 " AND " +
                 bangunanDefinitionExpression +
                 "&outFields=*&outSR=4326&f=pjson"
             );
             var sebelum = Axios.get(
-              "https://rdtr.onemap.id/server/rest/services/Versioning/bangunan_analisis/FeatureServer/0/query?where=objectid=" +
+              "https://localhost:8443/server/rest/services/Versioning/bangunan_analisis/FeatureServer/0/query?where=objectid=" +
                 id +
                 " AND " +
                 bangunanDefinitionExpression +
