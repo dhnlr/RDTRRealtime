@@ -731,6 +731,29 @@ const SimulasiMap = () => {
                 ],
               },
             }, */
+            renderer: {
+              type: "simple", // autocasts as new SimpleRenderer()
+              symbol: {
+                type: "web-style", // autocasts as new WebStyleSymbol()
+                name: "Trash_Can_2",
+                styleName: "EsriRealisticStreetSceneStyle",
+              },
+              visualVariables: [
+                {
+                  type: "size",
+                  field: "kapasitas",
+                  axis: "height",
+                },
+                {
+                  type: "color",
+                  field: "status_tps_int", 
+                  stops: [
+                    { value: 1, color: "green" }, 
+                    { value: 2, color: "red" }, 
+                  ]
+                }
+              ],
+            },
           });
 
           const persilTanahSesudahLayer = new FeatureLayer({
