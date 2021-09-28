@@ -731,64 +731,6 @@ const SimulasiMap = () => {
                 ],
               },
             }, */
-            renderer: {
-              type: "simple", 
-              symbol: {
-                type: "web-style",
-                name: "Trash_Can_2",
-                styleName: "EsriRealisticStreetSceneStyle",
-              },
-              visualVariables: [
-                {
-                  type: "size",
-                  field: "kapasitas",
-                  axis: "height",
-                },
-                    ],
-                  }
-                },
-                {
-                  value: "Waspada",
-                  symbol: {
-                    type: "point-3d",
-                    symbolLayers: [
-                      {
-                        type: "object", // autocasts as new ObjectSymbol3DLayer()
-                        height: 4, // height of the object in meters
-                        // width: 3,
-                        // depth: 15,
-                        resource: {
-                          href: "https://rdtr.onemap.id/backend/Template/dumpster/scene.gltf",
-                        },
-                        material: {
-                          color: "yellow"
-                        }
-                      },
-                    ],
-                  }
-                },
-                {
-                  value: "Melebihi",
-                  symbol: {
-                    type: "point-3d",
-                    symbolLayers: [
-                      {
-                        type: "object", // autocasts as new ObjectSymbol3DLayer()
-                        height: 4, // height of the object in meters
-                        // width: 3,
-                        // depth: 15,
-                        resource: {
-                          href: "https://rdtr.onemap.id/backend/Template/dumpster/scene.gltf",
-                        },
-                        material: {
-                          color: "purple"
-                        }
-                      },
-                    ],
-                  }
-                }
-              ]
-            }, */
           });
 
           const persilTanahSesudahLayer = new FeatureLayer({
