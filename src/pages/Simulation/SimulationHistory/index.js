@@ -13,6 +13,7 @@ import SceneView from "@arcgis/core/views/SceneView";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import VectorTileLayer from "@arcgis/core/layers/VectorTileLayer";
 import Legend from "@arcgis/core/widgets/Legend"
+import Expand from "@arcgis/core/widgets/Expand"
 import * as watchUtils from "@arcgis/core/core/watchUtils";
 
 function SimulationHistory() {
@@ -21,6 +22,9 @@ function SimulationHistory() {
   const mapBeforeDiv = useRef(null);
   const mapAfterDiv = useRef(null);
   const legendDiv = useRef(null)
+  const layerListDiv = useRef(null)
+
+  let highlight = null
 
   const treeData = [
     {
@@ -51,7 +55,7 @@ function SimulationHistory() {
   let mapBefore, mapAfter, viewBefore, viewAfter
 
   useEffect(() => {
-    if (mapBeforeDiv.current && mapAfterDiv.current) {
+    if (mapBeforeDiv.current && mapAfterDiv.current && layerListDiv.current) {
       mapBefore = new Map({
         basemap: "topo-vector",
         ground: "world-elevation",
@@ -108,7 +112,30 @@ function SimulationHistory() {
           //   persilTanahBpn,
           //   buildingsEnvelopeLayer,
         ])
-        viewBefore.ui.add(legend)
+        viewBefore.popup.watch("features", (features) => {
+          if(features[0]) {
+            console.log(features[0].attributes.objectid)
+            console.log(features[0])
+            if (features[0].layer.id === "bagunan_analisis") {
+              viewAfter.whenLayerView(bangunanSesudahLayer).then((bangunanSesudahLayerView) => {
+                if (highlight) {
+                  highlight.remove();
+                }
+                console.log(features[0].attributes.objectid)
+                highlight = bangunanSesudahLayerView.highlight(features[0].attributes.objectid);
+              })
+            }
+          }
+        })
+        viewBefore.ui.add(legendExpand, "top-left")
+        const layerListExpand = new Expand({
+          autoCollapse: true,
+          content: document.getElementById("layerListDiv"),
+          view: viewBefore,
+          expandTooltip: "Daftar Layer",
+          expandIconClass: "esri-icon-layer-list",
+        });
+        viewBefore.ui.add(layerListExpand, "top-left")
       })
       viewAfter.when(() => {
 
@@ -2509,8 +2536,15 @@ function SimulationHistory() {
 
   const legend = new Legend({
     view: viewBefore,
-    container: legendDiv.current
   })
+
+  const legendExpand = new Expand({
+    autoCollapse: true,
+    content: legend,
+    view: viewBefore,
+    expandTooltip: "Legenda",
+    expandIconClass: "esri-icon-legend",
+  });
 
   const viewOptions = (map, div, isAfter) => {
     var options = {
@@ -2670,7 +2704,33 @@ function SimulationHistory() {
           </div>
           {/* <Footer /> */}
           <div className="container-scroller d-md-flex flex-row">
-          <div style={{ position: "relative", width: "50%" }}>
+          <div className="esri-widget" id="layerListDiv" ref={layerListDiv}>
+          <div
+                style={{
+                  backgroundColor: "#fff",
+                  paddingTop: "10px",
+                  textAlign: "center",
+                }}
+              >
+                <h3 className="esri-widget__heading">Daftar Layer</h3>
+              </div>
+              <div
+                  className=""
+                  style={{
+                    background: "#f3f3f3",
+                    width: "300px",
+                    maxHeight: "180px",
+                    overflowX: "auto",
+                    padding: "0px",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#fff",
+                      margin: "5px",
+                      padding: "10px",
+                    }}
+                  >
           <Tree
           className="myCls"
           showLine
@@ -2680,6 +2740,8 @@ function SimulationHistory() {
           onCheck={checkLayerList}
           treeData={treeData}
         />
+        </div>
+        </div>
           </div>
           <div style={{ position: "relative", width: "50%" }} ref={legendDiv}></div>
           </div>
