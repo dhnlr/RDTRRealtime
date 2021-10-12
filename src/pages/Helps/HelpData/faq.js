@@ -110,10 +110,10 @@ function HelpDataFaq() {
                                                             <div className="card" key={bantuan?.id}>
                                                                 <div className="card-header" id="headingOne">
                                                                     <h2 className="mb-0">
-                                                                        <button className="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target={"#" + help?.namaKategori.replace(/\s\W+/g, '') + bantuan?.id} aria-expanded="true" aria-controls={help?.namaKategori.replace(/\s\W+/g, '') + bantuan?.id}>
+                                                                        <a className="collapsed" data-toggle="collapse" data-target={"#" + help?.namaKategori.replace(/\s\W+/g, '') + bantuan?.id} aria-expanded="false" aria-controls={help?.namaKategori.replace(/\s\W+/g, '') + bantuan?.id}>
                                                                             {bantuan?.pertanyaan}
-                                                                            <i className="ti-arrow-circle-down float-right"></i>
-                                                                        </button>
+                                                                            {/* <i className="ti-arrow-circle-down float-right"></i> */}
+                                                                        </a>
                                                                     </h2>
                                                                 </div>
 

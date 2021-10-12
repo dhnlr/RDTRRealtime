@@ -20,6 +20,8 @@ function SimulationTable() {
   const [pageCount, setPageCount] = useState(0);
   const [pI, setPI] = useState(0);
   const [sortByState, setSortByState] = useState([]);
+  const [isCompare, setIsCompare] = useState(false);
+  const [comparedSchenario, setComparedSchenario] = useState([]);
   const fetchIdRef = React.useRef(0);
 
   let history = useHistory();
@@ -78,11 +80,11 @@ function SimulationTable() {
             }
           );
           for (let index = 0; index <= datas.data.obj.length; index++) {
-            if(index < datas.data.obj.length){
+            if (index < datas.data.obj.length) {
               const element = datas.data.obj[index];
               let subRows = await fetchSubRows(element.id);
               element.subRows = subRows.data.obj;
-            } else if(index === datas.data.obj.length) {
+            } else if (index === datas.data.obj.length) {
               const fetchId = ++fetchIdRef.current;
               if (fetchId === fetchIdRef.current) {
                 // const startRow = pageSize * pageIndex;
@@ -99,7 +101,6 @@ function SimulationTable() {
               }
             }
           }
-
         } catch (errorForm) {
           setIsProcessing(false);
           console.warn(errorForm);
@@ -149,14 +150,19 @@ function SimulationTable() {
                 icon: "success",
                 confirmButtonText: "Selesai",
                 allowOutsideClick: false,
-              }).then((result) => {
-                if (result.value) {
-                  setProcessCounter(processCounter + 1);
-                }
               })
-              .catch (errorForm => {
-                Swal.fire("Maaf", errorForm.response.data.error.message, "error");
-              });
+                .then((result) => {
+                  if (result.value) {
+                    setProcessCounter(processCounter + 1);
+                  }
+                })
+                .catch((errorForm) => {
+                  Swal.fire(
+                    "Maaf",
+                    errorForm.response.data.error.message,
+                    "error"
+                  );
+                });
             });
         }
       });
@@ -187,8 +193,46 @@ function SimulationTable() {
     });
   };
 
+  const handleCompare = (newState) => {
+    var sameId = comparedSchenario.filter(
+      (schenario) => schenario.id === newState.id
+    );
+    if (comparedSchenario.length < 2 && sameId.length === 0) {
+      setComparedSchenario((state) => [...state, newState]);
+    } else if (sameId.length !== 0) {
+      Swal.fire(
+        "Maaf",
+        "Skenario sudah dipilih untuk dibandingkan. Silahkan pilih skenario lain.",
+        "error"
+      );
+    } else if (comparedSchenario.length >= 2) {
+      Swal.fire(
+        "Maaf",
+        "Maksimal skenario yang dapat dibandingkan hanya dua",
+        "error"
+      );
+    }
+  };
+
+  const removeCompare = (id) => {
+    var newState = comparedSchenario.filter((schenario) => schenario.id !== id);
+    setComparedSchenario(newState);
+  };
+
+  const routeCompare = () => {
+    if (comparedSchenario.length === 2) {
+      history.push("/schenariohistory", comparedSchenario);
+    } else {
+      Swal.fire(
+        "Maaf",
+        "Minimal skenario untuk dibandingkan adalah dua",
+        "error"
+      );
+    }
+  };
+
   return (
-    <div className="container-scroller">
+    <div className="container-fluid">
       <Header />
       <div className="container-fluid page-body-wrapper">
         <Menu active="schenario" />
@@ -204,19 +248,13 @@ function SimulationTable() {
                           <table style={{ height: "100%" }}>
                             <tbody>
                               <tr>
-                                {/* <td className="align-baseline">baseline</td>
-                                <td className="align-top">top</td> */}
                                 <td className="align-middle text-white">
                                   <h2 className="">Skenario</h2>
                                   <p className=" font-weight-500 mb-2">
                                     Siapapun dapat melihat perencanaan secara
                                     publik
                                   </p>
-                                  {/* <p className=" font-weight-400 mt-4"><i className="ti-help-alt"> </i>Butuh bantuan?</p> */}
                                 </td>
-                                {/* <td className="align-bottom">bottom</td>
-                                <td className="align-text-top">text-top</td>
-                                // <td className="align-text-bottom">text-bottom</td> */}
                               </tr>
                             </tbody>
                           </table>
@@ -224,22 +262,12 @@ function SimulationTable() {
                         <div
                           className="col-4 background-icon" /* style={{content:`url("${headerImage}")`, position: "absolute", right: 0, maxHeight: "10rem"}} */
                         >
-                          {/* {<img src={headerImage} alt="header" style={{ width: "50%", float: "right" }}></img>} */}
                           <ImageDiv src={headerImage} alt="header"></ImageDiv>
                         </div>
                       </div>
                     </div>
                   </div>
                 }
-                {/* <div style={{ display: "flex", flexWrap: "wrap" }}>
-                                    <div style={{ flex: "1" }}>
-                                        <img src={headerImage} alt="header" style={{ width: "100%" }}></img>
-                                    </div>
-                                    <div style={{ flex: "2", display: "flex", flexWrap: "wrap", flexDirection: "column", padding: "0 2.3rem", justifyContent: "center" }}>
-                                        <p className="font-weight-bold mb-4 fs-30">Skenario</p>
-                                        <p className="font-weight-500 mb-0" style={{ fontSize: "16px", lineHeight: "1.64" }}>Kini masyarakat dapat melakukan skenario terencana<br /> tata ruang secara online menjadi lebih mudah. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia tempor dolor, blandit mollis erat scelerisque vel. </p>
-                                    </div>
-                                </div> */}
               </div>
             </div>
 
@@ -313,7 +341,25 @@ function SimulationTable() {
               <div className="col-md-12 grid-margin stretch-card my-4">
                 <div className="card">
                   <div className="card-body">
-                    <p className="card-title">Skenario yang Telah Dibuat</p>
+                    <div className="d-flex justify-content-between flex-wrap align-items-baseline">
+                      <p className="card-title float-left">
+                        Skenario yang Telah Dibuat
+                      </p>
+                      <p className="card float-right">
+                        <button
+                          className={
+                            "btn ml-2 " +
+                            (!isCompare ? "btn-success" : "btn-outline-danger")
+                          }
+                          onClick={() => {
+                            setIsCompare(!isCompare);
+                            setComparedSchenario([])
+                          }}
+                        >
+                          {!isCompare ? "Bandingkan" : "Batal Perbandingan"}
+                        </button>
+                      </p>
+                    </div>
                     <div className="row">
                       <div className="col-12">
                         <div className="table-responsive">
@@ -326,31 +372,21 @@ function SimulationTable() {
                               // filterTenant={site}
                               columns={[
                                 {
-                                  // Build our expander column
                                   id: "expander", // Make sure it has an ID
-                                  // Header: ({
-                                  //   getToggleAllRowsExpandedProps,
-                                  //   isAllRowsExpanded,
-                                  // }) => (
-                                  //   <span {...getToggleAllRowsExpandedProps()}>
-                                  //     {isAllRowsExpanded ? "👇" : "👉"}
-                                  //   </span>
-                                  // ),
                                   Cell: ({ row }) =>
-                                    // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-                                    // to build the toggle for expanding a row
                                     row.canExpand ? (
                                       <span
                                         {...row.getToggleRowExpandedProps({
                                           style: {
-                                            // We can even use the row.depth property
-                                            // and paddingLeft to indicate the depth
-                                            // of the row
                                             paddingLeft: `${row.depth * 2}rem`,
                                           },
                                         })}
                                       >
-                                        {row.isExpanded ? <i className='ti-arrow-circle-down'></i> : <i className='ti-arrow-circle-right'></i>}
+                                        {row.isExpanded ? (
+                                          <i className="ti-arrow-circle-down"></i>
+                                        ) : (
+                                          <i className="ti-arrow-circle-right"></i>
+                                        )}
                                       </span>
                                     ) : null,
                                 },
@@ -396,7 +432,7 @@ function SimulationTable() {
                                 {
                                   Header: "",
                                   accessor: "action",
-                                  width: "20%",
+                                  width: "15%",
                                   disableGlobalFilter: true,
                                   Cell: (row) => {
                                     if (row.row.original.projectName) {
@@ -407,15 +443,6 @@ function SimulationTable() {
                                           {row.row.original.simulasiBangunan
                                             ?.projectId && (
                                             <>
-                                              {/* <Link 
-                                      to={{
-                                        pathname: "/simulasimap",
-                                        state: data.filter(
-                                          (datum) =>
-                                            datum.id === row.row.values.id
-                                        )[0]
-                                      }}
-                                      > */}
                                               <button
                                                 className="btn btn-outline-light btn-xs"
                                                 title="Peta Skenario"
@@ -427,19 +454,20 @@ function SimulationTable() {
                                               >
                                                 Lanjutkan Analisis
                                               </button>
-                                              {/* </Link> */}
                                               &nbsp;
                                             </>
                                           )}
-                                          {/* <Link to="/schenariohistory">
+                                          {isCompare && (
                                             <button
                                               className="btn btn-outline-light btn-xs"
-                                              title="Sejarah Simulasi"
+                                              title="Peta Skenario"
+                                              onClick={() => {
+                                                handleCompare(row.row.original);
+                                              }}
                                             >
-                                              Lihat Analisis
+                                              Bandingkan Skenario
                                             </button>
-                                          </Link>
-                                          &nbsp; */}
+                                          )}
                                         </div>
                                       );
                                     }
@@ -448,7 +476,7 @@ function SimulationTable() {
                                 {
                                   Header: "",
                                   accessor: "id",
-                                  width: "20%",
+                                  width: "15%",
                                   disableGlobalFilter: true,
                                   Cell: (row) => {
                                     if (row.row.original.projectName) {
@@ -511,6 +539,84 @@ function SimulationTable() {
                 </div>
               </div>
             </div>
+
+            {isCompare && (
+              <div
+                className="row"
+                style={{ position: "sticky", bottom: "12px", zIndex: "100" }}
+              >
+                <div className="col-md-12 grid-margin my-4 ">
+                  <div className="card">
+                    <div className="card-body">
+                      <p className="card-title">Skenario yang Dibandingkan</p>
+                      <div className="d-flex justify-content-between flex-wrap">
+                        <div className="d-flex flex-wrap">
+                          <div
+                            style={
+                              comparedSchenario[0]
+                                ? compareSelection
+                                : emptyCompareSelection
+                            }
+                          >
+                            {comparedSchenario[0] && (
+                              <button
+                                type="button"
+                                class="close"
+                                aria-label="Close"
+                                style={{
+                                  paddingLeft: "0.6rem",
+                                  fontSize: "1.2rem",
+                                }}
+                                onClick={() =>
+                                  removeCompare(comparedSchenario[0].id)
+                                }
+                              >
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            )}
+                            {comparedSchenario[0]
+                              ? comparedSchenario[0].name
+                              : "Skenario belum dipilih"}
+                          </div>
+                          <div
+                            style={
+                              comparedSchenario[1]
+                                ? compareSelection
+                                : emptyCompareSelection
+                            }
+                          >
+                            {comparedSchenario[1] && (
+                              <button
+                                type="button"
+                                class="close"
+                                aria-label="Close"
+                                style={{
+                                  paddingLeft: "0.6rem",
+                                  fontSize: "1.2rem",
+                                }}
+                                onClick={() =>
+                                  removeCompare(comparedSchenario[1].id)
+                                }
+                              >
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            )}
+                            {comparedSchenario[1]
+                              ? comparedSchenario[1].name
+                              : "Skenario belum dipilih"}
+                          </div>
+                        </div>
+                        <div className="d-flex align-items-baseline flex-column justify-content-center">
+                          <button className="btn btn-success btn-block" onClick={routeCompare}>
+                            Lanjutkan Perbandingan
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           <Footer />
         </div>
@@ -527,5 +633,33 @@ const ImageDiv = styled.img`
     display: none;
   }
 `;
+
+const emptyCompareSelection = {
+  borderColor: "rgba(163, 164, 165, 0.2)",
+  borderRadius: "15px",
+  backgroundColor: "rgba(163, 164, 165, 0.2)",
+  color: "#a3a4a5",
+  textAlign: "center",
+  padding: "0.5rem 0.75rem",
+  margin: "0.5rem",
+  lineHeight: 1.5,
+  position: "relative",
+  fontSize: "0.875rem",
+  height: "max-content",
+};
+const compareSelection = {
+  borderColor: "#e3e3e3",
+  borderRadius: "15px",
+  border: "1px solid",
+  // backgroundColor: "#e3e3e3",
+  color: "#212529",
+  textAlign: "center",
+  padding: "0.5rem 0.75rem",
+  margin: "0.5rem",
+  lineHeight: 1.5,
+  position: "relative",
+  fontSize: "0.875rem",
+  height: "max-content",
+};
 
 export default SimulationTable;

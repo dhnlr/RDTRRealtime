@@ -768,7 +768,7 @@ const SimulasiMap = () => {
           });
 
           const persilTanahSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/persiltanah/FeatureServer/0",
+            url: config.url.ARCGIS_URL + "/Versioning/persiltanah_analisis_process/FeatureServer/0",
             title: "Persil Tanah",
             popupTemplate: {
               title: "Persil Tanah",
@@ -882,10 +882,11 @@ const SimulasiMap = () => {
             },
             outFields: ["*"],
             editingEnabled: false,
+            definitionExpression: bangunanDefinitionExpression
           });
 
           const polaRuangVersioningSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Versioning/PolaRuang_analisis_proses/FeatureServer/0",
+            url: config.url.ARCGIS_URL + "/Versioning/polaruang_analisis_process/FeatureServer/0",
             id: "pola_ruang_analisis_proses",
             title: "Pola Ruang Versioning",
             popupTemplate: {
@@ -987,6 +988,7 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["id_polaruang", "namazona"],
+            definitionExpression: bangunanDefinitionExpression
           });
 
           const polaRuangVersioningSebelumLayer = new FeatureLayer({
@@ -1092,11 +1094,12 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["id_polaruang", "namazona"],
+            definitionExpression: bangunanDefinitionExpression
           });
 
           const jalanSesudahLayer = new FeatureLayer({
             url:
-              config.url.ARCGIS_URL + "/sesudah/jaringan_jalan/FeatureServer/0",
+              config.url.ARCGIS_URL + "/Versioning/jalan_analisis_process/FeatureServer/0",
             title: "Jaringan Jalan",
             id: "jaringan_jalan_analisis_proses",
             popupTemplate: {
@@ -1175,11 +1178,12 @@ const SimulasiMap = () => {
             },
             outFields: ["namobj", "kapasitas"],
             editingEnabled: false,
+            definitionExpression: bangunanDefinitionExpression
           });
 
           const jalanSebelumLayer = new FeatureLayer({
             url:
-              config.url.ARCGIS_URL + "/sesudah/jaringan_jalan/FeatureServer/0",
+              config.url.ARCGIS_URL + "/Versioning/jalan_analisis_process/FeatureServer/0",
             title: "Jaringan Jalan",
             id: "jaringan_jalan_analisis",
             popupTemplate: {
@@ -1258,6 +1262,7 @@ const SimulasiMap = () => {
             },
             outFields: ["namobj", "kapasitas"],
             editingEnabled: false,
+            definitionExpression: bangunanDefinitionExpression
           });
 
           function getSymbolBuildingsEnvelope(color) {
