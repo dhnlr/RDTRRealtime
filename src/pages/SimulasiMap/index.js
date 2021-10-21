@@ -49,7 +49,7 @@ const SimulasiMap = () => {
   let { state } = useLocation();
 
   useEffect(() => {
-    if (!state?.simulasiBangunan?.simulasiId) {
+    if (!state?.simulasiBangunan) {
       history.push("/schenario");
     } else {
       handleExecuteSpCopy(0);
@@ -74,6 +74,7 @@ const SimulasiMap = () => {
   const [runAnalysis, setRunAnalysis] = useState(false);
   const [inputX, setInputX] = useState(0);
   const [inputY, setInputY] = useState(0);
+  const [spAnalisisData, setSpAnalisisData] = useState(0);
   const [stateView, setStateView] = useState(null);
   const [resultAnalysis, setResultAnalysis] = useState(false);
   const [resPersilTanah, setResPersilTanah] = useState({});
@@ -695,7 +696,7 @@ const SimulasiMap = () => {
           });
 
           const kapasitasAirSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/kapasitas_air/FeatureServer/0",
+            url: config.url.ARCGIS_URL + "/Versioning/kapasitas_air/FeatureServer/0",
             id: "kapasitas_air_analisis_proses",
             title: "Kapasitas Air",
             popupTemplate: {
@@ -705,7 +706,7 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
           const kapasitasAirSebelumLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/kapasitas_air/FeatureServer/0",
+            url: config.url.ARCGIS_URL + "/Versioning/kapasitas_air/FeatureServer/0",
             id: "kapasitas_air_analisis",
             title: "Kapasitas Air",
             popupTemplate: {
@@ -1297,6 +1298,7 @@ const SimulasiMap = () => {
           const buildingsEnvelopeLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/Bangunan_Envelope/FeatureServer/0",
             renderer: rendererBuildingsEnvelope,
+            definitionExpression: `id_simulasi = ${state?.simulasiBangunan?.simulasiId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = 0`,
             elevationInfo: {
               mode: "on-the-ground",
             },
@@ -2365,6 +2367,14 @@ const SimulasiMap = () => {
                             setRunAnalysis(true);
                             setInputX(event.mapPoint.x);
                             setInputY(event.mapPoint.y);
+                            setSpAnalisisData({
+                              v_proyek: feature.attributes.id_project,
+                              v_skenario: feature.attributes.id_skenario,
+                              v_nambwp: feature.attributes.nambwp,
+                              v_nasbwp: feature.attributes.nasbwp,
+                              v_kodblk: feature.attributes.kodblk,
+                              v_kodsbl: feature.attributes.kodsbl
+                            })
                           });
                         } else {
                           setSelectBuildings(true);
@@ -4682,27 +4692,17 @@ const SimulasiMap = () => {
   // start run analysis
   const handleRunAnalysis = () => {
     setLoaded(!loaded);
-    Axios.get(
-      config.url.ARCGIS_URL +
-        "/KDBKLB/KDBKLB_PersilTanah_Pabaton/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=" +
-        document.getElementById("inputX").value +
-        "%2C" +
-        document.getElementById("inputY").value +
-        "&geometryType=esriGeometryPoint&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&f=pjson"
-    )
-      .then(function (response) {
-        // handle success
-        if (response.data.features.length > 0) {
-          let featuresPersilTanah = response.data.features;
-          console.log(featuresPersilTanah[0].attributes.nib);
-          //setResultAnalysis(true);
-          //setResPersilTanah(featuresPersilTanah[0].attributes);
-          axios
+    axios
             .post(
               config.url.API_URL +
-                "/Pembangunan/ExecuteSpPembangunanOptimum?nib=" +
-                featuresPersilTanah[0].attributes.nib,
-              {}
+                "/Pembangunan/ExecuteSpPembangunanOptimum",
+                null,
+                {
+                  // headers: headers,
+                  params: {
+                    spAnalisisData
+                  }
+                }
             )
             .then(function (response) {
               if (response.status === 200) {
@@ -4725,12 +4725,26 @@ const SimulasiMap = () => {
             .catch(function (error) {
               console.log("error check", error);
             });
+    /* Axios.get(
+      config.url.ARCGIS_URL +
+        "/Versioning/bangunan_analisis/FeatureServer/0/query?objectIds=" +
+        document.getElementById("inputX").value +
+        "&geometryType=esriGeometryPoint&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&f=pjson"
+    )
+      .then(function (response) {
+        // handle success
+        if (response.data.features.length > 0) {
+          let featuresPersilTanah = response.data.features;
+          console.log(featuresPersilTanah[0].attributes.nib);
+          //setResultAnalysis(true);
+          //setResPersilTanah(featuresPersilTanah[0].attributes);
+          
         }
       })
       .catch(function (error) {
         // handle error
         console.log("error check", error);
-      });
+      }); */
   };
   // end run analysis
 

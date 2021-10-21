@@ -56,24 +56,26 @@ function SimulationHistory() {
     {
       key: '0',
       title: 'Layer Utama',
+      icon: <i class="ti-folder"></i>,
       children: [
-        { key: 'bangunan', title: 'Bangunan'},
-        { key: 'jalan', title: 'Jaringan Jalan'},
-        { key: 'sampah', title: 'Sampah TPS'},
-        { key: 'air', title: 'Kapasitas Air'},
-        { key: 'persil', title: 'Persil Tanah'},
+        { key: 'bangunan', title: 'Bangunan', icon: <i class="ti-map"></i>},
+        { key: 'jalan', title: 'Jaringan Jalan', icon: <i class="ti-map"></i>},
+        { key: 'sampah', title: 'Sampah TPS', icon: <i class="ti-map"></i>},
+        { key: 'air', title: 'Kapasitas Air', icon: <i class="ti-map"></i>},
+        { key: 'persil', title: 'Persil Tanah', icon: <i class="ti-map"></i>},
       ],
     },
     {
       key: '1',
       title: 'Layer Tambahan',
+      icon: <i class="ti-folder"></i>,
       children: [
-        { key: 'bangunan_amplop', title: 'Bangunan - Amplop'},
-        { key: 'bpn', title: 'Persil Tanah - BPN'},
-        { key: 'zonasi_amplop', title: 'Zonasi - Amplop'},
-        { key: 'basemap', title: 'Basemap Pola Ruang'},
-        { key: 'frek_banjir_2019', title: 'Frekuensi Banjir 2019'},
-        { key: 'frek_banjir_2020', title: 'Frekuensi Banjir 2020'},
+        { key: 'bangunan_amplop', title: 'Bangunan - Amplop', icon: <i class="ti-map"></i>},
+        { key: 'bpn', title: 'Persil Tanah - BPN', icon: <i class="ti-map"></i>},
+        { key: 'zonasi_amplop', title: 'Zonasi - Amplop', icon: <i class="ti-map"></i>},
+        { key: 'basemap', title: 'Basemap Pola Ruang', icon: <i class="ti-map"></i>},
+        { key: 'frek_banjir_2019', title: 'Frekuensi Banjir 2019', icon: <i class="ti-map"></i>},
+        { key: 'frek_banjir_2020', title: 'Frekuensi Banjir 2020', icon: <i class="ti-map"></i>},
       ],
     },
   ];
@@ -1629,7 +1631,7 @@ function SimulationHistory() {
   });
 
   const kapasitasAirSesudahLayer = new FeatureLayer({
-    url: config.url.ARCGIS_URL + "/kapasitas_air/FeatureServer/0",
+    url: config.url.ARCGIS_URL + "/Versioning/kapasitas_air/FeatureServer/0",
     id: "kapasitas_air_analisis_proses",
     title: "Kapasitas Air",
     visible: false,
@@ -1641,7 +1643,7 @@ function SimulationHistory() {
     definitionExpression: sesudahDefinitionExpression,
   });
   const kapasitasAirSebelumLayer = new FeatureLayer({
-    url: config.url.ARCGIS_URL + "/kapasitas_air/FeatureServer/0",
+    url: config.url.ARCGIS_URL + "/Versioning/kapasitas_air/FeatureServer/0",
     id: "kapasitas_air_analisis",
     title: "Kapasitas Air",
     visible: false,
@@ -2353,8 +2355,9 @@ function SimulationHistory() {
     ],
   };
   const buildingsEnvelopeLayer = new FeatureLayer({
-    url: config.url.ARCGIS_URL + "/Bangunan_Envelope/FeatureServer/0",
+    url: config.url.ARCGIS_URL + "/Versioning/bangunan_analisis_process/FeatureServer/0",
     renderer: rendererBuildingsEnvelope,
+    definitionExpression: `id_simulasi = ${state[0].simulasiId} AND id_project = ${state[0].projectId} AND userid = '${state[0].userId}'AND data_ke = 0`,
     elevationInfo: {
       mode: "on-the-ground",
     },
