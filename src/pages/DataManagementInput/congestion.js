@@ -199,7 +199,7 @@ function DataManagementInputCongestion() {
                           </button>
                           <a
                             className="btn btn-rounded btn-outline-primary float-right"
-                            href="https://rdtr.onemap.id/backend/Template/jalan.zip"
+                            href={config.url.API_URL + "/Template/jalan.zip"}
                           >
                             Unduh Contoh
                           </a>
@@ -229,6 +229,7 @@ function DataManagementInputCongestion() {
                                 })}
                                 type="file"
                                 name="jaringan_jalan"
+                                accept=".zip"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(

@@ -19,7 +19,8 @@ const prod = {
 };
 const dev = {
   url: {
-    API_URL: "https://rdtr.onemap.id/backend",
+    // API_URL: "https://rdtr.onemap.id/backend",
+    API_URL: "https://localhost:8443/backend",
     // API_URL: 'https://f8a97c6e-0b6f-427a-be5e-e6a968b89d0e.mock.pstmn.io',
     ARCGIS_URL: "https://localhost:8443/server/rest/services"
     // ARCGIS_URL: "https://rdtr.onemap.id/server/rest/services",

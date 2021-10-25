@@ -26,7 +26,7 @@ function DataManagementInputPhase2() {
 
   function handleDone() {
     localStorage.removeItem("state");
-    history.push("/simulation");
+    history.push("/schenario");
   }
 
   return (
@@ -228,7 +228,7 @@ function DataManagementInputPhase2() {
                       handleDone();
                     }}
                   >
-                    Lanjutkan ke Simulasi
+                    Lanjutkan ke Skenario
                   </button>
                 </div>
               </div>

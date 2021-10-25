@@ -216,7 +216,7 @@ function DataManagementInputKdb() {
                           </button>
                           <a
                             className="btn btn-rounded btn-outline-primary float-right"
-                            href="https://rdtr.onemap.id/backend/Template/pola_ruang.zip"
+                            href={config.url.API_URL + "/Template/pola_ruang.zip"}
                           >
                             Unduh Contoh
                           </a>
@@ -346,7 +346,7 @@ function DataManagementInputKdb() {
                           </button>
                           <a
                             className="btn btn-rounded btn-outline-primary float-right"
-                            href="https://rdtr.onemap.id/backend/Template/bangunan.zip"
+                            href={config.url.API_URL + "/Template/bangunan.zip"}
                           >
                             Unduh Contoh
                           </a>
@@ -473,7 +473,7 @@ function DataManagementInputKdb() {
                           </button>
                           <a
                             className="btn btn-rounded btn-outline-primary float-right"
-                            href="https://rdtr.onemap.id/backend/Template/persil_tanah.zip"
+                            href={config.url.API_URL + "/Template/persil_tanah.zip"}
                           >
                             Unduh Contoh
                           </a>
@@ -503,6 +503,7 @@ function DataManagementInputKdb() {
                                 })}
                                 type="file"
                                 name="persil"
+                                accept=".zip"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(

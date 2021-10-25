@@ -26,45 +26,45 @@ function DataManagementInputFlood() {
 
   const onSubmit = (
     {
-      building,
-      building_year,
-      building_desc,
-      building_tag,
-      persil,
-      persil_year,
-      persil_desc,
-      persil_tag,
-      pola_ruang,
-      pola_ruang_year,
-      pola_ruang_desc,
-      pola_ruang_tag,
+      kelerengan,
+      kelerengan_year,
+      kelerengan_desc,
+      kelerengan_tag,
+      drainase,
+      drainase_year,
+      drainase_desc,
+      drainase_tag,
+      slope_denmas,
+      slope_denmas_year,
+      slope_denmas_desc,
+      slope_denmas_tag,
     },
     e
   ) => {
     setErrMessage(null);
     setIsProcessing(true);
 
-    building_tag = building_tag.map((tag) => tag.value);
-    persil_tag = persil_tag.map((tag) => tag.value);
-    pola_ruang_tag = pola_ruang_tag.map((tag) => tag.value);
+    if(kelerengan_tag) kelerengan_tag = kelerengan_tag.map((tag) => tag.value);
+    if(drainase_tag) drainase_tag = drainase_tag.map((tag) => tag.value);
+    if(slope_denmas_tag) slope_denmas_tag = slope_denmas_tag.map((tag) => tag.value);
 
     var fd = new FormData();
-    fd.set("bangunan", building[0]);
-    fd.set("tahun_bangunan", building_year);
-    fd.set("deskripsi_bangunan", building_desc);
-    fd.set("tag_bangunan", building_tag);
-    fd.set("persil_tanah", persil[0]);
-    fd.set("tahun_persil_tanah", persil_year);
-    fd.set("deskripsi_persil_tanah", persil_desc);
-    fd.set("tag_persil_tanah", persil_tag);
-    fd.set("pola_ruang", pola_ruang[0]);
-    fd.set("tahun_pola_ruang", pola_ruang_year);
-    fd.set("deskripsi_pola_ruang", pola_ruang_desc);
-    fd.set("tag_pola_ruang", pola_ruang_tag);
+    fd.set("kelerengan", kelerengan[0]);
+    fd.set("tahun_kelerengan", kelerengan_year);
+    fd.set("deskripsi_kelerengan", kelerengan_desc);
+    fd.set("tag_kelerengan", kelerengan_tag);
+    fd.set("drainase", drainase[0]);
+    fd.set("tahun_drainase", drainase_year);
+    fd.set("deskripsi_drainase", drainase_desc);
+    fd.set("tag_drainase", drainase_tag);
+    fd.set("slope_denmas", slope_denmas[0]);
+    fd.set("tahun_slope_denmas", slope_denmas_year);
+    fd.set("deskripsi_slope_denmas", slope_denmas_desc);
+    fd.set("tag_slope_denmas", slope_denmas_tag);
     fd.set("project_id", state?.id);
 
     axios
-      .post(config.url.API_URL + "/FileUploader/Kdbklb", fd, {
+      .post(config.url.API_URL + "/FileUploader/Banjir", fd, {
         onUploadProgress: (progressEvent) => {
           setProgress({
             loaded: progressEvent.loaded,
@@ -207,16 +207,16 @@ function DataManagementInputFlood() {
                             className="btn text-left btn-sm collapsed"
                             type="button"
                             data-toggle="collapse"
-                            data-target="#polaruang"
+                            data-target="#slope"
                             aria-expanded="false"
-                            aria-controls="polaruang"
+                            aria-controls="slope"
                           >
                             <i className="ti-arrow-circle-down"> </i>
-                            Pola Ruang RDTR Kabupaten/Kota
+                            Kelerengan
                           </button>
                           <a
                             className="btn btn-rounded btn-outline-primary float-right"
-                            href="https://rdtr.onemap.id/backend/Template/pola_ruang.zip"
+                            href={config.url.API_URL + "/Template/kelerengan.zip"}
                           >
                             Unduh Contoh
                           </a>
@@ -224,7 +224,7 @@ function DataManagementInputFlood() {
                       </div>
 
                       <div
-                        id="polaruang"
+                        id="slope"
                         className="collapse show"
                         aria-labelledby="headingOne"
                         data-parent="#accordionExample"
@@ -234,8 +234,8 @@ function DataManagementInputFlood() {
                             <label>Lampiran</label>
                             <div className="custom-file">
                               <label
-                                id="pola_ruang"
-                                htmlFor="pola_ruang"
+                                id="kelerengan"
+                                htmlFor="kelerengan"
                                 className="custom-file-label"
                               >
                                 Cari berkas...
@@ -243,27 +243,27 @@ function DataManagementInputFlood() {
                               <input
                                 className="form-control custom-file-input"
                                 ref={register({
-                                  required: "Berkas pola ruang harus diisi",
+                                  required: "Berkas kelerengan harus diisi",
                                 })}
                                 type="file"
-                                name="pola_ruang"
+                                name="kelerengan"
                                 accept=".zip"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(
-                                        "pola_ruang"
+                                        "kelerengan"
                                       ).innerHTML = e.target.files[0].name)
                                     : (document.getElementById(
-                                        "pola_ruang"
+                                        "kelerengan"
                                       ).innerHTML = "Cari berkas...");
                                 }}
                               />
-                              {errors.pola_ruang && (
+                              {errors.kelerengan && (
                                 <small
                                   id="nameHelp"
                                   className="form-text text-danger"
                                 >
-                                  {errors.pola_ruang.message}
+                                  {errors.kelerengan.message}
                                 </small>
                               )}
                             </div>
@@ -271,14 +271,14 @@ function DataManagementInputFlood() {
                           <h4>Rincian Data</h4>
                           <div className="form-row">
                             <div className="form-group col-md-6">
-                              <label htmlFor="pola_ruang_year">
+                              <label htmlFor="kelerengan_year">
                                 Tahun (opsional)
                               </label>
                               <input
-                                id="pola_ruang_year"
+                                id="kelerengan_year"
                                 className="form-control"
-                                name="pola_ruang_year"
-                                placeholder="Tahun pola ruang"
+                                name="kelerengan_year"
+                                placeholder="Tahun kelerengan"
                                 ref={register({
                                   pattern: {
                                     value: /^\d{4}$/,
@@ -286,36 +286,36 @@ function DataManagementInputFlood() {
                                   },
                                 })}
                               />
-                              {errors.pola_ruang_year && (
+                              {errors.kelerengan_year && (
                                 <small
                                   id="nameHelp"
                                   className="form-text text-danger"
                                 >
-                                  {errors.pola_ruang_year.message}
+                                  {errors.kelerengan_year.message}
                                 </small>
                               )}
                             </div>
                             <div className="form-group col-md-6">
-                              <label htmlFor="pola_ruang_desc">
+                              <label htmlFor="kelerengan_desc">
                                 Deskripsi (opsional)
                               </label>
                               <input
-                                id="pola_ruang_desc"
+                                id="kelerengan_desc"
                                 className="form-control"
-                                name="pola_ruang_desc"
-                                placeholder="Deskripsi pola ruang"
+                                name="kelerengan_desc"
+                                placeholder="Deskripsi kelerengan"
                                 ref={register}
                               />
                             </div>
                           </div>
                           <div className="form-group">
-                            <label htmlFor="pola_ruang_tag">
+                            <label htmlFor="kelerengan_tag">
                               Tag (opsional)
                             </label>
                             <Controller
-                              id="pola_ruang_tag"
+                              id="kelerengan_tag"
                               as={CreatableSelect}
-                              name="pola_ruang_tag"
+                              name="kelerengan_tag"
                               components={{
                                 DropdownIndicator: null,
                               }}
@@ -323,7 +323,7 @@ function DataManagementInputFlood() {
                               defaultValue={null}
                               isMulti
                               isClearable
-                              placeholder="Tag pola ruang"
+                              placeholder="Tag kelerengan"
                               className=""
                             />
                           </div>
@@ -332,21 +332,28 @@ function DataManagementInputFlood() {
                     </div>
                     <div className="card">
                       <div className="card-header" id="headingTwo">
-                        <h2 className="mb-0">
+                      <h2 className="mb-0">
                           <button
-                            className="btn btn-link collapsed"
+                            className="btn text-left btn-sm collapsed"
                             type="button"
                             data-toggle="collapse"
-                            data-target="#buildingfootprint"
+                            data-target="#slope"
                             aria-expanded="false"
-                            aria-controls="buildingfootprint"
+                            aria-controls="slope"
                           >
-                            Bangunan yang Sudah Ada
+                            <i className="ti-arrow-circle-down"> </i>
+                            Drainase
                           </button>
+                          <a
+                            className="btn btn-rounded btn-outline-primary float-right"
+                            href={config.url.API_URL + "/Template/drainase.zip"}
+                          >
+                            Unduh Contoh
+                          </a>
                         </h2>
                       </div>
                       <div
-                        id="buildingfootprint"
+                        id="drainase_div"
                         className="collapse show"
                         aria-labelledby="headingTwo"
                         data-parent="#accordionExample"
@@ -356,8 +363,8 @@ function DataManagementInputFlood() {
                             <label>Lampiran</label>
                             <div className="custom-file">
                               <label
-                                id="building"
-                                htmlFor="building"
+                                id="drainase"
+                                htmlFor="drainase"
                                 className="custom-file-label"
                               >
                                 Cari berkas...
@@ -365,42 +372,42 @@ function DataManagementInputFlood() {
                               <input
                                 className="form-control custom-file-input"
                                 ref={register({
-                                  required: "Berkas bangunan harus ada",
+                                  required: "Berkas drainase harus ada",
                                 })}
                                 type="file"
-                                name="building"
+                                name="drainase"
                                 accept=".zip"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(
-                                        "building"
+                                        "drainase"
                                       ).innerHTML = e.target.files[0].name)
                                     : (document.getElementById(
-                                        "building"
+                                        "drainase"
                                       ).innerHTML = "Cari berkas...");
                                 }}
                               />
                             </div>
-                            {errors.building && (
+                            {errors.drainase && (
                               <small
                                 id="nameHelp"
                                 className="form-text text-danger"
                               >
-                                {errors.building.message}
+                                {errors.drainase.message}
                               </small>
                             )}
                           </div>
                           <h4>Rincian Data</h4>
                           <div className="form-row">
                             <div className="form-group col-md-6">
-                              <label htmlFor="building_year">
+                              <label htmlFor="drainase_year">
                                 Tahun (opsional)
                               </label>
                               <input
-                                id="building_year"
+                                id="drainase_year"
                                 className="form-control"
-                                name="building_year"
-                                placeholder="Tahun bangunan yang sudah ada"
+                                name="drainase_year"
+                                placeholder="Tahun drainase yang sudah ada"
                                 ref={register({
                                   pattern: {
                                     value: /^\d{4}$/,
@@ -408,34 +415,34 @@ function DataManagementInputFlood() {
                                   },
                                 })}
                               />
-                              {errors.building_year && (
+                              {errors.drainase_year && (
                                 <small
                                   id="nameHelp"
                                   className="form-text text-danger"
                                 >
-                                  {errors.building_year.message}
+                                  {errors.drainase_year.message}
                                 </small>
                               )}
                             </div>
                             <div className="form-group col-md-6">
-                              <label htmlFor="building_desc">
+                              <label htmlFor="drainase_desc">
                                 Deskripsi (opsional)
                               </label>
                               <input
-                                id="building_desc"
+                                id="drainase_desc"
                                 className="form-control"
-                                name="building_desc"
-                                placeholder="Deskripsi bangunan yang sudah ada"
+                                name="drainase_desc"
+                                placeholder="Deskripsi drainase yang sudah ada"
                                 ref={register}
                               />
                             </div>
                           </div>
                           <div className="form-group">
-                            <label htmlFor="building_tag">Tag (opsional)</label>
+                            <label htmlFor="drainase_tag">Tag (opsional)</label>
                             <Controller
-                              id="building_tag"
+                              id="drainase_tag"
                               as={CreatableSelect}
-                              name="building_tag"
+                              name="drainase_tag"
                               components={{
                                 DropdownIndicator: null,
                               }}
@@ -443,7 +450,7 @@ function DataManagementInputFlood() {
                               defaultValue={null}
                               isMulti
                               isClearable
-                              placeholder="Tag bangunan"
+                              placeholder="Tag drainase"
                               className=""
                             />
                           </div>
@@ -452,21 +459,28 @@ function DataManagementInputFlood() {
                     </div>
                     <div className="card">
                       <div className="card-header" id="headingThree">
-                        <h2 className="mb-0">
+                      <h2 className="mb-0">
                           <button
-                            className="btn btn-link collapsed"
+                            className="btn text-left btn-sm collapsed"
                             type="button"
                             data-toggle="collapse"
-                            data-target="#persiltanah"
+                            data-target="#slope"
                             aria-expanded="false"
-                            aria-controls="persiltanah"
+                            aria-controls="slope"
                           >
-                            Persil Tanah
+                            <i className="ti-arrow-circle-down"> </i>
+                            Slope Denmas
                           </button>
+                          <a
+                            className="btn btn-rounded btn-outline-primary float-right"
+                            href={config.url.API_URL + "/Template/slope_denmas.zip"}
+                          >
+                            Unduh Contoh
+                          </a>
                         </h2>
                       </div>
                       <div
-                        id="persiltanah"
+                        id="demnas"
                         className="collapse show"
                         aria-labelledby="headingThree"
                         data-parent="#accordionExample"
@@ -476,8 +490,8 @@ function DataManagementInputFlood() {
                             <label>Lampiran</label>
                             <div className="custom-file">
                               <label
-                                id="persil"
-                                htmlFor="persil"
+                                id="slope_denmas"
+                                htmlFor="slope_denmas"
                                 className="custom-file-label"
                               >
                                 Cari berkas...
@@ -485,41 +499,41 @@ function DataManagementInputFlood() {
                               <input
                                 className="form-control custom-file-input"
                                 ref={register({
-                                  required: "Berkas persil tanah harus ada",
+                                  required: "Berkas slope denmas harus ada",
                                 })}
                                 type="file"
-                                name="persil"
+                                name="slope_denmas"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(
-                                        "persil"
+                                        "slope_denmas"
                                       ).innerHTML = e.target.files[0].name)
                                     : (document.getElementById(
-                                        "persil"
+                                        "slope_denmas"
                                       ).innerHTML = "Cari berkas...");
                                 }}
                               />
                             </div>
-                            {errors.persil && (
+                            {errors.slope_denmas && (
                               <small
                                 id="nameHelp"
                                 className="form-text text-danger"
                               >
-                                {errors.persil.message}
+                                {errors.slope_denmas.message}
                               </small>
                             )}
                           </div>
                           <h4>Rincian Data</h4>
                           <div className="form-row">
                             <div className="form-group col-md-6">
-                              <label htmlFor="persil_year">
+                              <label htmlFor="slope_denmas_year">
                                 Tahun (opsional)
                               </label>
                               <input
-                                id="persil_year"
+                                id="slope_denmas_year"
                                 className="form-control"
-                                name="persil_year"
-                                placeholder="Tahun persil tanah"
+                                name="slope_denmas_year"
+                                placeholder="Tahun slope denmas"
                                 ref={register({
                                   pattern: {
                                     value: /^\d{4}$/,
@@ -527,34 +541,34 @@ function DataManagementInputFlood() {
                                   },
                                 })}
                               />
-                              {errors.persil_year && (
+                              {errors.slope_denmas_year && (
                                 <small
                                   id="nameHelp"
                                   className="form-text text-danger"
                                 >
-                                  {errors.persil_year.message}
+                                  {errors.slope_denmas_year.message}
                                 </small>
                               )}
                             </div>
                             <div className="form-group col-md-6">
-                              <label htmlFor="persil_desc">
+                              <label htmlFor="slope_denmas_desc">
                                 Deskripsi (opsional)
                               </label>
                               <input
-                                id="persil_desc"
+                                id="slope_denmas_desc"
                                 className="form-control"
-                                name="persil_desc"
-                                placeholder="Deskripsi persil tanah"
+                                name="slope_denmas_desc"
+                                placeholder="Deskripsi slope denmas"
                                 ref={register}
                               />
                             </div>
                           </div>
                           <div className="form-group">
-                            <label htmlFor="persil_tag">Tag (opsional)</label>
+                            <label htmlFor="slope_denmas_tag">Tag (opsional)</label>
                             <Controller
-                              id="persil_tag"
+                              id="slope_denmas_tag"
                               as={CreatableSelect}
-                              name="persil_tag"
+                              name="slope_denmas_tag"
                               components={{
                                 DropdownIndicator: null,
                               }}
@@ -562,7 +576,7 @@ function DataManagementInputFlood() {
                               defaultValue={null}
                               isMulti
                               isClearable
-                              placeholder="Tag persil tanah"
+                              placeholder="Tag slope denmas"
                               className=""
                             />
                           </div>

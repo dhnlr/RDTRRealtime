@@ -193,7 +193,7 @@ function DataManagementInputWater() {
                           </button>
                           <a
                             className="btn btn-rounded btn-outline-primary float-right"
-                            href="https://rdtr.onemap.id/backend/Template/air_bersih.zip"
+                            href={config.url.API_URL + "/Template/air_bersih.zip"}
                           >
                             Unduh Contoh
                           </a>
@@ -223,6 +223,7 @@ function DataManagementInputWater() {
                                 })}
                                 type="file"
                                 name="air_bersih"
+                                accept=".zip"
                                 onChange={(e) => {
                                   e.target.files[0].name
                                     ? (document.getElementById(

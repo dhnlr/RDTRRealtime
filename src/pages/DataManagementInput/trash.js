@@ -190,7 +190,7 @@ function DataManagementInputTrash() {
                           </button>
                           <a
                             className="btn btn-rounded btn-outline-primary float-right"
-                            href="https://rdtr.onemap.id/backend/Template/persampahan.zip"
+                            href={config.url.API_URL + "/Template/persampahan.zip"}
                           >
                             Unduh Contoh
                           </a>
