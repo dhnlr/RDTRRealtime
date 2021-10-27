@@ -28,13 +28,15 @@ function Report() {
 
     var date = new Date();
     var fd = new FormData();
-    fd.set(
-      "file",
-      attachment[0],
-      `${name}_${date.getDate()}_${date.getMonth()}_${date.getFullYear()}_${
-        attachment[0].name
-      }`
-    );
+    if (attachment[0]) {
+      fd.set(
+        "file",
+        attachment[0],
+        `${name}_${date.getDate()}_${date.getMonth()}_${date.getFullYear()}_${
+          attachment[0].name ? attachment[0].name : "attachment"
+        }`
+      );
+    }
     fd.append("subject", subject);
     fd.append("nama", name);
     fd.append("email", email);
