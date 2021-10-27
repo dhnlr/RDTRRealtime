@@ -62,6 +62,7 @@ function Header() {
               </A>
               <A className="dropdown-item" onClick={() => {
                 Cookies.remove("token");
+                Cookies.remove("userId");
                 localStorage.clear() 
                 sessionStorage.clear() 
                 history.push("/login")
