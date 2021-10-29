@@ -415,7 +415,7 @@ function SimulationTable() {
                                   Header: "Dibuat pada",
                                   accessor: "createDate",
                                   width: "10%",
-                                  Cell: (row) => (
+                                  Cell: (row) => row.row.original.projectName ? (<></>) : (
                                     <span>
                                       {row.cell.value
                                         ? new Date(

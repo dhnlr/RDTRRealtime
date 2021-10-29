@@ -317,8 +317,36 @@ function DataManagement() {
                                 },
                                 {
                                   Header: "Modul Data",
-                                  accessor: "totalModul",
-                                  width: "5%",
+                                  accessor: "module",
+                                  Cell: (row) => (
+                                    <div style={{ textAlign: "center" }}>
+                                      {(row.cell.value.kemacetan.jaringanJalan.itemsCount || row.cell.value.kemacetan.jaringanJalan.detail) && (
+                                        <label className="badge badge-light m-1">
+                                        Kemacetan
+                                      </label>
+                                      )}
+                                      {(row.cell.value.airBersih.pdam.itemsCount || row.cell.value.airBersih.pdam.detail) && (
+                                        <label className="badge badge-light m-1">
+                                        Air Bersih
+                                      </label>
+                                      )}
+                                      {(row.cell.value.persampahan.sampah.itemsCount || row.cell.value.persampahan.sampah.detail) && (
+                                        <label className="badge badge-light m-1">
+                                        Persampahan
+                                      </label>
+                                      )}
+                                      {(row.cell.value.banjir.slopeDemnas.itemsCount || row.cell.value.banjir.slopeDemnas.detail || row.cell.value.banjir.drainase.itemsCount || row.cell.value.banjir.drainase.detail || row.cell.value.banjir.kelerengan.itemsCount || row.cell.value.banjir.kelerengan.detail) && (
+                                        <label className="badge badge-light m-1">
+                                        Banjir
+                                      </label>
+                                      )}
+                                      {(row.cell.value.kdbKlb.bangunan.itemsCount || row.cell.value.kdbKlb.bangunan.detail || row.cell.value.kdbKlb.persilTanah.itemsCount || row.cell.value.kdbKlb.persilTanah.detail || row.cell.value.kdbKlb.polaRuang.itemsCount || row.cell.value.kdbKlb.polaRuang.detail) && (
+                                        <label className="badge badge-light m-1">
+                                        KDB / KLB
+                                      </label>
+                                      )}
+                                    </div>
+                                  ),
                                 },
                                 {
                                   Header: "Status",
@@ -348,6 +376,42 @@ function DataManagement() {
                                       )}
                                     </div>
                                   ), */
+                                },
+                                {
+                                  Header: "Dibuat pada",
+                                  accessor: "createDate",
+                                  width: "10%",
+                                  Cell: (row) => (
+                                    <span>
+                                      {row.cell.value
+                                        ? new Date(
+                                            row.cell.value
+                                          ).toLocaleDateString("id-ID", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                          })
+                                        : ""}
+                                    </span>
+                                  ),
+                                },
+                                {
+                                  Header: "Dimodifikasi pada",
+                                  accessor: "modifiedDate",
+                                  width: "10%",
+                                  Cell: (row) => (
+                                    <span>
+                                      {row.cell.value
+                                        ? new Date(
+                                            row.cell.value
+                                          ).toLocaleDateString("id-ID", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                          })
+                                        : ""}
+                                    </span>
+                                  ),
                                 },
                                 {
                                   Header: "",

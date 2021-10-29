@@ -108,7 +108,8 @@ function SimulationInput() {
   }, [listCity]);
 
   useEffect(() => {
-    if (listCity.length !== 0 && city!== "" && listProvince.length !== 0 && province !== "" && listProject.length !== 0 && project !== "") {
+    if (listCity.length !== 0 && city!== "" && listProvince.length !== 0 && province !== "" && listProject.length !== 0 && project) {
+      console.log(project)
       axios
         .get(config.url.API_URL + "/Simulasi/GetAllDataKe", {
           params: {
