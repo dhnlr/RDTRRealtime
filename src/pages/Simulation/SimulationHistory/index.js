@@ -1998,6 +1998,9 @@ function SimulationHistory() {
     outFields: ["*"],
     editingEnabled: false,
     definitionExpression: sesudahDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
   const kapasitasAirSebelumLayer = new FeatureLayer({
     url: config.url.ARCGIS_URL + "/Versioning/kapasitas_air/FeatureServer/0",
@@ -2010,6 +2013,9 @@ function SimulationHistory() {
     outFields: ["*"],
     editingEnabled: false,
     definitionExpression: sebelumDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
 
   const sampahTpsLayer = new FeatureLayer({
@@ -2182,6 +2188,9 @@ function SimulationHistory() {
     outFields: ["*"],
     editingEnabled: false,
     definitionExpression: sesudahDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
   const persilTanah2SesudahLayer = new FeatureLayer({
     url: config.url.ARCGIS_URL + "/Versioning/persiltanah_analisis/FeatureServer/0",
@@ -2300,6 +2309,9 @@ function SimulationHistory() {
     outFields: ["*"],
     editingEnabled: false,
     definitionExpression: sesudahDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
   const persilTanahSebelumLayer = new FeatureLayer({
     url: config.url.ARCGIS_URL + "/Versioning/persiltanah_analisis_process/FeatureServer/0",
@@ -2418,6 +2430,9 @@ function SimulationHistory() {
     outFields: ["*"],
     editingEnabled: false,
     definitionExpression: sebelumDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
   const persilTanah2SebelumLayer = new FeatureLayer({
     url: config.url.ARCGIS_URL + "/Versioning/persiltanah_analisis/FeatureServer/0",
@@ -2536,6 +2551,9 @@ function SimulationHistory() {
     outFields: ["*"],
     editingEnabled: false,
     definitionExpression: sebelumDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
 
   const polaRuangVersioningSesudahLayer = new FeatureLayer({
@@ -2638,6 +2656,9 @@ function SimulationHistory() {
       ],
     },
     definitionExpression: sesudahDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
   const polaRuangVersioning2SesudahLayer = new FeatureLayer({
     url: config.url.ARCGIS_URL + "/Versioning/polaruang_analisis/FeatureServer/0",
@@ -2739,6 +2760,9 @@ function SimulationHistory() {
       ],
     },
     definitionExpression: sesudahDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
   const polaRuangVersioningSebelumLayer = new FeatureLayer({
     url: config.url.ARCGIS_URL + "/Versioning/polaruang_analisis_process/FeatureServer/0",
@@ -2840,6 +2864,9 @@ function SimulationHistory() {
       ],
     },
     definitionExpression: sebelumDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
   const polaRuangVersioning2SebelumLayer = new FeatureLayer({
     url: config.url.ARCGIS_URL + "/Versioning/polaruang_analisis/FeatureServer/0",
@@ -2941,6 +2968,9 @@ function SimulationHistory() {
       ],
     },
     definitionExpression: sebelumDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
 
   const jalanSesudahLayer = new FeatureLayer({
@@ -3026,6 +3056,9 @@ function SimulationHistory() {
     outFields: ["namobj", "kapasitas"],
     editingEnabled: false,
     definitionExpression: sesudahDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
   const jalan2SesudahLayer = new FeatureLayer({
     url:
@@ -3110,6 +3143,9 @@ function SimulationHistory() {
     outFields: ["namobj", "kapasitas"],
     editingEnabled: false,
     definitionExpression: sesudahDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
   const jalanSebelumLayer = new FeatureLayer({
     url:
@@ -3194,6 +3230,9 @@ function SimulationHistory() {
     outFields: ["namobj", "kapasitas"],
     editingEnabled: false,
     definitionExpression: sebelumDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
   const jalan2SebelumLayer = new FeatureLayer({
     url:
@@ -3278,6 +3317,9 @@ function SimulationHistory() {
     outFields: ["namobj", "kapasitas"],
     editingEnabled: false,
     definitionExpression: sebelumDefinitionExpression,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
   });
 
   function getSymbolBuildingsEnvelope(color) {

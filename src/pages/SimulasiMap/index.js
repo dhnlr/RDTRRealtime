@@ -447,6 +447,9 @@ const SimulasiMap = () => {
             outFields: ["*"],
             editingEnabled: false,
             listMode: "hide",
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
           });
 
           const sampahTpsLayer = new FeatureLayer({
@@ -504,119 +507,122 @@ const SimulasiMap = () => {
           const persilTanahSesudahLayer = new FeatureLayer({
             url: config.url.ARCGIS_URL + "/Versioning/persiltanah_analisis_process/FeatureServer/0",
             title: "Persil Tanah",
-            // popupTemplate: {
-            //   title: "Persil Tanah",
-            //   content: [
-            //     {
-            //       type: "fields",
-            //       fieldInfos: [
-            //         {
-            //           fieldName: "namobj",
-            //           label: "namobj",
-            //         },
-            //         {
-            //           fieldName: "namzon",
-            //           label: "namzon",
-            //         },
-            //         {
-            //           fieldName: "kodzon",
-            //           label: "kodzon",
-            //         },
-            //         {
-            //           fieldName: "namszn",
-            //           label: "namszn",
-            //         },
-            //         {
-            //           fieldName: "kodszn",
-            //           label: "kodszn",
-            //         },
-            //         {
-            //           fieldName: "nambwp",
-            //           label: "nambwp",
-            //         },
-            //         {
-            //           fieldName: "nasbwp",
-            //           label: "nasbwp",
-            //         },
-            //         {
-            //           fieldName: "kodblk",
-            //           label: "kodblk",
-            //         },
-            //         {
-            //           fieldName: "kodsbl",
-            //           label: "kodsbl",
-            //         },
-            //         {
-            //           fieldName: "wadmkc",
-            //           label: "wadmkc",
-            //         },
-            //         {
-            //           fieldName: "wadmkd",
-            //           label: "wadmkd",
-            //         },
-            //         {
-            //           fieldName: "luasha",
-            //           label: "luasha",
-            //         },
-            //         {
-            //           fieldName: "kdb",
-            //           label: "kdb",
-            //         },
-            //         {
-            //           fieldName: "klb",
-            //           label: "klb",
-            //         },
-            //         {
-            //           fieldName: "kdh",
-            //           label: "kdh",
-            //         },
-            //         {
-            //           fieldName: "lantai_max",
-            //           label: "lantai_max",
-            //         },
-            //         {
-            //           fieldName: "nib",
-            //           label: "nib",
-            //         },
-            //         {
-            //           fieldName: "status_pemb_optimum",
-            //           label: "status_pemb_optimum",
-            //         },
-            //         {
-            //           fieldName: "izin_air",
-            //           label: "izin_air",
-            //         },
-            //         {
-            //           fieldName: "izin_macet",
-            //           label: "izin_macet",
-            //         },
-            //         {
-            //           fieldName: "izin_sampah",
-            //           label: "izin_sampah",
-            //         },
-            //         {
-            //           fieldName: "izin_banjir",
-            //           label: "izin_banjir",
-            //         },
-            //         {
-            //           fieldName: "status_pemb_optimum_sebelum",
-            //           label: "status_pemb_optimum_sebelum",
-            //         },
-            //         {
-            //           fieldName: "izin_air_sebelum",
-            //           label: "izin_air_sebelum",
-            //         },
-            //         {
-            //           fieldName: "izin_macet_sebelum",
-            //           label: "izin_macet_sebelum",
-            //         },
-            //       ],
-            //     },
-            //   ],
-            // },
+            popupTemplate: {
+              title: "Persil Tanah",
+              content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "namobj",
+                      label: "namobj",
+                    },
+                    {
+                      fieldName: "namzon",
+                      label: "namzon",
+                    },
+                    {
+                      fieldName: "kodzon",
+                      label: "kodzon",
+                    },
+                    {
+                      fieldName: "namszn",
+                      label: "namszn",
+                    },
+                    {
+                      fieldName: "kodszn",
+                      label: "kodszn",
+                    },
+                    {
+                      fieldName: "nambwp",
+                      label: "nambwp",
+                    },
+                    {
+                      fieldName: "nasbwp",
+                      label: "nasbwp",
+                    },
+                    {
+                      fieldName: "kodblk",
+                      label: "kodblk",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
+                    },
+                    {
+                      fieldName: "luasha",
+                      label: "luasha",
+                    },
+                    {
+                      fieldName: "kdb",
+                      label: "kdb",
+                    },
+                    {
+                      fieldName: "klb",
+                      label: "klb",
+                    },
+                    {
+                      fieldName: "kdh",
+                      label: "kdh",
+                    },
+                    {
+                      fieldName: "lantai_max",
+                      label: "lantai_max",
+                    },
+                    {
+                      fieldName: "nib",
+                      label: "nib",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum",
+                      label: "status_pemb_optimum",
+                    },
+                    {
+                      fieldName: "izin_air",
+                      label: "izin_air",
+                    },
+                    {
+                      fieldName: "izin_macet",
+                      label: "izin_macet",
+                    },
+                    {
+                      fieldName: "izin_sampah",
+                      label: "izin_sampah",
+                    },
+                    {
+                      fieldName: "izin_banjir",
+                      label: "izin_banjir",
+                    },
+                    {
+                      fieldName: "status_pemb_optimum_sebelum",
+                      label: "status_pemb_optimum_sebelum",
+                    },
+                    {
+                      fieldName: "izin_air_sebelum",
+                      label: "izin_air_sebelum",
+                    },
+                    {
+                      fieldName: "izin_macet_sebelum",
+                      label: "izin_macet_sebelum",
+                    },
+                  ],
+                },
+              ],
+            },
             outFields: ["*"],
             editingEnabled: false,
-            // definitionExpression: bangunanDefinitionExpression
+            definitionExpression: bangunanDefinitionExpression,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
           });
 
           const polaRuangVersioningSesudahLayer = new FeatureLayer({
@@ -718,7 +724,10 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["namazona"],
-            // definitionExpression: bangunanDefinitionExpression
+            definitionExpression: bangunanDefinitionExpression,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
           });
 
           const polaRuangVersioningSebelumLayer = new FeatureLayer({
@@ -905,7 +914,10 @@ const SimulasiMap = () => {
             },
             outFields: ["namobj", "kapasitas"],
             editingEnabled: false,
-            definitionExpression: bangunanDefinitionExpression
+            definitionExpression: bangunanDefinitionExpression,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
           });
 
           const jalanSebelumLayer = new FeatureLayer({
@@ -991,6 +1003,9 @@ const SimulasiMap = () => {
             editingEnabled: false,
             definitionExpression: bangunanDefinitionExpression,
             listMode: "hide",
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
           });
 
           function getSymbolBuildingsEnvelope(color) {
