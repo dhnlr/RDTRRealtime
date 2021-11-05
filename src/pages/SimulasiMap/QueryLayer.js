@@ -2,48 +2,58 @@ import axios from "axios"
 
 import { config } from "../../Constants";
 
-function getScreenshotData(screenshot, id){
+function getScreenshotData(screenshot, id, historical){
     return new Promise((resolve, reject) => {
-        axios.get(config.url.ARCGIS_URL + "/Bangunan/FeatureServer/0/query", {
+        var sesudah = axios.get(config.url.ARCGIS_URL + "/Versioning/bangunan_analisis_process/FeatureServer/0/query", {
             params: {
-                where: "id_bangunan="+id??53035208,
+                where: "objectid="+id??53035208,
                 outFields: "*",
                 returnGeometry: false,
                 f: "json"
             }
         })
-        .then(({data}) => {
-            var attr = data.features[0].attributes
-            screenshot.id_bangunan = attr.id_bangunan
-            screenshot.kabkot = attr.kabkot
+        var sebelum = axios.get(config.url.ARCGIS_URL + "/Versioning/bangunan_analisis/FeatureServer/0/query", {
+            params: {
+                where: "objectid="+historical,
+                outFields: "*",
+                returnGeometry: false,
+                f: "json"
+            }
+        })
+        Promise.all([sesudah, sebelum])
+        .then(result => {
+            var attr = result[0].data.features[0].attributes
+            var attr2 = result[1].data.features[0].attributes
+            screenshot.id_bangunan = attr.objectid
+            screenshot.kabkot = attr.wadmkk
             screenshot.jenis = attr.jenis
-            screenshot.simulasi.pembangunan_optimum = attr.status_kdbklb
-            screenshot.simulasi.pembangunan_optimum_sebelum = attr.status_kdbklb_sebelum
-            screenshot.simulasi.air = attr.izin_air_y5
-            screenshot.simulasi.air_sebelum = attr.izin_air_y5_sebelum
-            screenshot.simulasi.kemacetan = attr.izin_macet
-            screenshot.simulasi.kemacetan_sebelum = attr.izin_macet_sebelum
+            screenshot.simulasi.pembangunan_optimum = String(attr.status_kdbklb)
+            screenshot.simulasi.pembangunan_optimum_sebelum = String(attr2.status_kdbklb)
+            screenshot.simulasi.air = attr.izin_air_y5 || ""
+            screenshot.simulasi.air_sebelum = attr2.izin_air_y5 || ""
+            screenshot.simulasi.kemacetan = attr.izin_macet || ""
+            screenshot.simulasi.kemacetan_sebelum = attr2.izin_macet || ""
             screenshot.rangkuman.semua = "Kosong" + "; " + attr.melampaui_tinggi + "; " + attr.melampaui_fa + "; " + "kosong"
             screenshot.rangkuman.air = "Kosong"
-            screenshot.rangkuman.pembangunan_optimum = attr.melampaui_tinggi
-            screenshot.rangkuman.floor_area = attr.melampaui_fa
+            screenshot.rangkuman.pembangunan_optimum = attr.melampaui_tinggi || ""
+            screenshot.rangkuman.floor_area = attr.melampaui_fa || ""
             screenshot.rangkuman.kemacetan = "Kosong"
             screenshot.luas_tapak = String(attr.luas_m2)
-            screenshot.luas_tapak_sebelum = String(attr.luas_m2_sebelum)
+            screenshot.luas_tapak_sebelum = String(attr2.luas_m2)
             screenshot.tinggi_bangunan = String(attr.jlh_lantai)
-            screenshot.tinggi_bangunan_sebelum = String(attr.jlh_lantai_sebelum)
+            screenshot.tinggi_bangunan_sebelum = String(attr2.jlh_lantai)
             screenshot.floor_area_total = String(attr.fa)
-            screenshot.floor_area_total_sebelum = String(attr.fa_sebelum)
+            screenshot.floor_area_total_sebelum = String(attr2.fa)
             screenshot.floor_area_maks = String("-")
             screenshot.floor_area_maks_sebelum = String("-")
             screenshot.jumlah_penduduk = String(attr.pertambahan_penduduk)
-            screenshot.jumlah_penduduk_sebelum = String(attr.pertambahan_penduduk)
+            screenshot.jumlah_penduduk_sebelum = String(attr2.pertambahan_penduduk)
             screenshot.kapasitas_jalan = String(attr.kapasitas)
             screenshot.kapasitas_jalan_sebelum = String(attr.kapasitas)
             screenshot.luas_jalan_dibutuhkan = String(attr.bangkitan_ruasjalan)
             screenshot.luas_jalan_dibutuhkan_sebelum = String(attr.bangkitan_ruasjalan)
             screenshot.level_of_service = String(attr.los_num)
-            screenshot.level_of_service_sebelum = String(attr.los_num_sebelum)
+            screenshot.level_of_service_sebelum = String(attr2.los_num)
             screenshot.kebutuhan_air = String(attr.keb_air_harian_y5)
             screenshot.kebutuhan_air_sebelum = String(attr.keb_air_harian_y5)
             screenshot.supply_air = String(attr.pdam_kapasitas_harian)

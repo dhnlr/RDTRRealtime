@@ -439,8 +439,7 @@ function DataManagement() {
                                   disableGlobalFilter: true,
                                   Cell: (row) => (
                                     <div style={{ textAlign: "right" }}>
-                                      {
-                                        <>
+                                      { /* row.row.values.canModify && */ <>
                                           <button
                                             className="btn btn-outline-dark btn-xs icons-size-16px"
                                             title={
@@ -463,8 +462,6 @@ function DataManagement() {
                                             </span>
                                           </button>
                                           &nbsp;
-                                        </>
-                                      }
                                       <Link
                                         to={{
                                           pathname: "/datamanagementinput",
@@ -496,6 +493,8 @@ function DataManagement() {
                                           <i className="ti-trash"></i>
                                         </span>
                                       </button>
+                                      </>
+                                }
                                     </div>
                                   ),
                                 },

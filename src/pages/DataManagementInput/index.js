@@ -39,6 +39,7 @@ function DataManagementInput() {
   });
   const [errMessage, setErrMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [canUpload, setCanUpload] = useState(true);
 
   const onSubmit = ({ projectName, province, city }) => {
     setErrMessage(null);
@@ -58,6 +59,11 @@ function DataManagementInput() {
     } else {
       if (state) {
         localStorage.setItem("state", JSON.stringify(state));
+        axios.get(config.url.API_URL + "/Simulasi/GetAll").then(({ data }) => {
+          if (data.obj.length > 0) {
+            setCanUpload(false);
+          }
+        });
       }
     }
   }, [history, state]);
@@ -133,7 +139,7 @@ function DataManagementInput() {
         projectName,
         status: 0,
         isPrivate: 1,
-        kotaKabupatenId: city,
+        kotaKabupatenId: Number(city),
         ownerId: Cookies.get("userId"),
       })
       .then((data) => {
@@ -145,7 +151,7 @@ function DataManagementInput() {
             projectName,
             status: 0,
             isPrivate: 1,
-            kotaKabupatenId: city,
+            kotaKabupatenId: Number(city),
             ownerId: Cookies.get("userId"),
           })
         );
@@ -194,9 +200,9 @@ function DataManagementInput() {
             ...JSON.parse(localStorage.state),
           })
         );
-        goManajemenDataPhase2(
+        canUpload ? goManajemenDataPhase2(
           state ? state?.id : JSON.parse(localStorage.state)?.id
-        );
+        ) : goSimulasi() ;
       })
       .catch((error) => {
         setIsProcessing(false);
@@ -421,7 +427,7 @@ function DataManagementInput() {
                               aria-hidden="true"
                             ></span>
                           )}
-                          Selanjutnya
+                          {canUpload ? "Selanjutnya" : "Ubah Proyek"}
                         </button>
                       </div>
                     </form>

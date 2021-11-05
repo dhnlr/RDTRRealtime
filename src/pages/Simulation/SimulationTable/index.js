@@ -561,7 +561,7 @@ function SimulationTable() {
                             {comparedSchenario[0] && (
                               <button
                                 type="button"
-                                class="close"
+                                className="close"
                                 aria-label="Close"
                                 style={{
                                   paddingLeft: "0.6rem",
@@ -588,7 +588,7 @@ function SimulationTable() {
                             {comparedSchenario[1] && (
                               <button
                                 type="button"
-                                class="close"
+                                className="close"
                                 aria-label="Close"
                                 style={{
                                   paddingLeft: "0.6rem",
