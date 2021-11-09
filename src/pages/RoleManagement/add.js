@@ -49,7 +49,7 @@ function RoleManagementCreate() {
         {
           permissions: permissions,
           name: name,
-          isPublisher: isPublisher,
+          isPublisher: isPublisher === "true",
         },
       )
       .then(() => {

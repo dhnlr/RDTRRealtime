@@ -35,7 +35,7 @@ function DataManagementInputTrash() {
     fd.set("tahun_sampah", trash_year);
     fd.set("deskripsi_sampah", trash_desc);
     fd.set("tag_sampah", trash_tag);
-    fd.set("project_id", state?.id);
+    fd.set("project_id", state?.id.id);
 
     axios
       .post(config.url.API_URL + "/FileUploader/Persampahan", fd, {
@@ -53,7 +53,7 @@ function DataManagementInputTrash() {
           total: null,
         });
         if (data.status.code === 200) {
-          goSimulasi();
+          goSimulasi(data.obj.project);
         } else {
           setErrMessage(data?.status?.description ?? data?.status?.message);
         }
@@ -68,9 +68,9 @@ function DataManagementInputTrash() {
       });
   };
 
-  function goSimulasi() {
+  function goSimulasi(data) {
     history.push("/datamanagementinput/kebutuhandata", {
-      id: state?.id,
+      id: data,
     });
   }
 

@@ -38,7 +38,7 @@ function DataManagementInputWater() {
     fd.set("tahun_pdam", air_bersih_year);
     fd.set("deskripsi_pdam", air_bersih_desc);
     fd.set("tag_pdam", air_bersih_tag);
-    fd.set("project_id", state?.id);
+    fd.set("project_id", state?.id.id);
 
     axios
       .post(config.url.API_URL + "/FileUploader/AirBersih", fd, {
@@ -56,7 +56,7 @@ function DataManagementInputWater() {
           total: null,
         });
         if (data.status.code === 200) {
-          goSimulasi();
+          goSimulasi(data.obj.project);
         } else {
           setErrMessage(data?.status?.description ?? data?.status?.message);
         }
@@ -71,9 +71,9 @@ function DataManagementInputWater() {
       });
   };
 
-  function goSimulasi() {
+  function goSimulasi(data) {
     history.push("/datamanagementinput/kebutuhandata", {
-      id: state?.id,
+      id: data,
     });
   }
 

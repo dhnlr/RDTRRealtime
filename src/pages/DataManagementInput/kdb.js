@@ -61,7 +61,7 @@ function DataManagementInputKdb() {
     fd.set("tahun_pola_ruang", pola_ruang_year);
     fd.set("deskripsi_pola_ruang", pola_ruang_desc);
     fd.set("tag_pola_ruang", pola_ruang_tag);
-    fd.set("project_id", state?.id);
+    fd.set("project_id", state?.id.id);
 
     axios
       .post(config.url.API_URL + "/FileUploader/Kdbklb", fd, {
@@ -79,7 +79,7 @@ function DataManagementInputKdb() {
           total: null,
         });
         if (data.status.code === 200) {
-          goSimulasi();
+          goSimulasi(data.obj.project);
         } else {
           setErrMessage(data?.status?.description ?? data?.status?.message);
         }
@@ -94,9 +94,9 @@ function DataManagementInputKdb() {
       });
   };
 
-  function goSimulasi() {
+  function goSimulasi(data) {
     history.push("/datamanagementinput/kebutuhandata", {
-      id: state?.id,
+      id: data,
     });
   }
 

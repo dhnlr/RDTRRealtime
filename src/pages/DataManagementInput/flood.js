@@ -57,11 +57,11 @@ function DataManagementInputFlood() {
     fd.set("tahun_drainase", drainase_year);
     fd.set("deskripsi_drainase", drainase_desc);
     fd.set("tag_drainase", drainase_tag);
-    fd.set("slope_denmas", slope_denmas[0]);
-    fd.set("tahun_slope_denmas", slope_denmas_year);
-    fd.set("deskripsi_slope_denmas", slope_denmas_desc);
-    fd.set("tag_slope_denmas", slope_denmas_tag);
-    fd.set("project_id", state?.id);
+    fd.set("slope_demnas", slope_denmas[0]);
+    fd.set("tahun_slope_demnas", slope_denmas_year);
+    fd.set("deskripsi_slope_demnas", slope_denmas_desc);
+    fd.set("tag_slope_demnas", slope_denmas_tag);
+    fd.set("project_id", state?.id.id);
 
     axios
       .post(config.url.API_URL + "/FileUploader/Banjir", fd, {
@@ -79,7 +79,7 @@ function DataManagementInputFlood() {
           total: null,
         });
         if (data.status.code === 200) {
-          goSimulasi();
+          goSimulasi(data.obj.project);
         } else {
           setErrMessage(data?.status?.description ?? data?.status?.message);
         }
@@ -94,9 +94,9 @@ function DataManagementInputFlood() {
       });
   };
 
-  function goSimulasi() {
+  function goSimulasi(data) {
     history.push("/datamanagementinput/kebutuhandata", {
-      id: state?.id,
+      id: data,
     });
   }
 
@@ -469,7 +469,7 @@ function DataManagementInputFlood() {
                             aria-controls="slope"
                           >
                             <i className="ti-arrow-circle-down"> </i>
-                            Slope Denmas
+                            Slope Demnas
                           </button>
                           <a
                             className="btn btn-rounded btn-outline-primary float-right"
@@ -533,7 +533,7 @@ function DataManagementInputFlood() {
                                 id="slope_denmas_year"
                                 className="form-control"
                                 name="slope_denmas_year"
-                                placeholder="Tahun slope denmas"
+                                placeholder="Tahun slope demnas"
                                 ref={register({
                                   pattern: {
                                     value: /^\d{4}$/,
@@ -558,7 +558,7 @@ function DataManagementInputFlood() {
                                 id="slope_denmas_desc"
                                 className="form-control"
                                 name="slope_denmas_desc"
-                                placeholder="Deskripsi slope denmas"
+                                placeholder="Deskripsi slope demnas"
                                 ref={register}
                               />
                             </div>
@@ -576,7 +576,7 @@ function DataManagementInputFlood() {
                               defaultValue={null}
                               isMulti
                               isClearable
-                              placeholder="Tag slope denmas"
+                              placeholder="Tag slope demnas"
                               className=""
                             />
                           </div>

@@ -61,7 +61,7 @@ function RoleManagementEdit() {
           id: state.id,
           permissions: permissions,
           name: name,
-          isPublisher: isPublisher,
+          isPublisher: isPublisher === "true",
         },
       )
       .then(() => {

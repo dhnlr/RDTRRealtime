@@ -44,7 +44,7 @@ function DataManagementInputCongestion() {
     fd.set("tahun_jaringan_jalan", jaringan_jalan_year);
     fd.set("deskripsi_jaringan_jalan", jaringan_jalan_desc);
     fd.set("tag_jaringan_jalan", jaringan_jalan_tag);
-    fd.set("project_id", state?.id);
+    fd.set("project_id", state?.id.id);
 
     axios
       .post(config.url.API_URL + "/FileUploader/Kemacetan", fd, {
@@ -62,7 +62,7 @@ function DataManagementInputCongestion() {
           total: null,
         });
         if (data.status.code === 200) {
-          goSimulasi();
+          goSimulasi(data.obj.project);
         } else {
           setErrMessage(data?.status?.description ?? data?.status?.message);
         }
@@ -77,9 +77,9 @@ function DataManagementInputCongestion() {
       });
   };
 
-  function goSimulasi() {
+  function goSimulasi(data) {
     history.push("/datamanagementinput/kebutuhandata", {
-      id: state?.id,
+      id: data,
     });
   }
 
