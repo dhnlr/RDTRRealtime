@@ -408,7 +408,7 @@ const SimulasiMap = () => {
             elevationInfo: {
               mode: "on-the-ground",
             },
-            title: "Bangunan Proses",
+            title: "Bangunan",
             listMode: "hide",
             popupTemplate: {
               title: "Bangunan",
@@ -428,7 +428,9 @@ const SimulasiMap = () => {
           });
 
           const kapasitasAirSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Versioning/kapasitas_air/FeatureServer/0",
+            url:
+              config.url.ARCGIS_URL +
+              "/Versioning/kapasitas_air/FeatureServer/0",
             id: "kapasitas_air_analisis_proses",
             title: "Kapasitas Air",
             popupTemplate: {
@@ -438,7 +440,9 @@ const SimulasiMap = () => {
             editingEnabled: false,
           });
           const kapasitasAirSebelumLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Versioning/kapasitas_air/FeatureServer/0",
+            url:
+              config.url.ARCGIS_URL +
+              "/Versioning/kapasitas_air/FeatureServer/0",
             id: "kapasitas_air_analisis",
             title: "Kapasitas Air",
             popupTemplate: {
@@ -452,15 +456,17 @@ const SimulasiMap = () => {
             },
           });
 
-          const sampahTpsLayer = new FeatureLayer({
+          const sampahTpsSesudahLayer = new FeatureLayer({
             url:
-              config.url.ARCGIS_URL + "/Persampahan/Sampah_TPS/FeatureServer/0",
+              config.url.ARCGIS_URL +
+              "/Versioning/sampah_analisis_process/FeatureServer/0",
             title: "Sampah TPS",
+            id: "sampah_tps_analisis_proses",
             popupTemplate: {
               title: "Sampah TPS",
             },
             outFields: ["*"],
-            editingEnabled: false,
+            editingEnabled: true,
             /* renderer: {
               type: "simple",
               symbol: {
@@ -494,18 +500,75 @@ const SimulasiMap = () => {
                 },
                 {
                   type: "color",
-                  field: "status_tps_int", 
+                  field: "status_tps_int",
                   stops: [
-                    { value: 1, color: "green" }, 
-                    { value: 2, color: "red" }, 
-                  ]
-                }
+                    { value: 1, color: "green" },
+                    { value: 2, color: "red" },
+                  ],
+                },
+              ],
+            },
+          });
+
+          const sampahTpsSebelumLayer = new FeatureLayer({
+            url:
+              config.url.ARCGIS_URL +
+              "/Versioning/sampah_analisis/FeatureServer/0",
+            title: "Sampah TPS",
+            id: "sampah_tps_analisis",
+            popupTemplate: {
+              title: "Sampah TPS",
+            },
+            outFields: ["*"],
+            editingEnabled: false,
+            listMode: "hide",
+            /* renderer: {
+              type: "simple",
+              symbol: {
+                type: "point-3d",
+                symbolLayers: [
+                  {
+                    type: "object", // autocasts as new ObjectSymbol3DLayer()
+                    height: 4, // height of the object in meters
+                    // width: 3,
+                    // depth: 15,
+                    resource: {
+                      href: "https://rdtr.onemap.id/backend/Template/dumpster/scene.gltf",
+                    },
+                    // heading: 270,
+                  },
+                ],
+              },
+            }, */
+            renderer: {
+              type: "simple", // autocasts as new SimpleRenderer()
+              symbol: {
+                type: "web-style", // autocasts as new WebStyleSymbol()
+                name: "Trash_Can_2",
+                styleName: "EsriRealisticStreetSceneStyle",
+              },
+              visualVariables: [
+                {
+                  type: "size",
+                  field: "kapasitas",
+                  axis: "height",
+                },
+                {
+                  type: "color",
+                  field: "status_tps_int",
+                  stops: [
+                    { value: 1, color: "green" },
+                    { value: 2, color: "red" },
+                  ],
+                },
               ],
             },
           });
 
           const persilTanahSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Versioning/persiltanah_analisis_process/FeatureServer/0",
+            url:
+              config.url.ARCGIS_URL +
+              "/Versioning/persiltanah_analisis_process/FeatureServer/0",
             title: "Persil Tanah",
             popupTemplate: {
               title: "Persil Tanah",
@@ -626,7 +689,9 @@ const SimulasiMap = () => {
           });
 
           const polaRuangVersioningSesudahLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Versioning/polaruang_analisis_process/FeatureServer/0",
+            url:
+              config.url.ARCGIS_URL +
+              "/Versioning/polaruang_analisis_process/FeatureServer/0",
             id: "pola_ruang_analisis_proses",
             title: "Pola Ruang Versioning",
             popupTemplate: {
@@ -640,84 +705,56 @@ const SimulasiMap = () => {
                       label: "objectid",
                     },
                     {
-                      fieldName: "namazona",
-                      label: "namazona",
+                      fieldName: "wadmpr",
+                      label: "wadmpr",
+                    },
+                    {
+                      fieldName: "wadmkk",
+                      label: "wadmkk",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
                     },
                     {
                       fieldName: "kdzona",
-                      label: "kdzona",
-                    },
-                    {
-                      fieldName: "namaszona",
-                      label: "namaszona",
+                      label: "Kode Zona",
                     },
                     {
                       fieldName: "kdszona",
-                      label: "kdszona",
+                      label: "Kode Subzona",
                     },
                     {
-                      fieldName: "luasha",
-                      label: "luasha",
+                      fieldName: "namazona",
+                      label: "Nama Zona",
+                    },
+                    {
+                      fieldName: "namaszona",
+                      label: "Kode Subzona",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
                     },
                     {
                       fieldName: "kdb",
                       label: "kdb",
                     },
                     {
-                      fieldName: "kdb_sebelum",
-                      label: "kdb_sebelum",
-                    },
-                    {
                       fieldName: "klb",
                       label: "klb",
-                    },
-                    {
-                      fieldName: "klb_sebelum",
-                      label: "klb_sebelum",
                     },
                     {
                       fieldName: "kdh",
                       label: "kdh",
                     },
                     {
-                      fieldName: "kdh_sebelum",
-                      label: "kdh_sebelum",
-                    },
-                    {
                       fieldName: "lantai_max",
                       label: "lantai_max",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                    {
-                      fieldName: "kabkot",
-                      label: "kabkot",
-                    },
-                    {
-                      fieldName: "lantai_max_sebelum",
-                      label: "lantai_max_sebelum",
                     },
                   ],
                 },
@@ -731,7 +768,9 @@ const SimulasiMap = () => {
           });
 
           const polaRuangVersioningSebelumLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Versioning/polaruang_analisis/FeatureServer/0",
+            url:
+              config.url.ARCGIS_URL +
+              "/Versioning/polaruang_analisis/FeatureServer/0",
             id: "pola_ruang_analisis",
             title: "Pola Ruang Versioning",
             popupTemplate: {
@@ -745,84 +784,56 @@ const SimulasiMap = () => {
                       label: "objectid",
                     },
                     {
-                      fieldName: "namazona",
-                      label: "namazona",
+                      fieldName: "wadmpr",
+                      label: "wadmpr",
+                    },
+                    {
+                      fieldName: "wadmkk",
+                      label: "wadmkk",
+                    },
+                    {
+                      fieldName: "wadmkc",
+                      label: "wadmkc",
+                    },
+                    {
+                      fieldName: "wadmkd",
+                      label: "wadmkd",
                     },
                     {
                       fieldName: "kdzona",
-                      label: "kdzona",
-                    },
-                    {
-                      fieldName: "namaszona",
-                      label: "namaszona",
+                      label: "Kode Zona",
                     },
                     {
                       fieldName: "kdszona",
-                      label: "kdszona",
+                      label: "Kode Subzona",
                     },
                     {
-                      fieldName: "luasha",
-                      label: "luasha",
+                      fieldName: "namazona",
+                      label: "Nama Zona",
+                    },
+                    {
+                      fieldName: "namaszona",
+                      label: "Kode Subzona",
+                    },
+                    {
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
                     },
                     {
                       fieldName: "kdb",
                       label: "kdb",
                     },
                     {
-                      fieldName: "kdb_sebelum",
-                      label: "kdb_sebelum",
-                    },
-                    {
                       fieldName: "klb",
                       label: "klb",
-                    },
-                    {
-                      fieldName: "klb_sebelum",
-                      label: "klb_sebelum",
                     },
                     {
                       fieldName: "kdh",
                       label: "kdh",
                     },
                     {
-                      fieldName: "kdh_sebelum",
-                      label: "kdh_sebelum",
-                    },
-                    {
                       fieldName: "lantai_max",
                       label: "lantai_max",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "status_pemb_optimum_sebelum",
-                      label: "status_pemb_optimum_sebelum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_air_sebelum",
-                      label: "izin_air_sebelum",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
-                    {
-                      fieldName: "izin_macet_sebelum",
-                      label: "izin_macet_sebelum",
-                    },
-                    {
-                      fieldName: "kabkot",
-                      label: "kabkot",
-                    },
-                    {
-                      fieldName: "lantai_max_sebelum",
-                      label: "lantai_max_sebelum",
                     },
                   ],
                 },
@@ -835,7 +846,8 @@ const SimulasiMap = () => {
 
           const jalanSesudahLayer = new FeatureLayer({
             url:
-              config.url.ARCGIS_URL + "/Versioning/jalan_analisis_process/FeatureServer/0",
+              config.url.ARCGIS_URL +
+              "/Versioning/jalan_analisis_process/FeatureServer/0",
             title: "Jaringan Jalan",
             id: "jaringan_jalan_analisis_proses",
             popupTemplate: {
@@ -922,7 +934,8 @@ const SimulasiMap = () => {
 
           const jalanSebelumLayer = new FeatureLayer({
             url:
-              config.url.ARCGIS_URL + "/Versioning/jalan_analisis_process/FeatureServer/0",
+              config.url.ARCGIS_URL +
+              "/Versioning/jalan_analisis_process/FeatureServer/0",
             title: "Jaringan Jalan",
             id: "jaringan_jalan_analisis",
             popupTemplate: {
@@ -1038,7 +1051,9 @@ const SimulasiMap = () => {
             ],
           };
           const buildingsEnvelopeLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Versioning/bangunan_analisis_process/FeatureServer/0",
+            url:
+              config.url.ARCGIS_URL +
+              "/Versioning/bangunan_analisis_process/FeatureServer/0",
             renderer: rendererBuildingsEnvelope,
             definitionExpression: `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = 0`,
             elevationInfo: {
@@ -1490,7 +1505,9 @@ const SimulasiMap = () => {
           };
 
           const polaRuangEnvelopeLayer = new FeatureLayer({
-            url: config.url.ARCGIS_URL + "/Versioning/polaruang_amplop/FeatureServer/0",
+            url:
+              config.url.ARCGIS_URL +
+              "/Versioning/polaruang_amplop/FeatureServer/0",
             renderer: rendererPolaRuangEnvelope,
             definitionExpression: `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = 0`,
             elevationInfo: {
@@ -1797,7 +1814,8 @@ const SimulasiMap = () => {
               persilTanahSesudahLayer,
               kapasitasAirSesudahLayer,
               kapasitasAirSebelumLayer,
-              sampahTpsLayer,
+              sampahTpsSesudahLayer,
+              sampahTpsSebelumLayer,
               jalanSesudahLayer,
               jalanSebelumLayer,
               bangunanSesudahLayer,
@@ -1811,18 +1829,21 @@ const SimulasiMap = () => {
               // frekuensiBanjir2019,
               basemapPolaRuangLayer,
               polaRuangEnvelopeLayer,
-              persilTanahBpn,
+              // persilTanahBpn,
               buildingsEnvelopeLayer,
             ],
           });
 
-          map.addMany([tambahanGroupLayer, utamaGroupLayer, buildings3dLayer]);
+          map.addMany([tambahanGroupLayer, utamaGroupLayer]);
 
           jalanSesudahLayer.visible = false;
+          jalanSebelumLayer.visible = false;
           polaRuangVersioningSesudahLayer.visible = false;
+          polaRuangVersioningSebelumLayer.visible = false;
           persilTanahSesudahLayer.visible = false;
           kapasitasAirSesudahLayer.visible = false;
-          sampahTpsLayer.visible = false;
+          sampahTpsSesudahLayer.visible = false;
+          sampahTpsSebelumLayer.visible = false;
           persilTanahBpn.visible = false;
           buildingsEnvelopeLayer.visible = false;
           basemapPolaRuangLayer.visible = false;
@@ -2040,7 +2061,8 @@ const SimulasiMap = () => {
                   activeSebelum: false,
                 });
                 setSelectedHistoryId(state.id);
-                bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
+                bangunanSesudahLayer.definitionExpression =
+                  bangunanDefinitionExpression;
               }
             });
             const editorExpand = new Expand({
@@ -2087,23 +2109,24 @@ const SimulasiMap = () => {
                 activeSebelum: false,
               });
               setSelectedHistoryId(state.id);
-                bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
-                view.on("click", function (event) {
-                  // Remove the previous highlights
-                  if (highlight) {
-                    highlight.remove();
+              bangunanSesudahLayer.definitionExpression =
+                bangunanDefinitionExpression;
+              view.on("click", function (event) {
+                // Remove the previous highlights
+                if (highlight) {
+                  highlight.remove();
                 }
                 let pointBuildings = event.mapPoint;
 
                 view
-                .whenLayerView(bangunanSesudahLayer)
-                .then(function (bangunanSesudahLayerView) {
-                  var query = bangunanSesudahLayer.createQuery();
-                  query.geometry = pointBuildings;
-                  bangunanSesudahLayer
-                  .queryFeatures(query)
-                  .then(function (result) {
-                        console.log(result.features)
+                  .whenLayerView(bangunanSesudahLayer)
+                  .then(function (bangunanSesudahLayerView) {
+                    var query = bangunanSesudahLayer.createQuery();
+                    query.geometry = pointBuildings;
+                    bangunanSesudahLayer
+                      .queryFeatures(query)
+                      .then(function (result) {
+                        console.log(result.features);
                         if (result.features.length > 0) {
                           result.features.forEach(function (feature) {
                             var objectId = feature.attributes.objectid;
@@ -2120,8 +2143,8 @@ const SimulasiMap = () => {
                               v_nambwp: feature.attributes.nambwp,
                               v_nasbwp: feature.attributes.nasbwp,
                               v_kodblk: feature.attributes.kodblk,
-                              v_kodsbl: feature.attributes.kodsbl
-                            })
+                              v_kodsbl: feature.attributes.kodsbl,
+                            });
                           });
                         } else {
                           setSelectBuildings(true);
@@ -2186,7 +2209,8 @@ const SimulasiMap = () => {
                 activeSebelum: false,
               });
               setSelectedHistoryId(state.id);
-                bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
+              bangunanSesudahLayer.definitionExpression =
+                bangunanDefinitionExpression;
               view.on("click", function (event) {
                 if (highlight) {
                   highlight.remove();
@@ -2204,20 +2228,23 @@ const SimulasiMap = () => {
                         if (result.features.length > 0) {
                           result.features.forEach(function (feature) {
                             var objectId = feature.attributes.objectid;
-                            var oid_historical = feature.attributes.oid_historical;
-                            getScreenshotData(dataScreenshot, objectId, oid_historical).then(
-                              (result) => {
-                                setDataScreenshot(result);
-                                view.container.classList.remove(
-                                  "screenshotCursor"
-                                );
-                                highlight =
-                                  bangunanSesudahLayerView.highlight(objectId);
-                                document.getElementById(
-                                  "id_bangunan_print"
-                                ).innerText = "ID bangunan: " + objectId;
-                              }
-                            );
+                            var oid_historical =
+                              feature.attributes.oid_historical;
+                            getScreenshotData(
+                              dataScreenshot,
+                              objectId,
+                              oid_historical
+                            ).then((result) => {
+                              setDataScreenshot(result);
+                              view.container.classList.remove(
+                                "screenshotCursor"
+                              );
+                              highlight =
+                                bangunanSesudahLayerView.highlight(objectId);
+                              document.getElementById(
+                                "id_bangunan_print"
+                              ).innerText = "ID bangunan: " + objectId;
+                            });
                           });
                         }
                         jalanSesudahLayer.popupEnabled = true;
@@ -2236,13 +2263,15 @@ const SimulasiMap = () => {
             };
 
             var cetak = () => {
-              console.log(dataScreenshot.photo.pembangunan_optimum_sebelum &&
-                dataScreenshot.photo.pembangunan_optimum_sesudah &&
-                dataScreenshot.photo.kemacetan_sebelum &&
-                dataScreenshot.photo.kemacetan_sesudah &&
-                dataScreenshot.photo.air_bersih_sebelum &&
-                dataScreenshot.photo.air_bersih_sesudah &&
-                dataScreenshot.id_bangunan)
+              console.log(
+                dataScreenshot.photo.pembangunan_optimum_sebelum &&
+                  dataScreenshot.photo.pembangunan_optimum_sesudah &&
+                  dataScreenshot.photo.kemacetan_sebelum &&
+                  dataScreenshot.photo.kemacetan_sesudah &&
+                  dataScreenshot.photo.air_bersih_sebelum &&
+                  dataScreenshot.photo.air_bersih_sesudah &&
+                  dataScreenshot.id_bangunan
+              );
               if (
                 dataScreenshot.photo.pembangunan_optimum_sebelum &&
                 dataScreenshot.photo.pembangunan_optimum_sesudah &&
@@ -2254,7 +2283,7 @@ const SimulasiMap = () => {
               ) {
                 Pdf(dataScreenshot);
               } else {
-                console.log(dataScreenshot)
+                console.log(dataScreenshot);
                 Swal.fire(
                   "Maaf",
                   "Lengkapi foto dan pilih bangunan untuk mencetak hasil analisis",
@@ -2302,7 +2331,8 @@ const SimulasiMap = () => {
                 activeSebelum: false,
               });
               setSelectedHistoryId(state.id);
-                bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
+              bangunanSesudahLayer.definitionExpression =
+                bangunanDefinitionExpression;
               view.on("click", function (event) {
                 if (highlight) {
                   highlight.remove();
@@ -2509,7 +2539,8 @@ const SimulasiMap = () => {
                 activeSebelum: false,
               });
               setSelectedHistoryId(state.id);
-                bangunanSesudahLayer.definitionExpression = bangunanDefinitionExpression;
+              bangunanSesudahLayer.definitionExpression =
+                bangunanDefinitionExpression;
               // end segmentation drawing function
 
               let fieldsArr = [];
@@ -2521,470 +2552,577 @@ const SimulasiMap = () => {
                   });
                 }
               });
-              if (features[0].layer.id.toLowerCase().indexOf("bagunan") !== -1) {
+              if (
+                features[0].layer.id.toLowerCase().indexOf("bagunan") !== -1
+              ) {
                 var sesudah = Axios.get(
-                  config.url.ARCGIS_URL+"/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=objectid=" +
-                  features[0].attributes.objectid +
+                  config.url.ARCGIS_URL +
+                    "/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=objectid=" +
+                    features[0].attributes.objectid +
                     "&outFields=*&outSR=4326&f=pjson"
                 );
                 var sebelum = Axios.get(
-                  config.url.ARCGIS_URL+"/Versioning/bangunan_analisis/FeatureServer/0/query?where=objectid=" +
-                  features[0].attributes.oid_historical +
+                  config.url.ARCGIS_URL +
+                    "/Versioning/bangunan_analisis/FeatureServer/0/query?where=objectid=" +
+                    features[0].attributes.oid_historical +
                     "&outFields=*&outSR=4326&f=pjson"
                 );
-                Promise.all([sesudah, sebelum])
-                .then(result => {
-                  console.log("Hasil promise all popup", result)
-                  if(result[0].data.features.length > 0 && result[1].data.features.length > 0){
-                  setContentBangunanKdbKlb([
-                    {
-                      field_name: "jenis",
-                      field_value: result[0].data.features[0].attributes.jenis,
-                    },
-                    {
-                      field_name: "jenis_bang",
-                      field_value: result[0].data.features[0].attributes.jenis_bang,
-                    },
-                    {
-                      field_name: "status_kdbklb_sebelum",
-                      field_value: result[1].data.features[0].attributes.status_kdbklb,
-                    },
-                    {
-                      field_name: "status_kdbklb",
-                      field_value: result[0].data.features[0].attributes.status_kdbklb,
-                    },
-                    {
-                      field_name: "melampaui_fa_sebelum",
-                      field_value: result[1].data.features[0].attributes.melampaui_fa,
-                    },
-                    {
-                      field_name: "melampaui_fa",
-                      field_value: result[0].data.features[0].attributes.melampaui_fa,
-                    },
-                    {
-                      field_name: "melampaui_tinggi_sebelum",
-                      field_value:
-                      result[1].data.features[0].attributes.melampaui_tinggi,
-                    },
-                    {
-                      field_name: "melampaui_tinggi",
-                      field_value: result[0].data.features[0].attributes.melampaui_tinggi,
-                    },
-                    {
-                      field_name: "izin_air_y5_sebelum",
-                      field_value: result[1].data.features[0].attributes.izin_air_y5,
-                    },
-                    {
-                      field_name: "izin_air_y5",
-                      field_value: result[0].data.features[0].attributes.izin_air_y5,
-                    },
-                    {
-                      field_name: "izin_macet_sebelum",
-                      field_value: result[1].data.features[0].attributes.izin_macet, //10
-                    },
-                    {
-                      field_name: "izin_macet",
-                      field_value: result[0].data.features[0].attributes.izin_macet,
-                    },
-                    {
-                      field_name: "los_num_sebelum",
-                      field_value: result[1].data.features[0].attributes.los_num,
-                    },
-                    {
-                      field_name: "los_num",
-                      field_value: features[0].attributes.los_num,
-                    },
-                    {
-                      field_name: "los_sebelum",
-                      field_value: result[1].data.features[0].attributes.los,
-                    },
-                    {
-                      field_name: "los",
-                      field_value: result[0].data.features[0].attributes.los,
-                    },
-                    {
-                      field_name: "jlh_lantai_sebelum",
-                      field_value: result[1].data.features[0].attributes.jlh_lantai,
-                    },
-                    {
-                      field_name: "jlh_lantai",
-                      field_value: result[0].data.features[0].attributes.jlh_lantai,
-                    },
-                    {
-                      field_name: "Shape__Area",
-                      field_value: result[0].data.features[0].attributes.Shape__Area,
-                    },
-                    {
-                      field_name: "Shape__Area",
-                      field_value: result[0].data.features[0].attributes.Shape__Area,
-                    },
-                    {
-                      field_name: "fa_sebelum",
-                      field_value: result[1].data.features[0].attributes.fa, //20
-                    },
-                    {
-                      field_name: "fa",
-                      field_value: result[0].data.features[0].attributes.fa,
-                    },
-                    {
-                      field_name: "id_bangunan",
-                      field_value: result[0].data.features[0].attributes.id_bangunan,
-                    },
-                    {
-                      field_name: "penduduk_y1",
-                      field_value: result[0].data.features[0].attributes.penduduk_y1,
-                    },
-                    {
-                      field_name: "penduduk_y2",
-                      field_value: result[0].data.features[0].attributes.penduduk_y2,
-                    },
-                    {
-                      field_name: "penduduk_y3",
-                      field_value: result[0].data.features[0].attributes.penduduk_y3,
-                    },
-                    {
-                      field_name: "penduduk_y4",
-                      field_value: result[0].data.features[0].attributes.penduduk_y4,
-                    },
-                    {
-                      field_name: "penduduk_y5",
-                      field_value: result[0].data.features[0].attributes.penduduk_y5,
-                    },
-                    {
-                      field_name: "laju_ptbh_penduduk",
-                      field_value: result[0].data.features[0].attributes.laju_ptbh_penduduk,
-                    },
-                    {
-                      field_name: "pertambahan_penduduk",
-                      field_value: result[0].data.features[0].attributes.pertambahan_penduduk,
-                    },
-                    {
-                      field_name: "penduduk_y5_pertambahan",
-                      field_value: result[0].data.features[0].attributes.penduduk_y5_pertambahan, //30
-                    },
-                    {
-                      field_name: "penduduk_y6_proyeksi",
-                      field_value: result[0].data.features[0].attributes.penduduk_y6_proyeksi,
-                    },
-                    {
-                      field_name: "penduduk_y7_proyeksi",
-                      field_value: result[0].data.features[0].attributes.penduduk_y7_proyeksi,
-                    },
-                    {
-                      field_name: "penduduk_y8_proyeksi",
-                      field_value: result[0].data.features[0].attributes.penduduk_y8_proyeksi,
-                    },
-                    {
-                      field_name: "penduduk_y9_proyeksi",
-                      field_value: result[0].data.features[0].attributes.penduduk_y9_proyeksi,
-                    },
-                    {
-                      field_name: "penduduk_y10_proyeksi",
-                      field_value: result[0].data.features[0].attributes.penduduk_y10_proyeksi,
-                    },
-                    {
-                      field_name: "pdam_kapasitas_harian",
-                      field_value: result[0].data.features[0].attributes.pdam_kapasitas_harian,
-                    },
-                    {
-                      field_name: "keb_air_harian_y5",
-                      field_value: result[0].data.features[0].attributes.keb_air_harian_y5,
-                    },
-                    {
-                      field_name: "keb_air_harian_y6",
-                      field_value: result[0].data.features[0].attributes.keb_air_harian_y6,
-                    },
-                    {
-                      field_name: "keb_air_harian_y7",
-                      field_value: result[0].data.features[0].attributes.keb_air_harian_y7,
-                    },
-                    {
-                      field_name: "keb_air_harian_y8",
-                      field_value: result[0].data.features[0].attributes.keb_air_harian_y8, //40
-                    },
-                    {
-                      field_name: "keb_air_harian_y9",
-                      field_value: result[0].data.features[0].attributes.keb_air_harian_y9,
-                    },
-                    {
-                      field_name: "keb_air_harian_y10",
-                      field_value: result[0].data.features[0].attributes.keb_air_harian_y10,
-                    },
-                    {
-                      field_name: "izin_air_y6",
-                      field_value: result[0].data.features[0].attributes.izin_air_y6,
-                    },
-                    {
-                      field_name: "izin_air_y7",
-                      field_value: result[0].data.features[0].attributes.izin_air_y7,
-                    },
-                    {
-                      field_name: "izin_air_y8",
-                      field_value: result[0].data.features[0].attributes.izin_air_y8,
-                    },
-                    {
-                      field_name: "izin_air_y9",
-                      field_value: result[0].data.features[0].attributes.izin_air_y9,
-                    },
-                    {
-                      field_name: "izin_air_y10",
-                      field_value: result[0].data.features[0].attributes.izin_air_y10,
-                    },
-                    {
-                      field_name: "lebar_jalan",
-                      field_value: result[0].data.features[0].attributes.lebar_jalan,
-                    },
-                    {
-                      field_name: "panjang_jalan",
-                      field_value: result[0].data.features[0].attributes.panjang_jalan,
-                    },
-                    {
-                      field_name: "bangkitan",
-                      field_value: result[0].data.features[0].attributes.bangkitan, //50
-                    },
-                    {
-                      field_name: "bangkitan_ruasjalan",
-                      field_value: result[0].data.features[0].attributes.bangkitan_ruasjalan,
-                    },
-                    {
-                      field_name: "kapasitas",
-                      field_value: result[0].data.features[0].attributes.kapasitas,
-                    },
-                    {
-                      field_name: "bangkitan_ruasjalan_y6",
-                      field_value: result[0].data.features[0].attributes.bangkitan_ruasjalan_y6,
-                    },
-                    {
-                      field_name: "bangkitan_ruasjalan_y7",
-                      field_value: result[0].data.features[0].attributes.bangkitan_ruasjalan_y7,
-                    },
-                    {
-                      field_name: "bangkitan_ruasjalan_y8",
-                      field_value: result[0].data.features[0].attributes.bangkitan_ruasjalan_y8,
-                    },
-                    {
-                      field_name: "bangkitan_ruasjalan_y9",
-                      field_value: result[0].data.features[0].attributes.bangkitan_ruasjalan_y9,
-                    },
-                    {
-                      field_name: "bangkitan_ruasjalan_y10",
-                      field_value: result[0].data.features[0].attributes.bangkitan_ruasjalan_y10,
-                    },
-                    // {
-                    //   field_name: "izin_macet_y6",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_y6,
-                    // },
-                    // {
-                    //   field_name: "izin_macet_y7",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_y7,
-                    // },
-                    // {
-                    //   field_name: "izin_macet_y8",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_y8,
-                    // },
-                    // {
-                    //   field_name: "izin_macet_y9",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_y9,
-                    // },
-                    // {
-                    //   field_name: "izin_macet_y10",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_y10,
-                    // },
-                    // {
-                    //   field_name: "izin_air_y6_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_air_y6_sebelum,
-                    // },
-                    // {
-                    //   field_name: "izin_air_y7_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_air_y7_sebelum,
-                    // },
-                    // {
-                    //   field_name: "izin_air_y8_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_air_y8_sebelum,
-                    // },
-                    // {
-                    //   field_name: "izin_air_y9_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_air_y9_sebelum,
-                    // },
-                    // {
-                    //   field_name: "izin_air_y10_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_air_y10_sebelum,
-                    // },
-                    // {
-                    //   field_name: "izin_macet_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_sebelum,
-                    // },
-                    // {
-                    //   field_name: "izin_macet_y6_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_y6_sebelum,
-                    // },
-                    // {
-                    //   field_name: "izin_macet_y7_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_y7_sebelum,
-                    // },
-                    // {
-                    //   field_name: "izin_macet_y8_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_y8_sebelum,
-                    // },
-                    // {
-                    //   field_name: "izin_macet_y9_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_y9_sebelum,
-                    // },
-                    // {
-                    //   field_name: "izin_macet_y10_sebelum",
-                    //   field_value: result[0].data.features[0].attributes.izin_macet_y10_sebelum,
-                    // },
-                    {
-                      field_name: "sumber",
-                      field_value: result[0].data.features[0].attributes.sumber,
-                    },
-                    {
-                      field_name: "kabkot",
-                      field_value: result[0].data.features[0].attributes.kabkot,
-                    },
-                    {
-                      field_name: "namaszona",
-                      field_value: result[0].data.features[0].attributes.namaszona, //60
-                    },
-                    {
-                      field_name: "lantai_max",
-                      field_value: result[0].data.features[0].attributes.lantai_max,
-                    },
-                    {
-                      field_name: "kdb",
-                      field_value: result[0].data.features[0].attributes.kdb,
-                    },
-                    {
-                      field_name: "klb",
-                      field_value: result[0].data.features[0].attributes.klb,
-                    },
-                    {
-                      field_name: "kdh",
-                      field_value: result[0].data.features[0].attributes.kdh,
-                    },
-                    {
-                      field_name: "fa_max",
-                      field_value: result[0].data.features[0].attributes.fa_max,
-                    },
-                    {
-                      field_name: "q_arus",
-                      field_value: result[0].data.features[0].attributes.q_arus,
-                    },
-                    {
-                      field_name: "namaszona_sebelum",
-                      field_value: result[1].data.features[0].attributes.namaszona,
-                    },
-                    {
-                      field_name: "kdb_sebelum",
-                      field_value: result[1].data.features[0].attributes.kdb,
-                    },
-                    {
-                      field_name: "klb_sebelum",
-                      field_value: result[1].data.features[0].attributes.klb,
-                    },
-                    {
-                      field_name: "kdh_sebelum",
-                      field_value: result[1].data.features[0].attributes.kdh, //70
-                    },
-                    {
-                      field_name: "lantai_max_sebelum",
-                      field_value: result[1].data.features[0].attributes.lantai_max,
-                    },
-                    {
-                      field_name: "status_itbx_sebelum",
-                      field_value: result[1].data.features[0].attributes.status_itbx, //72
-                    },
-                    {
-                      field_name: "status_itbx",
-                      field_value: result[0].data.features[0].attributes.status_itbx,
-                    },
-                    {
-                      field_name: "kegiatan_sebelum",
-                      field_value: result[1].data.features[0].attributes.kegiatan, //74
-                    },
-                    {
-                      field_name: "kegiatan",
-                      field_value: result[0].data.features[0].attributes.kegiatan,
-                    },
-                    {
-                      field_name: "kbli_sebelum",
-                      field_value: result[1].data.features[0].attributes.kbli,
-                    },
-                    {
-                      field_name: "kbli",
-                      field_value: result[0].data.features[0].attributes.kbli,
-                    },
-                    {
-                      field_name: "jenis_bang_sebelum",
-                      field_value: result[1].data.features[0].attributes.jenis_bang, //78
-                    },
-                    {
-                      field_name: "q_arus_sebelum",
-                      field_value: result[1].data.features[0].attributes.q_arus,
-                    },
-                    {
-                      field_name: "kdb_rdtr",
-                      field_value: result[0].data.features[0].attributes.kdb_rdtr, //80
-                    },
-                    {
-                      field_name: "klb_rdtr",
-                      field_value: result[0].data.features[0].attributes.klb_rdtr,
-                    },
-                    {
-                      field_name: "kdh_rdtr",
-                      field_value: result[0].data.features[0].attributes.kdh_rdtr, //82
-                    },
-                    {
-                      field_name: "keb_air_harian_y5_sebelum",
-                      field_value:
-                      result[1].data.features[0].attributes.keb_air_harian_y5,
-                    },
-                    {
-                      field_name: "pdam_kapasitas_harian_sebelum",
-                      field_value:
-                      result[1].data.features[0].attributes.pdam_kapasitas_harian,
-                    },
-                    {
-                      field_name: "izin_sampah_y5",
-                      field_value: result[0].data.features[0].attributes.izin_sampah_y5, //85
-                    },
-                    {
-                      field_name: "timbulan_sampah_harian_m3",
-                      field_value:
-                        result[0].data.features[0].attributes.timbulan_sampah_harian_m3,
-                    },
-                    {
-                      field_name: "sum_timbulan_sampah_harian_m3",
-                      field_value:
-                        result[0].data.features[0].attributes.sum_timbulan_sampah_harian_m3,
-                    },
-                    {
-                      field_name: "total_kapasitas",
-                      field_value: result[0].data.features[0].attributes.total_kapasitas,//88
-                    },
-                    {
-                      field_name: "jlh_biopori",
-                      field_value:
-                        result[0].data.features[0].attributes.jlh_biopori,
-                    },
-                    {
-                      field_name: "kapasitas_biopori",
-                      field_value:
-                        result[0].data.features[0].attributes.kapasitas_biopori,//90
-                    },
-                    {
-                      field_name: "surplus_debitalir",
-                      field_value:
-                        result[0].data.features[0].attributes.surplus_debitalir,
-                    },
-                    {
-                      field_name: "kecenderungan_banjir",
-                      field_value:
-                        result[0].data.features[0].attributes.kecenderungan_banjir,
-                    },
-                  ]);
+                Promise.all([sesudah, sebelum]).then((result) => {
+                  console.log("Hasil promise all popup", result);
+                  if (
+                    result[0].data.features.length > 0 &&
+                    result[1].data.features.length > 0
+                  ) {
+                    setContentBangunanKdbKlb([
+                      {
+                        field_name: "jenis",
+                        field_value:
+                          result[0].data.features[0].attributes.jenis,
+                      },
+                      {
+                        field_name: "jenis_bang",
+                        field_value:
+                          result[0].data.features[0].attributes.jenis_bang,
+                      },
+                      {
+                        field_name: "status_kdbklb_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.status_kdbklb,
+                      },
+                      {
+                        field_name: "status_kdbklb",
+                        field_value:
+                          result[0].data.features[0].attributes.status_kdbklb,
+                      },
+                      {
+                        field_name: "melampaui_fa_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.melampaui_fa,
+                      },
+                      {
+                        field_name: "melampaui_fa",
+                        field_value:
+                          result[0].data.features[0].attributes.melampaui_fa,
+                      },
+                      {
+                        field_name: "melampaui_tinggi_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes
+                            .melampaui_tinggi,
+                      },
+                      {
+                        field_name: "melampaui_tinggi",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .melampaui_tinggi,
+                      },
+                      {
+                        field_name: "izin_air_y5_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.izin_air_y5,
+                      },
+                      {
+                        field_name: "izin_air_y5",
+                        field_value:
+                          result[0].data.features[0].attributes.izin_air_y5,
+                      },
+                      {
+                        field_name: "izin_macet_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.izin_macet, //10
+                      },
+                      {
+                        field_name: "izin_macet",
+                        field_value:
+                          result[0].data.features[0].attributes.izin_macet,
+                      },
+                      {
+                        field_name: "los_num_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.los_num,
+                      },
+                      {
+                        field_name: "los_num",
+                        field_value: features[0].attributes.los_num,
+                      },
+                      {
+                        field_name: "los_sebelum",
+                        field_value: result[1].data.features[0].attributes.los,
+                      },
+                      {
+                        field_name: "los",
+                        field_value: result[0].data.features[0].attributes.los,
+                      },
+                      {
+                        field_name: "jlh_lantai_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.jlh_lantai,
+                      },
+                      {
+                        field_name: "jlh_lantai",
+                        field_value:
+                          result[0].data.features[0].attributes.jlh_lantai,
+                      },
+                      {
+                        field_name: "Shape__Area",
+                        field_value:
+                          result[0].data.features[0].attributes.Shape__Area,
+                      },
+                      {
+                        field_name: "Shape__Area",
+                        field_value:
+                          result[0].data.features[0].attributes.Shape__Area,
+                      },
+                      {
+                        field_name: "fa_sebelum",
+                        field_value: result[1].data.features[0].attributes.fa, //20
+                      },
+                      {
+                        field_name: "fa",
+                        field_value: result[0].data.features[0].attributes.fa,
+                      },
+                      {
+                        field_name: "id_bangunan",
+                        field_value:
+                          result[0].data.features[0].attributes.id_bangunan,
+                      },
+                      {
+                        field_name: "penduduk_y1",
+                        field_value:
+                          result[0].data.features[0].attributes.penduduk_y1,
+                      },
+                      {
+                        field_name: "penduduk_y2",
+                        field_value:
+                          result[0].data.features[0].attributes.penduduk_y2,
+                      },
+                      {
+                        field_name: "penduduk_y3",
+                        field_value:
+                          result[0].data.features[0].attributes.penduduk_y3,
+                      },
+                      {
+                        field_name: "penduduk_y4",
+                        field_value:
+                          result[0].data.features[0].attributes.penduduk_y4,
+                      },
+                      {
+                        field_name: "penduduk_y5",
+                        field_value:
+                          result[0].data.features[0].attributes.penduduk_y5,
+                      },
+                      {
+                        field_name: "laju_ptbh_penduduk",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .laju_ptbh_penduduk,
+                      },
+                      {
+                        field_name: "pertambahan_penduduk",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .pertambahan_penduduk,
+                      },
+                      {
+                        field_name: "penduduk_y5_pertambahan",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .penduduk_y5_pertambahan, //30
+                      },
+                      {
+                        field_name: "penduduk_y6_proyeksi",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .penduduk_y6_proyeksi,
+                      },
+                      {
+                        field_name: "penduduk_y7_proyeksi",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .penduduk_y7_proyeksi,
+                      },
+                      {
+                        field_name: "penduduk_y8_proyeksi",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .penduduk_y8_proyeksi,
+                      },
+                      {
+                        field_name: "penduduk_y9_proyeksi",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .penduduk_y9_proyeksi,
+                      },
+                      {
+                        field_name: "penduduk_y10_proyeksi",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .penduduk_y10_proyeksi,
+                      },
+                      {
+                        field_name: "pdam_kapasitas_harian",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .pdam_kapasitas_harian,
+                      },
+                      {
+                        field_name: "keb_air_harian_y5",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .keb_air_harian_y5,
+                      },
+                      {
+                        field_name: "keb_air_harian_y6",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .keb_air_harian_y6,
+                      },
+                      {
+                        field_name: "keb_air_harian_y7",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .keb_air_harian_y7,
+                      },
+                      {
+                        field_name: "keb_air_harian_y8",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .keb_air_harian_y8, //40
+                      },
+                      {
+                        field_name: "keb_air_harian_y9",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .keb_air_harian_y9,
+                      },
+                      {
+                        field_name: "keb_air_harian_y10",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .keb_air_harian_y10,
+                      },
+                      {
+                        field_name: "izin_air_y6",
+                        field_value:
+                          result[0].data.features[0].attributes.izin_air_y6,
+                      },
+                      {
+                        field_name: "izin_air_y7",
+                        field_value:
+                          result[0].data.features[0].attributes.izin_air_y7,
+                      },
+                      {
+                        field_name: "izin_air_y8",
+                        field_value:
+                          result[0].data.features[0].attributes.izin_air_y8,
+                      },
+                      {
+                        field_name: "izin_air_y9",
+                        field_value:
+                          result[0].data.features[0].attributes.izin_air_y9,
+                      },
+                      {
+                        field_name: "izin_air_y10",
+                        field_value:
+                          result[0].data.features[0].attributes.izin_air_y10,
+                      },
+                      {
+                        field_name: "lebar_jalan",
+                        field_value:
+                          result[0].data.features[0].attributes.lebar_jalan,
+                      },
+                      {
+                        field_name: "panjang_jalan",
+                        field_value:
+                          result[0].data.features[0].attributes.panjang_jalan,
+                      },
+                      {
+                        field_name: "bangkitan",
+                        field_value:
+                          result[0].data.features[0].attributes.bangkitan, //50
+                      },
+                      {
+                        field_name: "bangkitan_ruasjalan",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .bangkitan_ruasjalan,
+                      },
+                      {
+                        field_name: "kapasitas",
+                        field_value:
+                          result[0].data.features[0].attributes.kapasitas,
+                      },
+                      {
+                        field_name: "bangkitan_ruasjalan_y6",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .bangkitan_ruasjalan_y6,
+                      },
+                      {
+                        field_name: "bangkitan_ruasjalan_y7",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .bangkitan_ruasjalan_y7,
+                      },
+                      {
+                        field_name: "bangkitan_ruasjalan_y8",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .bangkitan_ruasjalan_y8,
+                      },
+                      {
+                        field_name: "bangkitan_ruasjalan_y9",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .bangkitan_ruasjalan_y9,
+                      },
+                      {
+                        field_name: "bangkitan_ruasjalan_y10",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .bangkitan_ruasjalan_y10,
+                      },
+                      // {
+                      //   field_name: "izin_macet_y6",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_y6,
+                      // },
+                      // {
+                      //   field_name: "izin_macet_y7",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_y7,
+                      // },
+                      // {
+                      //   field_name: "izin_macet_y8",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_y8,
+                      // },
+                      // {
+                      //   field_name: "izin_macet_y9",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_y9,
+                      // },
+                      // {
+                      //   field_name: "izin_macet_y10",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_y10,
+                      // },
+                      // {
+                      //   field_name: "izin_air_y6_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_air_y6_sebelum,
+                      // },
+                      // {
+                      //   field_name: "izin_air_y7_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_air_y7_sebelum,
+                      // },
+                      // {
+                      //   field_name: "izin_air_y8_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_air_y8_sebelum,
+                      // },
+                      // {
+                      //   field_name: "izin_air_y9_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_air_y9_sebelum,
+                      // },
+                      // {
+                      //   field_name: "izin_air_y10_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_air_y10_sebelum,
+                      // },
+                      // {
+                      //   field_name: "izin_macet_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_sebelum,
+                      // },
+                      // {
+                      //   field_name: "izin_macet_y6_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_y6_sebelum,
+                      // },
+                      // {
+                      //   field_name: "izin_macet_y7_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_y7_sebelum,
+                      // },
+                      // {
+                      //   field_name: "izin_macet_y8_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_y8_sebelum,
+                      // },
+                      // {
+                      //   field_name: "izin_macet_y9_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_y9_sebelum,
+                      // },
+                      // {
+                      //   field_name: "izin_macet_y10_sebelum",
+                      //   field_value: result[0].data.features[0].attributes.izin_macet_y10_sebelum,
+                      // },
+                      {
+                        field_name: "sumber",
+                        field_value:
+                          result[0].data.features[0].attributes.sumber,
+                      },
+                      {
+                        field_name: "kabkot",
+                        field_value:
+                          result[0].data.features[0].attributes.kabkot,
+                      },
+                      {
+                        field_name: "namaszona",
+                        field_value:
+                          result[0].data.features[0].attributes.namaszona, //60
+                      },
+                      {
+                        field_name: "lantai_max",
+                        field_value:
+                          result[0].data.features[0].attributes.lantai_max,
+                      },
+                      {
+                        field_name: "kdb",
+                        field_value: result[0].data.features[0].attributes.kdb,
+                      },
+                      {
+                        field_name: "klb",
+                        field_value: result[0].data.features[0].attributes.klb,
+                      },
+                      {
+                        field_name: "kdh",
+                        field_value: result[0].data.features[0].attributes.kdh,
+                      },
+                      {
+                        field_name: "fa_max",
+                        field_value:
+                          result[0].data.features[0].attributes.fa_max,
+                      },
+                      {
+                        field_name: "q_arus",
+                        field_value:
+                          result[0].data.features[0].attributes.q_arus,
+                      },
+                      {
+                        field_name: "namaszona_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.namaszona,
+                      },
+                      {
+                        field_name: "kdb_sebelum",
+                        field_value: result[1].data.features[0].attributes.kdb,
+                      },
+                      {
+                        field_name: "klb_sebelum",
+                        field_value: result[1].data.features[0].attributes.klb,
+                      },
+                      {
+                        field_name: "kdh_sebelum",
+                        field_value: result[1].data.features[0].attributes.kdh, //70
+                      },
+                      {
+                        field_name: "lantai_max_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.lantai_max,
+                      },
+                      {
+                        field_name: "status_itbx_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.status_itbx, //72
+                      },
+                      {
+                        field_name: "status_itbx",
+                        field_value:
+                          result[0].data.features[0].attributes.status_itbx,
+                      },
+                      {
+                        field_name: "kegiatan_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.kegiatan, //74
+                      },
+                      {
+                        field_name: "kegiatan",
+                        field_value:
+                          result[0].data.features[0].attributes.kegiatan,
+                      },
+                      {
+                        field_name: "kbli_sebelum",
+                        field_value: result[1].data.features[0].attributes.kbli,
+                      },
+                      {
+                        field_name: "kbli",
+                        field_value: result[0].data.features[0].attributes.kbli,
+                      },
+                      {
+                        field_name: "jenis_bang_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.jenis_bang, //78
+                      },
+                      {
+                        field_name: "q_arus_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes.q_arus,
+                      },
+                      {
+                        field_name: "kdb_rdtr",
+                        field_value:
+                          result[0].data.features[0].attributes.kdb_rdtr, //80
+                      },
+                      {
+                        field_name: "klb_rdtr",
+                        field_value:
+                          result[0].data.features[0].attributes.klb_rdtr,
+                      },
+                      {
+                        field_name: "kdh_rdtr",
+                        field_value:
+                          result[0].data.features[0].attributes.kdh_rdtr, //82
+                      },
+                      {
+                        field_name: "keb_air_harian_y5_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes
+                            .keb_air_harian_y5,
+                      },
+                      {
+                        field_name: "pdam_kapasitas_harian_sebelum",
+                        field_value:
+                          result[1].data.features[0].attributes
+                            .pdam_kapasitas_harian,
+                      },
+                      {
+                        field_name: "izin_sampah_y5",
+                        field_value:
+                          result[0].data.features[0].attributes.izin_sampah_y5, //85
+                      },
+                      {
+                        field_name: "timbulan_sampah_harian_m3",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .timbulan_sampah_harian_m3,
+                      },
+                      {
+                        field_name: "sum_timbulan_sampah_harian_m3",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .sum_timbulan_sampah_harian_m3,
+                      },
+                      {
+                        field_name: "total_kapasitas",
+                        field_value:
+                          result[0].data.features[0].attributes.total_kapasitas, //88
+                      },
+                      {
+                        field_name: "jlh_biopori",
+                        field_value:
+                          result[0].data.features[0].attributes.jlh_biopori,
+                      },
+                      {
+                        field_name: "kapasitas_biopori",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .kapasitas_biopori, //90
+                      },
+                      {
+                        field_name: "surplus_debitalir",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .surplus_debitalir,
+                      },
+                      {
+                        field_name: "kecenderungan_banjir",
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .kecenderungan_banjir,
+                      },
+                    ]);
                   }
-                })
+                });
                 setHasilSimulasiBangunanKdbKlb(
                   features[0].attributes.melampaui_tinggi
                 );
@@ -4000,7 +4138,9 @@ const SimulasiMap = () => {
                   });
                   setShowSegmentationFunc((id) => (id) => {
                     bangunanSesudahLayer.definitionExpression =
-                      bangunanDefinitionExpression + " AND NOT objectid = " + id;
+                      bangunanDefinitionExpression +
+                      " AND NOT objectid = " +
+                      id;
                     map.add(segmentationGroupLayer);
                     view.whenLayerView(lantaiAtas).then(function (layerView) {
                       layerView.highlight(lantaiAtas.graphics);
@@ -4031,87 +4171,62 @@ const SimulasiMap = () => {
                 // end segmentation drawing function
               } else if (features[0].layer.title === "Pola Ruang Versioning") {
                 setContentGeneral([
-                  {
-                    field_name: "namazona",
-                    field_value: features[0].attributes.namazona,
-                  },
-                  {
-                    field_name: "kdzona",
-                    field_value: features[0].attributes.kdzona,
-                  },
-                  {
-                    field_name: "namaszona",
-                    field_value: features[0].attributes.namaszona,
-                  },
-                  {
-                    field_name: "kdszona",
-                    field_value: features[0].attributes.kdszona,
-                  },
-                  {
-                    field_name: "status_pemb_optimum_sebelum",
-                    field_value:
-                      features[0].attributes.status_pemb_optimum_sebelum,
-                  },
-                  {
-                    field_name: "status_pemb_optimum",
-                    field_value: features[0].attributes.status_pemb_optimum,
-                  },
-                  {
-                    field_name: "izin_air_sebelum",
-                    field_value: features[0].attributes.izin_air_sebelum,
-                  },
-                  {
-                    field_name: "izin_air",
-                    field_value: features[0].attributes.izin_air,
-                  },
-                  {
-                    field_name: "izin_macet_sebelum",
-                    field_value: features[0].attributes.izin_macet_sebelum,
-                  },
-                  {
-                    field_name: "izin_macet",
-                    field_value: features[0].attributes.izin_macet,
-                  },
-                  {
-                    field_name: "kdb_sebelum",
-                    field_value: features[0].attributes.kdb_sebelum,
-                  },
-                  {
-                    field_name: "kdb",
-                    field_value: features[0].attributes.kdb,
-                  },
-                  {
-                    field_name: "klb_sebelum",
-                    field_value: features[0].attributes.klb_sebelum,
-                  },
-                  {
-                    field_name: "klb",
-                    field_value: features[0].attributes.klb,
-                  },
-                  {
-                    field_name: "kdh_sebelum",
-                    field_value: features[0].attributes.kdh_sebelum,
-                  },
-                  {
-                    field_name: "kdh",
-                    field_value: features[0].attributes.kdh,
-                  },
-                  {
-                    field_name: "lantai_max_sebelum",
-                    field_value: features[0].attributes.lantai_max_sebelum,
-                  },
-                  {
-                    field_name: "lantai_max",
-                    field_value: features[0].attributes.lantai_max,
-                  },
-                  {
-                    field_name: "luasha",
-                    field_value: features[0].attributes.luasha,
-                  },
-                  {
-                    field_name: "kabkot",
-                    field_value: features[0].attributes.kabkot,
-                  },
+                        {
+                          field_name: "objectid",
+                          field_value: features[0].attributes.objectid,
+                        },
+                        {
+                          field_name: "wadmpr",
+                          field_value: features[0].attributes.wadmpr,
+                        },
+                        {
+                          field_name: "wadmkk",
+                          field_value: features[0].attributes.wadmkk,
+                        },
+                        {
+                          field_name: "wadmkc",
+                          field_value: features[0].attributes.wadmkc,
+                        },
+                        {
+                          field_name: "wadmkd",
+                          field_value: features[0].attributes.wadmkd,
+                        },
+                        {
+                          field_name: "Kode Zona",
+                          field_value: features[0].attributes.kdzona,
+                        },
+                        {
+                          field_name: "Kode Subzona",
+                          field_value: features[0].attributes.kdszona,
+                        },
+                        {
+                          field_name: "Nama Zona",
+                          field_value: features[0].attributes.namazona,
+                        },
+                        {
+                          field_name: "Nama Subzona",
+                          field_value: features[0].attributes.namaszona,
+                        },
+                        {
+                          field_name: "kodsbl",
+                          field_value: features[0].attributes.kodsbl,
+                        },
+                        {
+                          field_name: "kdb",
+                          field_value: features[0].attributes.kdb,
+                        },
+                        {
+                          field_name: "klb",
+                          field_value: features[0].attributes.klb,
+                        },
+                        {
+                          field_name: "kdh",
+                          field_value: features[0].attributes.kdh,
+                        },
+                        {
+                          field_name: "lantai_max",
+                          field_value: features[0].attributes.lantai_max,
+                        },
                 ]);
               } else {
                 setContentGeneral(fieldsArr);
@@ -4130,12 +4245,14 @@ const SimulasiMap = () => {
            ************************************************************/
           var getRing = (id) => {
             var sesudah = Axios.get(
-              config.url.ARCGIS_URL+"/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=oid_historical=" +
+              config.url.ARCGIS_URL +
+                "/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=oid_historical=" +
                 id +
                 "&outFields=*&outSR=4326&f=pjson"
             );
             var sebelum = Axios.get(
-              config.url.ARCGIS_URL+"/Versioning/bangunan_analisis/FeatureServer/0/query?where=objectid=" +
+              config.url.ARCGIS_URL +
+                "/Versioning/bangunan_analisis/FeatureServer/0/query?where=objectid=" +
                 id +
                 "&outFields=*&outSR=4326&f=pjson"
             );
@@ -4427,44 +4544,39 @@ const SimulasiMap = () => {
 
   useEffect(() => {
     if (!historyList) {
-      handleGetSchenarioList()
+      handleGetSchenarioList();
     }
   }, [historyList]);
   // start run analysis
   const handleRunAnalysis = () => {
     setLoaded(!loaded);
     axios
-            .post(
-              config.url.API_URL +
-                "/Pembangunan/ExecuteSpAnalisis",
-                null,
-                {
-                  // headers: headers,
-                  params: spAnalisisData
-                }
-            )
-            .then(function (response) {
-              if (response.status === 200) {
-                //Swal.fire("Success", "Your analysis has been running successfully.", "success");
-                Swal.fire({
-                  title: "Berhasil",
-                  text: "Analisis Anda berhasil dilakukan!",
-                  icon: "success",
-                  showCancelButton: false,
-                  confirmButtonColor: "#3085d6",
-                  confirmButtonText: "OK",
-                }).then((result) => {
-                  setLoaded(!loaded);
-                  if (result.isConfirmed) {
-                    history.go(0);
-                  }
-                });
-              }
-            })
-            .catch(function (error) {
-              setLoaded(!loaded);
-              console.log("error check", error);
-            });
+      .post(config.url.API_URL + "/Pembangunan/ExecuteSpAnalisis", null, {
+        // headers: headers,
+        params: spAnalisisData,
+      })
+      .then(function (response) {
+        if (response.status === 200) {
+          //Swal.fire("Success", "Your analysis has been running successfully.", "success");
+          Swal.fire({
+            title: "Berhasil",
+            text: "Analisis Anda berhasil dilakukan!",
+            icon: "success",
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "OK",
+          }).then((result) => {
+            setLoaded(!loaded);
+            if (result.isConfirmed) {
+              history.go(0);
+            }
+          });
+        }
+      })
+      .catch(function (error) {
+        setLoaded(!loaded);
+        console.log("error check", error);
+      });
     /* Axios.get(
       config.url.ARCGIS_URL +
         "/Versioning/bangunan_analisis/FeatureServer/0/query?objectIds=" +
@@ -4532,6 +4644,12 @@ const SimulasiMap = () => {
     let layerJaringanJalanSesudah = esriMap.allLayers.find(function (layer) {
       return layer.id === "jaringan_jalan_analisis_proses";
     });
+    let layerSampahTPSSesudah = esriMap.allLayers.find(function (layer) {
+      return (layer.id = "sampah_tps_analisis_proses");
+    });
+    let layerSampahTPSSebelum = esriMap.allLayers.find(function (layer) {
+      return (layer.id = "sampah_tps_analisis");
+    });
     if (!activeSebelumSesudah.activeSebelum) {
       // layerBangunan.renderer = getRendererBangunan(
       //   "itbx_sebelum",
@@ -4541,35 +4659,43 @@ const SimulasiMap = () => {
       layerBangunan.listMode = "hide";
       layerBangunanSebelum.visible = true;
       layerBangunanSebelum.listMode = "show";
-      layerPolaRuangSesudah.visible = false
-      layerPolaRuangSesudah.listMode = "hide"
-      layerPolaRuangSebelum.visible = true
-      layerPolaRuangSebelum.listMode = "show"
-      layerKapasitasAirSesudah.visible = false
-      layerKapasitasAirSesudah.listMode = "hide"
-      layerKapasitasAirSebelum.visible = true
-      layerKapasitasAirSebelum.listMode = "show"
-      layerJaringanJalanSesudah.visible = false
-      layerJaringanJalanSesudah.listMode = "hide"
-      layerJaringanJalanSebelum.visible = true
-      layerJaringanJalanSebelum.listMode = "show"
+      layerPolaRuangSesudah.visible = false;
+      layerPolaRuangSesudah.listMode = "hide";
+      layerPolaRuangSebelum.visible = true;
+      layerPolaRuangSebelum.listMode = "show";
+      layerKapasitasAirSesudah.visible = false;
+      layerKapasitasAirSesudah.listMode = "hide";
+      layerKapasitasAirSebelum.visible = true;
+      layerKapasitasAirSebelum.listMode = "show";
+      layerJaringanJalanSesudah.visible = false;
+      layerJaringanJalanSesudah.listMode = "hide";
+      layerJaringanJalanSebelum.visible = true;
+      layerJaringanJalanSebelum.listMode = "show";
+      layerSampahTPSSesudah.visible = false;
+      layerSampahTPSSesudah.listMode = "hide";
+      layerSampahTPSSebelum.visible = true;
+      layerSampahTPSSebelum.listMode = "show";
     } else {
       layerBangunan.visible = true;
       layerBangunan.listMode = "show";
       layerBangunanSebelum.visible = false;
       layerBangunanSebelum.listMode = "hide";
-      layerPolaRuangSesudah.visible = true
-      layerPolaRuangSesudah.listMode = "show"
-      layerPolaRuangSebelum.visible = false
-      layerPolaRuangSebelum.listMode = "hide"
-      layerKapasitasAirSesudah.visible = true
-      layerKapasitasAirSesudah.listMode = "show"
-      layerKapasitasAirSebelum.visible = false
-      layerKapasitasAirSebelum.listMode = "hide"
-      layerJaringanJalanSesudah.visible = true
-      layerJaringanJalanSesudah.listMode = "show"
-      layerJaringanJalanSebelum.visible = false
-      layerJaringanJalanSebelum.listMode = "hide"
+      layerPolaRuangSesudah.visible = true;
+      layerPolaRuangSesudah.listMode = "show";
+      layerPolaRuangSebelum.visible = false;
+      layerPolaRuangSebelum.listMode = "hide";
+      layerKapasitasAirSesudah.visible = true;
+      layerKapasitasAirSesudah.listMode = "show";
+      layerKapasitasAirSebelum.visible = false;
+      layerKapasitasAirSebelum.listMode = "hide";
+      layerJaringanJalanSesudah.visible = true;
+      layerJaringanJalanSesudah.listMode = "show";
+      layerJaringanJalanSebelum.visible = false;
+      layerJaringanJalanSebelum.listMode = "hide";
+      layerSampahTPSSesudah.visible = true;
+      layerSampahTPSSesudah.listMode = "show";
+      layerSampahTPSSebelum.visible = false;
+      layerSampahTPSSebelum.listMode = "hide";
     }
     layerBangunan.refresh();
     layerBangunanSebelum.refresh();
@@ -5176,7 +5302,7 @@ const SimulasiMap = () => {
       })
       .then(({ data }) => {
         setLoaded(true);
-        handleGetSchenarioList()
+        handleGetSchenarioList();
         if (data.status.code === 200) {
           setIsCreateNewSchenario(false);
           Swal.fire("Berhasil", "Berhasil membuat skenario baru", "success");
@@ -5192,16 +5318,16 @@ const SimulasiMap = () => {
 
   const handleGetSchenarioList = () => {
     axios
-        .get(config.url.API_URL + "/Simulasi/GetAll", {
-          params: {
-            ProjectId: state?.simulasiBangunan?.projectId,
-          },
-        })
-        .then(({ data }) => {
-          setHistoryList(data.obj);
-          setSelectedHistoryId(state.id);
-        });
-  }
+      .get(config.url.API_URL + "/Simulasi/GetAll", {
+        params: {
+          ProjectId: state?.simulasiBangunan?.projectId,
+        },
+      })
+      .then(({ data }) => {
+        setHistoryList(data.obj);
+        setSelectedHistoryId(state.id);
+      });
+  };
 
   const handleSelectHistory = (id, expression) => {
     if (segmentationBuildingId) {
@@ -5265,6 +5391,12 @@ const SimulasiMap = () => {
     let layerJaringanJalanSebelum = esriMap.allLayers.find(function (layer) {
       return layer.id === "jaringan_jalan_analisis";
     });
+    let layerSampahTPSSesudah = esriMap.allLayers.find(function (layer) {
+      return (layer.id = "sampah_tps_analisis_proses");
+    });
+    let layerSampahTPSSebelum = esriMap.allLayers.find(function (layer) {
+      return (layer.id = "sampah_tps_analisis");
+    });
     layerBangunan.visible = true;
     layerBangunan.listMode = "show";
     layerBangunanSebelum.visible = false;
@@ -5272,15 +5404,19 @@ const SimulasiMap = () => {
     layerPolaRuang.visible = true;
     layerPolaRuang.listMode = "show";
     layerPolaRuangSebelum.visible = false;
-    layerPolaRuangSebelum.listMode = "hide"
-    layerKapasitasAir.visible = true
-    layerKapasitasAir.listMode = "show"
-    layerKapasitasAirSebelum.visible = false
-    layerKapasitasAirSebelum.listMode = "hide"
-    layerJaringanJalan.visible = true
-    layerJaringanJalan.listMode = "show"
-    layerJaringanJalanSebelum.visible = false
-    layerJaringanJalanSebelum.listMode = "hide"
+    layerPolaRuangSebelum.listMode = "hide";
+    layerKapasitasAir.visible = true;
+    layerKapasitasAir.listMode = "show";
+    layerKapasitasAirSebelum.visible = false;
+    layerKapasitasAirSebelum.listMode = "hide";
+    layerJaringanJalan.visible = true;
+    layerJaringanJalan.listMode = "show";
+    layerJaringanJalanSebelum.visible = false;
+    layerJaringanJalanSebelum.listMode = "hide";
+    layerSampahTPSSesudah.visible = true;
+    layerSampahTPSSesudah.listMode = "show";
+    layerSampahTPSSebelum.visible = false;
+    layerSampahTPSSebelum.listMode = "hide";
     layerBangunan.refresh();
     layerBangunanSebelum.refresh();
     layerPolaRuang.refresh();
@@ -5288,8 +5424,8 @@ const SimulasiMap = () => {
     layerKapasitasAir.refresh();
     layerJaringanJalan.refresh();
     layerJaringanJalanSebelum.refresh();
-    layerKapasitasAir.refresh()
-    layerKapasitasAirSebelum.refresh()
+    layerKapasitasAir.refresh();
+    layerKapasitasAirSebelum.refresh();
   };
 
   function toFix(x, fixed = 3) {
@@ -5452,7 +5588,8 @@ const SimulasiMap = () => {
                 >
                   {showingPopup.title}
                 </p>
-                {showingPopup.title === "Bangunan" && contentBangunanKdbKlb.length > 0 ? (
+                {showingPopup.title === "Bangunan" &&
+                contentBangunanKdbKlb.length > 0 ? (
                   <>
                     {/* start popup sebelumsesudah */}
                     <div className="switch-sebelum-sesudah">
@@ -6383,89 +6520,81 @@ const SimulasiMap = () => {
                             </div>
                           }
 
-<div
-                              className="card"
-                              style={{ margin: "0 0.2rem" }}
+                          <div className="card" style={{ margin: "0 0.2rem" }}>
+                            <div
+                              className="card-header"
+                              role="tab"
+                              id="headingFive"
+                              style={{ padding: "0px" }}
                             >
-                              <div
-                                className="card-header"
-                                role="tab"
-                                id="headingFive"
-                                style={{ padding: "0px" }}
-                              >
-                                <h6 className="mb-0">
-                                  <button
-                                    className="btn btn-block text-left collapsed btn-sm"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target={"#sebelumLima"}
-                                    aria-expanded="true"
-                                    aria-controls={"sebelumLima"}
-                                    style={{ fontSize: "14px" }}
-                                  >
-                                    <img
-                                      src="./images/flood.png"
-                                      alt="Banjir"
-                                      style={{
-                                        marginRight: "10px",
-                                        width: "16px",
-                                      }}
-                                    />
-                                    Banjir
-                                    <i className="ti-arrow-circle-down float-right"></i>
-                                  </button>
-                                </h6>
-                              </div>
-
-                              <div
-                                id="sebelumLima"
-                                className="collapse"
-                                aria-labelledby="headingFive"
-                                data-parent="#accordionExample"
-                              >
-                                <div className="card-body">
-                                  <table className="table">
-                                    <tbody>
-                                      <tr>
-                                        <td>Jumlah Biopori</td>
-                                        <td>
-                                          {contentBangunanKdbKlb[89]
-                                                .field_value}
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          Kapasitas Biopori
-                                        </td>
-                                        <td>
-                                          {contentBangunanKdbKlb[90]
-                                                .field_value}
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          Surplus Debit Alir
-                                        </td>
-                                        <td>
-                                          {contentBangunanKdbKlb[91]
-                                                .field_value ? toFix(contentBangunanKdbKlb[91]
-                                                  .field_value) : contentBangunanKdbKlb[91]
-                                                  .field_value}
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>Kecendrungan Banjir</td>
-                                        <td>
-                                          {contentBangunanKdbKlb[92]
-                                                .field_value}
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                              </div>
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left collapsed btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#sebelumLima"}
+                                  aria-expanded="true"
+                                  aria-controls={"sebelumLima"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  <img
+                                    src="./images/flood.png"
+                                    alt="Banjir"
+                                    style={{
+                                      marginRight: "10px",
+                                      width: "16px",
+                                    }}
+                                  />
+                                  Banjir
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
                             </div>
 
+                            <div
+                              id="sebelumLima"
+                              className="collapse"
+                              aria-labelledby="headingFive"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>Jumlah Biopori</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[89].field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Kapasitas Biopori</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[90].field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Surplus Debit Alir</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[91].field_value
+                                          ? toFix(
+                                              contentBangunanKdbKlb[91]
+                                                .field_value
+                                            )
+                                          : contentBangunanKdbKlb[91]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Kecendrungan Banjir</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[92].field_value}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -7004,7 +7133,10 @@ const SimulasiMap = () => {
                           <li className="media liHistoryList">
                             <div className="media-body">
                               <h5 className="mt-0">
-                                <i className="ti-star text-warning" title="Default"></i>{" "}
+                                <i
+                                  className="ti-star text-warning"
+                                  title="Default"
+                                ></i>{" "}
                                 {state.name}
                               </h5>
                               <p className="card-text">
