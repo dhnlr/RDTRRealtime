@@ -178,6 +178,44 @@ function UserManagement() {
       });
   };
 
+  const handleUnlock = (id) => {
+    Swal.fire({
+      title: "Izin Akses Pengguna",
+      text: "Apakah Anda yakin untuk memberi izin akses kepada pengguna?",
+      icon: "question",
+      showCancelButton: true,
+      showLoaderOnConfirm: true,
+      confirmButtonText: "Ya, izinkan!",
+      cancelButtonText: "Batal",
+    })
+      .then((action) => {
+        if (action.isConfirmed) {
+          axios
+            .post(config.url.API_URL + "/User/ActivateAccountById", null, {
+              params: {
+                id,
+              },
+            })
+            .then(() => {
+              Swal.fire({
+                title: "Berhasil",
+                text: "Pengguna berhasil diizinkan",
+                icon: "success",
+                confirmButtonText: "Selesai",
+                allowOutsideClick: false,
+              }).then((result) => {
+                if (result.value) {
+                  setProcessCounter(processCounter + 1);
+                }
+              });
+            });
+        }
+      })
+      .catch((errorForm) => {
+        Swal.fire("Maaf", errorForm.response.data.error.message, "error");
+      });
+  };
+
   const handleResetPassword = ({ email }) => {
     Swal.fire({
       title: "Ubah Kata Sandi Pengguna",
@@ -338,15 +376,26 @@ function UserManagement() {
                                     accessor: "emailConfirmed",
                                     width: "10%",
                                     Cell: (row) =>
-                                      row.cell.value ? (
+                                      (<>{row.cell.value ? 
                                         <label className="badge badge-success">
                                           Terkonfirmasi
                                         </label>
-                                      ) : (
+                                       : 
                                         <label className="badge badge-danger">
                                           Belum Dikonfirmasi
                                         </label>
-                                      ),
+                                  }
+                                  <br/>
+                                      {!row.row.values.lockoutEnabled ? 
+                                        <label className="badge badge-success">
+                                          Diizinkan
+                                        </label>
+                                       : 
+                                        <label className="badge badge-danger">
+                                          Belum Diizinkan
+                                        </label>
+                                      
+                                    }</>)
                                   },
                                   {
                                     Header: "Action",
@@ -366,6 +415,22 @@ function UserManagement() {
                                             >
                                               <span>
                                                 <i className="ti-id-badge"></i>
+                                              </span>
+                                            </button>
+                                            &nbsp;
+                                          </>
+                                        )}
+                                        {row.row.values.lockoutEnabled && (
+                                          <>
+                                            <button
+                                              className="btn btn-outline-dark btn-xs icons-size-16px"
+                                              title="Izin Akses"
+                                              onClick={() =>
+                                                handleUnlock(row.row.values.id)
+                                              }
+                                            >
+                                              <span>
+                                                <i className="ti-id-key"></i>
                                               </span>
                                             </button>
                                             &nbsp;

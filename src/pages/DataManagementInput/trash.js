@@ -68,7 +68,7 @@ function DataManagementInputTrash() {
       });
   };
 
-  function goSimulasi(data) {
+  function goSimulasi(data = state.id) {
     history.push("/datamanagementinput/kebutuhandata", {
       id: data,
     });

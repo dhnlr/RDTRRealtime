@@ -65,7 +65,7 @@ function Register() {
       )
       .then(() => {
         setSuccessMessage(
-          "Konfirmasi untuk mengaktikan akun Anda. Periksa kotak masuk atau spam lalu ikuti petunjuk konfirmasi yang dikirimkan ke email: " +
+          "Konfirmasi untuk mengaktifkan akun Anda. Periksa kotak masuk atau spam lalu ikuti petunjuk konfirmasi yang dikirimkan ke email: " +
             email
         );
         e.target.reset();

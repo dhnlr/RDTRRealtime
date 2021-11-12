@@ -94,7 +94,7 @@ function DataManagementInputFlood() {
       });
   };
 
-  function goSimulasi(data) {
+  function goSimulasi(data = state.id) {
     history.push("/datamanagementinput/kebutuhandata", {
       id: data,
     });

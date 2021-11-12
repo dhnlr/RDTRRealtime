@@ -244,7 +244,7 @@ const SimulasiMap = () => {
         ],
         {
           css: true,
-          version: "4.20",
+          version: "4.21",
         }
       ).then(
         ([
@@ -276,7 +276,7 @@ const SimulasiMap = () => {
             lantaiAtas,
             lantaiSebelumKelewatan,
             segmentationGroupLayer = {};
-          var bangunanDefinitionExpression = `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}' AND data_ke = ${state?.simulasiBangunan?.dataKe} AND wadmkd = 'Kel. Pabaton'`;
+          var bangunanDefinitionExpression = `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}' AND data_ke = ${state?.simulasiBangunan?.dataKe}  AND wadmkd = 'PABATON'`;
 
           const map = new Map({
             basemap: "topo-vector",
@@ -430,7 +430,7 @@ const SimulasiMap = () => {
           const kapasitasAirSesudahLayer = new FeatureLayer({
             url:
               config.url.ARCGIS_URL +
-              "/Versioning/kapasitas_air/FeatureServer/0",
+              "/Versioning/kapasitas_air_analisis_process/FeatureServer/0",
             id: "kapasitas_air_analisis_proses",
             title: "Kapasitas Air",
             popupTemplate: {
@@ -438,11 +438,14 @@ const SimulasiMap = () => {
             },
             outFields: ["*"],
             editingEnabled: false,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
           });
           const kapasitasAirSebelumLayer = new FeatureLayer({
             url:
               config.url.ARCGIS_URL +
-              "/Versioning/kapasitas_air/FeatureServer/0",
+              "/Versioning/kapasitas_air_analisis/FeatureServer/0",
             id: "kapasitas_air_analisis",
             title: "Kapasitas Air",
             popupTemplate: {
@@ -1055,7 +1058,7 @@ const SimulasiMap = () => {
               config.url.ARCGIS_URL +
               "/Versioning/bangunan_analisis_process/FeatureServer/0",
             renderer: rendererBuildingsEnvelope,
-            definitionExpression: `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = 0`,
+            definitionExpression: `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}' AND data_ke = 0  AND wadmkd = 'PABATON'`,
             elevationInfo: {
               mode: "on-the-ground",
             },
@@ -1842,6 +1845,7 @@ const SimulasiMap = () => {
           polaRuangVersioningSebelumLayer.visible = false;
           persilTanahSesudahLayer.visible = false;
           kapasitasAirSesudahLayer.visible = false;
+          kapasitasAirSebelumLayer.visible = false;
           sampahTpsSesudahLayer.visible = false;
           sampahTpsSebelumLayer.visible = false;
           persilTanahBpn.visible = false;
@@ -2763,43 +2767,43 @@ const SimulasiMap = () => {
                         field_name: "pdam_kapasitas_harian",
                         field_value:
                           result[0].data.features[0].attributes
-                            .pdam_kapasitas_harian,
+                            .kapasitas_air,
                       },
                       {
                         field_name: "keb_air_harian_y5",
                         field_value:
                           result[0].data.features[0].attributes
-                            .keb_air_harian_y5,
+                            .keb_harian_y5,
                       },
                       {
                         field_name: "keb_air_harian_y6",
                         field_value:
                           result[0].data.features[0].attributes
-                            .keb_air_harian_y6,
+                            .keb_harian_y6,
                       },
                       {
                         field_name: "keb_air_harian_y7",
                         field_value:
                           result[0].data.features[0].attributes
-                            .keb_air_harian_y7,
+                            .keb_harian_y7,
                       },
                       {
                         field_name: "keb_air_harian_y8",
                         field_value:
                           result[0].data.features[0].attributes
-                            .keb_air_harian_y8, //40
+                            .keb_harian_y8, //40
                       },
                       {
                         field_name: "keb_air_harian_y9",
                         field_value:
                           result[0].data.features[0].attributes
-                            .keb_air_harian_y9,
+                            .keb_harian_y9,
                       },
                       {
                         field_name: "keb_air_harian_y10",
                         field_value:
                           result[0].data.features[0].attributes
-                            .keb_air_harian_y10,
+                            .keb_harian_y10,
                       },
                       {
                         field_name: "izin_air_y6",
@@ -3067,13 +3071,13 @@ const SimulasiMap = () => {
                         field_name: "keb_air_harian_y5_sebelum",
                         field_value:
                           result[1].data.features[0].attributes
-                            .keb_air_harian_y5,
+                            .keb_harian_y5,
                       },
                       {
                         field_name: "pdam_kapasitas_harian_sebelum",
                         field_value:
                           result[1].data.features[0].attributes
-                            .pdam_kapasitas_harian,
+                            .kapasitas_air,
                       },
                       {
                         field_name: "izin_sampah_y5",
@@ -3294,31 +3298,31 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "pdam_kapasitas_harian",
-                    field_value: features[0].attributes.pdam_kapasitas_harian,
+                    field_value: features[0].attributes.kapasitas_air,
                   },
                   {
                     field_name: "keb_air_harian_y5",
-                    field_value: features[0].attributes.keb_air_harian_y5,
+                    field_value: features[0].attributes.keb_harian_y5,
                   },
                   {
                     field_name: "keb_air_harian_y6",
-                    field_value: features[0].attributes.keb_air_harian_y6,
+                    field_value: features[0].attributes.keb_harian_y6,
                   },
                   {
                     field_name: "keb_air_harian_y7",
-                    field_value: features[0].attributes.keb_air_harian_y7,
+                    field_value: features[0].attributes.keb_harian_y7,
                   },
                   {
                     field_name: "keb_air_harian_y8",
-                    field_value: features[0].attributes.keb_air_harian_y8,
+                    field_value: features[0].attributes.keb_harian_y8,
                   },
                   {
                     field_name: "keb_air_harian_y9",
-                    field_value: features[0].attributes.keb_air_harian_y9,
+                    field_value: features[0].attributes.keb_harian_y9,
                   },
                   {
                     field_name: "keb_air_harian_y10",
-                    field_value: features[0].attributes.keb_air_harian_y10,
+                    field_value: features[0].attributes.keb_harian_y10,
                   },
                   {
                     field_name: "izin_air_y6",
@@ -3615,31 +3619,31 @@ const SimulasiMap = () => {
                   },
                   {
                     field_name: "pdam_kapasitas_harian",
-                    field_value: features[0].attributes.pdam_kapasitas_harian,
+                    field_value: features[0].attributes.kapasitas_air,
                   },
                   {
                     field_name: "keb_air_harian_y5",
-                    field_value: features[0].attributes.keb_air_harian_y5,
+                    field_value: features[0].attributes.keb_harian_y5,
                   },
                   {
                     field_name: "keb_air_harian_y6",
-                    field_value: features[0].attributes.keb_air_harian_y6,
+                    field_value: features[0].attributes.keb_harian_y6,
                   },
                   {
                     field_name: "keb_air_harian_y7",
-                    field_value: features[0].attributes.keb_air_harian_y7,
+                    field_value: features[0].attributes.keb_harian_y7,
                   },
                   {
                     field_name: "keb_air_harian_y8",
-                    field_value: features[0].attributes.keb_air_harian_y8,
+                    field_value: features[0].attributes.keb_harian_y8,
                   },
                   {
                     field_name: "keb_air_harian_y9",
-                    field_value: features[0].attributes.keb_air_harian_y9,
+                    field_value: features[0].attributes.keb_harian_y9,
                   },
                   {
                     field_name: "keb_air_harian_y10",
-                    field_value: features[0].attributes.keb_air_harian_y10,
+                    field_value: features[0].attributes.keb_harian_y10,
                   },
                   {
                     field_name: "izin_air_y6",
@@ -4171,62 +4175,62 @@ const SimulasiMap = () => {
                 // end segmentation drawing function
               } else if (features[0].layer.title === "Pola Ruang Versioning") {
                 setContentGeneral([
-                        {
-                          field_name: "objectid",
-                          field_value: features[0].attributes.objectid,
-                        },
-                        {
-                          field_name: "wadmpr",
-                          field_value: features[0].attributes.wadmpr,
-                        },
-                        {
-                          field_name: "wadmkk",
-                          field_value: features[0].attributes.wadmkk,
-                        },
-                        {
-                          field_name: "wadmkc",
-                          field_value: features[0].attributes.wadmkc,
-                        },
-                        {
-                          field_name: "wadmkd",
-                          field_value: features[0].attributes.wadmkd,
-                        },
-                        {
-                          field_name: "Kode Zona",
-                          field_value: features[0].attributes.kdzona,
-                        },
-                        {
-                          field_name: "Kode Subzona",
-                          field_value: features[0].attributes.kdszona,
-                        },
-                        {
-                          field_name: "Nama Zona",
-                          field_value: features[0].attributes.namazona,
-                        },
-                        {
-                          field_name: "Nama Subzona",
-                          field_value: features[0].attributes.namaszona,
-                        },
-                        {
-                          field_name: "kodsbl",
-                          field_value: features[0].attributes.kodsbl,
-                        },
-                        {
-                          field_name: "kdb",
-                          field_value: features[0].attributes.kdb,
-                        },
-                        {
-                          field_name: "klb",
-                          field_value: features[0].attributes.klb,
-                        },
-                        {
-                          field_name: "kdh",
-                          field_value: features[0].attributes.kdh,
-                        },
-                        {
-                          field_name: "lantai_max",
-                          field_value: features[0].attributes.lantai_max,
-                        },
+                  {
+                    field_name: "objectid",
+                    field_value: features[0].attributes.objectid,
+                  },
+                  {
+                    field_name: "wadmpr",
+                    field_value: features[0].attributes.wadmpr,
+                  },
+                  {
+                    field_name: "wadmkk",
+                    field_value: features[0].attributes.wadmkk,
+                  },
+                  {
+                    field_name: "wadmkc",
+                    field_value: features[0].attributes.wadmkc,
+                  },
+                  {
+                    field_name: "wadmkd",
+                    field_value: features[0].attributes.wadmkd,
+                  },
+                  {
+                    field_name: "Kode Zona",
+                    field_value: features[0].attributes.kdzona,
+                  },
+                  {
+                    field_name: "Kode Subzona",
+                    field_value: features[0].attributes.kdszona,
+                  },
+                  {
+                    field_name: "Nama Zona",
+                    field_value: features[0].attributes.namazona,
+                  },
+                  {
+                    field_name: "Nama Subzona",
+                    field_value: features[0].attributes.namaszona,
+                  },
+                  {
+                    field_name: "kodsbl",
+                    field_value: features[0].attributes.kodsbl,
+                  },
+                  {
+                    field_name: "kdb",
+                    field_value: features[0].attributes.kdb,
+                  },
+                  {
+                    field_name: "klb",
+                    field_value: features[0].attributes.klb,
+                  },
+                  {
+                    field_name: "kdh",
+                    field_value: features[0].attributes.kdh,
+                  },
+                  {
+                    field_name: "lantai_max",
+                    field_value: features[0].attributes.lantai_max,
+                  },
                 ]);
               } else {
                 setContentGeneral(fieldsArr);
@@ -4620,6 +4624,9 @@ const SimulasiMap = () => {
   };
   // end close showing popup
   const handleSebelumSesudah = () => {
+    let activeLayer = esriMap.allLayers.filter(function (layer) {
+      return layer.visible;
+    });
     let layerBangunan = esriMap.allLayers.find(function (layer) {
       return layer.id === "bagunan_analisis_proses";
     });
@@ -4645,56 +4652,82 @@ const SimulasiMap = () => {
       return layer.id === "jaringan_jalan_analisis_proses";
     });
     let layerSampahTPSSesudah = esriMap.allLayers.find(function (layer) {
-      return (layer.id = "sampah_tps_analisis_proses");
+      return layer.id === "sampah_tps_analisis_proses";
     });
     let layerSampahTPSSebelum = esriMap.allLayers.find(function (layer) {
-      return (layer.id = "sampah_tps_analisis");
+      return layer.id === "sampah_tps_analisis";
     });
+    console.log("active", activeLayer);
+    let isBangunanActive = activeLayer.some(
+      (layer) =>
+        layer.id === "bagunan_analisis_proses" ||
+        layer.id === "bagunan_analisis"
+    );
+    let isPolaRuangActive = activeLayer.some(
+      (layer) =>
+        layer.id === "pola_ruang_analisis_proses" ||
+        layer.id === "pola_ruang_analisis"
+    );
+    let isJaringanJalanActive = activeLayer.some(
+      (layer) =>
+        layer.id === "jaringan_jalan_analisis_proses" ||
+        layer.id === "jaringan_jalan_analisis"
+    );
+    let isKapasitasAirActive = activeLayer.some(
+      (layer) =>
+        layer.id === "kapasitas_air_analisis_proses" ||
+        layer.id === "kapasitas_air_analisis"
+    );
+    let isTpsActive = activeLayer.some(
+      (layer) =>
+        layer.id === "sampah_tps_analisis_proses" ||
+        layer.id === "sampah_tps_analisis"
+    );
     if (!activeSebelumSesudah.activeSebelum) {
       // layerBangunan.renderer = getRendererBangunan(
       //   "itbx_sebelum",
       //   "jlh_lantai_sebelum"
       // );
-      layerBangunan.visible = false;
+      if(isBangunanActive) layerBangunan.visible = false;
       layerBangunan.listMode = "hide";
-      layerBangunanSebelum.visible = true;
+      if(isBangunanActive) layerBangunanSebelum.visible = true;
       layerBangunanSebelum.listMode = "show";
-      layerPolaRuangSesudah.visible = false;
+      if(isPolaRuangActive) layerPolaRuangSesudah.visible = false;
       layerPolaRuangSesudah.listMode = "hide";
-      layerPolaRuangSebelum.visible = true;
+      if(isPolaRuangActive)layerPolaRuangSebelum.visible = true;
       layerPolaRuangSebelum.listMode = "show";
-      layerKapasitasAirSesudah.visible = false;
+      if(isKapasitasAirActive) layerKapasitasAirSesudah.visible = false;
       layerKapasitasAirSesudah.listMode = "hide";
-      layerKapasitasAirSebelum.visible = true;
+      if(isKapasitasAirActive)layerKapasitasAirSebelum.visible = true;
       layerKapasitasAirSebelum.listMode = "show";
-      layerJaringanJalanSesudah.visible = false;
+      if(isJaringanJalanActive)layerJaringanJalanSesudah.visible = false;
       layerJaringanJalanSesudah.listMode = "hide";
-      layerJaringanJalanSebelum.visible = true;
+      if(isJaringanJalanActive)layerJaringanJalanSebelum.visible = true;
       layerJaringanJalanSebelum.listMode = "show";
-      layerSampahTPSSesudah.visible = false;
+      if(isTpsActive)layerSampahTPSSesudah.visible = false;
       layerSampahTPSSesudah.listMode = "hide";
-      layerSampahTPSSebelum.visible = true;
+      if(isTpsActive)layerSampahTPSSebelum.visible = true;
       layerSampahTPSSebelum.listMode = "show";
     } else {
-      layerBangunan.visible = true;
+      if(isBangunanActive)layerBangunan.visible = true;
       layerBangunan.listMode = "show";
-      layerBangunanSebelum.visible = false;
+      if(isBangunanActive)layerBangunanSebelum.visible = false;
       layerBangunanSebelum.listMode = "hide";
-      layerPolaRuangSesudah.visible = true;
+      if(isPolaRuangActive)layerPolaRuangSesudah.visible = true;
       layerPolaRuangSesudah.listMode = "show";
-      layerPolaRuangSebelum.visible = false;
+      if(isPolaRuangActive)layerPolaRuangSebelum.visible = false;
       layerPolaRuangSebelum.listMode = "hide";
-      layerKapasitasAirSesudah.visible = true;
+      if(isKapasitasAirActive)layerKapasitasAirSesudah.visible = true;
       layerKapasitasAirSesudah.listMode = "show";
-      layerKapasitasAirSebelum.visible = false;
+      if(isKapasitasAirActive)layerKapasitasAirSebelum.visible = false;
       layerKapasitasAirSebelum.listMode = "hide";
-      layerJaringanJalanSesudah.visible = true;
+      if(isJaringanJalanActive)layerJaringanJalanSesudah.visible = true;
       layerJaringanJalanSesudah.listMode = "show";
-      layerJaringanJalanSebelum.visible = false;
+      if(isJaringanJalanActive)layerJaringanJalanSebelum.visible = false;
       layerJaringanJalanSebelum.listMode = "hide";
-      layerSampahTPSSesudah.visible = true;
+      if(isTpsActive)layerSampahTPSSesudah.visible = true;
       layerSampahTPSSesudah.listMode = "show";
-      layerSampahTPSSebelum.visible = false;
+      if(isTpsActive)layerSampahTPSSebelum.visible = false;
       layerSampahTPSSebelum.listMode = "hide";
     }
     layerBangunan.refresh();
@@ -5367,6 +5400,9 @@ const SimulasiMap = () => {
     setActiveSebelumSesudah({
       activeSebelum: false,
     });
+    let activeLayer = esriMap.allLayers.filter(function (layer) {
+      return layer.visible;
+    });
     let layerBangunan = esriMap.allLayers.find(function (layer) {
       return layer.id === "bagunan_analisis_proses";
     });
@@ -5392,30 +5428,55 @@ const SimulasiMap = () => {
       return layer.id === "jaringan_jalan_analisis";
     });
     let layerSampahTPSSesudah = esriMap.allLayers.find(function (layer) {
-      return (layer.id = "sampah_tps_analisis_proses");
+      return layer.id === "sampah_tps_analisis_proses";
     });
     let layerSampahTPSSebelum = esriMap.allLayers.find(function (layer) {
-      return (layer.id = "sampah_tps_analisis");
+      return layer.id === "sampah_tps_analisis";
     });
-    layerBangunan.visible = true;
+    let isBangunanActive = activeLayer.some(
+      (layer) =>
+        layer.id === "bagunan_analisis_proses" ||
+        layer.id === "bagunan_analisis"
+    );
+    let isPolaRuangActive = activeLayer.some(
+      (layer) =>
+        layer.id === "pola_ruang_analisis_proses" ||
+        layer.id === "pola_ruang_analisis"
+    );
+    let isJaringanJalanActive = activeLayer.some(
+      (layer) =>
+        layer.id === "jaringan_jalan_analisis_proses" ||
+        layer.id === "jaringan_jalan_analisis"
+    );
+    let isKapasitasAirActive = activeLayer.some(
+      (layer) =>
+        layer.id === "kapasitas_air_analisis_proses" ||
+        layer.id === "kapasitas_air_analisis"
+    );
+    let isTpsActive = activeLayer.some(
+      (layer) =>
+        layer.id === "sampah_tps_analisis_proses" ||
+        layer.id === "sampah_tps_analisis"
+    );
+    if(isBangunanActive)layerBangunan.visible = true;
     layerBangunan.listMode = "show";
-    layerBangunanSebelum.visible = false;
+    if(isBangunanActive)layerBangunanSebelum.visible = false;
     layerBangunanSebelum.listMode = "hide";
-    layerPolaRuang.visible = true;
+    if(isPolaRuangActive)layerPolaRuang.visible = true;
     layerPolaRuang.listMode = "show";
-    layerPolaRuangSebelum.visible = false;
+    if(isPolaRuangActive)layerPolaRuangSebelum.visible = false;
     layerPolaRuangSebelum.listMode = "hide";
-    layerKapasitasAir.visible = true;
+    if(isKapasitasAirActive)layerKapasitasAir.visible = true;
     layerKapasitasAir.listMode = "show";
-    layerKapasitasAirSebelum.visible = false;
+    if(isKapasitasAirActive)layerKapasitasAirSebelum.visible = false;
     layerKapasitasAirSebelum.listMode = "hide";
-    layerJaringanJalan.visible = true;
+    if(isJaringanJalanActive)layerJaringanJalan.visible = true;
     layerJaringanJalan.listMode = "show";
-    layerJaringanJalanSebelum.visible = false;
+    if(isJaringanJalanActive)layerJaringanJalanSebelum.visible = false;
     layerJaringanJalanSebelum.listMode = "hide";
-    layerSampahTPSSesudah.visible = true;
+    if(isTpsActive)layerSampahTPSSesudah.visible = true;
     layerSampahTPSSesudah.listMode = "show";
-    layerSampahTPSSebelum.visible = false;
+    if(isTpsActive)layerSampahTPSSebelum.visible = false;
     layerSampahTPSSebelum.listMode = "hide";
     layerBangunan.refresh();
     layerBangunanSebelum.refresh();
@@ -7156,7 +7217,7 @@ const SimulasiMap = () => {
                                 onClick={() =>
                                   handleSelectHistory(
                                     state.id,
-                                    `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe} AND wadmkd = 'Kel. Pabaton'`
+                                    `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe} AND wadmkd = 'PABATON'`
                                   )
                                 }
                               >
@@ -7187,7 +7248,7 @@ const SimulasiMap = () => {
                                       onClick={() =>
                                         handleSelectHistory(
                                           list.id,
-                                          `id_simulasi = ${list?.simulasiBangunan?.skenarioId} AND id_project = ${list?.simulasiBangunan?.projectId} AND userid = '${list?.simulasiBangunan?.userId}'AND data_ke = ${list?.simulasiBangunan?.dataKe} AND wadmkd = 'Kel. Pabaton'`
+                                          `id_simulasi = ${list?.simulasiBangunan?.skenarioId} AND id_project = ${list?.simulasiBangunan?.projectId} AND userid = '${list?.simulasiBangunan?.userId}'AND data_ke = ${list?.simulasiBangunan?.dataKe} AND wadmkd = 'PABATON'`
                                         )
                                       }
                                     >
