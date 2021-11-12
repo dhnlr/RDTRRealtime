@@ -2854,7 +2854,7 @@ const SimulasiMap = () => {
                       {
                         field_name: "kapasitas",
                         field_value:
-                          result[0].data.features[0].attributes.kapasitas,
+                          result[0].data.features[0].attributes.kapasitas_jalan,
                       },
                       {
                         field_name: "bangkitan_ruasjalan_y6",
