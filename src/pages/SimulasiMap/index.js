@@ -6581,81 +6581,103 @@ const SimulasiMap = () => {
                             </div>
                           }
 
-                          <div className="card" style={{ margin: "0 0.2rem" }}>
-                            <div
-                              className="card-header"
-                              role="tab"
-                              id="headingFive"
-                              style={{ padding: "0px" }}
+<div
+                              className="card"
+                              style={{ margin: "0 0.2rem" }}
                             >
-                              <h6 className="mb-0">
-                                <button
-                                  className="btn btn-block text-left collapsed btn-sm"
-                                  type="button"
-                                  data-toggle="collapse"
-                                  data-target={"#sebelumLima"}
-                                  aria-expanded="true"
-                                  aria-controls={"sebelumLima"}
-                                  style={{ fontSize: "14px" }}
-                                >
-                                  <img
-                                    src="./images/flood.png"
-                                    alt="Banjir"
-                                    style={{
-                                      marginRight: "10px",
-                                      width: "16px",
-                                    }}
-                                  />
-                                  Banjir
-                                  <i className="ti-arrow-circle-down float-right"></i>
-                                </button>
-                              </h6>
-                            </div>
+                              <div
+                                className="card-header"
+                                role="tab"
+                                id="headingFive"
+                                style={{ padding: "0px" }}
+                              >
+                                <h6 className="mb-0">
+                                  <button
+                                    className="btn btn-block text-left collapsed btn-sm"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target={"#sebelumLima"}
+                                    aria-expanded="true"
+                                    aria-controls={"sebelumLima"}
+                                    style={{ fontSize: "14px" }}
+                                  >
+                                    <img
+                                      src="./images/flood.png"
+                                      alt="Banjir"
+                                      style={{
+                                        marginRight: "10px",
+                                        width: "16px",
+                                      }}
+                                    />
+                                    Banjir
+                                    <i className="ti-arrow-circle-down float-right"></i>
+                                  </button>
+                                </h6>
+                              </div>
 
-                            <div
-                              id="sebelumLima"
-                              className="collapse"
-                              aria-labelledby="headingFive"
-                              data-parent="#accordionExample"
-                            >
-                              <div className="card-body">
-                                <table className="table">
-                                  <tbody>
-                                    <tr>
-                                      <td>Jumlah Biopori</td>
-                                      <td>
-                                        {contentBangunanKdbKlb[89].field_value}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Kapasitas Biopori</td>
-                                      <td>
-                                        {contentBangunanKdbKlb[90].field_value}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Surplus Debit Alir</td>
-                                      <td>
-                                        {contentBangunanKdbKlb[91].field_value
-                                          ? toFix(
-                                              contentBangunanKdbKlb[91]
-                                                .field_value
-                                            )
-                                          : contentBangunanKdbKlb[91]
-                                              .field_value}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Kecendrungan Banjir</td>
-                                      <td>
-                                        {contentBangunanKdbKlb[92].field_value}
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
+                              <div
+                                id="sebelumLima"
+                                className="collapse"
+                                aria-labelledby="headingFive"
+                                data-parent="#accordionExample"
+                              >
+                                <div className="card-body">
+                                  <table className="table">
+                                    <tbody>
+                                      <tr>
+                                        <td>Jumlah Biopori</td>
+                                        <td>
+                                          {contentBangunanKdbKlb[89]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Kapasitas Biopori
+                                        </td>
+                                        <td>
+                                          {contentBangunanKdbKlb[90]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Surplus Debit Alir
+                                        </td>
+                                        <td>
+                                          {contentBangunanKdbKlb[91]
+                                                .field_value ? toFix(contentBangunanKdbKlb[91]
+                                                  .field_value) : contentBangunanKdbKlb[91]
+                                                  .field_value}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>Kecendrungan Banjir</td>
+                                        <td>
+                                          {contentBangunanKdbKlb[92]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>Jumlah Sumur Resapan</td>
+                                        <td>
+                                          {contentBangunanKdbKlb[93]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>Debit Sumur Resapan</td>
+                                        <td>
+                                          {contentBangunanKdbKlb[94]
+                                                .field_value}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                            
                         </div>
                       </div>
                     </div>
