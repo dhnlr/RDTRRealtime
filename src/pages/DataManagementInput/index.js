@@ -149,7 +149,7 @@ function DataManagementInput() {
             ownerId: Cookies.get("userId"),
           })
         );
-        goManajemenDataPhase2(state);
+        goManajemenDataPhase2(data.data?.obj);
       })
       .catch((error) => {
         console.error(error);
