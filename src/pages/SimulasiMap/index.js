@@ -3801,7 +3801,7 @@ const SimulasiMap = () => {
                 }
 
                 // get persil tanah
-                Axios.get(
+                /* Axios.get(
                   config.url.ARCGIS_URL +
                     "/KDBKLB/KDBKLB_PersilTanah_Pabaton/FeatureServer/0/query?where=objectid+%3D+" +
                     features[0].attributes.oid_persiltanah +
@@ -3890,10 +3890,10 @@ const SimulasiMap = () => {
                   .catch(function (error) {
                     // handle error
                     console.log("error check", error);
-                  });
+                  }); */
 
                 // get pola ruang
-                Axios.get(
+                /* Axios.get(
                   config.url.ARCGIS_URL +
                     "/KDBKLB/KDBKLB_PolaRuang/FeatureServer/0/query?where=objectid+%3D+" +
                     features[0].attributes.oid_zonasi +
@@ -4116,7 +4116,7 @@ const SimulasiMap = () => {
                   .catch(function (error) {
                     // handle error
                     console.log("error check", error);
-                  });
+                  }); */
 
                 axios
                   .get(config.url.API_URL + "/MasterData/Itbx/GetList", {
