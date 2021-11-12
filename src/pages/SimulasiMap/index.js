@@ -398,6 +398,53 @@ const SimulasiMap = () => {
             },
             outFields: ["objectid", "oid_historical"],
           });
+          bangunanSesudahLayer.on("edits", (event) => {
+            const extractObjectId = function (result) {
+              return result.objectId;
+            };
+
+            const adds = event.addedFeatures.map(extractObjectId);
+            // const edit = {
+            //   objectId: adds[0],
+            //   attributes: {
+            //     id_project: state?.simulasiBangunan?.projectId,
+            //     id_skenario: state?.simulasiBangunan?.skenarioId,
+            //     data_ke: state?.simulasiBangunan?.dataKe,
+            //     userid: state?.simulasiBangunan?.userId,
+            //   },
+            // };
+            if (adds.length > 0) {
+              var query = {
+                where: "objectid = " + adds[0],
+                returnGeometry: false,
+                outFields: ["*"],
+              };
+
+              bangunanSesudahLayer.queryFeatures(query).then(({ features }) => {
+                console.log("Hasil query untuk edit", features);
+                features[0].attributes.id_project =
+                  state?.simulasiBangunan?.projectId;
+                features[0].attributes.id_skenario =
+                  state?.simulasiBangunan?.skenarioId;
+                features[0].attributes.data_ke =
+                  state?.simulasiBangunan?.dataKe;
+                features[0].attributes.userid = state?.simulasiBangunan?.userId;
+                features[0].attributes.wadmkd = "PABATON";
+                (features[0].attributes.nambwp =
+                  state?.simulasiBangunan?.nambwp);
+                  (features[0].attributes.nasbwp =
+                    state?.simulasiBangunan?.nasbwp);
+                  (features[0].attributes.kodblk =
+                    state?.simulasiBangunan?.kodblk);
+                  (features[0].attributes.kodsbl =
+                    state?.simulasiBangunan?.kodsbl);
+                  bangunanSesudahLayer
+                    .applyEdits({ updateFeatures: [features[0]] })
+                    .then((edits) => bangunanSesudahLayer.refresh())
+                    .catch((error) => console.error(error));
+              });
+            }
+          });
           const bangunanSebelumLayer = new FeatureLayer({
             url:
               config.url.ARCGIS_URL +
@@ -2530,7 +2577,11 @@ const SimulasiMap = () => {
 
           view.popup.watch("features", (features) => {
             if (features[0]) {
-              console.log(features[0]);
+              console.log(
+                features[0],
+                features[0].layer.id,
+                features[0].layer.id.toLowerCase().indexOf("bagunan") !== -1
+              );
 
               //TODO Add fn to call Bangunan sebelum layer (analisis) for popup
 
@@ -2766,44 +2817,37 @@ const SimulasiMap = () => {
                       {
                         field_name: "pdam_kapasitas_harian",
                         field_value:
-                          result[0].data.features[0].attributes
-                            .kapasitas_air,
+                          result[0].data.features[0].attributes.kapasitas_air,
                       },
                       {
                         field_name: "keb_air_harian_y5",
                         field_value:
-                          result[0].data.features[0].attributes
-                            .keb_harian_y5,
+                          result[0].data.features[0].attributes.keb_harian_y5,
                       },
                       {
                         field_name: "keb_air_harian_y6",
                         field_value:
-                          result[0].data.features[0].attributes
-                            .keb_harian_y6,
+                          result[0].data.features[0].attributes.keb_harian_y6,
                       },
                       {
                         field_name: "keb_air_harian_y7",
                         field_value:
-                          result[0].data.features[0].attributes
-                            .keb_harian_y7,
+                          result[0].data.features[0].attributes.keb_harian_y7,
                       },
                       {
                         field_name: "keb_air_harian_y8",
                         field_value:
-                          result[0].data.features[0].attributes
-                            .keb_harian_y8, //40
+                          result[0].data.features[0].attributes.keb_harian_y8, //40
                       },
                       {
                         field_name: "keb_air_harian_y9",
                         field_value:
-                          result[0].data.features[0].attributes
-                            .keb_harian_y9,
+                          result[0].data.features[0].attributes.keb_harian_y9,
                       },
                       {
                         field_name: "keb_air_harian_y10",
                         field_value:
-                          result[0].data.features[0].attributes
-                            .keb_harian_y10,
+                          result[0].data.features[0].attributes.keb_harian_y10,
                       },
                       {
                         field_name: "izin_air_y6",
@@ -3070,14 +3114,12 @@ const SimulasiMap = () => {
                       {
                         field_name: "keb_air_harian_y5_sebelum",
                         field_value:
-                          result[1].data.features[0].attributes
-                            .keb_harian_y5,
+                          result[1].data.features[0].attributes.keb_harian_y5,
                       },
                       {
                         field_name: "pdam_kapasitas_harian_sebelum",
                         field_value:
-                          result[1].data.features[0].attributes
-                            .kapasitas_air,
+                          result[1].data.features[0].attributes.kapasitas_air,
                       },
                       {
                         field_name: "izin_sampah_y5",
@@ -3114,8 +3156,7 @@ const SimulasiMap = () => {
                       },
                       {
                         field_name: "surplus_debitalir",
-                        field_value:
-                          features[0].attributes.surplus_debitalir,
+                        field_value: features[0].attributes.surplus_debitalir,
                       },
                       {
                         field_name: "kecenderungan_banjir",
@@ -3124,15 +3165,14 @@ const SimulasiMap = () => {
                       },
                       {
                         field_name: "jlh_sumurresapan",
-                        field_value:
-                          features[0].attributes.jlh_sumurresapan,
+                        field_value: features[0].attributes.jlh_sumurresapan,
                       },
                       {
                         field_name: "q_debitsumurresapan",
-                        field_value:
-                          features[0].attributes.q_debitsumurresapan,
+                        field_value: features[0].attributes.q_debitsumurresapan,
                       },
                     ]);
+                    console.log(contentBangunanKdbKlb);
                   }
                 });
                 setHasilSimulasiBangunanKdbKlb(
@@ -4696,46 +4736,46 @@ const SimulasiMap = () => {
       //   "itbx_sebelum",
       //   "jlh_lantai_sebelum"
       // );
-      if(isBangunanActive) layerBangunan.visible = false;
+      if (isBangunanActive) layerBangunan.visible = false;
       layerBangunan.listMode = "hide";
-      if(isBangunanActive) layerBangunanSebelum.visible = true;
+      if (isBangunanActive) layerBangunanSebelum.visible = true;
       layerBangunanSebelum.listMode = "show";
-      if(isPolaRuangActive) layerPolaRuangSesudah.visible = false;
+      if (isPolaRuangActive) layerPolaRuangSesudah.visible = false;
       layerPolaRuangSesudah.listMode = "hide";
-      if(isPolaRuangActive)layerPolaRuangSebelum.visible = true;
+      if (isPolaRuangActive) layerPolaRuangSebelum.visible = true;
       layerPolaRuangSebelum.listMode = "show";
-      if(isKapasitasAirActive) layerKapasitasAirSesudah.visible = false;
+      if (isKapasitasAirActive) layerKapasitasAirSesudah.visible = false;
       layerKapasitasAirSesudah.listMode = "hide";
-      if(isKapasitasAirActive)layerKapasitasAirSebelum.visible = true;
+      if (isKapasitasAirActive) layerKapasitasAirSebelum.visible = true;
       layerKapasitasAirSebelum.listMode = "show";
-      if(isJaringanJalanActive)layerJaringanJalanSesudah.visible = false;
+      if (isJaringanJalanActive) layerJaringanJalanSesudah.visible = false;
       layerJaringanJalanSesudah.listMode = "hide";
-      if(isJaringanJalanActive)layerJaringanJalanSebelum.visible = true;
+      if (isJaringanJalanActive) layerJaringanJalanSebelum.visible = true;
       layerJaringanJalanSebelum.listMode = "show";
-      if(isTpsActive)layerSampahTPSSesudah.visible = false;
+      if (isTpsActive) layerSampahTPSSesudah.visible = false;
       layerSampahTPSSesudah.listMode = "hide";
-      if(isTpsActive)layerSampahTPSSebelum.visible = true;
+      if (isTpsActive) layerSampahTPSSebelum.visible = true;
       layerSampahTPSSebelum.listMode = "show";
     } else {
-      if(isBangunanActive)layerBangunan.visible = true;
+      if (isBangunanActive) layerBangunan.visible = true;
       layerBangunan.listMode = "show";
-      if(isBangunanActive)layerBangunanSebelum.visible = false;
+      if (isBangunanActive) layerBangunanSebelum.visible = false;
       layerBangunanSebelum.listMode = "hide";
-      if(isPolaRuangActive)layerPolaRuangSesudah.visible = true;
+      if (isPolaRuangActive) layerPolaRuangSesudah.visible = true;
       layerPolaRuangSesudah.listMode = "show";
-      if(isPolaRuangActive)layerPolaRuangSebelum.visible = false;
+      if (isPolaRuangActive) layerPolaRuangSebelum.visible = false;
       layerPolaRuangSebelum.listMode = "hide";
-      if(isKapasitasAirActive)layerKapasitasAirSesudah.visible = true;
+      if (isKapasitasAirActive) layerKapasitasAirSesudah.visible = true;
       layerKapasitasAirSesudah.listMode = "show";
-      if(isKapasitasAirActive)layerKapasitasAirSebelum.visible = false;
+      if (isKapasitasAirActive) layerKapasitasAirSebelum.visible = false;
       layerKapasitasAirSebelum.listMode = "hide";
-      if(isJaringanJalanActive)layerJaringanJalanSesudah.visible = true;
+      if (isJaringanJalanActive) layerJaringanJalanSesudah.visible = true;
       layerJaringanJalanSesudah.listMode = "show";
-      if(isJaringanJalanActive)layerJaringanJalanSebelum.visible = false;
+      if (isJaringanJalanActive) layerJaringanJalanSebelum.visible = false;
       layerJaringanJalanSebelum.listMode = "hide";
-      if(isTpsActive)layerSampahTPSSesudah.visible = true;
+      if (isTpsActive) layerSampahTPSSesudah.visible = true;
       layerSampahTPSSesudah.listMode = "show";
-      if(isTpsActive)layerSampahTPSSebelum.visible = false;
+      if (isTpsActive) layerSampahTPSSebelum.visible = false;
       layerSampahTPSSebelum.listMode = "hide";
     }
     layerBangunan.refresh();
@@ -5466,25 +5506,25 @@ const SimulasiMap = () => {
         layer.id === "sampah_tps_analisis_proses" ||
         layer.id === "sampah_tps_analisis"
     );
-    if(isBangunanActive)layerBangunan.visible = true;
+    if (isBangunanActive) layerBangunan.visible = true;
     layerBangunan.listMode = "show";
-    if(isBangunanActive)layerBangunanSebelum.visible = false;
+    if (isBangunanActive) layerBangunanSebelum.visible = false;
     layerBangunanSebelum.listMode = "hide";
-    if(isPolaRuangActive)layerPolaRuang.visible = true;
+    if (isPolaRuangActive) layerPolaRuang.visible = true;
     layerPolaRuang.listMode = "show";
-    if(isPolaRuangActive)layerPolaRuangSebelum.visible = false;
+    if (isPolaRuangActive) layerPolaRuangSebelum.visible = false;
     layerPolaRuangSebelum.listMode = "hide";
-    if(isKapasitasAirActive)layerKapasitasAir.visible = true;
+    if (isKapasitasAirActive) layerKapasitasAir.visible = true;
     layerKapasitasAir.listMode = "show";
-    if(isKapasitasAirActive)layerKapasitasAirSebelum.visible = false;
+    if (isKapasitasAirActive) layerKapasitasAirSebelum.visible = false;
     layerKapasitasAirSebelum.listMode = "hide";
-    if(isJaringanJalanActive)layerJaringanJalan.visible = true;
+    if (isJaringanJalanActive) layerJaringanJalan.visible = true;
     layerJaringanJalan.listMode = "show";
-    if(isJaringanJalanActive)layerJaringanJalanSebelum.visible = false;
+    if (isJaringanJalanActive) layerJaringanJalanSebelum.visible = false;
     layerJaringanJalanSebelum.listMode = "hide";
-    if(isTpsActive)layerSampahTPSSesudah.visible = true;
+    if (isTpsActive) layerSampahTPSSesudah.visible = true;
     layerSampahTPSSesudah.listMode = "show";
-    if(isTpsActive)layerSampahTPSSebelum.visible = false;
+    if (isTpsActive) layerSampahTPSSebelum.visible = false;
     layerSampahTPSSebelum.listMode = "hide";
     layerBangunan.refresh();
     layerBangunanSebelum.refresh();
@@ -6589,103 +6629,93 @@ const SimulasiMap = () => {
                             </div>
                           }
 
-<div
-                              className="card"
-                              style={{ margin: "0 0.2rem" }}
+                          <div className="card" style={{ margin: "0 0.2rem" }}>
+                            <div
+                              className="card-header"
+                              role="tab"
+                              id="headingFive"
+                              style={{ padding: "0px" }}
                             >
-                              <div
-                                className="card-header"
-                                role="tab"
-                                id="headingFive"
-                                style={{ padding: "0px" }}
-                              >
-                                <h6 className="mb-0">
-                                  <button
-                                    className="btn btn-block text-left collapsed btn-sm"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target={"#sebelumLima"}
-                                    aria-expanded="true"
-                                    aria-controls={"sebelumLima"}
-                                    style={{ fontSize: "14px" }}
-                                  >
-                                    <img
-                                      src="./images/flood.png"
-                                      alt="Banjir"
-                                      style={{
-                                        marginRight: "10px",
-                                        width: "16px",
-                                      }}
-                                    />
-                                    Banjir
-                                    <i className="ti-arrow-circle-down float-right"></i>
-                                  </button>
-                                </h6>
-                              </div>
+                              <h6 className="mb-0">
+                                <button
+                                  className="btn btn-block text-left collapsed btn-sm"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  data-target={"#sebelumLima"}
+                                  aria-expanded="true"
+                                  aria-controls={"sebelumLima"}
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  <img
+                                    src="./images/flood.png"
+                                    alt="Banjir"
+                                    style={{
+                                      marginRight: "10px",
+                                      width: "16px",
+                                    }}
+                                  />
+                                  Banjir
+                                  <i className="ti-arrow-circle-down float-right"></i>
+                                </button>
+                              </h6>
+                            </div>
 
-                              <div
-                                id="sebelumLima"
-                                className="collapse"
-                                aria-labelledby="headingFive"
-                                data-parent="#accordionExample"
-                              >
-                                <div className="card-body">
-                                  <table className="table">
-                                    <tbody>
-                                      <tr>
-                                        <td>Jumlah Biopori</td>
-                                        <td>
-                                          {contentBangunanKdbKlb[89]
-                                                .field_value}
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          Kapasitas Biopori
-                                        </td>
-                                        <td>
-                                          {contentBangunanKdbKlb[90]
-                                                .field_value}
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          Surplus Debit Alir
-                                        </td>
-                                        <td>
-                                          {contentBangunanKdbKlb[91]
-                                                .field_value ? toFix(contentBangunanKdbKlb[91]
-                                                  .field_value) : contentBangunanKdbKlb[91]
-                                                  .field_value}
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>Kecendrungan Banjir</td>
-                                        <td>
-                                          {contentBangunanKdbKlb[92]
-                                                .field_value}
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>Jumlah Sumur Resapan</td>
-                                        <td>
-                                          {contentBangunanKdbKlb[93]
-                                                .field_value}
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>Debit Sumur Resapan</td>
-                                        <td>
-                                          {contentBangunanKdbKlb[94]
-                                                .field_value}
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
+                            <div
+                              id="sebelumLima"
+                              className="collapse"
+                              aria-labelledby="headingFive"
+                              data-parent="#accordionExample"
+                            >
+                              <div className="card-body">
+                                <table className="table">
+                                  <tbody>
+                                    <tr>
+                                      <td>Jumlah Biopori</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[89].field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Kapasitas Biopori</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[90].field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Surplus Debit Alir</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[91].field_value
+                                          ? toFix(
+                                              contentBangunanKdbKlb[91]
+                                                .field_value
+                                            )
+                                          : contentBangunanKdbKlb[91]
+                                              .field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Kecendrungan Banjir</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[92].field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Jumlah Sumur Resapan</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[93].field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Debit Sumur Resapan</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[94].field_value}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
                               </div>
                             </div>
-                            
+                          </div>
                         </div>
                       </div>
                     </div>
