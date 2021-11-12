@@ -3115,14 +3115,22 @@ const SimulasiMap = () => {
                       {
                         field_name: "surplus_debitalir",
                         field_value:
-                          result[0].data.features[0].attributes
-                            .surplus_debitalir,
+                          features[0].attributes.surplus_debitalir,
                       },
                       {
                         field_name: "kecenderungan_banjir",
                         field_value:
-                          result[0].data.features[0].attributes
-                            .kecenderungan_banjir,
+                          features[0].attributes.kecenderungan_banjir,
+                      },
+                      {
+                        field_name: "jlh_sumurresapan",
+                        field_value:
+                          features[0].attributes.jlh_sumurresapan,
+                      },
+                      {
+                        field_name: "q_debitsumurresapan",
+                        field_value:
+                          features[0].attributes.q_debitsumurresapan,
                       },
                     ]);
                   }
