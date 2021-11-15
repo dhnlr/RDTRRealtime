@@ -232,7 +232,7 @@ function SimulationTable() {
   };
 
   return (
-    <div className="container-fluid">
+    <div className="container-scroller">
       <Header />
       <div className="container-fluid page-body-wrapper">
         <Menu active="schenario" />
