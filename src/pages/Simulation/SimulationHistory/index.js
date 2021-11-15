@@ -803,7 +803,7 @@ function SimulationHistory() {
                     ).style.display = "none";
                   }
                 });
-                setShowSegmentationFunc((id) => (id) => {
+                /* setShowSegmentationFunc((id) => (id) => {
                   bangunanSebelumLayer.definitionExpression =
                     sebelumDefinitionExpression + "AND NOT objectid = " + id;
                   mapBefore.add(segmentationGroupLayer);
@@ -830,8 +830,8 @@ function SimulationHistory() {
                       "segmentationLegendCard"
                     ).style.display = "block";
                   }
-                });
-                getRing(features[0].attributes.oid_historical);
+                }); */
+                getRing(features[0].attributes.oid_historical, mapBefore, viewBefore, sebelumDefinitionExpression);
                 // features[0].layer.definitionExpression =
                 //   "NOT id_bangunan = " + features[0].attributes.id_bangunan;
               }
@@ -1483,7 +1483,7 @@ function SimulationHistory() {
                     ).style.display = "none";
                   }
                 });
-                setShowSegmentationFunc((id) => (id) => {
+                /* setShowSegmentationFunc((id) => (id) => {
                   bangunanSesudahLayer.definitionExpression =
                     sesudahDefinitionExpression + "AND NOT objectid = " + id;
                   mapAfter.add(segmentationGroupLayer);
@@ -1510,8 +1510,8 @@ function SimulationHistory() {
                       "segmentationLegendCard"
                     ).style.display = "block";
                   }
-                });
-                getRing(features[0].attributes.oid_historical);
+                }); */
+                getRing(features[0].attributes.oid_historical, mapAfter, viewAfter, sesudahDefinitionExpression);
                 // features[0].layer.definitionExpression =
                 //   "NOT id_bangunan = " + features[0].attributes.id_bangunan;
               }
@@ -4884,7 +4884,7 @@ function SimulationHistory() {
   /************************************************************
    * Get polygon id from feature service and draw it when available
    ************************************************************/
-  var getRing = (id) => {
+  var getRing = (id, map, view, bangunanDefinitionExpression) => {
     var sesudah = Axios.get(
       config.url.ARCGIS_URL +
         "/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=oid_historical=" +
@@ -4907,8 +4907,14 @@ function SimulationHistory() {
           drawGraphic(
             result[0].data.features[0].geometry.rings,
             result[0].data.features[0].attributes,
-            result[1].data.features[0].attributes
+            result[1].data.features[0].attributes,
+            map,
+            view,
+            bangunanDefinitionExpression
           );
+        }
+        else {
+          setShowSegmentationFunc(() => () => console.info("Segmentation for this building not found!"))
         }
       })
       .catch((error) => {
@@ -4962,7 +4968,7 @@ function SimulationHistory() {
   /************************************************************
    * Draw polygon
    ************************************************************/
-  var drawGraphic = (ring, attributes, attributes_sebelum) => {
+  var drawGraphic = (ring, attributes, attributes_sebelum, map, view, bangunanDefinitionExpression) => {
     var polygon = new Polygon({
       rings: ring,
       spatialReference: { wkid: 4326 },
@@ -5098,6 +5104,35 @@ function SimulationHistory() {
       blendMode: "destination-over",
       listMode: "hide",
       // visible: false
+    });
+
+    setShowSegmentationFunc((id) => (id) => {
+      bangunanSesudahLayer.definitionExpression =
+        bangunanDefinitionExpression +
+        " AND NOT objectid = " +
+        id;
+      map.add(segmentationGroupLayer);
+      view.whenLayerView(lantaiAtas).then(function (layerView) {
+        layerView.highlight(lantaiAtas.graphics);
+      });
+      view.whenLayerView(lantai).then(function (layerView) {
+        layerView.highlight(lantai.graphics);
+      });
+      view
+        .whenLayerView(lantaiSebelum)
+        .then(function (layerView) {
+          layerView.highlight(lantaiSebelum.graphics);
+        });
+      view
+        .whenLayerView(lantaiSebelumKelewatan)
+        .then(function (layerView) {
+          layerView.highlight(lantaiSebelumKelewatan.graphics);
+        });
+      if (document.getElementById("segmentationLegendCard")) {
+        document.getElementById(
+          "segmentationLegendCard"
+        ).style.display = "block";
+      }
     });
   };
 
