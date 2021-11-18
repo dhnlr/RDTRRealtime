@@ -372,33 +372,36 @@ function UserManagement() {
                                     ),
                                   },
                                   {
-                                    Header: "Status",
+                                    Header: "Status Konfirmasi",
                                     accessor: "emailConfirmed",
                                     width: "10%",
                                     Cell: (row) =>
-                                      (<>{row.cell.value ? 
+                                      (row.cell.value ? 
                                         <label className="badge badge-success">
                                           Terkonfirmasi
                                         </label>
                                        : 
                                         <label className="badge badge-danger">
                                           Belum Dikonfirmasi
-                                        </label>
-                                  }
-                                  <br/>
-                                      {!row.row.values.lockoutEnabled ? 
-                                        <label className="badge badge-success">
-                                          Diizinkan
-                                        </label>
-                                       : 
+                                        </label>),
+                                  },
+                                  {
+                                    Header: "Status Izin",
+                                    accessor: "lockoutEnabled",
+                                    width: "10%",
+                                    Cell: (row) =>
+                                      (row.cell.value ? 
                                         <label className="badge badge-danger">
                                           Belum Diizinkan
                                         </label>
-                                      
-                                    }</>)
+                                       :
+                                       <label className="badge badge-success">
+                                          Diizinkan
+                                        </label> 
+                                    )
                                   },
                                   {
-                                    Header: "Action",
+                                    Header: "",
                                     accessor: "id",
                                     width: "25%",
                                     disableGlobalFilter: true,
@@ -430,7 +433,7 @@ function UserManagement() {
                                               }
                                             >
                                               <span>
-                                                <i className="ti-id-key"></i>
+                                                <i className="ti-key"></i>
                                               </span>
                                             </button>
                                             &nbsp;

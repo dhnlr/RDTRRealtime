@@ -217,7 +217,7 @@ function HelpManagement() {
                                                                     Cell: (row) => (<div><label className="badge badge-pill badge-dark my-1">{row.cell.value}</label></div>)
                                                                 },
                                                                 {
-                                                                    Header: "Action",
+                                                                    Header: "",
                                                                     accessor: "id",
                                                                     width: "15%",
                                                                     disableGlobalFilter: true,

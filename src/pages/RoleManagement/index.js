@@ -280,7 +280,7 @@ function RoleManagement() {
                                     ),
                                   },
                                   {
-                                    Header: "Action",
+                                    Header: "",
                                     accessor: "id",
                                     width: "15%",
                                     disableGlobalFilter: true,

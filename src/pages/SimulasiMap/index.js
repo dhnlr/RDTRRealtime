@@ -3,7 +3,7 @@ import Axios from "axios";
 import axios from "../../axiosConfig";
 import Swal from "sweetalert2";
 import { isLoaded, loadModules } from "esri-loader";
-import { useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import LoadingOverlay from "react-loading-overlay";
 
@@ -91,6 +91,8 @@ const SimulasiMap = () => {
   const [isShowHistoryList, setIsShowHistoryList] = useState(false);
   const [historyList, setHistoryList] = useState(null);
   const [selectedHistoryId, setSelectedHistoryId] = useState(null);
+  const [selectDatake, setSelectDatake] = useState([]);
+  const [createDatake, setCreateDatake] = useState([]);
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -430,18 +432,14 @@ const SimulasiMap = () => {
                   state?.simulasiBangunan?.dataKe;
                 features[0].attributes.userid = state?.simulasiBangunan?.userId;
                 features[0].attributes.wadmkd = "PABATON";
-                (features[0].attributes.nambwp =
-                  state?.simulasiBangunan?.nambwp);
-                  (features[0].attributes.nasbwp =
-                    state?.simulasiBangunan?.nasbwp);
-                  (features[0].attributes.kodblk =
-                    state?.simulasiBangunan?.kodblk);
-                  (features[0].attributes.kodsbl =
-                    state?.simulasiBangunan?.kodsbl);
-                  bangunanSesudahLayer
-                    .applyEdits({ updateFeatures: [features[0]] })
-                    .then((edits) => bangunanSesudahLayer.refresh())
-                    .catch((error) => console.error(error));
+                features[0].attributes.nambwp = state?.simulasiBangunan?.nambwp;
+                features[0].attributes.nasbwp = state?.simulasiBangunan?.nasbwp;
+                features[0].attributes.kodblk = state?.simulasiBangunan?.kodblk;
+                features[0].attributes.kodsbl = state?.simulasiBangunan?.kodsbl;
+                bangunanSesudahLayer
+                  .applyEdits({ updateFeatures: [features[0]] })
+                  .then((edits) => bangunanSesudahLayer.refresh())
+                  .catch((error) => console.error(error));
               });
             }
           });
@@ -2642,7 +2640,10 @@ const SimulasiMap = () => {
                       {
                         field_name: "status_kdbklb_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.status_kdbklb : "",
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes
+                                .status_kdbklb
+                            : "",
                       },
                       {
                         field_name: "status_kdbklb",
@@ -2652,7 +2653,9 @@ const SimulasiMap = () => {
                       {
                         field_name: "melampaui_fa_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.melampaui_fa : "",
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.melampaui_fa
+                            : "",
                       },
                       {
                         field_name: "melampaui_fa",
@@ -2662,8 +2665,10 @@ const SimulasiMap = () => {
                       {
                         field_name: "melampaui_tinggi_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes 
-                            .melampaui_tinggi : "",
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes
+                                .melampaui_tinggi
+                            : "",
                       },
                       {
                         field_name: "melampaui_tinggi",
@@ -2674,7 +2679,9 @@ const SimulasiMap = () => {
                       {
                         field_name: "izin_air_y5_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.izin_air_y5 : "", 
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.izin_air_y5
+                            : "",
                       },
                       {
                         field_name: "izin_air_y5",
@@ -2684,7 +2691,9 @@ const SimulasiMap = () => {
                       {
                         field_name: "izin_macet_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.izin_macet : "", //10 
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.izin_macet
+                            : "", //10
                       },
                       {
                         field_name: "izin_macet",
@@ -2694,7 +2703,9 @@ const SimulasiMap = () => {
                       {
                         field_name: "los_num_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.los_num : "", 
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.los_num
+                            : "",
                       },
                       {
                         field_name: "los_num",
@@ -2702,7 +2713,10 @@ const SimulasiMap = () => {
                       },
                       {
                         field_name: "los_sebelum",
-                        field_value:result[1].data.features.length > 0 ? result[1].data.features[0].attributes.los : "", 
+                        field_value:
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.los
+                            : "",
                       },
                       {
                         field_name: "los",
@@ -2711,7 +2725,9 @@ const SimulasiMap = () => {
                       {
                         field_name: "jlh_lantai_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.jlh_lantai : "",
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.jlh_lantai
+                            : "",
                       },
                       {
                         field_name: "jlh_lantai",
@@ -2730,7 +2746,10 @@ const SimulasiMap = () => {
                       },
                       {
                         field_name: "fa_sebelum",
-                        field_value:result[1].data.features.length > 0 ? result[1].data.features[0].attributes.fa : "", //20
+                        field_value:
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.fa
+                            : "", //20
                       },
                       {
                         field_name: "fa",
@@ -3039,29 +3058,44 @@ const SimulasiMap = () => {
                       {
                         field_name: "namaszona_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.namaszona: "", 
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.namaszona
+                            : "",
                       },
                       {
                         field_name: "kdb_sebelum",
-                        field_value:result[1].data.features.length > 0 ? result[1].data.features[0].attributes.kdb: "", 
+                        field_value:
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.kdb
+                            : "",
                       },
                       {
                         field_name: "klb_sebelum",
-                        field_value:result[1].data.features.length > 0 ? result[1].data.features[0].attributes.klb: "", 
+                        field_value:
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.klb
+                            : "",
                       },
                       {
                         field_name: "kdh_sebelum",
-                        field_value:result[1].data.features.length > 0 ? result[1].data.features[0].attributes.kdh: "", //70 
+                        field_value:
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.kdh
+                            : "", //70
                       },
                       {
                         field_name: "lantai_max_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.lantai_max: "", 
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.lantai_max
+                            : "",
                       },
                       {
                         field_name: "status_itbx_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.status_itbx: "", //72 
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.status_itbx
+                            : "", //72
                       },
                       {
                         field_name: "status_itbx",
@@ -3071,7 +3105,9 @@ const SimulasiMap = () => {
                       {
                         field_name: "kegiatan_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.kegiatan : "", //74
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.kegiatan
+                            : "", //74
                       },
                       {
                         field_name: "kegiatan",
@@ -3080,7 +3116,10 @@ const SimulasiMap = () => {
                       },
                       {
                         field_name: "kbli_sebelum",
-                        field_value:result[1].data.features.length > 0 ? result[1].data.features[0].attributes.kbli : "",
+                        field_value:
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.kbli
+                            : "",
                       },
                       {
                         field_name: "kbli",
@@ -3089,12 +3128,16 @@ const SimulasiMap = () => {
                       {
                         field_name: "jenis_bang_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.jenis_bang : "", //78
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.jenis_bang
+                            : "", //78
                       },
                       {
                         field_name: "q_arus_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.q_arus : "",
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes.q_arus
+                            : "",
                       },
                       {
                         field_name: "kdb_rdtr",
@@ -3114,12 +3157,18 @@ const SimulasiMap = () => {
                       {
                         field_name: "keb_air_harian_y5_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.keb_harian_y5 : "",
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes
+                                .keb_harian_y5
+                            : "",
                       },
                       {
                         field_name: "pdam_kapasitas_harian_sebelum",
                         field_value:
-                         result[1].data.features.length > 0 ? result[1].data.features[0].attributes.kapasitas_air : "",
+                          result[1].data.features.length > 0
+                            ? result[1].data.features[0].attributes
+                                .kapasitas_air
+                            : "",
                       },
                       {
                         field_name: "izin_sampah_y5",
@@ -4321,7 +4370,10 @@ const SimulasiMap = () => {
                     result[1].data.features[0].attributes
                   );
                 } else {
-                  setShowSegmentationFunc(() => () => console.info("Segmentation for this building not found!"))
+                  setShowSegmentationFunc(
+                    () => () =>
+                      console.info("Segmentation for this building not found!")
+                  );
                 }
               })
               .catch((error) => {
@@ -4550,9 +4602,7 @@ const SimulasiMap = () => {
 
             setShowSegmentationFunc((id) => (id) => {
               bangunanSesudahLayer.definitionExpression =
-                bangunanDefinitionExpression +
-                " AND NOT objectid = " +
-                id;
+                bangunanDefinitionExpression + " AND NOT objectid = " + id;
               map.add(segmentationGroupLayer);
               view.whenLayerView(lantaiAtas).then(function (layerView) {
                 layerView.highlight(lantaiAtas.graphics);
@@ -4560,11 +4610,9 @@ const SimulasiMap = () => {
               view.whenLayerView(lantai).then(function (layerView) {
                 layerView.highlight(lantai.graphics);
               });
-              view
-                .whenLayerView(lantaiSebelum)
-                .then(function (layerView) {
-                  layerView.highlight(lantaiSebelum.graphics);
-                });
+              view.whenLayerView(lantaiSebelum).then(function (layerView) {
+                layerView.highlight(lantaiSebelum.graphics);
+              });
               view
                 .whenLayerView(lantaiSebelumKelewatan)
                 .then(function (layerView) {
@@ -4630,6 +4678,12 @@ const SimulasiMap = () => {
       handleGetSchenarioList();
     }
   }, [historyList]);
+
+  useEffect(() => {
+    if(selectDatake.length === 0) {
+      getDataKe();
+    }
+  }, [selectDatake]);
   // start run analysis
   const handleRunAnalysis = () => {
     setLoaded(!loaded);
@@ -5390,12 +5444,12 @@ const SimulasiMap = () => {
       )
       .then((data) => {
         setLoaded(true);
-        if (param !== 0)
-          Swal.fire(
-            "Berhasil",
-            "Berhasil menganalisis riwayat skenario",
-            "success"
-          );
+        if (param !== 0) getDataKe();
+        Swal.fire(
+          "Berhasil",
+          "Berhasil menganalisis riwayat skenario",
+          "success"
+        );
       })
       .catch(() => {
         setLoaded(true);
@@ -5410,7 +5464,7 @@ const SimulasiMap = () => {
         name: createSchenarioname,
         projectId: state?.simulasiBangunan?.projectId,
         ownerId: state?.ownerId,
-        dataKe: state?.simulasiBangunan?.dataKe,
+        dataKe: createDatake,
       })
       .then(({ data }) => {
         setLoaded(true);
@@ -5568,7 +5622,7 @@ const SimulasiMap = () => {
     layerKapasitasAirSebelum.refresh();
   };
 
-  function toFix(x, fixed = 3) {
+  const toFix = (x, fixed = 3) => {
     if (Math.abs(x) < 1.0) {
       var e = parseInt(x.toString().split("e-")[1]);
       if (e) {
@@ -5590,7 +5644,24 @@ const SimulasiMap = () => {
       x = parseFloat(x.toFixed(fixed));
     }
     return x;
-  }
+  };
+
+  const getDataKe = () => {
+    axios
+      .get(config.url.API_URL + "/Simulasi/GetAllDataKe", {
+        params: {
+          ProjectId: state?.simulasiBangunan?.projectId,
+        },
+      })
+      .then(({ data }) => {
+        if (data.status.code === 200) {
+          setSelectDatake(data.obj);
+        }
+      })
+      .catch((error) => {
+        console.error(error)
+      });
+  };
 
   return (
     <div className="container-scroller">
@@ -6963,6 +7034,21 @@ const SimulasiMap = () => {
                             setCreateSchenarioname(e.target.value)
                           }
                         />
+                        <label htmlFor="select-new-schenario">
+                          Data ke- Skenario Baru
+                        </label>
+                        <select
+                          id="select-new-schenario"
+                          className="form-control"
+                          placeholder="Pilih Data ke-"
+                          onChange={(e) => setCreateDatake(e.target.value)}
+                        >
+                          {selectDatake.map((dataKe) => (
+                            <option key={dataKe.dataKe} value={dataKe.dataKe}>
+                              {dataKe.dataKe} - {dataKe.simulationName}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                       <div className="form-group">
                         <button

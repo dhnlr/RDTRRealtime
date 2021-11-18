@@ -63,14 +63,23 @@ function Register() {
         config.url.API_URL + "/User/Create",
         params,
       )
-      .then(() => {
-        setSuccessMessage(
-          "Konfirmasi untuk mengaktifkan akun Anda. Periksa kotak masuk atau spam lalu ikuti petunjuk konfirmasi yang dikirimkan ke email: " +
-            email
-        );
-        e.target.reset();
-        document.body.scrollTop = 0;
-        setIsProcessing(false);
+      .then(({data}) => {
+        console.log({data})
+        if (data.code === 200){
+          setSuccessMessage(
+            "Kami akan mengecek pendaftaran Anda dalam waktu 1x24 jam. Anda dapat menkonfirmasi untuk mengaktifkan akun Anda. Periksa kotak masuk atau spam lalu ikuti petunjuk konfirmasi yang dikirimkan ke email: " +
+              email
+          );
+          e.target.reset();
+          document.body.scrollTop = 0;
+        } else {
+          data?.description
+          ? setErrMessage(data?.description)
+          : setErrMessage(
+            "Gagal mendaftarkan akun. Silahkan coba beberapa saat lagi."
+            );
+          }
+          setIsProcessing(false);
       })
       .catch((error) => {
         error.response?.data?.status?.message
