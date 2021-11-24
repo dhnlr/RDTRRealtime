@@ -583,6 +583,119 @@ function DataManagementInputFlood() {
                         </div>
                       </div>
                     </div>
+                    <div className="accordion" id="accordionExample">
+                    <div className="card">
+                      <div className="card-header" id="headingThree">
+                        <h2 className="mb-0">
+                          <button
+                            className="btn text-left btn-sm collapsed"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#additionaldata"
+                            aria-expanded="false"
+                            aria-controls="additionaldata"
+                          >
+                            <i className="ti-arrow-circle-down"> </i>
+                            Data Tambahan
+                          </button>
+                          {/* <a
+                            className="btn btn-rounded btn-outline-primary float-right"
+                            href={config.url.API_URL + "/Template/air_bersih.zip"}
+                          >
+                            Unduh Contoh
+                          </a> */}
+                        </h2>
+                      </div>
+                      <div
+                        id="additionaldata"
+                        className="collapse show"
+                        aria-labelledby="headingThree"
+                        data-parent="#accordionExample"
+                      >
+                        <div className="card-body">
+                          <div className="form-group">
+                            <label htmlFor="curahhujan">
+                                Curah Hujan (opsional)
+                              </label>
+                              <input
+                                id="curahhujan"
+                                className="form-control"
+                                name="curahhujan"
+                                placeholder="Tahun jaringan jalan"
+                                ref={register}
+                              />
+                              {errors.curahhujan && (
+                                <small
+                                  id="nameHelp"
+                                  className="form-text text-danger"
+                                >
+                                  {errors.curahhujan.message}
+                                </small>
+                              )}
+                          </div>
+                          {/* <h4>Rincian Data</h4>
+                          <div className="form-row">
+                            <div className="form-group col-md-6">
+                              <label htmlFor="air_bersih_year">
+                                Tahun (opsional)
+                              </label>
+                              <input
+                                id="air_bersih_year"
+                                className="form-control"
+                                name="air_bersih_year"
+                                placeholder="Tahun jaringan jalan"
+                                ref={register({
+                                  pattern: {
+                                    value: /^\d{4}$/,
+                                    message: "Format tahun salah",
+                                  },
+                                })}
+                              />
+                              {errors.air_bersih_year && (
+                                <small
+                                  id="nameHelp"
+                                  className="form-text text-danger"
+                                >
+                                  {errors.air_bersih_year.message}
+                                </small>
+                              )}
+                            </div>
+                            <div className="form-group col-md-6">
+                              <label htmlFor="air_bersih_desc">
+                                Deskripsi (opsional)
+                              </label>
+                              <input
+                                id="air_bersih_desc"
+                                className="form-control"
+                                name="air_bersih_desc"
+                                placeholder="Deskripsi jaringan jalan"
+                                ref={register}
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="air_bersih_tag">
+                              Tag (opsional)
+                            </label>
+                            <Controller
+                              id="air_bersih_tag"
+                              as={CreatableSelect}
+                              name="air_bersih_tag"
+                              components={{
+                                DropdownIndicator: null,
+                              }}
+                              control={control}
+                              defaultValue={null}
+                              isMulti
+                              isClearable
+                              placeholder="Tag jaringan jalan"
+                              className=""
+                            />
+                          </div> */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   </div>
                   <div className="template-demo float-sm-left float-md-right">
                     <button

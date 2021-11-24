@@ -305,3 +305,17 @@ div.historyListDesc {
   background-color: #ffffff;
   border-radius: 5px;
 }
+.projection-header, .projection-footer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: .25rem .75rem .45rem;
+}
+.projection-header p {
+  text-align: right;
+}
+.popup .card-body .table tbody {
+  display: inline-block;
+  max-width: 100%;
+}

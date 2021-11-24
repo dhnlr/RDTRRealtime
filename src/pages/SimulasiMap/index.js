@@ -93,6 +93,15 @@ const SimulasiMap = () => {
   const [selectedHistoryId, setSelectedHistoryId] = useState(null);
   const [selectDatake, setSelectDatake] = useState([]);
   const [createDatake, setCreateDatake] = useState([]);
+  const [isWaterProjection, setIsWaterProjection] = useState(false);
+  const [waterYear, setWaterYear] = useState(1);
+  const [waterProjectionData, setWaterProjectionData] = useState({});
+  const [isTrashProjection, setIsTrashProjection] = useState(false);
+  const [trashYear, setTrashYear] = useState(1);
+  const [trashProjectionData, setTrashProjectionData] = useState({});
+  const [isCongestionProjection, setIsCongestionProjection] = useState(false);
+  const [congestionYear, setCongestionYear] = useState(1);
+  const [congestionProjectionData, setCongestionProjectionData] = useState({});
 
   const [activeTab, setActiveTab] = useState(0);
   const handleClickActiveTab = (e) => {
@@ -279,6 +288,7 @@ const SimulasiMap = () => {
             lantaiSebelumKelewatan,
             segmentationGroupLayer = {};
           var bangunanDefinitionExpression = `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}' AND data_ke = ${state?.simulasiBangunan?.dataKe}  AND wadmkd = 'PABATON'`;
+          // var bangunanDefinitionExpression = `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}' AND data_ke = ${state?.simulasiBangunan?.dataKe}  AND nambwp = '${state?.simulasiBangunan?.nambwp}'`;
 
           const map = new Map({
             basemap: "topo-vector",
@@ -2049,6 +2059,9 @@ const SimulasiMap = () => {
                       name: "kegiatan",
                       label: "Kegiatan",
                     },
+                    { name: "jlh_tampungan_kegiatan ",
+                      label: "Jumlah Tampungan Kegiatan"
+                    }
                   ],
                 },
                 {
@@ -2189,10 +2202,10 @@ const SimulasiMap = () => {
                             setSpAnalisisData({
                               v_proyek: feature.attributes.id_project,
                               v_skenario: feature.attributes.id_skenario,
-                              v_nambwp: feature.attributes.nambwp,
-                              v_nasbwp: feature.attributes.nasbwp,
-                              v_kodblk: feature.attributes.kodblk,
-                              v_kodsbl: feature.attributes.kodsbl,
+                              v_nambwp: feature.attributes.nambwp || "",
+                              v_nasbwp: feature.attributes.nasbwp || "",
+                              v_kodblk: feature.attributes.kodblk || "",
+                              v_kodsbl: feature.attributes.kodsbl || "",
                             });
                           });
                         } else {
@@ -2709,7 +2722,7 @@ const SimulasiMap = () => {
                       },
                       {
                         field_name: "los_num",
-                        field_value: features[0].attributes.los_num,
+                        field_value: result[0].data.features[0].attributes.los_num,
                       },
                       {
                         field_name: "los_sebelum",
@@ -3205,23 +3218,405 @@ const SimulasiMap = () => {
                       },
                       {
                         field_name: "surplus_debitalir",
-                        field_value: features[0].attributes.surplus_debitalir,
+                        field_value: result[0].data.features[0].attributes.surplus_debitalir,
                       },
                       {
                         field_name: "kecenderungan_banjir",
                         field_value:
-                          features[0].attributes.kecenderungan_banjir,
+                        result[0].data.features[0].attributes.kecenderungan_banjir,
                       },
                       {
                         field_name: "jlh_sumurresapan",
-                        field_value: features[0].attributes.jlh_sumurresapan,
+                        field_value: result[0].data.features[0].attributes.jlh_sumurresapan,
                       },
                       {
                         field_name: "q_debitsumurresapan",
-                        field_value: features[0].attributes.q_debitsumurresapan,
+                        field_value: result[0].data.features[0].attributes.q_debitsumurresapan,
                       },
                     ]);
-                    console.log(contentBangunanKdbKlb);
+                    setCongestionProjectionData({
+                      1: [
+                        {
+                          name: "Status Tingkat Kemacetan",
+                          value:
+                            result[0].data.features[0].attributes.izin_macet_y6,
+                        },
+                        {
+                          name: "LOS",
+                          value: result[0].data.features[0].attributes.los_y6,
+                        },
+                        {
+                          name: "LOS Num",
+                          value:
+                            result[0].data.features[0].attributes.los_num_y6,
+                        },
+                        {
+                          name: "Arus",
+                          value: result[0].data.features[0].attributes.q_arus_y6,
+                        },
+                        {
+                          name: "Kapasitas",
+                          value: result[0].data.features[0].attributes.kapasitas_jalan,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y6_proyeksi,
+                        },
+                      ],
+                      2: [
+                        {
+                          name: "Status Tingkat Kemacetan",
+                          value:
+                            result[0].data.features[0].attributes.izin_macet_y7,
+                        },
+                        {
+                          name: "LOS",
+                          value: result[0].data.features[0].attributes.los_y7,
+                        },
+                        {
+                          name: "LOS Num",
+                          value:
+                            result[0].data.features[0].attributes.los_num_y7,
+                        },
+                        {
+                          name: "Arus",
+                          value: result[0].data.features[0].attributes.q_arus_y7,
+                        },
+                        {
+                          name: "Kapasitas",
+                          value: result[0].data.features[0].attributes.kapasitas_jalan,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y7_proyeksi,
+                        },
+                      ],
+                      3: [
+                        {
+                          name: "Status Tingkat Kemacetan",
+                          value:
+                            result[0].data.features[0].attributes.izin_macet_y8,
+                        },
+                        {
+                          name: "LOS",
+                          value: result[0].data.features[0].attributes.los_y8,
+                        },
+                        {
+                          name: "LOS Num",
+                          value:
+                            result[0].data.features[0].attributes.los_num_y8,
+                        },
+                        {
+                          name: "Arus",
+                          value: result[0].data.features[0].attributes.q_arus_y8,
+                        },
+                        {
+                          name: "Kapasitas",
+                          value: result[0].data.features[0].attributes.kapasitas_jalan,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y8_proyeksi,
+                        },
+                      ],
+                      4: [
+                        {
+                          name: "Status Tingkat Kemacetan",
+                          value:
+                            result[0].data.features[0].attributes.izin_macet_y9,
+                        },
+                        {
+                          name: "LOS",
+                          value: result[0].data.features[0].attributes.los_y9,
+                        },
+                        {
+                          name: "LOS Num",
+                          value:
+                            result[0].data.features[0].attributes.los_num_y9,
+                        },
+                        {
+                          name: "Arus",
+                          value: result[0].data.features[0].attributes.q_arus_y9,
+                        },
+                        {
+                          name: "Kapasitas",
+                          value: result[0].data.features[0].attributes.kapasitas_jalan,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y9_proyeksi,
+                        },
+                      ],
+                      5: [
+                        {
+                          name: "Status Tingkat Kemacetan",
+                          value:
+                            result[0].data.features[0].attributes
+                              .izin_macet_y10,
+                        },
+                        {
+                          name: "LOS",
+                          value: result[0].data.features[0].attributes.los_y10,
+                        },
+                        {
+                          name: "LOS Num",
+                          value:
+                            result[0].data.features[0].attributes.los_num_y10,
+                        },
+                        {
+                          name: "Arus",
+                          value: result[0].data.features[0].attributes.q_arus_y10,
+                        },
+                        {
+                          name: "Kapasitas",
+                          value: result[0].data.features[0].attributes.kapasitas_jalan,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y10_proyeksi,
+                        },
+                      ],
+                    });
+                    setTrashProjectionData({
+                      1: [
+                        {
+                          name: "Status Kapasitas TPS",
+                          value:
+                            result[0].data.features[0].attributes.izin_sampah_y6,
+                        },
+                        {
+                          name: "Timbulan Sampah Harian (Bangunan)",
+                          value: result[0].data.features[0].attributes.bangkitan_sampah_y6,
+                        },
+                        {
+                          name: "Timbulan Sampah Harian (TPS Kumulatif)",
+                          value:
+                            result[0].data.features[0].attributes.bangkitan_sampah_kum_y6,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y6_proyeksi,
+                        },
+                      ],
+                      2: [
+                        {
+                          name: "Status Kapasitas TPS",
+                          value:
+                            result[0].data.features[0].attributes.izin_sampah_y7,
+                        },
+                        {
+                          name: "Timbulan Sampah Harian (Bangunan)",
+                          value: result[0].data.features[0].attributes.bangkitan_sampah_y7,
+                        },
+                        {
+                          name: "Timbulan Sampah Harian (TPS Kumulatif)",
+                          value:
+                            result[0].data.features[0].attributes.bangkitan_sampah_kum_y7,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y7_proyeksi,
+                        },
+                      ],
+                      3: [
+                        {
+                          name: "Status Kapasitas TPS",
+                          value:
+                            result[0].data.features[0].attributes.izin_sampah_y8,
+                        },
+                        {
+                          name: "Timbulan Sampah Harian (Bangunan)",
+                          value: result[0].data.features[0].attributes.bangkitan_sampah_y8,
+                        },
+                        {
+                          name: "Timbulan Sampah Harian (TPS Kumulatif)",
+                          value:
+                            result[0].data.features[0].attributes.bangkitan_sampah_kum_y8,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y8_proyeksi,
+                        },
+                      ],
+                      4: [
+                        {
+                          name: "Status Kapasitas TPS",
+                          value:
+                            result[0].data.features[0].attributes.izin_sampah_y9,
+                        },
+                        {
+                          name: "Timbulan Sampah Harian (Bangunan)",
+                          value: result[0].data.features[0].attributes.bangkitan_sampah_y9,
+                        },
+                        {
+                          name: "Timbulan Sampah Harian (TPS Kumulatif)",
+                          value:
+                            result[0].data.features[0].attributes.bangkitan_sampah_kum_y9,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y9_proyeksi,
+                        },
+                      ],
+                      5: [
+                        {
+                          name: "Status Kapasitas TPS",
+                          value:
+                            result[0].data.features[0].attributes.izin_sampah_y10,
+                        },
+                        {
+                          name: "Timbulan Sampah Harian (Bangunan)",
+                          value: result[0].data.features[0].attributes.bangkitan_sampah_y10,
+                        },
+                        {
+                          name: "Timbulan Sampah Harian (TPS Kumulatif)",
+                          value:
+                            result[0].data.features[0].attributes.bangkitan_sampah_kum_y10,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y10_proyeksi,
+                        },
+                      ],
+                    });
+                    setWaterProjectionData({
+                      1: [
+                        {
+                          name: "Status Kuantitas Air Bersih",
+                          value:
+                            result[0].data.features[0].attributes.izin_air_y6,
+                        },
+                        {
+                          name: "Kebutuhan Harian",
+                          value:
+                            result[0].data.features[0].attributes.keb_harian_y6,
+                        },
+                        {
+                          name: "Ketersediaan Air Harian",
+                          value:
+                            result[0].data.features[0].attributes.los_num_y6,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y6_proyeksi,
+                        },
+                      ],
+                      2: [
+                        {
+                          name: "Status Kuantitas Air Bersih",
+                          value:
+                            result[0].data.features[0].attributes.izin_air_y7,
+                        },
+                        {
+                          name: "Kebutuhan Harian",
+                          value:
+                            result[0].data.features[0].attributes.keb_harian_y7,
+                        },
+                        {
+                          name: "Ketersediaan Air Harian",
+                          value:
+                            result[0].data.features[0].attributes.los_num_y7,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y7_proyeksi,
+                        },
+                      ],
+                      3: [
+                        {
+                          name: "Status Kuantitas Air Bersih",
+                          value:
+                            result[0].data.features[0].attributes.izin_air_y8,
+                        },
+                        {
+                          name: "Kebutuhan Harian",
+                          value:
+                            result[0].data.features[0].attributes.keb_harian_y8,
+                        },
+                        {
+                          name: "Ketersediaan Air Harian",
+                          value:
+                            result[0].data.features[0].attributes.los_num_y8,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y8_proyeksi,
+                        },
+                      ],
+                      4: [
+                        {
+                          name: "Status Kuantitas Air Bersih",
+                          value:
+                            result[0].data.features[0].attributes.izin_air_y9,
+                        },
+                        {
+                          name: "Kebutuhan Harian",
+                          value:
+                            result[0].data.features[0].attributes.keb_harian_y9,
+                        },
+                        {
+                          name: "Ketersediaan Air Harian",
+                          value:
+                            result[0].data.features[0].attributes.los_num_y9,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y9_proyeksi,
+                        },
+                      ],
+                      5: [
+                        {
+                          name: "Status Kuantitas Air Bersih",
+                          value:
+                            result[0].data.features[0].attributes.izin_air_y10,
+                        },
+                        {
+                          name: "Kebutuhan Harian",
+                          value:
+                            result[0].data.features[0].attributes
+                              .keb_harian_y10,
+                        },
+                        {
+                          name: "Ketersediaan Air Harian",
+                          value:
+                            result[0].data.features[0].attributes.los_num_y10,
+                        },
+                        {
+                          name: "Jumlah Penduduk",
+                          value:
+                            result[0].data.features[0].attributes
+                              .penduduk_y10_proyeksi,
+                        },
+                      ],
+                    });
                   }
                 });
                 setHasilSimulasiBangunanKdbKlb(
@@ -4680,13 +5075,13 @@ const SimulasiMap = () => {
   }, [historyList]);
 
   useEffect(() => {
-    if(selectDatake.length === 0) {
+    if (selectDatake.length === 0) {
       getDataKe();
     }
   }, [selectDatake]);
   // start run analysis
   const handleRunAnalysis = () => {
-    setLoaded(!loaded);
+    setLoaded(false);
     axios
       .post(config.url.API_URL + "/Pembangunan/ExecuteSpAnalisis", null, {
         // headers: headers,
@@ -4703,7 +5098,7 @@ const SimulasiMap = () => {
             confirmButtonColor: "#3085d6",
             confirmButtonText: "OK",
           }).then((result) => {
-            setLoaded(!loaded);
+            setLoaded(true);
             if (result.isConfirmed) {
               history.go(0);
             }
@@ -4711,8 +5106,8 @@ const SimulasiMap = () => {
         }
       })
       .catch(function (error) {
-        setLoaded(!loaded);
-        console.log("error check", error);
+        setLoaded(true);
+        Swal.fire("Gagal", "Gagal menganalisis bangunan", "error");
       });
     /* Axios.get(
       config.url.ARCGIS_URL +
@@ -5659,7 +6054,7 @@ const SimulasiMap = () => {
         }
       })
       .catch((error) => {
-        console.error(error)
+        console.error(error);
       });
   };
 
@@ -5755,6 +6150,7 @@ const SimulasiMap = () => {
             <div style={style.viewDiv} ref={mapRef} />
             {showingPopup.show && (
               <div
+                className="popup"
                 style={{
                   borderLeft: "1px solid #CED4DA",
                   display: "block",
@@ -6459,20 +6855,32 @@ const SimulasiMap = () => {
                             >
                               <div className="card-body">
                                 <table className="table">
-                                  <tbody>
-                                    <tr>
-                                      <td>Status Tingkat Kemacetan</td>
-                                      <td>
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[10]
-                                              .field_value
-                                          : contentBangunanKdbKlb[11]
-                                              .field_value}
-                                      </td>
-                                      {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
-                                      {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
-                                    </tr>
-                                    {/* <tr>
+                                  {!isCongestionProjection && (
+                                    <>
+                                      <div className="projection-header">
+                                        <button
+                                          className="btn btn-dark btn-sm"
+                                          onClick={() =>
+                                            setIsCongestionProjection(true)
+                                          }
+                                        >
+                                          Lihat proyeksi 5 tahun
+                                        </button>
+                                      </div>
+                                      <tbody>
+                                        <tr>
+                                          <td>Status Tingkat Kemacetan</td>
+                                          <td>
+                                            {activeSebelumSesudah.activeSebelum
+                                              ? contentBangunanKdbKlb[10]
+                                                  .field_value
+                                              : contentBangunanKdbKlb[11]
+                                                  .field_value}
+                                          </td>
+                                          {/* <td>{!activeSebelumSesudah.activeSebelum ? hasilSimulasiBangunanKemacetan : hasilSimulasiBangunanKemacetan}</td> */}
+                                          {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanKemacetan[10].field_value : contentBangunanKemacetan[11].field_value}</td> */}
+                                        </tr>
+                                        {/* <tr>
                                     <td>Jenis Bangunan</td>
                                     <td>
                                       {contentBangunanKdbKlb[1].field_value}
@@ -6487,44 +6895,109 @@ const SimulasiMap = () => {
                                             .field_value}
                                     </td>
                                   </tr> */}
-                                    <tr>
-                                      <td>LOS</td>
-                                      <td>
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[14]
-                                              .field_value
-                                          : contentBangunanKdbKlb[15]
-                                              .field_value}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>LOS Num</td>
-                                      <td>
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[12]
-                                              .field_value
-                                          : contentBangunanKdbKlb[13]
-                                              .field_value}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Arus</td>
-                                      <td>
-                                        {/* {contentBangunanKdbKlb[66].field_value} */}
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[79]
-                                              .field_value
-                                          : contentBangunanKdbKlb[66]
-                                              .field_value}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Kapasitas</td>
-                                      <td>
-                                        {contentBangunanKdbKlb[52].field_value}
-                                      </td>
-                                    </tr>
-                                  </tbody>
+                                        <tr>
+                                          <td>LOS</td>
+                                          <td>
+                                            {activeSebelumSesudah.activeSebelum
+                                              ? contentBangunanKdbKlb[14]
+                                                  .field_value
+                                              : contentBangunanKdbKlb[15]
+                                                  .field_value}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>LOS Num</td>
+                                          <td>
+                                            {activeSebelumSesudah.activeSebelum
+                                              ? contentBangunanKdbKlb[12]
+                                                  .field_value
+                                              : contentBangunanKdbKlb[13]
+                                                  .field_value}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>Arus</td>
+                                          <td>
+                                            {/* {contentBangunanKdbKlb[66].field_value} */}
+                                            {activeSebelumSesudah.activeSebelum
+                                              ? contentBangunanKdbKlb[79]
+                                                  .field_value
+                                              : contentBangunanKdbKlb[66]
+                                                  .field_value}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>Kapasitas</td>
+                                          <td>
+                                            {
+                                              contentBangunanKdbKlb[52]
+                                                .field_value
+                                            }
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </>
+                                  )}
+                                  {isCongestionProjection && (
+                                    <>
+                                      <div className="projection-header">
+                                        <button
+                                          className="btn btn-dark btn-sm"
+                                          onClick={() =>
+                                            setIsCongestionProjection(false)
+                                          }
+                                        >
+                                          <i className="ti-back-left"></i>{" "}
+                                          Kembali
+                                        </button>
+                                        <p>
+                                          Proyeksi Tahun ke-{congestionYear}
+                                        </p>
+                                      </div>
+                                      <tbody>
+                                        {congestionYear &&
+                                          congestionProjectionData[1] &&
+                                          congestionProjectionData[
+                                            congestionYear
+                                          ].map((data) => (
+                                            <tr>
+                                              <td>{data.name}</td>
+                                              <td>{data.value}</td>
+                                            </tr>
+                                          ))}
+                                      </tbody>
+                                      <div className="projection-footer">
+                                        <div>
+                                          <p>Tahun</p>
+                                        </div>
+                                        <div>
+                                          <div
+                                            className="btn-group"
+                                            role="group"
+                                            aria-label="Page"
+                                          >
+                                            {[1, 2, 3, 4, 5].map((page) => (
+                                              <button
+                                                className={`btn btn-sm ${
+                                                  page === congestionYear
+                                                    ? "btn-dark"
+                                                    : "btn-inverse-dark"
+                                                }`}
+                                                onClick={() =>
+                                                  setCongestionYear(page)
+                                                }
+                                                disabled={
+                                                  page === congestionYear
+                                                }
+                                              >
+                                                {page}
+                                              </button>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </>
+                                  )}
                                 </table>
                               </div>
                             </div>
@@ -6569,18 +7042,31 @@ const SimulasiMap = () => {
                             >
                               <div className="card-body">
                                 <table className="table">
-                                  <tbody>
-                                    <tr>
-                                      <td>Status Kuantitas Air Bersih</td>
-                                      <td>
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[8].field_value
-                                          : contentBangunanKdbKlb[9]
-                                              .field_value}
-                                      </td>
-                                      {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
-                                    </tr>
-                                    {/* <tr>
+                                  {!isWaterProjection && (
+                                    <>
+                                      <div className="projection-header">
+                                        <button
+                                          className="btn btn-dark btn-sm"
+                                          onClick={() =>
+                                            setIsWaterProjection(true)
+                                          }
+                                        >
+                                          Lihat proyeksi 5 tahun
+                                        </button>
+                                      </div>
+                                      <tbody>
+                                        <tr>
+                                          <td>Status Kuantitas Air Bersih</td>
+                                          <td>
+                                            {activeSebelumSesudah.activeSebelum
+                                              ? contentBangunanKdbKlb[8]
+                                                  .field_value
+                                              : contentBangunanKdbKlb[9]
+                                                  .field_value}
+                                          </td>
+                                          {/* <td>{!activeSebelumSesudah.activeSebelum ? contentBangunanAirBersih[8].field_value : contentBangunanAirBersih[9].field_value}</td> */}
+                                        </tr>
+                                        {/* <tr>
                                     <td>Jenis Bangunan</td>
                                     <td>
                                       {contentBangunanKdbKlb[1].field_value}
@@ -6595,30 +7081,88 @@ const SimulasiMap = () => {
                                             .field_value}
                                     </td>
                                   </tr> */}
-                                    <tr>
-                                      <td>Kebutuhan Air Harian</td>
-                                      <td>
-                                        {/* {contentBangunanKdbKlb[37].field_value} */}
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[83]
-                                              .field_value
-                                          : contentBangunanKdbKlb[37]
-                                              .field_value}{" "}
-                                        liter/hari
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Ketersediaan Air PDAM Harian</td>
-                                      <td>
-                                        {activeSebelumSesudah.activeSebelum
-                                          ? contentBangunanKdbKlb[84]
-                                              .field_value
-                                          : contentBangunanKdbKlb[36]
-                                              .field_value}{" "}
-                                        liter/hari
-                                      </td>
-                                    </tr>
-                                  </tbody>
+                                        <tr>
+                                          <td>Kebutuhan Air Harian</td>
+                                          <td>
+                                            {/* {contentBangunanKdbKlb[37].field_value} */}
+                                            {activeSebelumSesudah.activeSebelum
+                                              ? contentBangunanKdbKlb[83]
+                                                  .field_value
+                                              : contentBangunanKdbKlb[37]
+                                                  .field_value}{" "}
+                                            liter/hari
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>Ketersediaan Air PDAM Harian</td>
+                                          <td>
+                                            {activeSebelumSesudah.activeSebelum
+                                              ? contentBangunanKdbKlb[84]
+                                                  .field_value
+                                              : contentBangunanKdbKlb[36]
+                                                  .field_value}{" "}
+                                            liter/hari
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </>
+                                  )}
+                                  {isWaterProjection && (
+                                    <>
+                                      <div className="projection-header">
+                                        <button
+                                          className="btn btn-dark btn-sm"
+                                          onClick={() =>
+                                            setIsWaterProjection(false)
+                                          }
+                                        >
+                                          <i className="ti-back-left"></i>{" "}
+                                          Kembali
+                                        </button>
+                                        <p>Proyeksi Tahun ke-{waterYear}</p>
+                                      </div>
+                                      <tbody>
+                                        {waterYear &&
+                                          waterProjectionData[1] &&
+                                          waterProjectionData[waterYear].map(
+                                            (data) => (
+                                              <tr>
+                                                <td>{data.name}</td>
+                                                <td>{data.value}</td>
+                                              </tr>
+                                            )
+                                          )}
+                                      </tbody>
+                                      <div className="projection-footer">
+                                        <div>
+                                          <p>Tahun</p>
+                                        </div>
+                                        <div>
+                                          <div
+                                            className="btn-group"
+                                            role="group"
+                                            aria-label="Page"
+                                          >
+                                            {[1, 2, 3, 4, 5].map((page) => (
+                                              <button
+                                                className={`btn btn-sm ${
+                                                  page === waterYear
+                                                    ? "btn-dark"
+                                                    : "btn-inverse-dark"
+                                                }`}
+                                                onClick={() =>
+                                                  setWaterYear(page)
+                                                }
+                                                disabled={page === waterYear}
+                                              >
+                                                {page}
+                                              </button>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </>
+                                  )}
                                 </table>
                               </div>
                             </div>
@@ -6667,64 +7211,138 @@ const SimulasiMap = () => {
                               >
                                 <div className="card-body">
                                   <table className="table">
-                                    <tbody>
-                                      <tr>
-                                        <td>Status Kapasitas TPS</td>
-                                        <td>
-                                          {activeSebelumSesudah.activeSebelum
-                                            ? contentBangunanKdbKlb[85]
+                                    {!isTrashProjection && (
+                                      <>
+                                        <div className="projection-header">
+                                          <button
+                                            className="btn btn-dark btn-sm"
+                                            onClick={() =>
+                                              setIsTrashProjection(true)
+                                            }
+                                          >
+                                            Lihat proyeksi 5 tahun
+                                          </button>
+                                        </div>
+                                        <tbody>
+                                          <tr>
+                                            <td>Status Kapasitas TPS</td>
+                                            <td>
+                                              {activeSebelumSesudah.activeSebelum
+                                                ? contentBangunanKdbKlb[85]
+                                                    .field_value
+                                                : contentBangunanKdbKlb[85]
+                                                    .field_value}
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              Timbulan Sampah Harian (Bangunan)
+                                            </td>
+                                            <td>
+                                              {contentBangunanKdbKlb[86]
                                                 .field_value
-                                            : contentBangunanKdbKlb[85]
-                                                .field_value}
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          Timbulan Sampah Harian (Bangunan)
-                                        </td>
-                                        <td>
-                                          {contentBangunanKdbKlb[86].field_value
-                                            ? toFix(
-                                                contentBangunanKdbKlb[86]
-                                                  .field_value,
-                                                3
+                                                ? toFix(
+                                                    contentBangunanKdbKlb[86]
+                                                      .field_value,
+                                                    3
+                                                  )
+                                                : contentBangunanKdbKlb[86]
+                                                    .field_value}{" "}
+                                              m<sup>3</sup>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              Timbulan Sampah Harian (TPS
+                                              Kumulatif)
+                                            </td>
+                                            <td>
+                                              {contentBangunanKdbKlb[87]
+                                                .field_value
+                                                ? toFix(
+                                                    contentBangunanKdbKlb[87]
+                                                      .field_value,
+                                                    3
+                                                  )
+                                                : contentBangunanKdbKlb[87]
+                                                    .field_value}{" "}
+                                              m<sup>3</sup>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>Total Kapasitas TPS</td>
+                                            <td>
+                                              {contentBangunanKdbKlb[88]
+                                                .field_value
+                                                ? toFix(
+                                                    contentBangunanKdbKlb[88]
+                                                      .field_value,
+                                                    3
+                                                  )
+                                                : contentBangunanKdbKlb[88]
+                                                    .field_value}{" "}
+                                              m<sup>3</sup>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </>
+                                    )}
+                                    {isTrashProjection && (
+                                      <>
+                                        <div className="projection-header">
+                                          <button
+                                            className="btn btn-dark btn-sm"
+                                            onClick={() =>
+                                              setIsTrashProjection(false)
+                                            }
+                                          >
+                                            <i className="ti-back-left"></i>{" "}
+                                            Kembali
+                                          </button>
+                                          <p>Proyeksi Tahun ke-{trashYear}</p>
+                                        </div>
+                                        <tbody>
+                                          {waterYear &&
+                                            trashProjectionData[1] &&
+                                            trashProjectionData[trashYear].map(
+                                              (data) => (
+                                                <tr>
+                                                  <td>{data.name}</td>
+                                                  <td>{data.value}</td>
+                                                </tr>
                                               )
-                                            : contentBangunanKdbKlb[86]
-                                                .field_value}{" "}
-                                          m<sup>3</sup>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          Timbulan Sampah Harian (TPS Kumulatif)
-                                        </td>
-                                        <td>
-                                          {contentBangunanKdbKlb[87].field_value
-                                            ? toFix(
-                                                contentBangunanKdbKlb[87]
-                                                  .field_value,
-                                                3
-                                              )
-                                            : contentBangunanKdbKlb[87]
-                                                .field_value}{" "}
-                                          m<sup>3</sup>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>Total Kapasitas TPS</td>
-                                        <td>
-                                          {contentBangunanKdbKlb[88].field_value
-                                            ? toFix(
-                                                contentBangunanKdbKlb[88]
-                                                  .field_value,
-                                                3
-                                              )
-                                            : contentBangunanKdbKlb[88]
-                                                .field_value}{" "}
-                                          m<sup>3</sup>
-                                        </td>
-                                      </tr>
-                                    </tbody>
+                                            )}
+                                        </tbody>
+                                        <div className="projection-footer">
+                                          <div>
+                                            <p>Tahun</p>
+                                          </div>
+                                          <div>
+                                            <div
+                                              className="btn-group"
+                                              role="group"
+                                              aria-label="Page"
+                                            >
+                                              {[1, 2, 3, 4, 5].map((page) => (
+                                                <button
+                                                  className={`btn btn-sm ${
+                                                    page === trashYear
+                                                      ? "btn-dark"
+                                                      : "btn-inverse-dark"
+                                                  }`}
+                                                  onClick={() =>
+                                                    setTrashYear(page)
+                                                  }
+                                                  disabled={page === trashYear}
+                                                >
+                                                  {page}
+                                                </button>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </>
+                                    )}
                                   </table>
                                 </div>
                               </div>
@@ -6772,18 +7390,6 @@ const SimulasiMap = () => {
                                 <table className="table">
                                   <tbody>
                                     <tr>
-                                      <td>Jumlah Biopori</td>
-                                      <td>
-                                        {contentBangunanKdbKlb[89].field_value}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Kapasitas Biopori</td>
-                                      <td>
-                                        {contentBangunanKdbKlb[90].field_value}
-                                      </td>
-                                    </tr>
-                                    <tr>
                                       <td>Surplus Debit Alir</td>
                                       <td>
                                         {contentBangunanKdbKlb[91].field_value
@@ -6811,6 +7417,18 @@ const SimulasiMap = () => {
                                       <td>Debit Sumur Resapan</td>
                                       <td>
                                         {contentBangunanKdbKlb[94].field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Jumlah Biopori</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[89].field_value}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Kapasitas Biopori</td>
+                                      <td>
+                                        {contentBangunanKdbKlb[90].field_value}
                                       </td>
                                     </tr>
                                   </tbody>
