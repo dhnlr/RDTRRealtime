@@ -13,6 +13,11 @@ function SimulationInput() {
   let history = useHistory();
   let { state } = useLocation();
 
+  useEffect(() => {
+    if (JSON.parse(Cookies.get("permissions")).indexOf("Simulasi") === -1)
+      history.goBack();
+  }, [history]);
+
   const { register, errors, control, handleSubmit } = useForm({
     defaultValues: {
       name: state ? state?.name : "",
@@ -23,22 +28,32 @@ function SimulationInput() {
   const [listCity, setListCity] = useState([]);
   const [listProject, setListProject] = useState([]);
   const [listDataKe, setListDataKe] = useState([]);
-  const [{ province, city, project, dataKe }, setData] = useState({
+  const [listKecamatan, setListKecamatan] = useState([]);
+  const [listKelurahan, setListKelurahan] = useState([]);
+  const [listBwp, setListBwp] = useState([]);
+  const [listKodblk, setListKodblk] = useState([]);
+  const [listKodsbl, setListKodsbl] = useState([]);
+  const [{ province, city, project, dataKe, kecamatan, kelurahan, bwp, kodblk, kodsbl }, setData] = useState({
     province: state ? String(state?.project?.kotaKabupaten?.provinsi?.id) : "",
     city: state ? String(state?.project?.kotaKabupaten?.id) : "",
     project: state ? state?.projectId : "",
     dataKe: state ? String(state?.simulasiBangunan?.dataKe) : "",
+    kecamatan: state ? String(state?.simulasiBangunan?.kecamatan) : "",
+    kelurahan: state ? String(state?.simulasiBangunan?.kelurahan) : "",
+    bwp: state ? String(state?.simulasiBangunan?.bwp) : "",
+    kodblk: state ? String(state?.simulasiBangunan?.kodblk) : "",
+    kodsbl: state ? String(state?.simulasiBangunan?.kodsbl) : "",
   });
   const [errMessage, setErrMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const onSubmit = ({ name, province, city, project, dataKe }) => {
+  const onSubmit = ({ name, province, city, project, dataKe, kecamatan, kelurahan, bwp, kodblk, kodsbl }) => {
     setErrMessage(null);
     setIsProcessing(true);
 
     !state?.id
-      ? createProject(name, province, city, project, dataKe)
-      : updateProject(name, province, city, project, dataKe);
+      ? createProject(name, province, city, project, dataKe, kecamatan, kelurahan, bwp, kodblk, kodsbl)
+      : updateProject(name, province, city, project, dataKe, kecamatan, kelurahan, bwp, kodblk, kodsbl);
   };
 
   useEffect(() => {
@@ -83,7 +98,7 @@ function SimulationInput() {
   }, [listProvince, province]);
 
   useEffect(() => {
-    if (listCity.length !== 0 && city!== "") {
+    if (listCity.length !== 0 && city !== "") {
       axios
         .get(config.url.API_URL + "/Project/GetAll", {
           params: {
@@ -94,7 +109,10 @@ function SimulationInput() {
           if (data.status.code === 200) {
             setListProject(data.obj);
             if (project === "")
-              setData((state) => ({ ...state, project: String(data.obj[0].id) }));
+              setData((state) => ({
+                ...state,
+                project: String(data.obj[0].id),
+              }));
           }
         })
         .catch((error) => {
@@ -108,8 +126,14 @@ function SimulationInput() {
   }, [listCity]);
 
   useEffect(() => {
-    if (listCity.length !== 0 && city!== "" && listProvince.length !== 0 && province !== "" && listProject.length !== 0 && project) {
-      console.log(project)
+    if (
+      listCity.length !== 0 &&
+      city !== "" &&
+      listProvince.length !== 0 &&
+      province !== "" &&
+      listProject.length !== 0 &&
+      project
+    ) {
       axios
         .get(config.url.API_URL + "/Simulasi/GetAllDataKe", {
           params: {
@@ -166,7 +190,7 @@ function SimulationInput() {
         if (data.status.code === 200) {
           setListProject(data.obj);
           if (project === "")
-              setData((state) => ({ ...state, project: String(data.obj[0].id) }));
+            setData((state) => ({ ...state, project: String(data.obj[0].id) }));
         }
       })
       .catch((error) => {
@@ -206,16 +230,13 @@ function SimulationInput() {
   }
 
   const createProject = (name, province, city, project, dataKe) => {
-    axios
-      .post(
-        config.url.API_URL + "/Simulasi/Create",
-        {
-          name,
-          ownerId: Cookies.get("userId"),
-          projectId: project,
-          dataKe
-        },
-      )
+    /* axios
+      .post(config.url.API_URL + "/Simulasi/Create", {
+        name,
+        ownerId: Cookies.get("userId"),
+        projectId: project,
+        dataKe,
+      })
       .then((data) => {
         setIsProcessing(false);
         goManajemenDataPhase2();
@@ -227,21 +248,33 @@ function SimulationInput() {
           : setErrMessage(
               "Gagal mendaftarkan skenario. Silahkan coba beberapa saat lagi."
             );
-      });
+      }); */
+      history.push("/schenarioinput/phase2", {
+        name,
+        project: {
+          kotaKabupaten: {
+            id: city,
+            provinsi: {
+              id: province
+            }
+          }
+        },
+        projectId: project,
+        simulasiBangunan: {
+          dataKe,
+        }
+      })
   };
 
   const updateProject = (name, province, city, project, dataKe) => {
     axios
-      .put(
-        config.url.API_URL + "/Simulasi/Update",
-        {
-          id: state?.id,
-          name,
-          projectId: project,
-          ownerId: state?.ownerId,
-          dataKe
-        },
-      )
+      .put(config.url.API_URL + "/Simulasi/Update", {
+        id: state?.id,
+        name,
+        projectId: project,
+        ownerId: state?.ownerId,
+        dataKe,
+      })
       .then((data) => {
         setIsProcessing(false);
         goManajemenDataPhase2(
@@ -353,11 +386,10 @@ function SimulationInput() {
             <div className="row">
               <div className="col-12">
                 <div className="mb-2">
-                  {/* <div className="float-right">
+                  {<div className="float-right">
                     <ProgressCircle className="text-primary"></ProgressCircle>
                     <ProgressCircle className="text-muted"></ProgressCircle>
-                    <ProgressCircle className="text-muted"></ProgressCircle>
-                  </div> */}
+                  </div>}
                   <h1>Skenario Baru</h1>
                   <p className="text-muted">
                     Silahkan lengkapi borang di bawah ini
@@ -403,9 +435,10 @@ function SimulationInput() {
                       </div>
 
                       {/* include validation with required or other standard HTML validation rules */}
-                      {!state?.id && <div className="form-group">
-                        <label htmlFor="province">Provinsi</label>
-                        {/* <Controller
+                      {!state?.id && (
+                        <div className="form-group">
+                          <label htmlFor="province">Provinsi</label>
+                          {/* <Controller
                           name="province"
                           control={control}
                           defaultValue={null}
@@ -414,36 +447,38 @@ function SimulationInput() {
                           )}
                           rules={{ required: "Provinsi harus diisi" }}
                         /> */}
-                        <select
-                          className={`form-control ${
-                            errors.province ? "is-invalid" : ""
-                          }`}
-                          id="province"
-                          name="province"
-                          // value  ={province}
-                          onChange={handleProvinceChange}
-                          ref={register({
-                            required: "Provinsi harus diisi",
-                          })}
-                        >
-                          <option value="" disabled selected>
-                            Pilih provinsi
-                          </option>
-                          {provinces}
-                        </select>
-                        {errors.province && (
-                          <small
-                            id="nameHelp"
-                            className="form-text text-danger"
+                          <select
+                            className={`form-control ${
+                              errors.province ? "is-invalid" : ""
+                            }`}
+                            id="province"
+                            name="province"
+                            value  ={province}
+                            onChange={handleProvinceChange}
+                            ref={register({
+                              required: "Provinsi harus diisi",
+                            })}
                           >
-                            {errors.province.message}
-                          </small>
-                        )}
-                      </div>}
-                      
-                      {!state?.id && <div className="form-group">
-                        <label htmlFor="city">Kota / kabupaten</label>
-                        {/* <Controller
+                            <option value="" disabled selected>
+                              Pilih provinsi
+                            </option>
+                            {provinces}
+                          </select>
+                          {errors.province && (
+                            <small
+                              id="nameHelp"
+                              className="form-text text-danger"
+                            >
+                              {errors.province.message}
+                            </small>
+                          )}
+                        </div>
+                      )}
+
+                      {!state?.id && (
+                        <div className="form-group">
+                          <label htmlFor="city">Kota / kabupaten</label>
+                          {/* <Controller
                           name="city"
                           control={control}
                           defaultValue={null}
@@ -452,74 +487,38 @@ function SimulationInput() {
                           )}
                           rules={{ required: "Kota harus diisi" }}
                         /> */}
-                        <select
-                          className={`form-control ${
-                            errors.city ? "is-invalid" : ""
-                          }`}
-                          id="city"
-                          name="city"
-                          // value={city}
-                          onChange={handleCityChange}
-                          ref={register({
-                            required: "Kota/kabupaten harus diisi",
-                          })}
-                        >
-                          <option value="" disabled selected>
-                            Pilih kota
-                          </option>
-                          {cities}
-                        </select>
-                        {errors.city && (
-                          <small
-                            id="nameHelp"
-                            className="form-text text-danger"
+                          <select
+                            className={`form-control ${
+                              errors.city ? "is-invalid" : ""
+                            }`}
+                            id="city"
+                            name="city"
+                            value={city}
+                            onChange={handleCityChange}
+                            ref={register({
+                              required: "Kota/kabupaten harus diisi",
+                            })}
                           >
-                            {errors.city.message}
-                          </small>
-                        )}
-                      </div>}
-                      
-                      {!state?.id && <div className="form-group">
-                        <label htmlFor="project">Proyek</label>
-                        {/* <Controller
-                          name="project"
-                          control={control}
-                          defaultValue={null}
-                          render={(props) => (
-                            
+                            <option value="" disabled selected>
+                              Pilih kota/kabupaten
+                            </option>
+                            {cities}
+                          </select>
+                          {errors.city && (
+                            <small
+                              id="nameHelp"
+                              className="form-text text-danger"
+                            >
+                              {errors.city.message}
+                            </small>
                           )}
-                          rules={{ required: "Proyek harus diisi" }}
-                        /> */}
-                        <select
-                          className={`form-control ${
-                            errors.project ? "is-invalid" : ""
-                          }`}
-                          id="project"
-                          name="project"
-                          // value={project}
-                          onChange={handleProjectChange}
-                          ref={register({
-                            required: "Proyek harus diisi",
-                          })}
-                        >
-                          <option value="" disabled selected>
-                            {city === "" || listProject.length !== 0 ? "Pilih proyek" : "Tidak ada proyek"}
-                          </option>
-                          {projects}
-                        </select>
-                        {errors.project && (
-                          <small
-                            id="nameHelp"
-                            className="form-text text-danger"
-                          >
-                            {errors.project.message}
-                          </small>
-                        )}
-                      </div>}
+                        </div>
+                      )}
 
-                      {!state?.id && <div className="form-group">
-                        <label htmlFor="dataKe">Basis Skenario (mulai dari)</label>
-                        {/* <Controller
+                      {!state?.id && (
+                        <div className="form-group">
+                          <label htmlFor="project">Proyek</label>
+                          {/* <Controller
                           name="project"
                           control={control}
                           defaultValue={null}
@@ -528,32 +527,79 @@ function SimulationInput() {
                           )}
                           rules={{ required: "Proyek harus diisi" }}
                         /> */}
-                        <select
-                          className={`form-control ${
-                            errors.dataKe ? "is-invalid" : ""
-                          }`}
-                          id="dataKe"
-                          name="dataKe"
-                          // value={project}
-                          onChange={handleDataKeChange}
-                          ref={register({
-                            required: "Basis skenario harus diisi",
-                          })}
-                        >
-                          <option value="" disabled selected>
-                            {dataKe === "" || listDataKe.length !== 0 ? "Pilih basis skenario" : "Tidak ada basis skenario"}
-                          </option>
-                          {dataKes}
-                        </select>
-                        {errors.dataKe && (
-                          <small
-                            id="nameHelp"
-                            className="form-text text-danger"
+                          <select
+                            className={`form-control ${
+                              errors.project ? "is-invalid" : ""
+                            }`}
+                            id="project"
+                            name="project"
+                            value={project}
+                            onChange={handleProjectChange}
+                            ref={register({
+                              required: "Proyek harus diisi",
+                            })}
                           >
-                            {errors.dataKe.message}
-                          </small>
-                        )}
-                      </div>}
+                            <option value="" disabled selected>
+                              {city === "" || listProject.length !== 0
+                                ? "Pilih proyek"
+                                : "Tidak ada proyek"}
+                            </option>
+                            {projects}
+                          </select>
+                          {errors.project && (
+                            <small
+                              id="nameHelp"
+                              className="form-text text-danger"
+                            >
+                              {errors.project.message}
+                            </small>
+                          )}
+                        </div>
+                      )}
+
+                      {!state?.id && (
+                        <div className="form-group">
+                          <label htmlFor="dataKe">
+                            Basis Skenario (mulai dari)
+                          </label>
+                          {/* <Controller
+                          name="project"
+                          control={control}
+                          defaultValue={null}
+                          render={(props) => (
+                            
+                          )}
+                          rules={{ required: "Proyek harus diisi" }}
+                        /> */}
+                          <select
+                            className={`form-control ${
+                              errors.dataKe ? "is-invalid" : ""
+                            }`}
+                            id="dataKe"
+                            name="dataKe"
+                            value={dataKe}
+                            onChange={handleDataKeChange}
+                            ref={register({
+                              required: "Basis skenario harus diisi",
+                            })}
+                          >
+                            <option value="" disabled selected>
+                              {dataKe === "" || listDataKe.length !== 0
+                                ? "Pilih basis skenario"
+                                : "Tidak ada basis skenario"}
+                            </option>
+                            {dataKes}
+                          </select>
+                          {errors.dataKe && (
+                            <small
+                              id="nameHelp"
+                              className="form-text text-danger"
+                            >
+                              {errors.dataKe.message}
+                            </small>
+                          )}
+                        </div>
+                      )}
                       <div className="template-demo float-sm-left float-md-right">
                         <button
                           className="btn btn-light"
@@ -575,7 +621,7 @@ function SimulationInput() {
                               aria-hidden="true"
                             ></span>
                           )}
-                          {!state?.id && "Buat Skenario"}
+                          {!state?.id && "Selanjutnya"}
                           {state?.id && "Perbarui Skenario"}
                         </button>
                       </div>

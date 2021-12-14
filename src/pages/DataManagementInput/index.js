@@ -30,7 +30,7 @@ function DataManagementInput() {
       ? state?.kotaKabupaten?.provinsi?.id
       : localStorage.state
       ? JSON.parse(localStorage.state)?.kotaKabupaten?.provinsi?.id
-      : 2,
+      : "",
     city: state
       ? state?.kotaKabupaten?.id
       : localStorage.state
@@ -60,6 +60,7 @@ function DataManagementInput() {
         localStorage.setItem("state", JSON.stringify(state));
       }
     }
+    if(JSON.parse(Cookies.get("permissions")).indexOf("Manajemen Data") === -1) history.goBack()
   }, [history, state]);
 
   useEffect(() => {
@@ -353,6 +354,9 @@ function DataManagementInput() {
                           <option value="1">
                             aaa
                           </option> */}
+                          <option value="" disabled selected>
+                              Pilih provinsi
+                            </option>
                               {provinces}
                             </select>
                           )}
@@ -386,6 +390,9 @@ function DataManagementInput() {
                                 required: "Kota/kabupaten harus diisi",
                               })}
                             >
+                              <option value="" disabled selected>
+                              Pilih kota/kabupaten
+                            </option>
                               {cities}
                             </select>
                           )}

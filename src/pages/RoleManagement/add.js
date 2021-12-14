@@ -6,6 +6,7 @@ import axios from "../../axiosConfig";
 import { config } from "../../Constants";
 
 import { Header, Menu, Footer } from "../../components";
+import Cookies from "js-cookie";
 
 function RoleManagementCreate() {
   let history = useHistory();
@@ -21,6 +22,8 @@ function RoleManagementCreate() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
+    if (JSON.parse(Cookies.get("permissions")).indexOf("Roles") === -1){
+      history.goBack();}
     if (listRole.length === 0) {
       axios
         .get(config.url.API_URL + "/Role/GetAllPermissions")

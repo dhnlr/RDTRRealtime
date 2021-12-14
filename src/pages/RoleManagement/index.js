@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, {useEffect, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import axios from "../../axiosConfig";
 import Swal from "sweetalert2";
@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { Header, Menu, Footer, Table, TableLoading } from "../../components";
 
 import { config } from "../../Constants";
+import Cookies from "js-cookie";
 
 function RoleManagement() {
   const [search, setSearch] = useState(null);
@@ -23,6 +24,11 @@ function RoleManagement() {
   function goInputSimulasi() {
     history.push("/rolemanagement/create");
   }
+
+  useEffect(() => {
+    if (JSON.parse(Cookies.get("permissions")).indexOf("Roles") === -1)
+      history.goBack();
+  }, [history]);
 
   const fetchData = React.useCallback(
     ({

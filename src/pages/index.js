@@ -15,6 +15,7 @@ import DataManagementInputTrash from "./DataManagementInput/trash";
 import DataManagementInputWater from "./DataManagementInput/water";
 import SimulationTable from "./Simulation/SimulationTable";
 import SimulationInput from "./Simulation/SimulationInput";
+import SimulationInputPhase2 from "./Simulation/SimulationInput/Phase2";
 import SimulationHistory from "./Simulation/SimulationHistory";
 import SimulasiMap from "./SimulasiMap";
 import ConfirmByCode from "./ConfirmByCode";
@@ -54,6 +55,7 @@ export {
   DataManagementInputWater,
   SimulationTable,
   SimulationInput,
+  SimulationInputPhase2,
   SimulasiMap,
   SimulationHistory,
   ConfirmByCode,

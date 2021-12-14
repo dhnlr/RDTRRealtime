@@ -315,7 +315,7 @@ div.historyListDesc {
 .projection-header p {
   text-align: right;
 }
-.popup .card-body .table tbody {
-  display: inline-block;
+tbody.popup {
+  display: inherit;
   max-width: 100%;
 }

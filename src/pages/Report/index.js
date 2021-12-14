@@ -1,7 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router";
 import axios from "../../axiosConfig";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 
 import { Header, Menu, Footer } from "../../components";
 import image from "./OBJECTS.svg";
@@ -9,6 +11,11 @@ import image from "./OBJECTS.svg";
 import { config } from "../../Constants";
 
 function Report() {
+  const history = useHistory()
+  useEffect(() => {
+    if (JSON.parse(Cookies.get("permissions")).indexOf("Laporan") === -1)
+      history.goBack();
+  }, [history]);
   const {
     register,
     handleSubmit,

@@ -64,7 +64,6 @@ function Register() {
         params,
       )
       .then(({data}) => {
-        console.log({data})
         if (data.code === 200){
           setSuccessMessage(
             "Pendaftaran berhasil, akun Anda akan ditinjau oleh admin selama 1x24 jam. Silahkan lakukan aktivasi akun Anda setelah mendapat email konfirmasi dari admin pada alamat email " +

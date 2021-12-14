@@ -1,26 +1,52 @@
-import React from "react";
+import Cookies from "js-cookie";
+import React, { useEffect } from "react";
+import { useHistory } from "react-router";
 
 import { Header, Menu, Footer } from "../../components";
+import DashboardImage from "./dasbor.svg"
 
 function Dashboard() {
+  const history = useHistory();
+  useEffect(() => {
+    // if(JSON.parse(Cookies.get("permissions")).indexOf("Dasbor") === -1) history.goBack()
+  }, [history]);
+
   return (
     <div className="container-scroller">
       <Header />
       <div className="container-fluid page-body-wrapper">
-        <Menu active="dashboard"/>
+        <Menu active="dashboard" />
         <div className="main-panel">
           <div className="content-wrapper">
             <div className="row">
               <div className="col-md-12 grid-margin stretch-card">
-                <div className="card tale-bg">
-                  <div className="card-people mt-auto" style={{ paddingTop: "0px" }}>
-                    <img src="images/dashboard/info.png" alt="info" />
+              <div className="card" style={{ backgroundColor: "#63af9b", backgroundImage: `url("${DashboardImage}")`, backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+                    <div className="card-body">
+                      <div className="row">
+                        <div className="col-8 ">
+                          <table style={{ height: "100%" }}>
+                            <tbody>
+                              <tr>
+                                <td className="align-middle text-white">
+                                  <h2 className="mt-3 pt-3">Selamat Datang di Aplikasi RDTR Realtime</h2>
+                                  <p className=" font-weight-500 mb-5 ">
+                                    Kini membuat perencanaan lebih mudah
+                                  </p>
+                                  <p className=" font-weight-400 pt-5 mb-3">
+                                    Anda dapat melihat Rencana Detail Tata Ruang (RDTR) wilayah kabupaten/kota seluruh Indonesia, serta melakukan simulasi aturan untuk lokasi Anda.
+                                  </p>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
               </div>
             </div>
 
-            <div className="row">
+            {/* <div className="row">
               <div className="col-md-12 grid-margin stretch-card">
                 <div className="card position-relative">
                   <div className="card-body">
@@ -111,7 +137,7 @@ function Dashboard() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <Footer />
         </div>

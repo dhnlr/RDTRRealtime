@@ -142,12 +142,12 @@ function Pdf(data) {
   doc.setFillColor(50, 100, 100);
   doc.rect(220, 220, 10, 10, "F");
   doc.setFontSize(12);
-  doc.text("Air PDAM mencukupi", 233, 226);
+  doc.text("Air bersih mencukupi", 233, 226);
   doc.setDrawColor(0);
   doc.setFillColor(255, 192, 203);
   doc.rect(220, 235, 10, 10, "F");
   doc.setFontSize(12);
-  doc.text("Air PDAM melebihi kapasitas", 233, 241);
+  doc.text("Air bersih melebihi kapasitas", 233, 241);
 
   doc.setFontSize(14);
   doc.text("Zonasi", 220, 255);
@@ -524,10 +524,10 @@ function Pdf(data) {
   doc.text("Jumlah Penduduk (M2)", 310, 121);
   doc.text(data.jumlah_penduduk_sebelum, 360, 121);
   doc.text(data.jumlah_penduduk, 390, 121);
-  doc.text("Kebutuhan Air PDAM", 310, 131);
+  doc.text("Kebutuhan Air Bersih", 310, 131);
   doc.text(data.kebutuhan_air_sebelum, 360, 131);
   doc.text(data.kebutuhan_air, 390, 131);
-  doc.text("Suply Air PDAM (M2)", 310, 141);
+  doc.text("Suply Air Bersih (M2)", 310, 141);
   doc.text(data.supply_air_sebelum, 360, 141);
   doc.text(data.supply_air, 390, 141);
   doc.text("Status Pembangunan", 310, 151);
@@ -570,12 +570,12 @@ function Pdf(data) {
   doc.setFillColor(50, 100, 100);
   doc.rect(230, 220, 10, 10, "F");
   doc.setFontSize(12);
-  doc.text("Air PDAM mencukupi", 243, 226);
+  doc.text("Air bersih mencukupi", 243, 226);
   doc.setDrawColor(0);
   doc.setFillColor(255, 192, 203);
   doc.rect(230, 235, 10, 10, "F");
   doc.setFontSize(12);
-  doc.text("Air PDAM melebihi kapasitas", 243, 241);
+  doc.text("Air bersih melebihi kapasitas", 243, 241);
 
   doc.save("Hasil_Simulasi.pdf");
 }

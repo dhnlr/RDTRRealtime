@@ -38,6 +38,7 @@ import {
   SimulationTable,
   SimulationInput,
   SimulationHistory,
+  SimulationInputPhase2,
 } from "./pages";
 import PrivateRoute from "./PrivateRoute";
 
@@ -86,6 +87,9 @@ function App() {
           </PrivateRoute>
           <PrivateRoute path="/schenariomap">
             <SimulasiMap />
+          </PrivateRoute>
+          <PrivateRoute path="/schenarioinput/phase2">
+            <SimulationInputPhase2 />
           </PrivateRoute>
           <PrivateRoute path="/schenarioinput">
             <SimulationInput />

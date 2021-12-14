@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useHistory, Link } from "react-router-dom";
 import axios from "../../../axiosConfig";
@@ -9,6 +9,7 @@ import headerImage from "./Group 12399.svg";
 import buildingIcon from "./building.svg";
 
 import { config } from "../../../Constants";
+import Cookies from "js-cookie";
 
 function SimulationTable() {
   const [search, setSearch] = useState(null);
@@ -28,6 +29,11 @@ function SimulationTable() {
   function goInputSimulasi() {
     history.push("/schenarioinput");
   }
+
+  useEffect(() => {
+    if (JSON.parse(Cookies.get("permissions")).indexOf("Simulasi") === -1)
+      history.goBack();
+  }, [history]);
 
   const fetchData = React.useCallback(
     ({

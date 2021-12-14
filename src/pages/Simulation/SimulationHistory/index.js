@@ -226,11 +226,6 @@ function SimulationHistory() {
                   if (highlight) {
                     highlight.remove();
                   }
-                  console.log(
-                    "objectid popup",
-                    features[0].attributes.objectid,
-                    features[0].attributes
-                  );
                   highlight = bangunanSebelumLayerView.highlight(
                     features[0].attributes.objectid
                   );
@@ -892,11 +887,6 @@ function SimulationHistory() {
                   if (highlight) {
                     highlight.remove();
                   }
-                  console.log(
-                    "objectid popup",
-                    features[0].attributes.objectid,
-                    features[0].attributes
-                  );
                   highlight = bangunanSesudahLayerView.highlight(
                     features[0].attributes.objectid
                   );
@@ -4539,7 +4529,6 @@ function SimulationHistory() {
   };
 
   const checkLayerList = (key, info) => {
-    console.log(key, info);
     // if(info.checked === true){
     //   if(key == "bangunan"){
     //     bangunanSebelumLayer.visible = info.checked
@@ -4555,7 +4544,6 @@ function SimulationHistory() {
         jalanSesudahLayer.visible = info.checked;
         break;
       case "sampah":
-        console.log("sampah");
         sampahTpsSebelumLayer.visible = info.checked;
         sampahTpsSesudahLayer.visible = info.checked;
         break;
@@ -4680,7 +4668,6 @@ function SimulationHistory() {
       let layerSampahTPSSebelum = mapBeforeState.allLayers.find(function (layer) {
         return layer.id === "sampah_tps_analisis";
       });
-      console.log("active", activeLayer);
       let isBangunanActive = activeLayer.some(
         (layer) =>
           layer.id === "bagunan_analisis_proses" ||
@@ -4754,7 +4741,6 @@ function SimulationHistory() {
         layerSampahTPSSebelum.listMode = "hide";
       }
     } else if (isPopupBefore === false) {
-      console.log(mapAfterState.allLayers);
       let activeLayer = mapAfterState.allLayers.filter(function (layer) {
         return layer.visible;
       });
@@ -4788,7 +4774,6 @@ function SimulationHistory() {
       let layerSampahTPSSebelum = mapAfterState.allLayers.find(function (layer) {
         return layer.id === "sampah_tps_analisis";
       });
-      console.log("active", activeLayer);
       let isBangunanActive = activeLayer.some(
         (layer) =>
           layer.id === "bagunan_analisis_proses" ||
@@ -4899,7 +4884,6 @@ function SimulationHistory() {
     );
     Promise.all([sesudah, sebelum])
       .then((result) => {
-        console.log(result);
         if (
           result[0].data.features.length > 0 &&
           result[1].data.features.length > 0

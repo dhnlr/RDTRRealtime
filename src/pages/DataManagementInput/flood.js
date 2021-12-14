@@ -7,6 +7,7 @@ import CreatableSelect from "react-select/creatable";
 import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
 import { config } from "../../Constants";
+import Cookies from "js-cookie";
 
 function DataManagementInputFlood() {
   const { state } = useLocation();
@@ -38,6 +39,7 @@ function DataManagementInputFlood() {
       slope_denmas_year,
       slope_denmas_desc,
       slope_denmas_tag,
+      curahhujan
     },
     e
   ) => {
@@ -61,6 +63,7 @@ function DataManagementInputFlood() {
     fd.set("tahun_slope_demnas", slope_denmas_year);
     fd.set("deskripsi_slope_demnas", slope_denmas_desc);
     fd.set("tag_slope_demnas", slope_denmas_tag);
+    fd.set("curah_hujan", curahhujan);
     fd.set("project_id", state?.id.id);
 
     axios
@@ -615,14 +618,19 @@ function DataManagementInputFlood() {
                         <div className="card-body">
                           <div className="form-group">
                             <label htmlFor="curahhujan">
-                                Curah Hujan (opsional)
+                                Intensitas Hujan (mm/s)
                               </label>
                               <input
                                 id="curahhujan"
                                 className="form-control"
                                 name="curahhujan"
-                                placeholder="Tahun jaringan jalan"
-                                ref={register}
+                                placeholder="Intensitas hujan (milimeter per detik)"
+                                ref={register({
+                                  pattern: {
+                                    value: /^[+]?([.]\d+|\d+[.]?\d*)$/,
+                                    message: "Format intensitas hujan salah",
+                                  },
+                                })}
                               />
                               {errors.curahhujan && (
                                 <small

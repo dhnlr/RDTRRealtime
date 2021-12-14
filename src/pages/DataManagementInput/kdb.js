@@ -7,6 +7,7 @@ import CreatableSelect from "react-select/creatable";
 import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
 import { config } from "../../Constants";
+import Cookies from "js-cookie";
 
 function DataManagementInputKdb() {
   const { state } = useLocation();
@@ -22,6 +23,7 @@ function DataManagementInputKdb() {
       localStorage.removeItem("state");
       history.push("/datamanagement");
     }
+    if(JSON.parse(Cookies.get("permissions")).indexOf("Dasbor") === -1) history.goBack()
   }, [history, state?.id]);
 
   const onSubmit = (

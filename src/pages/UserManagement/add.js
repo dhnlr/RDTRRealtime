@@ -6,9 +6,15 @@ import axios from "../../axiosConfig";
 import { config } from "../../Constants";
 
 import { Header, Menu, Footer } from "../../components";
+import Cookies from "js-cookie";
 
 function UserManagementCreate() {
     let history = useHistory();
+    useEffect(() => {
+        if (JSON.parse(Cookies.get("permissions")).indexOf("Users") === -1)
+          history.goBack();
+      }, [history]);
+      
     const { register,
         handleSubmit,
         formState: { errors },

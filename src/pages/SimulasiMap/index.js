@@ -24,6 +24,8 @@ import Pdf from "./pdf";
 import dataScreenshotTemplate from "./data";
 import getScreenshotData from "./QueryLayer";
 import { findAllByDisplayValue } from "@testing-library/dom";
+import getDefExp from "../../getDefExp";
+import Cookies from "js-cookie";
 
 const DarkBackground = styled.div`
   display: none; /* Hidden by default */
@@ -49,12 +51,14 @@ const SimulasiMap = () => {
   let { state } = useLocation();
 
   useEffect(() => {
-    if (!state?.simulasiBangunan) {
-      history.push("/schenario");
+    if (JSON.parse(Cookies.get("permissions")).indexOf("Simulasi") === -1) {
+      history.goBack();
     } else {
-      handleExecuteSpCopy(0);
+      if (!state?.simulasiBangunan) {
+        history.push("/schenario");
+      }
     }
-  }, [state]);
+  }, [state, history]);
 
   // Form State
   const [form, setForm] = useState({
@@ -287,8 +291,18 @@ const SimulasiMap = () => {
             lantaiAtas,
             lantaiSebelumKelewatan,
             segmentationGroupLayer = {};
-          var bangunanDefinitionExpression = `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}' AND data_ke = ${state?.simulasiBangunan?.dataKe}  AND wadmkd = 'PABATON'`;
-          // var bangunanDefinitionExpression = `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}' AND data_ke = ${state?.simulasiBangunan?.dataKe}  AND nambwp = '${state?.simulasiBangunan?.nambwp}'`;
+          var bangunanDefinitionExpression = getDefExp({
+            skenarioId: state?.simulasiBangunan?.skenarioId,
+            projectId: state?.simulasiBangunan?.projectId,
+            dataKe: state?.simulasiBangunan?.dataKe,
+            userId: state.simulasiBangunan.userId,
+            nambwp: state?.simulasiBangunan?.nambwp,
+            nasbwp: state?.simulasiBangunan?.nasbwp,
+            kodblk: state.simulasiBangunan.kodblk,
+            kodsbl: state.simulasiBangunan.kodsbl,
+            // wadmkd: "PABATON",
+          });
+          // var bangunanDefinitionExpression = `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND data_ke = ${state?.simulasiBangunan?.dataKe}  AND nambwp = '${state?.simulasiBangunan?.nambwp}' AND nasbwp = '${state.simulasiBangunan.nasbwp}' AND kodblk = '${state.simulasiBangunan.kodblk}' AND kodsbl = '${state.simulasiBangunan.kodsbl}'`;
 
           const map = new Map({
             basemap: "topo-vector",
@@ -433,7 +447,6 @@ const SimulasiMap = () => {
               };
 
               bangunanSesudahLayer.queryFeatures(query).then(({ features }) => {
-                console.log("Hasil query untuk edit", features);
                 features[0].attributes.id_project =
                   state?.simulasiBangunan?.projectId;
                 features[0].attributes.id_skenario =
@@ -739,7 +752,7 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["*"],
-            editingEnabled: false,
+            editingEnabled: true,
             definitionExpression: bangunanDefinitionExpression,
             elevationInfo: {
               mode: "on-the-ground",
@@ -983,8 +996,16 @@ const SimulasiMap = () => {
               ],
             },
             outFields: ["namobj", "kapasitas"],
-            editingEnabled: false,
-            definitionExpression: bangunanDefinitionExpression,
+            editingEnabled: true,
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: state?.simulasiBangunan?.dataKe,
+              userId: state.simulasiBangunan.userId,
+              nambwp: state?.simulasiBangunan?.nambwp,
+              nasbwp: state?.simulasiBangunan?.nasbwp,
+              kodblk: state.simulasiBangunan.kodblk,
+            }),
             elevationInfo: {
               mode: "on-the-ground",
             },
@@ -1072,7 +1093,15 @@ const SimulasiMap = () => {
             },
             outFields: ["namobj", "kapasitas"],
             editingEnabled: false,
-            definitionExpression: bangunanDefinitionExpression,
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: state?.simulasiBangunan?.dataKe,
+              userId: state.simulasiBangunan.userId,
+              nambwp: state?.simulasiBangunan?.nambwp,
+              nasbwp: state?.simulasiBangunan?.nasbwp,
+              kodblk: state.simulasiBangunan.kodblk,
+            }),
             listMode: "hide",
             elevationInfo: {
               mode: "on-the-ground",
@@ -1113,7 +1142,15 @@ const SimulasiMap = () => {
               config.url.ARCGIS_URL +
               "/Versioning/bangunan_analisis_process/FeatureServer/0",
             renderer: rendererBuildingsEnvelope,
-            definitionExpression: `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}' AND data_ke = 0  AND wadmkd = 'PABATON'`,
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: 0,
+              nambwp: state?.simulasiBangunan?.nambwp,
+              nasbwp: state?.simulasiBangunan?.nasbwp,
+              kodblk: state.simulasiBangunan.kodblk,
+              kodsbl: state.simulasiBangunan.kodsbl,
+            }),
             elevationInfo: {
               mode: "on-the-ground",
             },
@@ -1565,70 +1602,34 @@ const SimulasiMap = () => {
           const polaRuangEnvelopeLayer = new FeatureLayer({
             url:
               config.url.ARCGIS_URL +
-              "/Versioning/polaruang_amplop/FeatureServer/0",
+              "/Versioning/polaruang_analisis_process/FeatureServer/0",
             renderer: rendererPolaRuangEnvelope,
-            definitionExpression: `id_skenario = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = 0`,
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: 0,
+            }),
             elevationInfo: {
               mode: "on-the-ground",
             },
             title: "Zonasi - Amplop",
             popupTemplate: {
-              title: "Zonasi - Amplop",
+              title: "Pola Ruang Versioning",
               content: [
                 {
                   type: "fields",
                   fieldInfos: [
                     {
-                      fieldName: "namobj",
-                      label: "namobj",
+                      fieldName: "objectid",
+                      label: "objectid",
                     },
                     {
-                      fieldName: "namzon",
-                      label: "namzon",
+                      fieldName: "wadmpr",
+                      label: "wadmpr",
                     },
                     {
-                      fieldName: "kodzon",
-                      label: "kodzon",
-                    },
-                    {
-                      fieldName: "namszn",
-                      label: "namszn",
-                    },
-                    {
-                      fieldName: "kodszn",
-                      label: "kodszn",
-                    },
-                    {
-                      fieldName: "namazona",
-                      label: "namazona",
-                    },
-                    {
-                      fieldName: "kdzona ",
-                      label: "kdzona ",
-                    },
-                    {
-                      fieldName: "namaszona",
-                      label: "namaszona",
-                    },
-                    {
-                      fieldName: "kdszona",
-                      label: "kdszona",
-                    },
-                    {
-                      fieldName: "nambwp",
-                      label: "nambwp",
-                    },
-                    {
-                      fieldName: "nasbwp",
-                      label: "nasbwp",
-                    },
-                    {
-                      fieldName: "kodblk",
-                      label: "kodblk",
-                    },
-                    {
-                      fieldName: "kodsbl",
-                      label: "kodsbl",
+                      fieldName: "wadmkk",
+                      label: "wadmkk",
                     },
                     {
                       fieldName: "wadmkc",
@@ -1639,44 +1640,24 @@ const SimulasiMap = () => {
                       label: "wadmkd",
                     },
                     {
-                      fieldName: "kkop_1",
-                      label: "kkop_1",
+                      fieldName: "kdzona",
+                      label: "Kode Zona",
                     },
                     {
-                      fieldName: "lp2b_2",
-                      label: "lp2b_2",
+                      fieldName: "kdszona",
+                      label: "Kode Subzona",
                     },
                     {
-                      fieldName: "krb_03",
-                      label: "krb_03",
+                      fieldName: "namazona",
+                      label: "Nama Zona",
                     },
                     {
-                      fieldName: "tod_04",
-                      label: "tod_04",
+                      fieldName: "namaszona",
+                      label: "Kode Subzona",
                     },
                     {
-                      fieldName: "teb_05",
-                      label: "teb_05",
-                    },
-                    {
-                      fieldName: "cagbud",
-                      label: "cagbud",
-                    },
-                    {
-                      fieldName: "hankam",
-                      label: "hankam",
-                    },
-                    {
-                      fieldName: "puslit",
-                      label: "puslit",
-                    },
-                    {
-                      fieldName: "tpz_00",
-                      label: "tpz_00",
-                    },
-                    {
-                      fieldName: "luasha",
-                      label: "luasha",
+                      fieldName: "kodsbl",
+                      label: "kodsbl",
                     },
                     {
                       fieldName: "kdb",
@@ -1694,31 +1675,29 @@ const SimulasiMap = () => {
                       fieldName: "lantai_max",
                       label: "lantai_max",
                     },
-                    {
-                      fieldName: "status_pemb_optimum",
-                      label: "status_pemb_optimum",
-                    },
-                    {
-                      fieldName: "izin_air",
-                      label: "izin_air",
-                    },
-                    {
-                      fieldName: "izin_macet",
-                      label: "izin_macet",
-                    },
                   ],
                 },
               ],
             },
-            outFields: ["*"],
+            outFields: ["namazona"],
             editingEnabled: false,
           });
 
-          const basemapPolaRuangLayer = new VectorTileLayer({
+          const basemapPolaRuangLayer = new FeatureLayer({
             url:
               config.url.ARCGIS_URL +
-              "/Hosted/KDBKLB_PolaRuang_base/VectorTileServer",
+              "/Versioning/polaruang_analisis_process/FeatureServer/0",
             title: "Basemap Pola Ruang",
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: 0,
+            }),
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            outFields: ["*"],
+            editingEnabled: false,
           });
 
           const persilTanahBpn = new FeatureLayer({
@@ -1864,12 +1843,143 @@ const SimulasiMap = () => {
             },
           });
 
+          const drainaseSesudahLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL+"/Versioning/drainase_analisis_process/FeatureServer/0",
+            id: "drainase_analisis_proses",
+            title: "Drainase",
+            outFields: ["*"],
+            editingEnabled: true,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            popupTemplate: {
+              title: "Drainase",
+            },
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: state?.simulasiBangunan?.dataKe,
+              nambwp: state?.simulasiBangunan?.nambwp,
+              nasbwp: state?.simulasiBangunan?.nasbwp,
+              kodblk: state.simulasiBangunan.kodblk,
+            })
+          });
+
+          const drainaseSebelumLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL+"/Versioning/drainase_analisis/FeatureServer/0",
+            id: "drainase_analisis",
+            title: "Drainase",
+            outFields: ["*"],
+            editingEnabled: false,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            popupTemplate: {
+              title: "Drainase",
+            },
+            listMode: "hide",
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: state?.simulasiBangunan?.dataKe,
+              nambwp: state?.simulasiBangunan?.nambwp,
+              nasbwp: state?.simulasiBangunan?.nasbwp,
+              kodblk: state.simulasiBangunan.kodblk,
+            })
+          });
+
+          const slopeSesudahLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL+"/Versioning/slope_analisis_process/FeatureServer/0",
+            id: "slope_analisis_proses",
+            title: "Slope",
+            outFields: ["*"],
+            editingEnabled: false,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            popupTemplate: {
+              title: "Slope",
+            },
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: state?.simulasiBangunan?.dataKe,
+            })
+          });
+
+          const slopeSebelumLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL+"/Versioning/slope_analisis/FeatureServer/0",
+            id: "slope_analisis",
+            title: "Slope",
+            outFields: ["*"],
+            editingEnabled: false,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            popupTemplate: {
+              title: "Slope",
+            },
+            listMode: "hide",
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: state?.simulasiBangunan?.dataKe,
+            })
+          });
+
+          const kelerenganSesudahLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL+"/Versioning/kelerengan_analisis_process/FeatureServer/0",
+            id: "kelerengan_analisis_proses",
+            title: "Kelerengan",
+            outFields: ["*"],
+            editingEnabled: false,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            popupTemplate: {
+              title: "Kelerengan",
+            },
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: state?.simulasiBangunan?.dataKe,
+              nambwp: state?.simulasiBangunan?.nambwp,
+              nasbwp: state?.simulasiBangunan?.nasbwp,
+              kodblk: state.simulasiBangunan.kodblk,
+            })
+          });
+
+          const kelerenganSebelumLayer = new FeatureLayer({
+            url: config.url.ARCGIS_URL+"/Versioning/kelerengan_analisis/FeatureServer/0",
+            id: "kelerengan_analisis",
+            title: "Kelerengan",
+            outFields: ["*"],
+            editingEnabled: false,
+            elevationInfo: {
+              mode: "on-the-ground",
+            },
+            popupTemplate: {
+              title: "Kelerengan",
+            },
+            listMode: "hide",
+            definitionExpression: getDefExp({
+              skenarioId: state?.simulasiBangunan?.skenarioId,
+              projectId: state?.simulasiBangunan?.projectId,
+              dataKe: state?.simulasiBangunan?.dataKe,
+              nambwp: state?.simulasiBangunan?.nambwp,
+              nasbwp: state?.simulasiBangunan?.nasbwp,
+              kodblk: state.simulasiBangunan.kodblk,
+            })
+          });
+
           let utamaGroupLayer = new GroupLayer({
             title: "Layer Utama",
             layers: [
               polaRuangVersioningSesudahLayer,
               polaRuangVersioningSebelumLayer,
               persilTanahSesudahLayer,
+              drainaseSesudahLayer,
+              drainaseSebelumLayer,
               kapasitasAirSesudahLayer,
               kapasitasAirSebelumLayer,
               sampahTpsSesudahLayer,
@@ -1885,6 +1995,10 @@ const SimulasiMap = () => {
             layers: [
               // frekuensiBanjir2020,
               // frekuensiBanjir2019,
+              kelerenganSesudahLayer,
+              kelerenganSebelumLayer,
+              slopeSesudahLayer,
+              slopeSebelumLayer,
               basemapPolaRuangLayer,
               polaRuangEnvelopeLayer,
               // persilTanahBpn,
@@ -1901,6 +2015,8 @@ const SimulasiMap = () => {
           persilTanahSesudahLayer.visible = false;
           kapasitasAirSesudahLayer.visible = false;
           kapasitasAirSebelumLayer.visible = false;
+          drainaseSesudahLayer.visible = false;
+          drainaseSebelumLayer.visible = false;
           sampahTpsSesudahLayer.visible = false;
           sampahTpsSebelumLayer.visible = false;
           persilTanahBpn.visible = false;
@@ -1911,6 +2027,10 @@ const SimulasiMap = () => {
           bangunanSebelumLayer.visible = false;
           frekuensiBanjir2020.visible = false;
           frekuensiBanjir2019.visible = false;
+          slopeSesudahLayer.visible = false;
+          slopeSebelumLayer.visible = false;
+          kelerenganSesudahLayer.visible = false;
+          kelerenganSebelumLayer.visible = false;
 
           async function finishLayer() {
             if (isMounted) {
@@ -1930,6 +2050,39 @@ const SimulasiMap = () => {
 
           view.when(function () {
             setEsriMap(map);
+            Axios.get(
+              config.url.ARCGIS_URL +
+                "/Versioning/polaruang_analisis_process/FeatureServer/0/query",
+              {
+                params: {
+                  f: "json",
+                  where: getDefExp({
+                    skenarioId: state?.simulasiBangunan?.skenarioId,
+                    projectId: state?.simulasiBangunan?.projectId,
+                    dataKe: state?.simulasiBangunan?.dataKe,
+                    nambwp: state?.simulasiBangunan?.nambwp,
+                    nasbwp: state?.simulasiBangunan?.nasbwp,
+                    kodblk: state.simulasiBangunan.kodblk,
+                    kodsbl: state.simulasiBangunan.kodsbl,
+                  }),
+                  returnExtentOnly: true,
+                },
+              }
+            ).then(({ data }) => {
+              const { extent } = data;
+              if (extent.xmin !== "NaN") {
+                view.extent = extent;
+                view.zoom = 18;
+              } else {
+                console.error("Can't zoom because no features found");
+              }
+            });
+            // polaRuangVersioningSesudahLayer.queryFeatures(zoomQuery)
+            // .then(({ features }) => {
+            //   console
+            //   if(features.length > 0){view.goTo(features[0].geometry)}
+            //   else {console.error("Can't zoom because no features found")}
+            // })
             // start layerlist
             var uniqueParentItems = [];
             const layerList = new LayerList({
@@ -2059,9 +2212,10 @@ const SimulasiMap = () => {
                       name: "kegiatan",
                       label: "Kegiatan",
                     },
-                    { name: "jlh_tampungan_kegiatan ",
-                      label: "Jumlah Tampungan Kegiatan"
-                    }
+                    {
+                      name: "jlh_tampungan_kegiatan",
+                      label: "Jumlah Tampungan Kegiatan",
+                    },
                   ],
                 },
                 {
@@ -2071,14 +2225,6 @@ const SimulasiMap = () => {
                   updateEnabled: true,
                   deleteEnabled: true,
                   fieldConfig: [
-                    {
-                      name: "namobj",
-                      label: "namobj",
-                    },
-                    {
-                      name: "lebar",
-                      label: "lebar",
-                    },
                     {
                       name: "jalan_lhr",
                       label: "jalan_lhr",
@@ -2108,6 +2254,57 @@ const SimulasiMap = () => {
                     //   name: "kdszona",
                     //   label: "kdszona",
                     // },
+                  ],
+                },
+                {
+                  layer: sampahTpsSesudahLayer,
+                  enabled: true,
+                  addEnabled: true,
+                  updateEnabled: true,
+                  deleteEnabled: true,
+                  fieldConfig: [
+                    {
+                      name: "kapasitas",
+                      label: "Kapasitas TPS",
+                    },
+                  ],
+                },
+                {
+                  layer: persilTanahSesudahLayer,
+                  enabled: true,
+                  addEnabled: true,
+                  updateEnabled: true,
+                  deleteEnabled: true,
+                  fieldConfig: [
+                    {
+                      name: "jlh_biopori",
+                      label: "Jumlah Biopori",
+                    },
+                    {
+                      name: "kapasitas_biopori",
+                      label: "Kapasitas Biopori",
+                    },
+                    {
+                      name: "jlh_sumurresapan",
+                      label: "Jumlah Sumur Resapan",
+                    },
+                    {
+                      name: "q_debitsumurresapan",
+                      label: "Debit Sumur Resapan"
+                    }
+                  ],
+                },
+                {
+                  layer: drainaseSesudahLayer,
+                  enabled: true,
+                  addEnabled: true,
+                  updateEnabled: true,
+                  deleteEnabled: true,
+                  fieldConfig: [
+                    {
+                      name: "kemiringan",
+                      label: "Kemiringan",
+                    },
                   ],
                 },
               ],
@@ -2154,6 +2351,7 @@ const SimulasiMap = () => {
             });
             const handleMarking = () => {
               view.container.classList.add("screenshotCursor");
+              editor.viewModel.cancelWorkflow();
               jalanSesudahLayer.popupEnabled = false;
               polaRuangVersioningSesudahLayer.popupEnabled = false;
               persilTanahSesudahLayer.popupEnabled = false;
@@ -2183,7 +2381,59 @@ const SimulasiMap = () => {
                 view
                   .whenLayerView(bangunanSesudahLayer)
                   .then(function (bangunanSesudahLayerView) {
-                    var query = bangunanSesudahLayer.createQuery();
+                    Axios.get(
+                      config.url.ARCGIS_URL +
+                        "/Versioning/polaruang_analisis_process/FeatureServer/0/query?where=id_project%3D" +
+                        state.simulasiBangunan.projectId +
+                        "+AND+id_skenario%3D" +
+                        state.simulasiBangunan.skenarioId +
+                        "+AND+data_ke%3D" +
+                        state.simulasiBangunan.dataKe +
+                        "&objectIds=&time=&geometry=" +
+                        event.mapPoint.x +
+                        "%2C" +
+                        event.mapPoint.y +
+                        "&geometryType=esriGeometryPoint&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&f=pjson"
+                    ).then((result) => {
+                      if (result.data.features.length > 0) {
+                        result.data.features.forEach(function (feature) {
+                          var query = bangunanSesudahLayer.createQuery();
+                          query.geometry = pointBuildings;
+                          bangunanSesudahLayer
+                            .queryFeatures(query)
+                            .then(function (features) {
+                              if (features.features.length > 0) {
+                                var objectId =
+                                  features.features[0].attributes.objectid;
+                                // Highlight the feature passing the objectId to the method
+                                highlight =
+                                  bangunanSesudahLayerView.highlight(objectId);
+                              }
+                            });
+                          setSelectBuildings(false);
+                          setRunAnalysis(true);
+                          setInputX(event.mapPoint.x);
+                          setInputY(event.mapPoint.y);
+                          setSpAnalisisData({
+                            v_proyek: state.simulasiBangunan.projectId,
+                            v_skenario: state.simulasiBangunan.skenarioId,
+                            v_nambwp: feature.attributes.nambwp || "",
+                            v_nasbwp: feature.attributes.nasbwp || "",
+                            v_kodblk: feature.attributes.kodblk || "",
+                            v_kodsbl: feature.attributes.kodsbl || "",
+                          });
+                        });
+                      } else {
+                        setSelectBuildings(true);
+                        setRunAnalysis(false);
+                        setInputX(0);
+                        setInputY(0);
+                        setResultAnalysis(false);
+                        setResPersilTanah({});
+                      }
+                    });
+
+                    /* var query = bangunanSesudahLayer.createQuery();
                     query.geometry = pointBuildings;
                     bangunanSesudahLayer
                       .queryFeatures(query)
@@ -2216,7 +2466,7 @@ const SimulasiMap = () => {
                           setResultAnalysis(false);
                           setResPersilTanah({});
                         }
-                      });
+                      }); */
                   });
               });
             };
@@ -2254,6 +2504,7 @@ const SimulasiMap = () => {
 
             const selectBuildingPrint = () => {
               view.container.classList.add("screenshotCursor");
+              editor.viewModel.cancelWorkflow();
               jalanSesudahLayer.popupEnabled = false;
               polaRuangVersioningSesudahLayer.popupEnabled = false;
               persilTanahSesudahLayer.popupEnabled = false;
@@ -2284,18 +2535,33 @@ const SimulasiMap = () => {
                 view
                   .whenLayerView(bangunanSesudahLayer)
                   .then(function (bangunanSesudahLayerView) {
-                    bangunanSesudahLayer
-                      .queryFeatures(query)
-                      .then(function (result) {
-                        if (result.features.length > 0) {
-                          result.features.forEach(function (feature) {
+                    Axios.get(
+                      config.url.ARCGIS_URL +
+                        "/Versioning/bangunan_analisis_process/FeatureServer/0/query?where=id_project%3D" +
+                        state.simulasiBangunan.projectId +
+                        "+AND+id_skenario%3D" +
+                        state.simulasiBangunan.skenarioId +
+                        "+AND+data_ke%3D" +
+                        state.simulasiBangunan.dataKe +
+                        "&objectIds=&time=&geometry=" +
+                        event.mapPoint.x +
+                        "%2C" +
+                        event.mapPoint.y +
+                        "&geometryType=esriGeometryPoint&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&f=pjson"
+                    ).then(({data}) => {
+                    // bangunanSesudahLayer
+                    //   .queryFeatures(query)
+                    //   .then(function (result) {
+                        if (data.features.length > 0) {
+                          data.features.forEach(function (feature) {
                             var objectId = feature.attributes.objectid;
                             var oid_historical =
                               feature.attributes.oid_historical;
                             getScreenshotData(
                               dataScreenshot,
                               objectId,
-                              oid_historical
+                              oid_historical,
+                              state?.name
                             ).then((result) => {
                               setDataScreenshot(result);
                               view.container.classList.remove(
@@ -2325,15 +2591,6 @@ const SimulasiMap = () => {
             };
 
             var cetak = () => {
-              console.log(
-                dataScreenshot.photo.pembangunan_optimum_sebelum &&
-                  dataScreenshot.photo.pembangunan_optimum_sesudah &&
-                  dataScreenshot.photo.kemacetan_sebelum &&
-                  dataScreenshot.photo.kemacetan_sesudah &&
-                  dataScreenshot.photo.air_bersih_sebelum &&
-                  dataScreenshot.photo.air_bersih_sesudah &&
-                  dataScreenshot.id_bangunan
-              );
               if (
                 dataScreenshot.photo.pembangunan_optimum_sebelum &&
                 dataScreenshot.photo.pembangunan_optimum_sesudah &&
@@ -2345,7 +2602,6 @@ const SimulasiMap = () => {
               ) {
                 Pdf(dataScreenshot);
               } else {
-                console.log(dataScreenshot);
                 Swal.fire(
                   "Maaf",
                   "Lengkapi foto dan pilih bangunan untuk mencetak hasil analisis",
@@ -2376,6 +2632,7 @@ const SimulasiMap = () => {
 
             const selectBuildingHistory = () => {
               view.container.classList.add("screenshotCursor");
+              editor.viewModel.cancelWorkflow();
               jalanSesudahLayer.popupEnabled = false;
               polaRuangVersioningSesudahLayer.popupEnabled = false;
               persilTanahSesudahLayer.popupEnabled = false;
@@ -2588,12 +2845,6 @@ const SimulasiMap = () => {
 
           view.popup.watch("features", (features) => {
             if (features[0]) {
-              console.log(
-                features[0],
-                features[0].layer.id,
-                features[0].layer.id.toLowerCase().indexOf("bagunan") !== -1
-              );
-
               //TODO Add fn to call Bangunan sebelum layer (analisis) for popup
 
               // start segmentation drawing function
@@ -2634,7 +2885,6 @@ const SimulasiMap = () => {
                     "&outFields=*&outSR=4326&f=pjson"
                 );
                 Promise.all([sesudah, sebelum]).then((result) => {
-                  console.log("Hasil promise all popup", result);
                   if (
                     result[0].data.features.length > 0 /* &&
                     result[1].data.features.length > 0 */
@@ -2722,7 +2972,8 @@ const SimulasiMap = () => {
                       },
                       {
                         field_name: "los_num",
-                        field_value: result[0].data.features[0].attributes.los_num,
+                        field_value:
+                          result[0].data.features[0].attributes.los_num,
                       },
                       {
                         field_name: "los_sebelum",
@@ -3218,20 +3469,27 @@ const SimulasiMap = () => {
                       },
                       {
                         field_name: "surplus_debitalir",
-                        field_value: result[0].data.features[0].attributes.surplus_debitalir,
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .surplus_debitalir,
                       },
                       {
                         field_name: "kecenderungan_banjir",
                         field_value:
-                        result[0].data.features[0].attributes.kecenderungan_banjir,
+                          result[0].data.features[0].attributes
+                            .kecenderungan_banjir,
                       },
                       {
                         field_name: "jlh_sumurresapan",
-                        field_value: result[0].data.features[0].attributes.jlh_sumurresapan,
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .jlh_sumurresapan,
                       },
                       {
                         field_name: "q_debitsumurresapan",
-                        field_value: result[0].data.features[0].attributes.q_debitsumurresapan,
+                        field_value:
+                          result[0].data.features[0].attributes
+                            .q_debitsumurresapan,
                       },
                     ]);
                     setCongestionProjectionData({
@@ -3252,11 +3510,14 @@ const SimulasiMap = () => {
                         },
                         {
                           name: "Arus",
-                          value: result[0].data.features[0].attributes.q_arus_y6,
+                          value:
+                            result[0].data.features[0].attributes.q_arus_y6,
                         },
                         {
                           name: "Kapasitas",
-                          value: result[0].data.features[0].attributes.kapasitas_jalan,
+                          value:
+                            result[0].data.features[0].attributes
+                              .kapasitas_jalan,
                         },
                         {
                           name: "Jumlah Penduduk",
@@ -3282,11 +3543,14 @@ const SimulasiMap = () => {
                         },
                         {
                           name: "Arus",
-                          value: result[0].data.features[0].attributes.q_arus_y7,
+                          value:
+                            result[0].data.features[0].attributes.q_arus_y7,
                         },
                         {
                           name: "Kapasitas",
-                          value: result[0].data.features[0].attributes.kapasitas_jalan,
+                          value:
+                            result[0].data.features[0].attributes
+                              .kapasitas_jalan,
                         },
                         {
                           name: "Jumlah Penduduk",
@@ -3312,11 +3576,14 @@ const SimulasiMap = () => {
                         },
                         {
                           name: "Arus",
-                          value: result[0].data.features[0].attributes.q_arus_y8,
+                          value:
+                            result[0].data.features[0].attributes.q_arus_y8,
                         },
                         {
                           name: "Kapasitas",
-                          value: result[0].data.features[0].attributes.kapasitas_jalan,
+                          value:
+                            result[0].data.features[0].attributes
+                              .kapasitas_jalan,
                         },
                         {
                           name: "Jumlah Penduduk",
@@ -3342,11 +3609,14 @@ const SimulasiMap = () => {
                         },
                         {
                           name: "Arus",
-                          value: result[0].data.features[0].attributes.q_arus_y9,
+                          value:
+                            result[0].data.features[0].attributes.q_arus_y9,
                         },
                         {
                           name: "Kapasitas",
-                          value: result[0].data.features[0].attributes.kapasitas_jalan,
+                          value:
+                            result[0].data.features[0].attributes
+                              .kapasitas_jalan,
                         },
                         {
                           name: "Jumlah Penduduk",
@@ -3373,11 +3643,14 @@ const SimulasiMap = () => {
                         },
                         {
                           name: "Arus",
-                          value: result[0].data.features[0].attributes.q_arus_y10,
+                          value:
+                            result[0].data.features[0].attributes.q_arus_y10,
                         },
                         {
                           name: "Kapasitas",
-                          value: result[0].data.features[0].attributes.kapasitas_jalan,
+                          value:
+                            result[0].data.features[0].attributes
+                              .kapasitas_jalan,
                         },
                         {
                           name: "Jumlah Penduduk",
@@ -3392,16 +3665,20 @@ const SimulasiMap = () => {
                         {
                           name: "Status Kapasitas TPS",
                           value:
-                            result[0].data.features[0].attributes.izin_sampah_y6,
+                            result[0].data.features[0].attributes
+                              .izin_sampah_y6,
                         },
                         {
                           name: "Timbulan Sampah Harian (Bangunan)",
-                          value: result[0].data.features[0].attributes.bangkitan_sampah_y6,
+                          value:
+                            result[0].data.features[0].attributes
+                              .bangkitan_sampah_y6,
                         },
                         {
                           name: "Timbulan Sampah Harian (TPS Kumulatif)",
                           value:
-                            result[0].data.features[0].attributes.bangkitan_sampah_kum_y6,
+                            result[0].data.features[0].attributes
+                              .bangkitan_sampah_kum_y6,
                         },
                         {
                           name: "Jumlah Penduduk",
@@ -3414,16 +3691,20 @@ const SimulasiMap = () => {
                         {
                           name: "Status Kapasitas TPS",
                           value:
-                            result[0].data.features[0].attributes.izin_sampah_y7,
+                            result[0].data.features[0].attributes
+                              .izin_sampah_y7,
                         },
                         {
                           name: "Timbulan Sampah Harian (Bangunan)",
-                          value: result[0].data.features[0].attributes.bangkitan_sampah_y7,
+                          value:
+                            result[0].data.features[0].attributes
+                              .bangkitan_sampah_y7,
                         },
                         {
                           name: "Timbulan Sampah Harian (TPS Kumulatif)",
                           value:
-                            result[0].data.features[0].attributes.bangkitan_sampah_kum_y7,
+                            result[0].data.features[0].attributes
+                              .bangkitan_sampah_kum_y7,
                         },
                         {
                           name: "Jumlah Penduduk",
@@ -3436,16 +3717,20 @@ const SimulasiMap = () => {
                         {
                           name: "Status Kapasitas TPS",
                           value:
-                            result[0].data.features[0].attributes.izin_sampah_y8,
+                            result[0].data.features[0].attributes
+                              .izin_sampah_y8,
                         },
                         {
                           name: "Timbulan Sampah Harian (Bangunan)",
-                          value: result[0].data.features[0].attributes.bangkitan_sampah_y8,
+                          value:
+                            result[0].data.features[0].attributes
+                              .bangkitan_sampah_y8,
                         },
                         {
                           name: "Timbulan Sampah Harian (TPS Kumulatif)",
                           value:
-                            result[0].data.features[0].attributes.bangkitan_sampah_kum_y8,
+                            result[0].data.features[0].attributes
+                              .bangkitan_sampah_kum_y8,
                         },
                         {
                           name: "Jumlah Penduduk",
@@ -3458,16 +3743,20 @@ const SimulasiMap = () => {
                         {
                           name: "Status Kapasitas TPS",
                           value:
-                            result[0].data.features[0].attributes.izin_sampah_y9,
+                            result[0].data.features[0].attributes
+                              .izin_sampah_y9,
                         },
                         {
                           name: "Timbulan Sampah Harian (Bangunan)",
-                          value: result[0].data.features[0].attributes.bangkitan_sampah_y9,
+                          value:
+                            result[0].data.features[0].attributes
+                              .bangkitan_sampah_y9,
                         },
                         {
                           name: "Timbulan Sampah Harian (TPS Kumulatif)",
                           value:
-                            result[0].data.features[0].attributes.bangkitan_sampah_kum_y9,
+                            result[0].data.features[0].attributes
+                              .bangkitan_sampah_kum_y9,
                         },
                         {
                           name: "Jumlah Penduduk",
@@ -3480,16 +3769,20 @@ const SimulasiMap = () => {
                         {
                           name: "Status Kapasitas TPS",
                           value:
-                            result[0].data.features[0].attributes.izin_sampah_y10,
+                            result[0].data.features[0].attributes
+                              .izin_sampah_y10,
                         },
                         {
                           name: "Timbulan Sampah Harian (Bangunan)",
-                          value: result[0].data.features[0].attributes.bangkitan_sampah_y10,
+                          value:
+                            result[0].data.features[0].attributes
+                              .bangkitan_sampah_y10,
                         },
                         {
                           name: "Timbulan Sampah Harian (TPS Kumulatif)",
                           value:
-                            result[0].data.features[0].attributes.bangkitan_sampah_kum_y10,
+                            result[0].data.features[0].attributes
+                              .bangkitan_sampah_kum_y10,
                         },
                         {
                           name: "Jumlah Penduduk",
@@ -3499,123 +3792,153 @@ const SimulasiMap = () => {
                         },
                       ],
                     });
-                    setWaterProjectionData({
-                      1: [
-                        {
-                          name: "Status Kuantitas Air Bersih",
-                          value:
-                            result[0].data.features[0].attributes.izin_air_y6,
-                        },
-                        {
-                          name: "Kebutuhan Harian",
-                          value:
-                            result[0].data.features[0].attributes.keb_harian_y6,
-                        },
-                        {
-                          name: "Ketersediaan Air Harian",
-                          value:
-                            result[0].data.features[0].attributes.los_num_y6,
-                        },
-                        {
-                          name: "Jumlah Penduduk",
-                          value:
-                            result[0].data.features[0].attributes
-                              .penduduk_y6_proyeksi,
-                        },
-                      ],
-                      2: [
-                        {
-                          name: "Status Kuantitas Air Bersih",
-                          value:
-                            result[0].data.features[0].attributes.izin_air_y7,
-                        },
-                        {
-                          name: "Kebutuhan Harian",
-                          value:
-                            result[0].data.features[0].attributes.keb_harian_y7,
-                        },
-                        {
-                          name: "Ketersediaan Air Harian",
-                          value:
-                            result[0].data.features[0].attributes.los_num_y7,
-                        },
-                        {
-                          name: "Jumlah Penduduk",
-                          value:
-                            result[0].data.features[0].attributes
-                              .penduduk_y7_proyeksi,
-                        },
-                      ],
-                      3: [
-                        {
-                          name: "Status Kuantitas Air Bersih",
-                          value:
-                            result[0].data.features[0].attributes.izin_air_y8,
-                        },
-                        {
-                          name: "Kebutuhan Harian",
-                          value:
-                            result[0].data.features[0].attributes.keb_harian_y8,
-                        },
-                        {
-                          name: "Ketersediaan Air Harian",
-                          value:
-                            result[0].data.features[0].attributes.los_num_y8,
-                        },
-                        {
-                          name: "Jumlah Penduduk",
-                          value:
-                            result[0].data.features[0].attributes
-                              .penduduk_y8_proyeksi,
-                        },
-                      ],
-                      4: [
-                        {
-                          name: "Status Kuantitas Air Bersih",
-                          value:
-                            result[0].data.features[0].attributes.izin_air_y9,
-                        },
-                        {
-                          name: "Kebutuhan Harian",
-                          value:
-                            result[0].data.features[0].attributes.keb_harian_y9,
-                        },
-                        {
-                          name: "Ketersediaan Air Harian",
-                          value:
-                            result[0].data.features[0].attributes.los_num_y9,
-                        },
-                        {
-                          name: "Jumlah Penduduk",
-                          value:
-                            result[0].data.features[0].attributes
-                              .penduduk_y9_proyeksi,
-                        },
-                      ],
-                      5: [
-                        {
-                          name: "Status Kuantitas Air Bersih",
-                          value:
-                            result[0].data.features[0].attributes.izin_air_y10,
-                        },
-                        {
-                          name: "Kebutuhan Harian",
-                          value:
-                            result[0].data.features[0].attributes
-                              .keb_harian_y10,
-                        },
-                        {
-                          name: "Ketersediaan Air Harian",
-                          value:
-                            result[0].data.features[0].attributes.los_num_y10,
-                        },
-                        {
-                          name: "Jumlah Penduduk",
-                          value:
-                            result[0].data.features[0].attributes
-                              .penduduk_y10_proyeksi,
-                        },
-                      ],
+                    Axios.get(
+                      config.url.ARCGIS_URL +
+                        "/Versioning/sumber_air_analisis_process/FeatureServer/0/query?where=id_project%3D" +
+                        state.simulasiBangunan.projectId +
+                        "+AND+id_skenario%3D" +
+                        state.simulasiBangunan.skenarioId +
+                        "+AND+data_ke%3D" +
+                        state.simulasiBangunan.dataKe +
+                        "&objectIds=&time=&geometry=" +
+                        encodeURIComponent(
+                          JSON.stringify(result[0].data.features[0].geometry)
+                        ) +
+                        "&geometryType=esriGeometryPolygon&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&f=pjson" /* params: {
+                      where: "id_project%3D"+state.simulasiBangunan.projectId+"+AND+id_skenario%3D"+state.simulasiBangunan.skenarioId+"+AND+data_ke%3D"+state.simulasiBangunan.dataKe,
+                      geometry: result[0].data.features[0].geometry,
+                      geometryType: "esriGeometryPolygon",
+                      f: "pjson"
+                    } */
+                    ).then((air) => {
+                      setWaterProjectionData({
+                        1: [
+                          {
+                            name: "Status Kuantitas Air Bersih",
+                            value:
+                              result[0].data.features[0].attributes.izin_air_y6,
+                          },
+                          {
+                            name: "Kebutuhan Harian",
+                            value:
+                              result[0].data.features[0].attributes
+                                .keb_harian_y6,
+                          },
+                          {
+                            name: "Ketersediaan Air Harian",
+                            value:
+                              // air.data.features[0].attributes.kapasitas_harian,
+                              "",
+                          },
+                          {
+                            name: "Jumlah Penduduk",
+                            value:
+                              result[0].data.features[0].attributes
+                                .penduduk_y6_proyeksi,
+                          },
+                        ],
+                        2: [
+                          {
+                            name: "Status Kuantitas Air Bersih",
+                            value:
+                              result[0].data.features[0].attributes.izin_air_y7,
+                          },
+                          {
+                            name: "Kebutuhan Harian",
+                            value:
+                              result[0].data.features[0].attributes
+                                .keb_harian_y7,
+                          },
+                          {
+                            name: "Ketersediaan Air Harian",
+                            value:
+                              // air.data.features[0].attributes.kapasitas_harian,
+                              "",
+                          },
+                          {
+                            name: "Jumlah Penduduk",
+                            value:
+                              result[0].data.features[0].attributes
+                                .penduduk_y7_proyeksi,
+                          },
+                        ],
+                        3: [
+                          {
+                            name: "Status Kuantitas Air Bersih",
+                            value:
+                              result[0].data.features[0].attributes.izin_air_y8,
+                          },
+                          {
+                            name: "Kebutuhan Harian",
+                            value:
+                              result[0].data.features[0].attributes
+                                .keb_harian_y8,
+                          },
+                          {
+                            name: "Ketersediaan Air Harian",
+                            value:
+                              // air.data.features[0].attributes.kapasitas_harian,
+                              "",
+                          },
+                          {
+                            name: "Jumlah Penduduk",
+                            value:
+                              result[0].data.features[0].attributes
+                                .penduduk_y8_proyeksi,
+                          },
+                        ],
+                        4: [
+                          {
+                            name: "Status Kuantitas Air Bersih",
+                            value:
+                              result[0].data.features[0].attributes.izin_air_y9,
+                          },
+                          {
+                            name: "Kebutuhan Harian",
+                            value:
+                              result[0].data.features[0].attributes
+                                .keb_harian_y9,
+                          },
+                          {
+                            name: "Ketersediaan Air Harian",
+                            value:
+                              // air.data.features[0].attributes.kapasitas_harian,
+                              "",
+                          },
+                          {
+                            name: "Jumlah Penduduk",
+                            value:
+                              result[0].data.features[0].attributes
+                                .penduduk_y9_proyeksi,
+                          },
+                        ],
+                        5: [
+                          {
+                            name: "Status Kuantitas Air Bersih",
+                            value:
+                              result[0].data.features[0].attributes
+                                .izin_air_y10,
+                          },
+                          {
+                            name: "Kebutuhan Harian",
+                            value:
+                              result[0].data.features[0].attributes
+                                .keb_harian_y10,
+                          },
+                          {
+                            name: "Ketersediaan Air Harian",
+                            value:
+                              // air.data.features[0].attributes.kapasitas_harian,
+                              "",
+                          },
+                          {
+                            name: "Jumlah Penduduk",
+                            value:
+                              result[0].data.features[0].attributes
+                                .penduduk_y10_proyeksi,
+                          },
+                        ],
+                      });
                     });
                   }
                 });
@@ -4754,7 +5077,6 @@ const SimulasiMap = () => {
             );
             Promise.all([sesudah, sebelum])
               .then((result) => {
-                console.log("Hasil untuk segmentasi", result);
                 if (
                   result[0].data.features.length > 0 &&
                   result[1].data.features.length > 0
@@ -5176,6 +5498,12 @@ const SimulasiMap = () => {
     let layerJaringanJalanSebelum = esriMap.allLayers.find(function (layer) {
       return layer.id === "jaringan_jalan_analisis";
     });
+    let drainaseSesudah = esriMap.allLayers.find(function (layer) {
+      return layer.id === "drainase_analisis_proses";
+    });
+    let drainaseSebelum = esriMap.allLayers.find(function (layer) {
+      return layer.id === "drainase_analisis";
+    });
     let layerJaringanJalanSesudah = esriMap.allLayers.find(function (layer) {
       return layer.id === "jaringan_jalan_analisis_proses";
     });
@@ -5185,7 +5513,18 @@ const SimulasiMap = () => {
     let layerSampahTPSSebelum = esriMap.allLayers.find(function (layer) {
       return layer.id === "sampah_tps_analisis";
     });
-    console.log("active", activeLayer);
+    let layerSlopeSesudah = esriMap.allLayers.find(function (layer) {
+      return layer.id === "slope_analisis_proses";
+    });
+    let layerSlopeSebelum = esriMap.allLayers.find(function (layer) {
+      return layer.id === "slope_analisis";
+    });
+    let layerKelerenganSesudah = esriMap.allLayers.find(function (layer) {
+      return layer.id === "kelerengan_analisis_proses";
+    });
+    let layerKelerenganSebelum = esriMap.allLayers.find(function (layer) {
+      return layer.id === "kelerengan_analisis";
+    });
     let isBangunanActive = activeLayer.some(
       (layer) =>
         layer.id === "bagunan_analisis_proses" ||
@@ -5206,10 +5545,25 @@ const SimulasiMap = () => {
         layer.id === "kapasitas_air_analisis_proses" ||
         layer.id === "kapasitas_air_analisis"
     );
+    let isDrainaseActive = activeLayer.some(
+      (layer) =>
+        layer.id === "drainase_analisis_proses" ||
+        layer.id === "drainase_analisis"
+    );
     let isTpsActive = activeLayer.some(
       (layer) =>
         layer.id === "sampah_tps_analisis_proses" ||
         layer.id === "sampah_tps_analisis"
+    );
+    let isSlopeActive = activeLayer.some(
+      (layer) =>
+        layer.id === "slope_analisis_proses" ||
+        layer.id === "slope_analisis"
+    );
+    let isKelerenganActive = activeLayer.some(
+      (layer) =>
+        layer.id === "kelerengan_analisis_proses" ||
+        layer.id === "kelerengan_analisis"
     );
     if (!activeSebelumSesudah.activeSebelum) {
       // layerBangunan.renderer = getRendererBangunan(
@@ -5224,6 +5578,10 @@ const SimulasiMap = () => {
       layerPolaRuangSesudah.listMode = "hide";
       if (isPolaRuangActive) layerPolaRuangSebelum.visible = true;
       layerPolaRuangSebelum.listMode = "show";
+      if (isDrainaseActive) drainaseSesudah.visible = false;
+      drainaseSesudah.listMode = "hide";
+      if (isDrainaseActive) drainaseSebelum.visible = true;
+      drainaseSebelum.listMode = "show";
       if (isKapasitasAirActive) layerKapasitasAirSesudah.visible = false;
       layerKapasitasAirSesudah.listMode = "hide";
       if (isKapasitasAirActive) layerKapasitasAirSebelum.visible = true;
@@ -5236,6 +5594,14 @@ const SimulasiMap = () => {
       layerSampahTPSSesudah.listMode = "hide";
       if (isTpsActive) layerSampahTPSSebelum.visible = true;
       layerSampahTPSSebelum.listMode = "show";
+      if (isSlopeActive) layerSlopeSesudah.visible = false;
+      layerSlopeSesudah.listMode = "hide";
+      if (isSlopeActive) layerSlopeSebelum.visible = true;
+      layerSlopeSebelum.listMode = "show";
+      if (isKelerenganActive) layerKelerenganSesudah.visible = false;
+      layerKelerenganSesudah.listMode = "hide";
+      if (isKelerenganActive) layerKelerenganSebelum.visible = true;
+      layerKelerenganSebelum.listMode = "show";
     } else {
       if (isBangunanActive) layerBangunan.visible = true;
       layerBangunan.listMode = "show";
@@ -5245,6 +5611,10 @@ const SimulasiMap = () => {
       layerPolaRuangSesudah.listMode = "show";
       if (isPolaRuangActive) layerPolaRuangSebelum.visible = false;
       layerPolaRuangSebelum.listMode = "hide";
+      if (isDrainaseActive) drainaseSesudah.visible = true;
+      drainaseSesudah.listMode = "show";
+      if (isDrainaseActive) drainaseSebelum.visible = false;
+      drainaseSebelum.listMode = "hide";
       if (isKapasitasAirActive) layerKapasitasAirSesudah.visible = true;
       layerKapasitasAirSesudah.listMode = "show";
       if (isKapasitasAirActive) layerKapasitasAirSebelum.visible = false;
@@ -5257,6 +5627,14 @@ const SimulasiMap = () => {
       layerSampahTPSSesudah.listMode = "show";
       if (isTpsActive) layerSampahTPSSebelum.visible = false;
       layerSampahTPSSebelum.listMode = "hide";
+      if (isSlopeActive) layerSlopeSesudah.visible = true;
+      layerSlopeSesudah.listMode = "show";
+      if (isSlopeActive) layerSlopeSebelum.visible = false;
+      layerSlopeSebelum.listMode = "hide";
+      if (isKelerenganActive) layerKelerenganSesudah.visible = true;
+      layerKelerenganSesudah.listMode = "show";
+      if (isKelerenganActive) layerKelerenganSebelum.visible = false;
+      layerKelerenganSebelum.listMode = "hide";
     }
     layerBangunan.refresh();
     layerBangunanSebelum.refresh();
@@ -5828,23 +6206,34 @@ const SimulasiMap = () => {
         config.url.API_URL + "/Simulasi/ExecuteSpCopy",
         {},
         {
-          params: {
-            simulasiId: state?.id,
-            simulasiIdBaru: state?.simulasiBangunan?.skenarioId,
-            projectId: state?.simulasiBangunan?.projectId,
-            dataKe: state?.simulasiBangunan?.dataKe,
-            param: param,
-          },
+          params:
+            param === 1
+              ? {
+                  simulasiId: state?.simulasiBangunan?.skenarioId,
+                  simulasiIdBaru: 0,
+                  projectId: state?.simulasiBangunan?.projectId,
+                  dataKe: state?.simulasiBangunan?.dataKe,
+                  param: param,
+                }
+              : {
+                  simulasiId: state?.id,
+                  simulasiIdBaru: 0,
+                  projectId: state?.simulasiBangunan?.projectId,
+                  dataKe: state?.simulasiBangunan?.dataKe,
+                  param: param,
+                },
         }
       )
       .then((data) => {
         setLoaded(true);
-        if (param !== 0) getDataKe();
-        Swal.fire(
-          "Berhasil",
-          "Berhasil menganalisis riwayat skenario",
-          "success"
-        );
+        if (param !== 0) {
+          getDataKe();
+          Swal.fire(
+            "Berhasil",
+            "Berhasil menganalisis riwayat skenario",
+            "success"
+          );
+        }
       })
       .catch(() => {
         setLoaded(true);
@@ -5918,10 +6307,72 @@ const SimulasiMap = () => {
     let layerJaringanJalan = esriMap.allLayers.find(function (layer) {
       return layer.id === "jaringan_jalan_analisis_proses";
     });
-    layerBangunan.definitionExpression = `id_simulasi = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe}`;
-    layerPolaRuang.definitionExpression = `id_simulasi = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe}`;
-    layerKapasitasAir.definitionExpression = `id_simulasi = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe}`;
-    layerJaringanJalan.definitionExpression = `id_simulasi = ${state?.simulasiBangunan?.skenarioId} AND id_project = ${state?.simulasiBangunan?.projectId} AND userid = '${state?.simulasiBangunan?.userId}'AND data_ke = ${state?.simulasiBangunan?.dataKe}`;
+    let layerDrainase = esriMap.allLayers.find(function (layer) {
+      return layer.id === "drainase_analisis_proses";
+    });
+    let layerSlope = esriMap.allLayers.find(function (layer) {
+      return layer.id === "slope_analisis_proses";
+    });
+    let layerKelerengan = esriMap.allLayers.find(function (layer) {
+      return layer.id === "kelerengan_analisis_proses";
+    });
+    layerBangunan.definitionExpression = getDefExp({
+      skenarioId: state?.simulasiBangunan?.skenarioId,
+      projectId: state?.simulasiBangunan?.projectId,
+      dataKe: state?.simulasiBangunan?.dataKe,
+      nambwp: state?.simulasiBangunan?.nambwp,
+      nasbwp: state?.simulasiBangunan?.nasbwp,
+      kodblk: state.simulasiBangunan.kodblk,
+      kodsbl: state.simulasiBangunan.kodsbl,
+    });
+    layerPolaRuang.definitionExpression = getDefExp({
+      skenarioId: state?.simulasiBangunan?.skenarioId,
+      projectId: state?.simulasiBangunan?.projectId,
+      dataKe: state?.simulasiBangunan?.dataKe,
+      nambwp: state?.simulasiBangunan?.nambwp,
+      nasbwp: state?.simulasiBangunan?.nasbwp,
+      kodblk: state.simulasiBangunan.kodblk,
+      kodsbl: state.simulasiBangunan.kodsbl,
+    });
+    layerKapasitasAir.definitionExpression = getDefExp({
+      skenarioId: state?.simulasiBangunan?.skenarioId,
+      projectId: state?.simulasiBangunan?.projectId,
+      dataKe: state?.simulasiBangunan?.dataKe,
+      nambwp: state?.simulasiBangunan?.nambwp,
+      nasbwp: state?.simulasiBangunan?.nasbwp,
+      kodblk: state.simulasiBangunan.kodblk,
+      kodsbl: state.simulasiBangunan.kodsbl,
+    });
+    layerJaringanJalan.definitionExpression = getDefExp({
+      skenarioId: state?.simulasiBangunan?.skenarioId,
+      projectId: state?.simulasiBangunan?.projectId,
+      dataKe: state?.simulasiBangunan?.dataKe,
+      nambwp: state?.simulasiBangunan?.nambwp,
+      nasbwp: state?.simulasiBangunan?.nasbwp,
+      kodblk: state.simulasiBangunan.kodblk,
+    });
+    layerDrainase.definitionExpression = getDefExp({
+      skenarioId: state?.simulasiBangunan?.skenarioId,
+      projectId: state?.simulasiBangunan?.projectId,
+      dataKe: state?.simulasiBangunan?.dataKe,
+      nambwp: state?.simulasiBangunan?.nambwp,
+      nasbwp: state?.simulasiBangunan?.nasbwp,
+      kodblk: state.simulasiBangunan.kodblk,
+    });
+    layerSlope.definitionExpression = getDefExp({
+      skenarioId: state?.simulasiBangunan?.skenarioId,
+      projectId: state?.simulasiBangunan?.projectId,
+      dataKe: state?.simulasiBangunan?.dataKe,
+    });
+    layerKelerengan.definitionExpression = getDefExp({
+      skenarioId: state?.simulasiBangunan?.skenarioId,
+      projectId: state?.simulasiBangunan?.projectId,
+      dataKe: state?.simulasiBangunan?.dataKe,
+      nambwp: state?.simulasiBangunan?.nambwp,
+      nasbwp: state?.simulasiBangunan?.nasbwp,
+      kodblk: state.simulasiBangunan.kodblk,
+      kodsbl: state.simulasiBangunan.kodsbl,
+    });
   };
 
   const resetMapToSesudah = () => {
@@ -5949,6 +6400,12 @@ const SimulasiMap = () => {
     let layerKapasitasAirSebelum = esriMap.allLayers.find(function (layer) {
       return layer.id === "kapasitas_air_analisis";
     });
+    let layerDrainase = esriMap.allLayers.find(function (layer) {
+      return layer.id === "drainase_analisis_proses";
+    });
+    let layerDrainaseSebelum = esriMap.allLayers.find(function (layer) {
+      return layer.id === "drainase_analisis";
+    });
     let layerJaringanJalan = esriMap.allLayers.find(function (layer) {
       return layer.id === "jaringan_jalan_analisis_proses";
     });
@@ -5960,6 +6417,18 @@ const SimulasiMap = () => {
     });
     let layerSampahTPSSebelum = esriMap.allLayers.find(function (layer) {
       return layer.id === "sampah_tps_analisis";
+    });
+    let layerSlope = esriMap.allLayers.find(function (layer) {
+      return layer.id === "slope_analisis_proses";
+    });
+    let layerSlopeSebelum = esriMap.allLayers.find(function (layer) {
+      return layer.id === "slope_analisis";
+    });
+    let layerKelerengan = esriMap.allLayers.find(function (layer) {
+      return layer.id === "kelerengan_analisis_proses";
+    });
+    let layerKelerenganSebelum = esriMap.allLayers.find(function (layer) {
+      return layer.id === "kelerengan_analisis";
     });
     let isBangunanActive = activeLayer.some(
       (layer) =>
@@ -5981,10 +6450,25 @@ const SimulasiMap = () => {
         layer.id === "kapasitas_air_analisis_proses" ||
         layer.id === "kapasitas_air_analisis"
     );
+    let isDrainaseActive = activeLayer.some(
+      (layer) =>
+        layer.id === "drainase_analisis_proses" ||
+        layer.id === "drainase_analisis"
+    );
     let isTpsActive = activeLayer.some(
       (layer) =>
         layer.id === "sampah_tps_analisis_proses" ||
         layer.id === "sampah_tps_analisis"
+    );
+    let isSlopeActive = activeLayer.some(
+      (layer) =>
+        layer.id === "slope_analisis_proses" ||
+        layer.id === "slope_analisis"
+    );
+    let isKelerenganActive = activeLayer.some(
+      (layer) =>
+        layer.id === "kelerengan_analisis_proses" ||
+        layer.id === "kelerengan_analisis"
     );
     if (isBangunanActive) layerBangunan.visible = true;
     layerBangunan.listMode = "show";
@@ -5998,6 +6482,10 @@ const SimulasiMap = () => {
     layerKapasitasAir.listMode = "show";
     if (isKapasitasAirActive) layerKapasitasAirSebelum.visible = false;
     layerKapasitasAirSebelum.listMode = "hide";
+    if (isDrainaseActive) layerDrainase.visible = true;
+    layerDrainase.listMode = "show";
+    if (isDrainaseActive) layerDrainaseSebelum.visible = false;
+    layerDrainaseSebelum.listMode = "hide";
     if (isJaringanJalanActive) layerJaringanJalan.visible = true;
     layerJaringanJalan.listMode = "show";
     if (isJaringanJalanActive) layerJaringanJalanSebelum.visible = false;
@@ -6005,6 +6493,14 @@ const SimulasiMap = () => {
     if (isTpsActive) layerSampahTPSSesudah.visible = true;
     layerSampahTPSSesudah.listMode = "show";
     if (isTpsActive) layerSampahTPSSebelum.visible = false;
+    if (isSlopeActive) layerSlope.visible = true;
+    layerSlope.listMode = "show";
+    if (isSlopeActive) layerSlopeSebelum.visible = false;
+    layerSlopeSebelum.listMode = "hide";
+    if (isKelerenganActive) layerKelerengan.visible = true;
+    layerKelerengan.listMode = "show";
+    if (isKelerenganActive) layerKelerenganSebelum.visible = false;
+    layerKelerenganSebelum.listMode = "hide";
     layerSampahTPSSebelum.listMode = "hide";
     layerBangunan.refresh();
     layerBangunanSebelum.refresh();
@@ -6150,7 +6646,6 @@ const SimulasiMap = () => {
             <div style={style.viewDiv} ref={mapRef} />
             {showingPopup.show && (
               <div
-                className="popup"
                 style={{
                   borderLeft: "1px solid #CED4DA",
                   display: "block",
@@ -6954,7 +7449,7 @@ const SimulasiMap = () => {
                                           Proyeksi Tahun ke-{congestionYear}
                                         </p>
                                       </div>
-                                      <tbody>
+                                      <tbody className="popup">
                                         {congestionYear &&
                                           congestionProjectionData[1] &&
                                           congestionProjectionData[

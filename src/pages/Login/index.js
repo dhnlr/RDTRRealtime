@@ -53,6 +53,7 @@ function Login() {
         setIsProcessing(false);
         if (response.data.status.code === 200) {
           Cookies.set("userId", response.data.obj.id)
+          Cookies.set("permissions", JSON.stringify(response.data.obj.roles[0].permissions))
           handleDashboard();
         } else {
           setErrMessage(response.data.status.message);

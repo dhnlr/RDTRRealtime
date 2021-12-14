@@ -5,9 +5,11 @@ import { useHistory, Link } from "react-router-dom";
 import { Header, Menu, Footer } from "../../../components";
 import headerImage from "./header.svg"
 import "./style.css"
+import Cookies from "js-cookie";
 
 function HelpData() {
     let history = useHistory();
+    const permissions = JSON.parse(Cookies.get("permissions"))
 
     return (
         <div className="container-scroller">
@@ -90,7 +92,7 @@ function HelpData() {
                         </div>
 
                         <div className="col-md-4 grid-margin my-4">
-                        <Link className="btn btn-primary btn-block mb-2" to="/helpmanagement">Manajemen Bantuan</Link>
+                        {permissions.indexOf("Bantuan") !== -1 && <Link className="btn btn-primary btn-block mb-2" to="/helpmanagement">Manajemen Bantuan</Link>}
                             <div className="card p-3" style={{ background: "#daeaae"}}>
                                 <div className="card-body">
                                     <p className="card-title">Butuh Bantuan?</p>

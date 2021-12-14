@@ -36,6 +36,7 @@ function DataManagement() {
     if(localStorage.state){
       localStorage.removeItem("state")
     }
+    if(JSON.parse(Cookies.get("permissions")).indexOf("Manajemen Data") === -1){ history.goBack()}
   }, [history]);
 
   const fetchData = React.useCallback(

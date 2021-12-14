@@ -7,6 +7,7 @@ import CreatableSelect from "react-select/creatable";
 import { Header, Menu, Footer, ProgressCircle } from "../../components";
 
 import { config } from "../../Constants";
+import Cookies from "js-cookie";
 
 function DataManagementInputCongestion() {
   const { state } = useLocation();
