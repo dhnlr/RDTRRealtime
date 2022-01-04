@@ -319,3 +319,6 @@ tbody.popup {
   display: inherit;
   max-width: 100%;
 }
+#selectExpDiv {
+  min-width: 400px;
+}

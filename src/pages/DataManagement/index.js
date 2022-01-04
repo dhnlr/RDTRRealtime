@@ -33,10 +33,14 @@ function DataManagement() {
   }
 
   useEffect(() => {
-    if(localStorage.state){
-      localStorage.removeItem("state")
+    if (localStorage.state) {
+      localStorage.removeItem("state");
     }
-    if(JSON.parse(Cookies.get("permissions")).indexOf("Manajemen Data") === -1){ history.goBack()}
+    if (
+      JSON.parse(Cookies.get("permissions")).indexOf("Manajemen Data") === -1
+    ) {
+      history.goBack();
+    }
   }, [history]);
 
   const fetchData = React.useCallback(
@@ -138,11 +142,21 @@ function DataManagement() {
                   icon: "success",
                   confirmButtonText: "OK",
                   allowOutsideClick: false,
-                }).then((result) => {
-                  if (result.value) {
-                    setProcessCounter(processCounter + 1);
-                  }
-                });
+                })
+                  .then((result) => {
+                    if (result.value) {
+                      setProcessCounter(processCounter + 1);
+                    }
+                  })
+                  .catch((error) =>
+                    Swal.fire(
+                      "Maaf",
+                      error.response?.data?.status?.message
+                        ? error.response?.data?.status?.message
+                        : "Gagal menghapus pengguna. Silahkan coba beberapa saat lagi.",
+                      "error"
+                    )
+                  );
               } else {
                 Swal.fire("Maaf", response.data.description, "error");
               }
@@ -162,17 +176,14 @@ function DataManagement() {
     isPrivate,
   }) => {
     axios
-      .put(
-        config.url.API_URL + "/Project/Update",
-        {
-          id,
-          projectName,
-          status,
-          kotaKabupatenId: kotaKabupaten.id,
-          isPrivate: !isPrivate,
-          ownerId: Cookies.get("userId"),
-        },
-      )
+      .put(config.url.API_URL + "/Project/Update", {
+        id,
+        projectName,
+        status,
+        kotaKabupatenId: kotaKabupaten.id,
+        isPrivate: !isPrivate,
+        ownerId: Cookies.get("userId"),
+      })
       .then(() => {
         setIsProcessing(false);
         Swal.fire({
@@ -181,11 +192,21 @@ function DataManagement() {
           icon: "success",
           confirmButtonText: "OK",
           allowOutsideClick: false,
-        }).then((result) => {
-          if (result.value) {
-            setProcessCounter(processCounter + 1);
-          }
-        });
+        })
+          .then((result) => {
+            if (result.value) {
+              setProcessCounter(processCounter + 1);
+            }
+          })
+          .catch((error) =>
+            Swal.fire(
+              "Maaf",
+              error.response?.data?.status?.message
+                ? error.response?.data?.status?.message
+                : "Gagal menghapus pengguna. Silahkan coba beberapa saat lagi.",
+              "error"
+            )
+          );
       })
       .catch((error) => {
         setIsProcessing(false);
@@ -321,30 +342,59 @@ function DataManagement() {
                                   accessor: "module",
                                   Cell: (row) => (
                                     <div style={{ textAlign: "center" }}>
-                                      {(row.cell.value.kemacetan.jaringanJalan.itemsCount || row.cell.value.kemacetan.jaringanJalan.detail) && (
+                                      {(row.cell.value.kemacetan.jaringanJalan
+                                        .itemsCount ||
+                                        row.cell.value.kemacetan.jaringanJalan
+                                          .detail) && (
                                         <label className="badge badge-light m-1">
-                                        Kemacetan
-                                      </label>
+                                          Kemacetan
+                                        </label>
                                       )}
-                                      {(row.cell.value.airBersih.pdam.itemsCount || row.cell.value.airBersih.pdam.detail) && (
+                                      {(row.cell.value.airBersih.pdam
+                                        .itemsCount ||
+                                        row.cell.value.airBersih.pdam
+                                          .detail) && (
                                         <label className="badge badge-light m-1">
-                                        Air Bersih
-                                      </label>
+                                          Air Bersih
+                                        </label>
                                       )}
-                                      {(row.cell.value.persampahan.sampah.itemsCount || row.cell.value.persampahan.sampah.detail) && (
+                                      {(row.cell.value.persampahan.sampah
+                                        .itemsCount ||
+                                        row.cell.value.persampahan.sampah
+                                          .detail) && (
                                         <label className="badge badge-light m-1">
-                                        Persampahan
-                                      </label>
+                                          Persampahan
+                                        </label>
                                       )}
-                                      {(row.cell.value.banjir.slopeDemnas.itemsCount || row.cell.value.banjir.slopeDemnas.detail || row.cell.value.banjir.drainase.itemsCount || row.cell.value.banjir.drainase.detail || row.cell.value.banjir.kelerengan.itemsCount || row.cell.value.banjir.kelerengan.detail) && (
+                                      {(row.cell.value.banjir.slopeDemnas
+                                        .itemsCount ||
+                                        row.cell.value.banjir.slopeDemnas
+                                          .detail ||
+                                        row.cell.value.banjir.drainase
+                                          .itemsCount ||
+                                        row.cell.value.banjir.drainase.detail ||
+                                        row.cell.value.banjir.kelerengan
+                                          .itemsCount ||
+                                        row.cell.value.banjir.kelerengan
+                                          .detail) && (
                                         <label className="badge badge-light m-1">
-                                        Banjir
-                                      </label>
+                                          Banjir
+                                        </label>
                                       )}
-                                      {(row.cell.value.kdbKlb.bangunan.itemsCount || row.cell.value.kdbKlb.bangunan.detail || row.cell.value.kdbKlb.persilTanah.itemsCount || row.cell.value.kdbKlb.persilTanah.detail || row.cell.value.kdbKlb.polaRuang.itemsCount || row.cell.value.kdbKlb.polaRuang.detail) && (
+                                      {(row.cell.value.kdbKlb.bangunan
+                                        .itemsCount ||
+                                        row.cell.value.kdbKlb.bangunan.detail ||
+                                        row.cell.value.kdbKlb.persilTanah
+                                          .itemsCount ||
+                                        row.cell.value.kdbKlb.persilTanah
+                                          .detail ||
+                                        row.cell.value.kdbKlb.polaRuang
+                                          .itemsCount ||
+                                        row.cell.value.kdbKlb.polaRuang
+                                          .detail) && (
                                         <label className="badge badge-light m-1">
-                                        KDB / KLB
-                                      </label>
+                                          KDB / KLB
+                                        </label>
                                       )}
                                     </div>
                                   ),
@@ -420,15 +470,21 @@ function DataManagement() {
                                   Cell: (row) => (
                                     <div style={{ textAlign: "center" }}>
                                       {row.cell.value ? (
-                                        <p><i
-                                          className="ti-lock text-danger text-center"
-                                          title="Privat"
-                                        ></i> Privat </p>
+                                        <p>
+                                          <i
+                                            className="ti-lock text-danger text-center"
+                                            title="Privat"
+                                          ></i>{" "}
+                                          Privat{" "}
+                                        </p>
                                       ) : (
-                                        <p><i
-                                          className="ti-unlock text-success text-center"
-                                          title="Publik"
-                                        ></i> Publik </p>
+                                        <p>
+                                          <i
+                                            className="ti-unlock text-success text-center"
+                                            title="Publik"
+                                          ></i>{" "}
+                                          Publik{" "}
+                                        </p>
                                       )}
                                     </div>
                                   ),
@@ -440,7 +496,8 @@ function DataManagement() {
                                   disableGlobalFilter: true,
                                   Cell: (row) => (
                                     <div style={{ textAlign: "right" }}>
-                                      { /* row.row.values.canModify && */ <>
+                                      {
+                                        /* row.row.values.canModify && */ <>
                                           <button
                                             className="btn btn-outline-dark btn-xs icons-size-16px"
                                             title={
@@ -463,39 +520,39 @@ function DataManagement() {
                                             </span>
                                           </button>
                                           &nbsp;
-                                      <Link
-                                        to={{
-                                          pathname: "/datamanagementinput",
-                                          state: data.filter(
-                                            (datum) =>
-                                              datum.id === row.row.values.id
-                                          )[0],
-                                          // row.row.values,
-                                        }}
-                                      >
-                                        <button
-                                          className="btn btn-outline-dark btn-xs"
-                                          title="Ubah"
-                                        >
-                                          <span>
-                                            <i className="ti-pencil"></i>
-                                          </span>
-                                        </button>
-                                      </Link>
-                                      &nbsp;
-                                      <button
-                                        className="btn btn-outline-danger btn-xs"
-                                        title="Hapus"
-                                        onClick={() =>
-                                          handleDelete(row.row.values)
-                                        }
-                                      >
-                                        <span>
-                                          <i className="ti-trash"></i>
-                                        </span>
-                                      </button>
-                                      </>
-                                }
+                                          <Link
+                                            to={{
+                                              pathname: "/datamanagementinput",
+                                              state: data.filter(
+                                                (datum) =>
+                                                  datum.id === row.row.values.id
+                                              )[0],
+                                              // row.row.values,
+                                            }}
+                                          >
+                                            <button
+                                              className="btn btn-outline-dark btn-xs"
+                                              title="Ubah"
+                                            >
+                                              <span>
+                                                <i className="ti-pencil"></i>
+                                              </span>
+                                            </button>
+                                          </Link>
+                                          &nbsp;
+                                          <button
+                                            className="btn btn-outline-danger btn-xs"
+                                            title="Hapus"
+                                            onClick={() =>
+                                              handleDelete(row.row.values)
+                                            }
+                                          >
+                                            <span>
+                                              <i className="ti-trash"></i>
+                                            </span>
+                                          </button>
+                                        </>
+                                      }
                                     </div>
                                   ),
                                 },

@@ -138,7 +138,16 @@ function UserManagement() {
                   setProcessCounter(processCounter + 1);
                 }
               });
-            });
+            })
+            .catch((error) =>
+              Swal.fire(
+                "Maaf",
+                error.response?.data?.status?.message
+                  ? error.response?.data?.status?.message
+                  : "Gagal menghapus pengguna. Silahkan coba beberapa saat lagi.",
+                "error"
+              )
+            );
         }
       });
     } catch (errorForm) {
@@ -176,7 +185,16 @@ function UserManagement() {
                   setProcessCounter(processCounter + 1);
                 }
               });
-            });
+            })
+            .catch((error) =>
+              Swal.fire(
+                "Maaf",
+                error.response?.data?.status?.message
+                  ? error.response?.data?.status?.message
+                  : "Gagal mengkonfirmasi pengguna. Silahkan coba beberapa saat lagi.",
+                "error"
+              )
+            );
         }
       })
       .catch((errorForm) => {
@@ -214,7 +232,16 @@ function UserManagement() {
                   setProcessCounter(processCounter + 1);
                 }
               });
-            });
+            })
+            .catch((error) =>
+              Swal.fire(
+                "Maaf",
+                error.response?.data?.status?.message
+                  ? error.response?.data?.status?.message
+                  : "Gagal mengganti izin pengguna. Silahkan coba beberapa saat lagi.",
+                "error"
+              )
+            );
         }
       })
       .catch((errorForm) => {
@@ -252,7 +279,16 @@ function UserManagement() {
                   setProcessCounter(processCounter + 1);
                 }
               });
-            });
+            })
+            .catch((error) =>
+              Swal.fire(
+                "Maaf",
+                error.response?.data?.status?.message
+                  ? error.response?.data?.status?.message
+                  : "Gagal mengganti sandi pengguna. Silahkan coba beberapa saat lagi.",
+                "error"
+              )
+            );
         }
       })
       .catch((errorForm) => {
@@ -382,29 +418,30 @@ function UserManagement() {
                                     accessor: "emailConfirmed",
                                     width: "10%",
                                     Cell: (row) =>
-                                      (row.cell.value ? 
+                                      row.cell.value ? (
                                         <label className="badge badge-success">
                                           Terkonfirmasi
                                         </label>
-                                       : 
+                                      ) : (
                                         <label className="badge badge-danger">
                                           Belum Dikonfirmasi
-                                        </label>),
+                                        </label>
+                                      ),
                                   },
                                   {
                                     Header: "Status Izin",
                                     accessor: "lockoutEnabled",
                                     width: "10%",
                                     Cell: (row) =>
-                                      (row.cell.value ? 
+                                      row.cell.value ? (
                                         <label className="badge badge-danger">
                                           Belum Diizinkan
                                         </label>
-                                       :
-                                       <label className="badge badge-success">
+                                      ) : (
+                                        <label className="badge badge-success">
                                           Diizinkan
-                                        </label> 
-                                    )
+                                        </label>
+                                      ),
                                   },
                                   {
                                     Header: "",

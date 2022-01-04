@@ -20,15 +20,51 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    return response;
+    console.log(response);
+    if (response.data) {
+      if (response.data.status) {
+        if (response.data.status?.code == 200) {
+          return response;
+        } else {
+          return Promise.reject({
+            response: {
+              data: {
+                status: response.data.status,
+              },
+            },
+          });
+        }
+      }
+      if (response.data.code) {
+        if (response.data.code == 200) {
+          return response;
+        } else {
+          return Promise.reject({
+            response: {
+              data: {
+                status: response.data,
+              },
+            },
+          });
+        }
+      }
+    } else {
+      return Promise.reject({
+        response: {
+          data: {
+            status: response.data,
+          },
+        },
+      });
+    }
   },
   function (error) {
     const originalRequest = error.config;
     // console.log(originalRequest)
     if (!originalRequest) {
       Cookie.remove("token");
-      localStorage.clear() 
-      sessionStorage.clear() 
+      localStorage.clear();
+      sessionStorage.clear();
       window.location.reload("/rdtrrealtime/login");
       return Promise.reject(error);
     }
@@ -37,14 +73,14 @@ instance.interceptors.response.use(
         title: "Tidak terautorisasi",
         text: error.response.data.error.message,
         type: "warning",
-      })
+      });
       setTimeout(() => {
         Cookie.remove("token");
         // Cookie.remove("access");
-        localStorage.clear() 
-        sessionStorage.clear() 
-      },1000)
-      
+        localStorage.clear();
+        sessionStorage.clear();
+      }, 1000);
+
       return Promise.reject(error);
     }
     return Promise.reject(error);

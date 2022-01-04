@@ -162,13 +162,15 @@ function SimulationTable() {
                     setProcessCounter(processCounter + 1);
                   }
                 })
-                .catch((errorForm) => {
+                .catch((error) =>
                   Swal.fire(
                     "Maaf",
-                    errorForm.response.data.error.message,
+                    error.response?.data?.status?.message
+                      ? error.response?.data?.status?.message
+                      : "Gagal menghapus pengguna. Silahkan coba beberapa saat lagi.",
                     "error"
-                  );
-                });
+                  )
+                );
             });
         }
       });
@@ -359,7 +361,7 @@ function SimulationTable() {
                           }
                           onClick={() => {
                             setIsCompare(!isCompare);
-                            setComparedSchenario([])
+                            setComparedSchenario([]);
                           }}
                         >
                           {!isCompare ? "Bandingkan" : "Batal Perbandingan"}
@@ -421,19 +423,22 @@ function SimulationTable() {
                                   Header: "Dibuat pada",
                                   accessor: "createDate",
                                   width: "10%",
-                                  Cell: (row) => row.row.original.projectName ? (<></>) : (
-                                    <span>
-                                      {row.cell.value
-                                        ? new Date(
-                                            row.cell.value
-                                          ).toLocaleDateString("id-ID", {
-                                            year: "numeric",
-                                            month: "long",
-                                            day: "numeric",
-                                          })
-                                        : ""}
-                                    </span>
-                                  ),
+                                  Cell: (row) =>
+                                    row.row.original.projectName ? (
+                                      <></>
+                                    ) : (
+                                      <span>
+                                        {row.cell.value
+                                          ? new Date(
+                                              row.cell.value
+                                            ).toLocaleDateString("id-ID", {
+                                              year: "numeric",
+                                              month: "long",
+                                              day: "numeric",
+                                            })
+                                          : ""}
+                                      </span>
+                                    ),
                                 },
                                 {
                                   Header: "",
@@ -613,7 +618,10 @@ function SimulationTable() {
                           </div>
                         </div>
                         <div className="d-flex align-items-baseline flex-column justify-content-center">
-                          <button className="btn btn-success btn-block" onClick={routeCompare}>
+                          <button
+                            className="btn btn-success btn-block"
+                            onClick={routeCompare}
+                          >
                             Lanjutkan Perbandingan
                           </button>
                         </div>

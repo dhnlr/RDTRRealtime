@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import axios from "../../axiosConfig";
 import Swal from "sweetalert2";
@@ -134,11 +134,21 @@ function RoleManagement() {
                   icon: "success",
                   confirmButtonText: "OK",
                   allowOutsideClick: false,
-                }).then((result) => {
-                  if (result.value) {
-                    setProcessCounter(processCounter + 1);
-                  }
-                });
+                })
+                  .then((result) => {
+                    if (result.value) {
+                      setProcessCounter(processCounter + 1);
+                    }
+                  })
+                  .catch((error) =>
+                    Swal.fire(
+                      "Maaf",
+                      error.response?.data?.status?.message
+                        ? error.response?.data?.status?.message
+                        : "Gagal menghapus pengguna. Silahkan coba beberapa saat lagi.",
+                      "error"
+                    )
+                  );
               } else {
                 Swal.fire("Maaf", response.data.description, "error");
               }

@@ -1,9 +1,11 @@
 import Cookies from "js-cookie";
 import React, { useEffect } from "react";
 import { useHistory } from "react-router";
+// import Select from 'react-select'
 
 import { Header, Menu, Footer } from "../../components";
 import DashboardImage from "./dasbor.svg"
+// import kegiatanBangunan from "../SimulasiMap/kegiatanBangunan"
 
 function Dashboard() {
   const history = useHistory();
@@ -138,6 +140,8 @@ function Dashboard() {
                 </div>
               </div>
             </div> */}
+          {/* <Select options={kegiatanBangunan} isSearchable="true" isClearable="true" onChange={({value}) => console.log(value)} /> */}
+
           </div>
           <Footer />
         </div>

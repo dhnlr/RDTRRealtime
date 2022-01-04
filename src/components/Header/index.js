@@ -54,7 +54,7 @@ function Header() {
           <li className="nav-item nav-profile dropdown">
             <A className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
               {/* <img src={profile} alt="profile" /> */}
-              <i class="icon-ellipsis"></i>
+              <i className="icon-ellipsis"></i>
             </A>
             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
               <A className="dropdown-item" onClick={()=>history.push("/profile")}>

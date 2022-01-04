@@ -66,7 +66,7 @@ function SimulationInputPhase2() {
 
   useEffect(() => {
     if (!mapLoaded) {
-      console.log(selectedFeature);
+      // console.log(selectedFeature);
       const polaRuang = esriMap.map.allLayers.find(function (layer) {
         return layer.id === "pola_ruang";
       });
@@ -123,6 +123,7 @@ function SimulationInputPhase2() {
             "/Versioning/polaruang_analisis/FeatureServer/0",
           id: "pola_ruang",
           popupEnabled: true,
+          outFields: ["*"],
           popupTemplate: {
             title: "Pola Ruang Versioning",
             content: [
@@ -192,10 +193,10 @@ function SimulationInputPhase2() {
 
         view.popup.watch("features", (features) => {
           if (features[0]) {
-            console.log(features[0]);
+            // console.log(features[0]);
             if (features[0].layer.id) {
               if (
-                features[0].layer.id.toLowerCase().indexOf("pola_ruang") !== -1
+                features[0].layer.id === "pola_ruang"
               ) {
                 setSelectedFeature(features[0].attributes);
               }
@@ -278,7 +279,45 @@ function SimulationInputPhase2() {
                       )}
                       {features.length > 0 && !isProcessing && (
                         <ul className="icon-data-list list-group list-group-flush">
-                          {features.map((feature) => (
+                          {selectedFeature.objectid && <li
+                              style={style.feature}
+                              // onClick={() => setSelectedFeature(feature)}
+                              className={`list-group-item list-group-item-action active`}
+                            >
+                              <p className="title mb-0">wadmpr</p>
+                              <p className="title font-weight-bolder">
+                                {selectedFeature.wadmpr}
+                              </p>
+                              <p className="title mb-0">wadmkk</p>
+                              <p className="title font-weight-bolder">
+                                {selectedFeature.wadmkk}
+                              </p>
+                              <p className="title mb-0">wiadpr</p>
+                              <p className="title font-weight-bolder">
+                                {selectedFeature.wiadpr}
+                              </p>
+                              <p className="title mb-0">wiadkk</p>
+                              <p className="title font-weight-bolder">
+                                {selectedFeature.wiadkk}
+                              </p>
+                              <p className="title mb-0">nambwp</p>
+                              <p className="title font-weight-bolder">
+                                {selectedFeature.nambwp}
+                              </p>
+                              <p className="title mb-0">nasbwp</p>
+                              <p className="title font-weight-bolder">
+                                {selectedFeature.nasbwp}
+                              </p>
+                              <p className="title mb-0">kodblk</p>
+                              <p className="title font-weight-bolder">
+                                {selectedFeature.kodblk}
+                              </p>
+                              <p className="title mb-0">kodsbl</p>
+                              <p className="title font-weight-bolder">
+                                {selectedFeature.kodsbl}
+                              </p>
+                            </li>}
+                          {features.filter(filter => filter.objectid !== selectedFeature.objectid).map((feature) => (
                             <li
                               style={style.feature}
                               onClick={() => setSelectedFeature(feature)}
